@@ -1,0 +1,5 @@
+*.dic
+bin/
+.classpath
+.project
+.settings/
