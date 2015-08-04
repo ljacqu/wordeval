@@ -6,12 +6,14 @@ import ch.ljacqu.wordeval.evaluation.Evaluator;
 
 public class AfDictionary extends Dictionary {
 	
+	public static final String CODE = "af";
+	
 	public AfDictionary(List<Evaluator> evaluators) {
-		super("dict/af.dic", "af", DictionaryType.WORD_PER_LINE, evaluators);
+		super("dict/af.dic", CODE, DictionaryType.WORD_PER_LINE, evaluators);
 	}
 	
 	public AfDictionary(String fileName, DictionaryType type, List<Evaluator> evaluators) {
-		super(fileName, "af", type, evaluators);
+		super(fileName, CODE, type, evaluators);
 	}
 
 	@Override

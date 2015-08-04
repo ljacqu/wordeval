@@ -11,6 +11,7 @@ import ch.ljacqu.wordeval.evaluation.VowelCount;
 import ch.ljacqu.wordeval.evaluation.VowelCount.SearchType;
 import ch.ljacqu.wordeval.language.AfDictionary;
 import ch.ljacqu.wordeval.language.Dictionary;
+import ch.ljacqu.wordeval.language.TrDictionary;
 
 
 public class TestDriver {
@@ -24,8 +25,8 @@ public class TestDriver {
 		evaluators.add(new VowelCount(SearchType.CONSONANTS));
 		
 		
-		Dictionary afDictionary = new AfDictionary(evaluators);
-		afDictionary.processDictionary();
+		Dictionary dictionary = new TrDictionary(evaluators);
+		dictionary.processDictionary();
 		
 		for (Evaluator evaluator : evaluators) {
 			System.out.println("-------\n" + evaluator.getClass().getSimpleName());

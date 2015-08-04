@@ -9,13 +9,22 @@ import java.util.Map.Entry;
 public class LongWords implements Evaluator {
 	
 	/** Ignore any words whose length is less than the minimum length. */
-	public static final int MIN_LENGTH = 0;
+	public static final int DEFAULT_MIN_LENGTH = 6;
+	
+	private int minLength = DEFAULT_MIN_LENGTH;
 	
 	private Map<Integer, List<String>> longWords = new HashMap<>();
 	
+	public LongWords() {
+	}
+	
+	public LongWords(int minLength) {
+		this.minLength = minLength;
+	}
+	
 	@Override
 	public void processWord(String word) {
-		if (word.length() < MIN_LENGTH) {
+		if (word.length() < minLength) {
 			return;
 		}
 		int length = word.length();
