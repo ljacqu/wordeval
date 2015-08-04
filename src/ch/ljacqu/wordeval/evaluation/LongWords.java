@@ -1,4 +1,4 @@
-package evaluation;
+package ch.ljacqu.wordeval.evaluation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.Map.Entry;
 
-public class LongWords implements Evaluation {
+public class LongWords implements Evaluator {
 	
 	/** Ignore any words whose length is less than the minimum length. */
 	public static final int MIN_LENGTH = 0;

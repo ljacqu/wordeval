@@ -1,4 +1,4 @@
-package evaluation;
+package ch.ljacqu.wordeval.evaluation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class ConsecutiveLetterPairs implements Evaluation {
+public class ConsecutiveLetterPairs implements Evaluator {
 	
 	private Map<Integer, List<String>> foundWords = new HashMap<>();
 	
@@ -49,8 +49,6 @@ public class ConsecutiveLetterPairs implements Evaluation {
 	public void outputAggregatedResult() {
 		for (Entry<Integer, List<String>> entry : foundWords.entrySet()) {
 			System.out.println(entry.getKey() + ": " + entry.getValue().size());
-
-			System.out.println(entry.getValue());
 		}
 	}
 

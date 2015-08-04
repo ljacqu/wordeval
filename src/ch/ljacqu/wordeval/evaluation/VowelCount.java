@@ -1,4 +1,4 @@
-package evaluation;
+package ch.ljacqu.wordeval.evaluation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import main.VowelService;
+import ch.ljacqu.wordeval.VowelService;
 
-public class VowelCount implements Evaluation {
+public class VowelCount implements Evaluator {
 	
 	public enum SearchType {
 		VOWELS(true),
@@ -57,9 +57,6 @@ public class VowelCount implements Evaluation {
 	public void outputAggregatedResult() {
 		for (Entry<Integer, List<String>> entry : vowels.entrySet()) {
 			System.out.println(entry.getKey() + ": " + entry.getValue().size());
-			if (entry.getKey() >= 4) {
-				System.out.println(entry.getValue());
-			}
 		}
 	}
 	

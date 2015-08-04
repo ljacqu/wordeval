@@ -1,6 +1,6 @@
-package evaluation;
+package ch.ljacqu.wordeval.evaluation;
 
-public interface Evaluation {
+public interface Evaluator {
 	
 	void processWord(String word);
 	

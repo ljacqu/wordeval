@@ -1,4 +1,4 @@
-package evaluation;
+package ch.ljacqu.wordeval.evaluation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class SameLetterConsecutive implements Evaluation {
+public class SameLetterConsecutive implements Evaluator {
 	
 	private Map<String, List<String>> letterGroups = new HashMap<>();
 	
