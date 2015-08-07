@@ -3,12 +3,18 @@ Dictionary Sources
 The dictionaries are not included in this repository to avoid
 any licensing issues.
 
-Afrikaans
+Afrikaans<br />
 https://chromium.googlesource.com/chromium/deps/hunspell_dictionaries/+/6dd1387ccee1affcb2f6b2a6bd559c8c2cec0e2c
 
-Turkish
+Hungarian<br />
+Hunspell repo
+
+Turkish<br />
 https://code.google.com/p/zemberek/downloads/detail?name=full.txt.tr.tar.gz&can=2&q=
 
+
+Hunspell UTF-8 dictionaries (gold mine!)
+https://github.com/titoBouzout/Dictionaries
 
 
 Features many dictionaries but seem outdated:

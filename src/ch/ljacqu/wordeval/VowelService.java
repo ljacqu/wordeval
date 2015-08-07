@@ -30,9 +30,9 @@ public final class VowelService {
 		Character[] a = {'â', 'ä', 'à', 'á', 'ã', 'å'};
 		Character[] e = {'ê', 'ë', 'è', 'é'};
 		Character[] i = {'î', 'ï', 'ì', 'í', 'ı'};
-		Character[] o = {'ô', 'ö', 'ò', 'ó', 'õ'};
-		Character[] u = {'û', 'ü', 'ù', 'ú'};
-		Character[] y = {'ÿ'};
+		Character[] o = {'ô', 'ö', 'ò', 'ó', 'õ', 'ő'};
+		Character[] u = {'û', 'ü', 'ù', 'ú', 'ű', 'ů'};
+		Character[] y = {'ÿ'};		
 		
 		Map<Character, Character[]> variations = new HashMap<>();
 		variations.put('a', a);

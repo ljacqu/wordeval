@@ -9,9 +9,8 @@ import ch.ljacqu.wordeval.evaluation.LongWords;
 import ch.ljacqu.wordeval.evaluation.SameLetterConsecutive;
 import ch.ljacqu.wordeval.evaluation.VowelCount;
 import ch.ljacqu.wordeval.evaluation.VowelCount.SearchType;
-import ch.ljacqu.wordeval.language.AfDictionary;
 import ch.ljacqu.wordeval.language.Dictionary;
-import ch.ljacqu.wordeval.language.TrDictionary;
+import ch.ljacqu.wordeval.language.HuDictionary;
 
 
 public class TestDriver {
@@ -25,7 +24,7 @@ public class TestDriver {
 		evaluators.add(new VowelCount(SearchType.CONSONANTS));
 		
 		
-		Dictionary dictionary = new TrDictionary(evaluators);
+		Dictionary dictionary = new HuDictionary(evaluators);
 		dictionary.processDictionary();
 		
 		for (Evaluator evaluator : evaluators) {

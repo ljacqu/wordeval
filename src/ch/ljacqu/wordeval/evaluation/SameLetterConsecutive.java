@@ -1,14 +1,7 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
-public class SameLetterConsecutive implements Evaluator {
-	
-	private Map<String, List<String>> letterGroups = new HashMap<>();
+public class SameLetterConsecutive extends Evaluator<String, String> {
 	
 	@Override
 	public void processWord(String word) {
@@ -28,26 +21,12 @@ public class SameLetterConsecutive implements Evaluator {
 		}
 	}
 	
-	private void addEntry(String key, String value) {
-		if (letterGroups.get(key) == null) {
-			letterGroups.put(key, new ArrayList<>());
-		}
-		letterGroups.get(key).add(value);
-	}
-	
 	private String repeatChar(char chr, int times) {
 		String str = "";
 		for (int i = 0; i < times; ++i) {
 			str += chr;
 		}
 		return str;
-	}
-	
-	@Override
-	public void outputAggregatedResult() {
-		for (Entry<String, List<String>> entry : letterGroups.entrySet()) {
-			System.out.println(entry.getKey() + ": " + entry.getValue().size());
-		}
 	}
 
 }
