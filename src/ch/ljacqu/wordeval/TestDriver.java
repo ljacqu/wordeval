@@ -4,14 +4,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.ljacqu.wordeval.evaluation.AlphabeticSequence.SearchDirection;
+import ch.ljacqu.wordeval.evaluation.AlphabeticalOrder;
+import ch.ljacqu.wordeval.evaluation.AlphabeticalOrder.SortDirection;
+import ch.ljacqu.wordeval.evaluation.AlphabeticSequence;
 import ch.ljacqu.wordeval.evaluation.ConsecutiveLetterPairs;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.LongWords;
 import ch.ljacqu.wordeval.evaluation.SameLetterConsecutive;
 import ch.ljacqu.wordeval.evaluation.VowelCount;
 import ch.ljacqu.wordeval.evaluation.VowelCount.SearchType;
+import ch.ljacqu.wordeval.language.AfDictionary;
 import ch.ljacqu.wordeval.language.Dictionary;
 import ch.ljacqu.wordeval.language.HuDictionary;
+import ch.ljacqu.wordeval.language.TrDictionary;
 
 public class TestDriver {
 
@@ -22,6 +28,10 @@ public class TestDriver {
     evaluators.add(new SameLetterConsecutive());
     evaluators.add(new VowelCount(SearchType.VOWELS));
     evaluators.add(new VowelCount(SearchType.CONSONANTS));
+    evaluators.add(new AlphabeticalOrder(SortDirection.FORWARDS));
+    evaluators.add(new AlphabeticalOrder(SortDirection.BACKWARDS));
+    evaluators.add(new AlphabeticSequence(SearchDirection.FORWARDS));
+    evaluators.add(new AlphabeticSequence(SearchDirection.BACKWARDS));
 
     Dictionary dictionary = new HuDictionary(evaluators);
     dictionary.processDictionary();

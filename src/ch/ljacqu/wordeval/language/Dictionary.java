@@ -39,7 +39,10 @@ public abstract class Dictionary {
     try (BufferedReader br = new BufferedReader(isr)) {
       for (String line; (line = br.readLine()) != null;) {
         if (!line.trim().isEmpty()) {
-          processWord(sanitizeWord(line));
+          String word = sanitizeWord(line);
+          if (!word.trim().isEmpty()) {
+            processWord(word);
+          }
         }
       }
     }
