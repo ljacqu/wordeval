@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.ljacqu.wordeval.evaluation.AlphabeticSequence.SearchDirection;
 import ch.ljacqu.wordeval.evaluation.AlphabeticalOrder;
-import ch.ljacqu.wordeval.evaluation.AlphabeticalOrder.SortDirection;
 import ch.ljacqu.wordeval.evaluation.AlphabeticSequence;
 import ch.ljacqu.wordeval.evaluation.ConsecutiveLetterPairs;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
@@ -28,10 +26,8 @@ public class TestDriver {
     evaluators.add(new SameLetterConsecutive());
     evaluators.add(new VowelCount(SearchType.VOWELS));
     evaluators.add(new VowelCount(SearchType.CONSONANTS));
-    evaluators.add(new AlphabeticalOrder(SortDirection.FORWARDS));
-    evaluators.add(new AlphabeticalOrder(SortDirection.BACKWARDS));
-    evaluators.add(new AlphabeticSequence(SearchDirection.FORWARDS));
-    evaluators.add(new AlphabeticSequence(SearchDirection.BACKWARDS));
+    evaluators.add(new AlphabeticalOrder());
+    evaluators.add(new AlphabeticSequence());
 
     Dictionary dictionary = new HuDictionary(evaluators);
     dictionary.processDictionary();

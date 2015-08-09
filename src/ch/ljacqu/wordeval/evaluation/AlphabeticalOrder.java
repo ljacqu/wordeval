@@ -7,29 +7,21 @@ package ch.ljacqu.wordeval.evaluation;
  */
 public class AlphabeticalOrder extends Evaluator<Integer, String> {
 
-  public enum SortDirection {
-    FORWARDS(-1), BACKWARDS(1);
-
-    SortDirection(int compareValue) {
-      this.shallCompareValue = compareValue;
-    }
-
-    int shallCompareValue;
-  }
-
-  private SortDirection sortDirection;
-
-  public AlphabeticalOrder(SortDirection direction) {
-    sortDirection = direction;
-  }
+  private static final int FORWARDS = -1;
+  private static final int BACKWARDS = 1;
 
   @Override
   public void processWord(String word) {
+    checkIsOrdered(word, FORWARDS);
+    checkIsOrdered(word, BACKWARDS);
+  }
+
+  private void checkIsOrdered(String word, int searchDirection) {
     String previousChar = String.valueOf(word.charAt(0));
     for (int i = 1; i < word.length(); ++i) {
       String currentChar = String.valueOf(word.charAt(i));
       int comparison = strcmp(previousChar, currentChar);
-      if (comparison == 0 || comparison == sortDirection.shallCompareValue) {
+      if (comparison == 0 || comparison == searchDirection) {
         previousChar = currentChar;
       } else {
         // The comparison is not what we were looking for, so stop
