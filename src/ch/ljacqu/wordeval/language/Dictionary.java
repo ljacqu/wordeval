@@ -8,20 +8,30 @@ import java.util.List;
 
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 
-public abstract class Dictionary {
+public class Dictionary {
 
-  @SuppressWarnings("unused")
   private String languageCode;
   private String fileName;
   private List<Evaluator> evaluators;
   private char[] delimiters;
 
-  public Dictionary(String fileName, String languageCode,
+  public Dictionary(String languageCode, String fileName,
       List<Evaluator> evaluators, char... delimiters) {
-    this.languageCode = languageCode;
     this.fileName = fileName;
     this.evaluators = evaluators;
     this.delimiters = delimiters;
+  }
+
+  public static Dictionary getLanguageDictionary(String languageCode,
+      List<Evaluator> evaluators) throws Exception {
+    return getLanguageDictionary(languageCode, evaluators, "dict/");
+  }
+
+  public static Dictionary getLanguageDictionary(String languageCode,
+      List<Evaluator> evaluators, String path) throws Exception {
+    char[] delimiters = DictionaryLoader.getLanguageDictionary(languageCode);
+    String fileName = path + languageCode + ".dic";
+    return new Dictionary(languageCode, fileName, evaluators, delimiters);
   }
 
   protected String sanitizeWord(String crudeWord) {
@@ -36,28 +46,23 @@ public abstract class Dictionary {
   }
 
   public final void processDictionary() throws IOException {
-    loadLineDictionary();
-  }
-
-  private void loadLineDictionary() throws IOException {
     FileInputStream fis = new FileInputStream(fileName);
     InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
 
     try (BufferedReader br = new BufferedReader(isr)) {
       for (String line; (line = br.readLine()) != null;) {
         if (!line.trim().isEmpty()) {
-          String word = sanitizeWord(line);
-          if (!word.trim().isEmpty()) {
-            processWord(word);
-          }
+          processWord(sanitizeWord(line));
         }
       }
     }
   }
 
   private void processWord(String word) {
-    for (Evaluator evaluator : evaluators) {
-      evaluator.processWord(word);
+    if (!word.trim().isEmpty()) {
+      for (Evaluator evaluator : evaluators) {
+        evaluator.processWord(word);
+      }
     }
   }
 
