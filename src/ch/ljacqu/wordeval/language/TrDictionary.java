@@ -9,17 +9,11 @@ public class TrDictionary extends Dictionary {
   public static final String CODE = "tr";
 
   public TrDictionary(List<Evaluator> evaluators) {
-    super("dict/tr.dic", CODE, DictionaryType.WORD_PER_LINE, evaluators);
+    this("dict/tr.dic", evaluators);
   }
 
-  public TrDictionary(String fileName, DictionaryType type,
-      List<Evaluator> evaluators) {
-    super(fileName, CODE, type, evaluators);
-  }
-
-  @Override
-  public String sanitizeWord(String word) {
-    return word.substring(0, word.indexOf(' '));
+  public TrDictionary(String fileName, List<Evaluator> evaluators) {
+    super(fileName, CODE, evaluators, ' ');
   }
 
 }

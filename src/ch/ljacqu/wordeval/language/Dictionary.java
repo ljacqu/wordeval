@@ -13,23 +13,30 @@ public abstract class Dictionary {
   @SuppressWarnings("unused")
   private String languageCode;
   private String fileName;
-  private DictionaryType type;
   private List<Evaluator> evaluators;
+  private char[] delimiters;
 
-  public Dictionary(String fileName, String languageCode, DictionaryType type,
-      List<Evaluator> evaluators) {
+  public Dictionary(String fileName, String languageCode,
+      List<Evaluator> evaluators, char... delimiters) {
     this.languageCode = languageCode;
     this.fileName = fileName;
-    this.type = type;
     this.evaluators = evaluators;
+    this.delimiters = delimiters;
   }
 
-  public abstract String sanitizeWord(String crudeWord);
+  protected String sanitizeWord(String crudeWord) {
+    int minIndex = crudeWord.length();
+    for (char delimiter : delimiters) {
+      int delimiterIndex = crudeWord.indexOf(delimiter);
+      if (delimiterIndex > -1 && delimiterIndex < minIndex) {
+        minIndex = delimiterIndex;
+      }
+    }
+    return crudeWord.substring(0, minIndex);
+  }
 
   public final void processDictionary() throws IOException {
-    if (type == DictionaryType.WORD_PER_LINE) {
-      loadLineDictionary();
-    }
+    loadLineDictionary();
   }
 
   private void loadLineDictionary() throws IOException {
