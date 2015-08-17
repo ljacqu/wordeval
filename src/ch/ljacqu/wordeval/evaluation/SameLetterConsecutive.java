@@ -1,31 +1,24 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class SameLetterConsecutive extends Evaluator<String, String> {
 
   @Override
-  public void processWord(String word) {
-    String sWord = word.trim().toLowerCase();
+  public void processWord(String word, String rawWord) {
     int counter = 0;
     char lastChar = '\0';
-    for (int i = 0; i <= sWord.length(); ++i) {
-      if (i < sWord.length() && sWord.charAt(i) == lastChar) {
+    for (int i = 0; i <= word.length(); ++i) {
+      if (i < word.length() && word.charAt(i) == lastChar) {
         ++counter;
       } else {
         if (counter > 1) {
-          addEntry(repeatChar(lastChar, counter), word);
+          addEntry(StringUtils.repeat(lastChar, counter), rawWord);
         }
-        lastChar = i < sWord.length() ? sWord.charAt(i) : '\0';
+        lastChar = i < word.length() ? word.charAt(i) : '\0';
         counter = 1;
       }
     }
-  }
-
-  private String repeatChar(char chr, int times) {
-    String str = "";
-    for (int i = 0; i < times; ++i) {
-      str += chr;
-    }
-    return str;
   }
 
 }

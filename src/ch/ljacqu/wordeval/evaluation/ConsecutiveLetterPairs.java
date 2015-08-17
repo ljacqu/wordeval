@@ -7,14 +7,13 @@ package ch.ljacqu.wordeval.evaluation;
 public class ConsecutiveLetterPairs extends Evaluator<Integer, String> {
 
   @Override
-  public void processWord(String word) {
-    String sWord = word.toLowerCase();
+  public void processWord(String word, String rawWord) {
     int letterCounter = 0;
     int pairCounter = 0;
     int pairCountMax = 0;
     char lastChar = '\0';
-    for (int i = 0; i <= sWord.length(); ++i) {
-      if (i < sWord.length() && sWord.charAt(i) == lastChar) {
+    for (int i = 0; i <= word.length(); ++i) {
+      if (i < word.length() && word.charAt(i) == lastChar) {
         ++letterCounter;
       } else {
         if (letterCounter > 1) {
@@ -25,12 +24,12 @@ public class ConsecutiveLetterPairs extends Evaluator<Integer, String> {
         } else {
           pairCounter = 0;
         }
-        lastChar = i < sWord.length() ? sWord.charAt(i) : '\0';
+        lastChar = i < word.length() ? word.charAt(i) : '\0';
         letterCounter = 1;
       }
     }
     if (pairCountMax > 1) {
-      addEntry(pairCountMax, word);
+      addEntry(pairCountMax, rawWord);
     }
   }
 

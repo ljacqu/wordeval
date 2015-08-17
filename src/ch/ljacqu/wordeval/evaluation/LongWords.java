@@ -15,9 +15,9 @@ public class LongWords extends Evaluator<Integer, String> {
   }
 
   @Override
-  public void processWord(String word) {
+  public void processWord(String word, String rawWord) {
     if (word.length() >= minLength) {
-      addEntry(word.length(), word);
+      addEntry(word.length(), rawWord);
     }
   }
 

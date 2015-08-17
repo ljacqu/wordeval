@@ -11,12 +11,18 @@ public class AlphabeticalOrder extends Evaluator<Integer, String> {
   private static final int BACKWARDS = 1;
 
   @Override
-  public void processWord(String word) {
-    checkIsOrdered(word, FORWARDS);
-    checkIsOrdered(word, BACKWARDS);
+  public void processWord(String word, String rawWord) {
+    int length = checkIsOrdered(word, FORWARDS);
+    if (length > 0) {
+      addEntry(length, rawWord);
+    }
+    length = checkIsOrdered(word, BACKWARDS);
+    if (length > 0) {
+      addEntry(length, rawWord);
+    }
   }
 
-  private void checkIsOrdered(String word, int searchDirection) {
+  private int checkIsOrdered(String word, int searchDirection) {
     String previousChar = String.valueOf(word.charAt(0));
     for (int i = 1; i < word.length(); ++i) {
       String currentChar = String.valueOf(word.charAt(i));
@@ -25,10 +31,10 @@ public class AlphabeticalOrder extends Evaluator<Integer, String> {
         previousChar = currentChar;
       } else {
         // The comparison is not what we were looking for, so stop
-        return;
+        return 0;
       }
     }
-    addEntry(word.length(), word);
+    return word.length();
   }
 
   private int strcmp(String a, String b) {

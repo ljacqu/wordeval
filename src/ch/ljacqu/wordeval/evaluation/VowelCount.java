@@ -1,9 +1,13 @@
 package ch.ljacqu.wordeval.evaluation;
 
 import java.util.List;
-
 import ch.ljacqu.wordeval.VowelService;
 
+/**
+ * Searches words for clusters of vowels or consonants, e.g. "ngstschw" in
+ * German "Angstschweiss". The same word can appear multiple times in the
+ * results, e.g. "poignée" will count twice as 2 ("oi", "ée").
+ */
 public class VowelCount extends Evaluator<Integer, String> {
 
   public enum SearchType {
@@ -25,13 +29,13 @@ public class VowelCount extends Evaluator<Integer, String> {
   }
 
   @Override
-  public void processWord(String word) {
+  public void processWord(String word, String rawWord) {
     int count = 0;
     for (int i = 0; i <= word.length(); ++i) {
       if (i == word.length()
           || recognizedVowels.contains(word.charAt(i)) != isVowel) {
         if (count > 1) {
-          addEntry(count, word);
+          addEntry(count, rawWord);
         }
         count = 0;
       } else {

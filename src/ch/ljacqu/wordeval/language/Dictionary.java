@@ -44,7 +44,7 @@ public class Dictionary {
         minIndex = delimiterIndex;
       }
     }
-    return crudeWord.substring(0, minIndex).toLowerCase(locale);
+    return crudeWord.substring(0, minIndex).trim().toLowerCase(locale);
   }
 
   public final void processDictionary() throws IOException {
@@ -53,17 +53,18 @@ public class Dictionary {
 
     try (BufferedReader br = new BufferedReader(isr)) {
       for (String line; (line = br.readLine()) != null;) {
-        if (!line.trim().isEmpty()) {
-          processWord(sanitizeWord(line));
+        String cleanWord = sanitizeWord(line);
+        if (!cleanWord.isEmpty()) {
+          processWord(cleanWord, line);
         }
       }
     }
   }
 
-  private void processWord(String word) {
+  private void processWord(String word, String rawWord) {
     if (!word.trim().isEmpty()) {
       for (Evaluator evaluator : evaluators) {
-        evaluator.processWord(word);
+        evaluator.processWord(word, rawWord);
       }
     }
   }
