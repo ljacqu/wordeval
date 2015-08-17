@@ -28,12 +28,12 @@ public final class VowelService {
   }
 
   public static List<Character> variationsFor(Character c) {
-    Character[] a = { 'â', 'ä', 'à', 'á', 'ã', 'å' };
-    Character[] e = { 'ê', 'ë', 'è', 'é' };
-    Character[] i = { 'î', 'ï', 'ì', 'í', 'ı' };
-    Character[] o = { 'ô', 'ö', 'ò', 'ó', 'õ', 'ő' };
-    Character[] u = { 'û', 'ü', 'ù', 'ú', 'ű', 'ů' };
-    Character[] y = { 'ÿ' };
+    Character[] a = { 'â', 'ä', 'à', 'á', 'ã', 'å', 'ą' };
+    Character[] e = { 'ê', 'ë', 'è', 'é', 'ě', 'ę' };
+    Character[] i = { 'î', 'ï', 'ì', 'í', 'ı', 'į' };
+    Character[] o = { 'ô', 'ö', 'ò', 'ó', 'õ', 'ő', 'ǫ' };
+    Character[] u = { 'û', 'ü', 'ù', 'ú', 'ű', 'ů', 'ų' };
+    Character[] y = { 'ÿ', 'ý' };
 
     Map<Character, Character[]> variations = new HashMap<>();
     variations.put('a', a);

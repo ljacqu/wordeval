@@ -5,12 +5,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
-
+import java.util.Locale;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 
 public class Dictionary {
 
   private String languageCode;
+  private final Locale locale;
   private String fileName;
   private List<Evaluator> evaluators;
   private char[] delimiters;
@@ -20,6 +21,7 @@ public class Dictionary {
     this.fileName = fileName;
     this.evaluators = evaluators;
     this.delimiters = delimiters;
+    locale = new Locale(languageCode);
   }
 
   public static Dictionary getLanguageDictionary(String languageCode,
@@ -42,7 +44,7 @@ public class Dictionary {
         minIndex = delimiterIndex;
       }
     }
-    return crudeWord.substring(0, minIndex);
+    return crudeWord.substring(0, minIndex).toLowerCase(locale);
   }
 
   public final void processDictionary() throws IOException {
