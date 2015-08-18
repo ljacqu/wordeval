@@ -22,7 +22,8 @@ public class DictionarySanitationTest {
 
   private class TestEvaluator extends Evaluator<String, String> {
 
-    private final char[] disallowedChars = { '/', ',', '\n', '(', ')', '[', ']' };
+    private final char[] disallowedChars = { '/', ',', '\n', '(', ')', '[',
+        ']', ' ' };
 
     @Override
     public void processWord(String word, String rawWord) {
