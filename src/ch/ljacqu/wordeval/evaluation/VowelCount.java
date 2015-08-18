@@ -22,7 +22,7 @@ public class VowelCount extends Evaluator<Integer, String> {
 
   private boolean isVowel;
 
-  private List<Character> recognizedVowels = LetterService.getStandardVowels();
+  private List<Character> recognizedVowels = LetterService.getVowels();
 
   public VowelCount(SearchType type) {
     isVowel = type.isVowel;
