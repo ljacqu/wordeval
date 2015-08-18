@@ -9,7 +9,6 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import ch.ljacqu.wordeval.evaluation.VowelCount.SearchType;
 
 public class VowelCountTest {
 
@@ -18,8 +17,8 @@ public class VowelCountTest {
 
   @Before
   public void initializeEvaluator() {
-    vowelCount = new VowelCount(SearchType.VOWELS);
-    consonantCount = new VowelCount(SearchType.CONSONANTS);
+    vowelCount = new VowelCount(LetterType.VOWELS);
+    consonantCount = new VowelCount(LetterType.CONSONANTS);
   }
 
   private void processWords(String[] words) {

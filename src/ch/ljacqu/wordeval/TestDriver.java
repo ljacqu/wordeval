@@ -12,7 +12,6 @@ import ch.ljacqu.wordeval.evaluation.LongWords;
 import ch.ljacqu.wordeval.evaluation.MonotoneVowel;
 import ch.ljacqu.wordeval.evaluation.SameLetterConsecutive;
 import ch.ljacqu.wordeval.evaluation.VowelCount;
-import ch.ljacqu.wordeval.evaluation.VowelCount.SearchType;
 import ch.ljacqu.wordeval.language.Dictionary;
 
 public class TestDriver {
@@ -21,10 +20,10 @@ public class TestDriver {
     List<Evaluator> evaluators = new ArrayList<Evaluator>();
     /*evaluators.add(new ConsecutiveLetterPairs());
     evaluators.add(new LongWords());
-    evaluators.add(new SameLetterConsecutive());
-    evaluators.add(new VowelCount(SearchType.VOWELS));
-    evaluators.add(new VowelCount(SearchType.CONSONANTS));
-    evaluators.add(new AlphabeticalOrder());
+    evaluators.add(new SameLetterConsecutive());*/
+    evaluators.add(new VowelCount(LetterType.VOWELS));
+    evaluators.add(new VowelCount(LetterType.CONSONANTS));
+    /*evaluators.add(new AlphabeticalOrder());
     evaluators.add(new AlphabeticSequence());*/
     evaluators.add(new MonotoneVowel(LetterType.VOWELS));
     evaluators.add(new MonotoneVowel(LetterType.CONSONANTS));

@@ -10,22 +10,12 @@ import ch.ljacqu.wordeval.LetterService;
  */
 public class VowelCount extends Evaluator<Integer, String> {
 
-  public enum SearchType {
-    VOWELS(true), CONSONANTS(false);
-
-    SearchType(boolean isVowel) {
-      this.isVowel = isVowel;
-    }
-
-    boolean isVowel;
-  }
-
   private boolean isVowel;
 
   private List<Character> recognizedVowels = LetterService.getVowels();
 
-  public VowelCount(SearchType type) {
-    isVowel = type.isVowel;
+  public VowelCount(LetterType type) {
+    isVowel = (type == LetterType.VOWELS);
   }
 
   @Override
