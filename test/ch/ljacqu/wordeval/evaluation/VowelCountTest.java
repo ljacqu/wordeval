@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 import java.util.Map;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import ch.ljacqu.wordeval.evaluation.VowelCount.SearchType;
 
@@ -61,6 +62,24 @@ public class VowelCountTest {
     assertEquals(consonantResults.get(3).get(1), "przy");
     assertEquals(consonantResults.get(4).size(), 1);
     assertNull(consonantResults.get(5));
+  }
+
+  @Ignore
+  // TODO: implement Cyrillic logic
+  public void shouldProcessCyrillicWords() {
+    String[] word = { "Википедия", "Вооружённый" };
+
+    processWords(word);
+
+    Map<Integer, List<String>> vowelResults = vowelCount.getResults();
+    Map<Integer, List<String>> consonantResults = consonantCount.getResults();
+
+    assertEquals(vowelResults.size(), 1);
+    assertEquals(consonantResults.size(), 1);
+    assertEquals(vowelResults.get(2), 2);
+    assertEquals(consonantResults.get(2), 1);
+
+    // TODO: test Bulgarian-specific words
   }
 
 }

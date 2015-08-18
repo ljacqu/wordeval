@@ -18,13 +18,13 @@ public class TestDriver {
 
   public static void main(String[] args) throws Exception {
     List<Evaluator> evaluators = new ArrayList<Evaluator>();
-    evaluators.add(new ConsecutiveLetterPairs());
+    /*evaluators.add(new ConsecutiveLetterPairs());
     evaluators.add(new LongWords());
-    evaluators.add(new SameLetterConsecutive());
+    evaluators.add(new SameLetterConsecutive());*/
     evaluators.add(new VowelCount(SearchType.VOWELS));
     evaluators.add(new VowelCount(SearchType.CONSONANTS));
-    evaluators.add(new AlphabeticalOrder());
-    evaluators.add(new AlphabeticSequence());
+    /*evaluators.add(new AlphabeticalOrder());
+    evaluators.add(new AlphabeticSequence());*/
 
     Dictionary dictionary = Dictionary.getLanguageDictionary("af", evaluators);
     dictionary.processDictionary();

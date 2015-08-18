@@ -1,7 +1,7 @@
 package ch.ljacqu.wordeval.evaluation;
 
 import java.util.List;
-import ch.ljacqu.wordeval.VowelService;
+import ch.ljacqu.wordeval.LetterService;
 
 /**
  * Searches words for clusters of vowels or consonants, e.g. "ngstschw" in
@@ -22,7 +22,7 @@ public class VowelCount extends Evaluator<Integer, String> {
 
   private boolean isVowel;
 
-  private List<Character> recognizedVowels = VowelService.getExtendedVowels();
+  private List<Character> recognizedVowels = LetterService.getStandardVowels();
 
   public VowelCount(SearchType type) {
     isVowel = type.isVowel;
@@ -30,6 +30,7 @@ public class VowelCount extends Evaluator<Integer, String> {
 
   @Override
   public void processWord(String word, String rawWord) {
+    word = LetterService.removeAccentsFromWord(word);
     int count = 0;
     for (int i = 0; i <= word.length(); ++i) {
       if (i == word.length()
