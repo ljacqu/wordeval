@@ -7,6 +7,7 @@ import ch.ljacqu.wordeval.evaluation.AlphabeticalOrder;
 import ch.ljacqu.wordeval.evaluation.AlphabeticSequence;
 import ch.ljacqu.wordeval.evaluation.ConsecutiveLetterPairs;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
+import ch.ljacqu.wordeval.evaluation.Isograms;
 import ch.ljacqu.wordeval.evaluation.LetterType;
 import ch.ljacqu.wordeval.evaluation.LongWords;
 import ch.ljacqu.wordeval.evaluation.MonotoneVowel;
@@ -27,6 +28,7 @@ public class TestDriver {
     evaluators.add(new AlphabeticSequence());*/
     evaluators.add(new MonotoneVowel(LetterType.VOWELS));
     evaluators.add(new MonotoneVowel(LetterType.CONSONANTS));
+    evaluators.add(new Isograms());
 
     Dictionary dictionary = Dictionary.getLanguageDictionary("af", evaluators);
     dictionary.processDictionary();

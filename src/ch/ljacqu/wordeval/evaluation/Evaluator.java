@@ -49,7 +49,11 @@ public abstract class Evaluator<K, V> {
   }
 
   protected void outputEntry(K key, List<V> entry) {
-    System.out.println(key + ": " + entry.size());
+    if (entry.size() > 50) {
+      System.out.println(key + ": " + entry.size());
+    } else {
+      System.out.println(key + ": " + entry);
+    }
   }
 
 }
