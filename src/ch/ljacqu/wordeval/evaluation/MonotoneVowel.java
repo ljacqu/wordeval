@@ -35,13 +35,4 @@ public class MonotoneVowel extends Evaluator<Integer, String> {
     addEntry(word.length(), rawWord);
   }
 
-  @Override
-  protected void outputEntry(Integer key, List<String> entry) {
-    if (key < 7) {
-      System.out.println(key + ": " + entry.size());
-    } else {
-      System.out.println(key + ": " + entry);
-    }
-  }
-
 }

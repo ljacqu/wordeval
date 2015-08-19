@@ -11,6 +11,7 @@ import ch.ljacqu.wordeval.evaluation.Isograms;
 import ch.ljacqu.wordeval.evaluation.LetterType;
 import ch.ljacqu.wordeval.evaluation.LongWords;
 import ch.ljacqu.wordeval.evaluation.MonotoneVowel;
+import ch.ljacqu.wordeval.evaluation.Palindromes;
 import ch.ljacqu.wordeval.evaluation.SameLetterConsecutive;
 import ch.ljacqu.wordeval.evaluation.VowelCount;
 import ch.ljacqu.wordeval.language.Dictionary;
@@ -29,6 +30,7 @@ public class TestDriver {
     evaluators.add(new MonotoneVowel(LetterType.VOWELS));
     evaluators.add(new MonotoneVowel(LetterType.CONSONANTS));
     evaluators.add(new Isograms());
+    evaluators.add(new Palindromes());
 
     Dictionary dictionary = Dictionary.getLanguageDictionary("af", evaluators);
     dictionary.processDictionary();

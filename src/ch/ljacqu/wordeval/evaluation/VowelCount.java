@@ -35,12 +35,4 @@ public class VowelCount extends Evaluator<Integer, String> {
     }
   }
 
-  @Override
-  public void outputEntry(Integer key, List<String> entry) {
-    System.out.println(key + ": " + entry.size());
-    if (key > 4) {
-      System.out.println(entry);
-    }
-  }
-
 }
