@@ -26,7 +26,6 @@ public class PalindromesTest {
       evaluator.processWord(word, word);
     }
     Map<String, List<String>> results = evaluator.getResults();
-    System.out.println(results);
 
     assertEquals(results.size(), 5);
     assertNotNull(results.get("otto"));

@@ -8,7 +8,6 @@ import ch.ljacqu.wordeval.evaluation.AlphabeticSequence;
 import ch.ljacqu.wordeval.evaluation.ConsecutiveLetterPairs;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.Isograms;
-import ch.ljacqu.wordeval.evaluation.LetterType;
 import ch.ljacqu.wordeval.evaluation.LongWords;
 import ch.ljacqu.wordeval.evaluation.MonotoneVowel;
 import ch.ljacqu.wordeval.evaluation.Palindromes;

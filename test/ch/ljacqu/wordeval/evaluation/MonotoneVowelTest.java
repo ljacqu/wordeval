@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
+import ch.ljacqu.wordeval.LetterType;
 
 public class MonotoneVowelTest {
 

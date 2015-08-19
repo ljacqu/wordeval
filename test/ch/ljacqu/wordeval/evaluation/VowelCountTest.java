@@ -9,6 +9,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import ch.ljacqu.wordeval.LetterType;
 
 public class VowelCountTest {
 

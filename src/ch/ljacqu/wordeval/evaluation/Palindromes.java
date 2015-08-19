@@ -23,13 +23,13 @@ public class Palindromes extends Evaluator<String, String> {
    * @return The palindrome part, or null if none found
    */
   private String findPalindrome(String word, int index) {
-    // Symmetrical palindromes like "abba"
-    String palindrome = findPalindrome(word, index, 0);
+    // Asymmetrical palindromes like "awkwa" 
+    String palindrome = findPalindrome(word, index, 1);
     if (palindrome != null) {
       return palindrome;
     }
-    // Asymmetrical palindromes like "awkwa"
-    palindrome = findPalindrome(word, index, 1);
+    // Symmetrical palindromes like "abba"
+    palindrome = findPalindrome(word, index, 0);
     if (palindrome != null) {
       return palindrome;
     }

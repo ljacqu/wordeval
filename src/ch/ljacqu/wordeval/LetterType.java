@@ -1,4 +1,4 @@
-package ch.ljacqu.wordeval.evaluation;
+package ch.ljacqu.wordeval;
 
 public enum LetterType {
   
