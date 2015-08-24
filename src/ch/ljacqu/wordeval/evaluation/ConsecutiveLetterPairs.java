@@ -1,5 +1,7 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import ch.ljacqu.wordeval.language.WordForm;
+
 /**
  * Finds words with multiple consecutive letter groups following each other,
  * e.g. <code>voorraaddrakoste</code> in Afrikaans (oo + rr + aa + dd = 4).
@@ -31,6 +33,11 @@ public class ConsecutiveLetterPairs extends Evaluator<Integer, String> {
     if (pairCountMax > 1) {
       addEntry(pairCountMax, rawWord);
     }
+  }
+  
+  @Override
+  public WordForm getWordForm() {
+    return WordForm.NO_ACCENTS;
   }
 
 }

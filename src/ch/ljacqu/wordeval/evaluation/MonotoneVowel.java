@@ -3,6 +3,7 @@ package ch.ljacqu.wordeval.evaluation;
 import java.util.List;
 import ch.ljacqu.wordeval.LetterService;
 import ch.ljacqu.wordeval.LetterType;
+import ch.ljacqu.wordeval.language.WordForm;
 
 /**
  * Filters long words which only use one different vowel or consonant, like
@@ -30,6 +31,12 @@ public class MonotoneVowel extends Evaluator<Integer, String> {
       }
     }
     addEntry(word.length(), rawWord);
+  }
+  
+  @Override
+  public WordForm getWordForm() {
+    // TODO: No accents, or just lowercase?
+    return WordForm.NO_ACCENTS;
   }
 
 }

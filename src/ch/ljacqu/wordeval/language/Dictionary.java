@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Locale;
+import ch.ljacqu.wordeval.LetterService;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 
+@SuppressWarnings("rawtypes")
 public class Dictionary {
 
   private String languageCode;
@@ -36,6 +38,43 @@ public class Dictionary {
     return new Dictionary(languageCode, fileName, evaluators, delimiters);
   }
 
+  public final void processDictionary() throws IOException {
+    FileInputStream fis = new FileInputStream(fileName);
+    InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+
+    try (BufferedReader br = new BufferedReader(isr)) {
+      for (String line; (line = br.readLine()) != null;) {
+        String[] wordForms = computeWordForms(line);
+        if (!getWordForm(wordForms, WordForm.RAW).isEmpty()) {
+          processWord(wordForms);
+        }
+      }
+    }
+  }
+
+  private void processWord(String[] wordForms) {
+    for (Evaluator evaluator : evaluators) {
+      evaluator.processWord(getWordForm(wordForms, evaluator.getWordForm()),
+          getWordForm(wordForms, WordForm.RAW));
+    }
+  }
+
+  private String[] computeWordForms(String crudeWord) {
+    String[] wordForms = new String[WordForm.values().length];
+    wordForms[WordForm.RAW_UNSAFE.ordinal()] = crudeWord;
+    String rawWord = sanitizeWord(crudeWord);
+    wordForms[WordForm.RAW.ordinal()] = rawWord;
+    String lowerCaseWord = rawWord.toLowerCase(locale);
+    wordForms[WordForm.LOWERCASE.ordinal()] = lowerCaseWord;
+    wordForms[WordForm.NO_ACCENTS.ordinal()] = LetterService
+        .removeAccentsFromWord(lowerCaseWord);
+    return wordForms;
+  }
+
+  private String getWordForm(String[] wordForms, WordForm wordForm) {
+    return wordForms[wordForm.ordinal()];
+  }
+
   protected String sanitizeWord(String crudeWord) {
     int minIndex = crudeWord.length();
     for (char delimiter : delimiters) {
@@ -45,28 +84,6 @@ public class Dictionary {
       }
     }
     return crudeWord.substring(0, minIndex).trim().toLowerCase(locale);
-  }
-
-  public final void processDictionary() throws IOException {
-    FileInputStream fis = new FileInputStream(fileName);
-    InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
-
-    try (BufferedReader br = new BufferedReader(isr)) {
-      for (String line; (line = br.readLine()) != null;) {
-        String cleanWord = sanitizeWord(line);
-        if (!cleanWord.isEmpty()) {
-          processWord(cleanWord, line);
-        }
-      }
-    }
-  }
-
-  private void processWord(String word, String rawWord) {
-    if (!word.trim().isEmpty()) {
-      for (Evaluator evaluator : evaluators) {
-        evaluator.processWord(word, rawWord);
-      }
-    }
   }
 
 }

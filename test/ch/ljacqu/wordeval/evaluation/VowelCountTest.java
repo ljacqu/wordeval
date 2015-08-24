@@ -9,6 +9,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import ch.ljacqu.wordeval.LetterService;
 import ch.ljacqu.wordeval.LetterType;
 
 public class VowelCountTest {
@@ -24,8 +25,9 @@ public class VowelCountTest {
 
   private void processWords(String[] words) {
     for (String word : words) {
-      vowelCount.processWord(word, word);
-      consonantCount.processWord(word, word);
+      String accentLessWord = LetterService.removeAccentsFromWord(word);
+      vowelCount.processWord(accentLessWord, word);
+      consonantCount.processWord(accentLessWord, word);
     }
   }
 

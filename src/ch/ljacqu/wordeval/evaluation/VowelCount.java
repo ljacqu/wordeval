@@ -3,6 +3,7 @@ package ch.ljacqu.wordeval.evaluation;
 import java.util.List;
 import ch.ljacqu.wordeval.LetterService;
 import ch.ljacqu.wordeval.LetterType;
+import ch.ljacqu.wordeval.language.WordForm;
 
 /**
  * Searches words for clusters of vowels or consonants, e.g. "ngstschw" in
@@ -16,10 +17,14 @@ public class VowelCount extends Evaluator<Integer, String> {
   public VowelCount(LetterType type) {
     recognizedLetters = LetterService.getLetters(type);
   }
+  
+  @Override
+  public WordForm getWordForm() {
+    return WordForm.NO_ACCENTS;
+  }
 
   @Override
   public void processWord(String word, String rawWord) {
-    word = LetterService.removeAccentsFromWord(word);
     int count = 0;
     for (int i = 0; i <= word.length(); ++i) {
       if (i == word.length() || !recognizedLetters.contains(word.charAt(i))) {

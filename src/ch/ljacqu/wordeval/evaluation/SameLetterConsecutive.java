@@ -1,6 +1,7 @@
 package ch.ljacqu.wordeval.evaluation;
 
 import org.apache.commons.lang3.StringUtils;
+import ch.ljacqu.wordeval.language.WordForm;
 
 public class SameLetterConsecutive extends Evaluator<String, String> {
 
@@ -19,6 +20,11 @@ public class SameLetterConsecutive extends Evaluator<String, String> {
         counter = 1;
       }
     }
+  }
+  
+  @Override
+  public WordForm getWordForm() {
+    return WordForm.NO_ACCENTS;
   }
 
 }

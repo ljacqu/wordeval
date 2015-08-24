@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import ch.ljacqu.wordeval.language.WordForm;
 
 /**
  * Evaluator base class. An evaluator checks words for a given property and adds
@@ -30,6 +31,14 @@ public abstract class Evaluator<K, V> {
    */
   public Map<K, List<V>> getResults() {
     return results;
+  }
+  
+  /**
+   * Returns the desired form of the word to process.
+   * @return The word form
+   */
+  public WordForm getWordForm() {
+    return WordForm.LOWERCASE;
   }
 
   protected void addEntry(K key, V entry) {

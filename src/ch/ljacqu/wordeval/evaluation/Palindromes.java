@@ -1,5 +1,7 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import ch.ljacqu.wordeval.language.WordForm;
+
 /**
  * Finds palindromes or palindrome-parts inside a word, e.g. "awkwa" in
  * "awkward".
@@ -14,6 +16,11 @@ public class Palindromes extends Evaluator<String, String> {
         addEntry(palindrome, rawWord);
       }
     }
+  }
+  
+  @Override
+  public WordForm getWordForm() {
+    return WordForm.NO_ACCENTS;
   }
 
   /**
