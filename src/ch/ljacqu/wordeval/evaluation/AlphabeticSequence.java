@@ -18,7 +18,7 @@ public class AlphabeticSequence extends Evaluator<String, String> {
   public void checkForSequence(String word, String rawWord, int searchDirection) {
     int alphabeticalStreak = 1;
     String previousChar = String.valueOf(word.charAt(0));
-    for (int i = 1; i < word.length(); ++i) {
+    for (int i = 1; i <= word.length(); ++i) {
       boolean isCharInSequence = false;
       if (i < word.length()) {
         String currentChar = String.valueOf(word.charAt(i));
