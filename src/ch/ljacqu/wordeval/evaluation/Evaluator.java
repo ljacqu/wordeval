@@ -1,9 +1,11 @@
 package ch.ljacqu.wordeval.evaluation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.SortedMap;
 import java.util.TreeMap;
 import ch.ljacqu.wordeval.language.WordForm;
 
@@ -16,7 +18,7 @@ import ch.ljacqu.wordeval.language.WordForm;
 public abstract class Evaluator<K> {
 
   /** Collection of relevant words. */
-  protected Map<K, List<String>> results = new TreeMap<K, List<String>>();
+  protected SortedMap<K, List<String>> results = new TreeMap<K, List<String>>();
 
   /**
    * Processes a word and add it to results if it is relevant.
@@ -30,7 +32,7 @@ public abstract class Evaluator<K> {
    * @return A map with the results (key = property, entry = list of values)
    */
   public Map<K, List<String>> getResults() {
-    return results;
+    return Collections.unmodifiableMap(results);
   }
 
   /**
@@ -44,13 +46,13 @@ public abstract class Evaluator<K> {
   /**
    * Adds an entry to the results map.
    * @param key The key for the new entry
-   * @param entry The entry to add for the key
+   * @param word The word to add to the key's list
    */
-  protected void addEntry(K key, String entry) {
+  protected void addEntry(K key, String word) {
     if (results.get(key) == null) {
       results.put(key, new ArrayList<String>());
     }
-    results.get(key).add(entry);
+    results.get(key).add(word);
   }
 
   /**

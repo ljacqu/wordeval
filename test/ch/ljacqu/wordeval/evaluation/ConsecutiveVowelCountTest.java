@@ -12,15 +12,15 @@ import org.junit.Test;
 import ch.ljacqu.wordeval.LetterService;
 import ch.ljacqu.wordeval.LetterType;
 
-public class VowelCountTest {
+public class ConsecutiveVowelCountTest {
 
-  private VowelCount vowelCount;
-  private VowelCount consonantCount;
+  private ConsecutiveVowelCount vowelCount;
+  private ConsecutiveVowelCount consonantCount;
 
   @Before
   public void initializeEvaluator() {
-    vowelCount = new VowelCount(LetterType.VOWELS);
-    consonantCount = new VowelCount(LetterType.CONSONANTS);
+    vowelCount = new ConsecutiveVowelCount(LetterType.VOWELS);
+    consonantCount = new ConsecutiveVowelCount(LetterType.CONSONANTS);
   }
 
   private void processWords(String[] words) {

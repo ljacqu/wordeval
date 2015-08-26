@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import java.util.List;
 import ch.ljacqu.wordeval.language.WordForm;
 
 /**
@@ -68,5 +69,12 @@ public class Palindromes extends Evaluator<String> {
       return word.substring(i, j + 1);
     }
     return null;
+  }
+  
+  @Override
+  protected void outputEntry(String key, List<String> entry) {
+    if (key.length() > 4) {
+      super.outputEntry(key, entry);
+    }
   }
 }

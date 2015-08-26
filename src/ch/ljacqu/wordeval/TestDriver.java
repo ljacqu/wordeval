@@ -11,23 +11,20 @@ import ch.ljacqu.wordeval.evaluation.LongWords;
 import ch.ljacqu.wordeval.evaluation.MonotoneVowel;
 import ch.ljacqu.wordeval.evaluation.Palindromes;
 import ch.ljacqu.wordeval.evaluation.SameLetterConsecutive;
-import ch.ljacqu.wordeval.evaluation.VowelCount;
+import ch.ljacqu.wordeval.evaluation.ConsecutiveVowelCount;
 import ch.ljacqu.wordeval.language.Dictionary;
 
 public class TestDriver {
 
   public static void main(String[] args) throws Exception {
     List<Evaluator> evaluators = new ArrayList<Evaluator>();
-    /*
-     * evaluators.add(new ConsecutiveLetterPairs()); evaluators.add(new
-     * LongWords()); evaluators.add(new SameLetterConsecutive());
-     */
-    evaluators.add(new VowelCount(LetterType.VOWELS));
-    evaluators.add(new VowelCount(LetterType.CONSONANTS));
-    /*
-     * evaluators.add(new AlphabeticalOrder()); evaluators.add(new
-     * AlphabeticSequence());
-     */
+    evaluators.add(new ConsecutiveLetterPairs());
+    evaluators.add(new LongWords());
+    evaluators.add(new SameLetterConsecutive());
+    evaluators.add(new ConsecutiveVowelCount(LetterType.VOWELS));
+    evaluators.add(new ConsecutiveVowelCount(LetterType.CONSONANTS));
+    evaluators.add(new AlphabeticalOrder());
+    evaluators.add(new AlphabeticSequence());
     evaluators.add(new MonotoneVowel(LetterType.VOWELS));
     evaluators.add(new MonotoneVowel(LetterType.CONSONANTS));
     evaluators.add(new Isograms());
