@@ -63,10 +63,10 @@ public class ConsecutiveLetterPairsTest {
     // 2, 0, 3, 4, 0
     String[] words = { "laaaii", "kayak", "poolooeeerr", "aabbbccdddef",
         "walking" };
-    
+
     processWords(words);
     Map<Integer, List<String>> results = evaluator.getResults();
-    
+
     assertEquals(results.size(), 3);
     assertEquals(results.get(2).size(), 1);
     assertEquals(results.get(3).size(), 1);

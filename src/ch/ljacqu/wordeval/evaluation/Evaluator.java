@@ -32,7 +32,7 @@ public abstract class Evaluator<K, V> {
   public Map<K, List<V>> getResults() {
     return results;
   }
-  
+
   /**
    * Returns the desired form of the word to process.
    * @return The word form
@@ -41,6 +41,11 @@ public abstract class Evaluator<K, V> {
     return WordForm.LOWERCASE;
   }
 
+  /**
+   * Adds an entry to the results map.
+   * @param key The key for the new entry
+   * @param entry The entry to add for the key
+   */
   protected void addEntry(K key, V entry) {
     if (results.get(key) == null) {
       results.put(key, new ArrayList<V>());
@@ -57,6 +62,11 @@ public abstract class Evaluator<K, V> {
     }
   }
 
+  /**
+   * Outputs an entry of the results map.
+   * @param key The key in the results map
+   * @param entry The list of entries to output
+   */
   protected void outputEntry(K key, List<V> entry) {
     if (entry.size() > 50) {
       System.out.println(key + ": " + entry.size());

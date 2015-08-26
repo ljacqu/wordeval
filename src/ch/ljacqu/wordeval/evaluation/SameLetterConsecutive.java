@@ -3,6 +3,10 @@ package ch.ljacqu.wordeval.evaluation;
 import org.apache.commons.lang3.StringUtils;
 import ch.ljacqu.wordeval.language.WordForm;
 
+/**
+ * Finds words wherein the same letter appears multiple times consecutively,
+ * e.g. "lll" in German "Rollladen."
+ */
 public class SameLetterConsecutive extends Evaluator<String, String> {
 
   @Override
@@ -21,7 +25,7 @@ public class SameLetterConsecutive extends Evaluator<String, String> {
       }
     }
   }
-  
+
   @Override
   public WordForm getWordForm() {
     return WordForm.NO_ACCENTS;

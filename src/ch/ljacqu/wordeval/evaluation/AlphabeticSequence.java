@@ -15,7 +15,14 @@ public class AlphabeticSequence extends Evaluator<String, String> {
     checkForSequence(word, rawWord, BACKWARDS);
   }
 
-  public void checkForSequence(String word, String rawWord, int searchDirection) {
+  /**
+   * Checks a word for consecutive alphabetical sequences.
+   * @param word The lowercase word
+   * @param rawWord The word in its raw form
+   * @param searchDirection 1 to look for forward alphabetical sequences, -1 for
+   *        backwards
+   */
+  private void checkForSequence(String word, String rawWord, int searchDirection) {
     int alphabeticalStreak = 1;
     String previousChar = String.valueOf(word.charAt(0));
     for (int i = 1; i <= word.length(); ++i) {

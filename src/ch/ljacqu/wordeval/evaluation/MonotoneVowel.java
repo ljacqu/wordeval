@@ -13,6 +13,10 @@ public class MonotoneVowel extends Evaluator<Integer, String> {
 
   private List<Character> letters;
 
+  /**
+   * Creates a new MonotoneVowel evaluator.
+   * @param letterType The letter type (consonant, vowel) to consider
+   */
   public MonotoneVowel(LetterType letterType) {
     letters = LetterService.getLetters(letterType);
   }
@@ -32,7 +36,7 @@ public class MonotoneVowel extends Evaluator<Integer, String> {
     }
     addEntry(word.length(), rawWord);
   }
-  
+
   @Override
   public WordForm getWordForm() {
     // TODO: No accents, or just lowercase?

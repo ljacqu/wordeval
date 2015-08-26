@@ -14,10 +14,14 @@ public class VowelCount extends Evaluator<Integer, String> {
 
   private List<Character> recognizedLetters;
 
+  /**
+   * Creates a new VowelCount evaluator instance.
+   * @param type The letter type to consider
+   */
   public VowelCount(LetterType type) {
     recognizedLetters = LetterService.getLetters(type);
   }
-  
+
   @Override
   public WordForm getWordForm() {
     return WordForm.NO_ACCENTS;

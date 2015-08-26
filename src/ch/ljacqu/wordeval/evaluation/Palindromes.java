@@ -17,7 +17,7 @@ public class Palindromes extends Evaluator<String, String> {
       }
     }
   }
-  
+
   @Override
   public WordForm getWordForm() {
     return WordForm.NO_ACCENTS;
@@ -30,7 +30,7 @@ public class Palindromes extends Evaluator<String, String> {
    * @return The palindrome part, or null if none found
    */
   private String findPalindrome(String word, int index) {
-    // Asymmetrical palindromes like "awkwa" 
+    // Asymmetrical palindromes like "awkwa"
     String palindrome = findPalindrome(word, index, 1);
     if (palindrome != null) {
       return palindrome;

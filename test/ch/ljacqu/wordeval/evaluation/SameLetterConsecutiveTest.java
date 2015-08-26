@@ -36,6 +36,27 @@ public class SameLetterConsecutiveTest {
   }
 
   @Test
+  public void shouldRecognizeSeparateOccurrences() {
+    // {sss,bb}, {ss,pp}, {aa,ff}, {ooo,ee,oo}
+    String[] words = { "Massstabbrecher", "Reisstopp", "aabeffo", "oooeemoo" };
+
+    for (String word : words) {
+      evaluator.processWord(word, word);
+    }
+    Map<String, List<String>> results = evaluator.getResults();
+
+    assertEquals(results.size(), 9);
+    assertEquals(results.get("sss").size(), 1);
+    assertEquals(results.get("ss").size(), 1);
+    assertEquals(results.get("ooo").size(), 1);
+    assertEquals(results.get("oo").size(), 1);
+    assertEquals(results.get("pp").size(), 1);
+    assertEquals(results.get("ff").get(0), "aabeffo");
+    assertEquals(results.get("ooo"), results.get("ee"));
+    assertEquals(results.get("pp"), results.get("ss"));
+  }
+
+  @Test
   public void shouldProcessCyrillicWords() {
     String[] words = { "старинного", "величайший", "поддержки", "Избранные",
         "независимая" };

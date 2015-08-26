@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Finds isograms (word without a repeating letter).
+ * Finds isograms (word with all different letters).
  */
 public class Isograms extends Evaluator<Integer, String> {
 
