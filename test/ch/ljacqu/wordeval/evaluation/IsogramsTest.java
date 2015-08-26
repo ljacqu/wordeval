@@ -29,6 +29,5 @@ public class IsogramsTest {
     assertEquals(results.get(14).size(), 1);
     assertEquals(results.get(14).get(0), "halfduimspyker");
   }
-  
-  
+
 }

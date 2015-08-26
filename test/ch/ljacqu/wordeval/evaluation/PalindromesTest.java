@@ -17,7 +17,7 @@ public class PalindromesTest {
   }
 
   @Test
-  public void shouldRecognizeIsograms() {
+  public void shouldRecognizePalindromes() {
     // otto, bagab, -, awkwa, bab, bab/ili
     String[] words = { "trottoir", "ebagabo", "palindrome", "awkward",
         "probable", "probability" };

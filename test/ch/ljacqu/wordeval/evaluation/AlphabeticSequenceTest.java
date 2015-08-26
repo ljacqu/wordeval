@@ -1,6 +1,6 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import java.util.List;
 import java.util.Map;
 import org.junit.Before;
@@ -33,7 +33,7 @@ public class AlphabeticSequenceTest {
     assertEquals(results.get("mno").get(0), "neMNOgo");
     assertEquals(results.get("hijk").get(1), "HIJK");
   }
-  
+
   @Test
   public void shouldRecognizeWordsWithBackwardsSequence() {
     String[] words = { "south", "FEDex", "aJIHaa", "jaPON", "sweet",

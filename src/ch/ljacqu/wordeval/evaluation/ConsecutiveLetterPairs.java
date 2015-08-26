@@ -12,7 +12,6 @@ public class ConsecutiveLetterPairs extends Evaluator<Integer, String> {
   public void processWord(String word, String rawWord) {
     int letterCounter = 0;
     int pairCounter = 0;
-    int pairCountMax = 0;
     char lastChar = '\0';
     for (int i = 0; i <= word.length(); ++i) {
       if (i < word.length() && word.charAt(i) == lastChar) {
@@ -20,21 +19,19 @@ public class ConsecutiveLetterPairs extends Evaluator<Integer, String> {
       } else {
         if (letterCounter > 1) {
           ++pairCounter;
-          if (pairCounter > pairCountMax) {
-            pairCountMax = pairCounter;
+        }
+        if (letterCounter <= 1 || i == word.length()) {
+          if (pairCounter > 1) {
+            addEntry(pairCounter, rawWord);
           }
-        } else {
           pairCounter = 0;
         }
-        lastChar = i < word.length() ? word.charAt(i) : '\0';
+        lastChar = (i < word.length()) ? word.charAt(i) : '\0';
         letterCounter = 1;
       }
     }
-    if (pairCountMax > 1) {
-      addEntry(pairCountMax, rawWord);
-    }
   }
-  
+
   @Override
   public WordForm getWordForm() {
     return WordForm.NO_ACCENTS;
