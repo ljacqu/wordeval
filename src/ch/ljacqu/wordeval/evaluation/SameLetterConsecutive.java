@@ -7,7 +7,7 @@ import ch.ljacqu.wordeval.language.WordForm;
  * Finds words wherein the same letter appears multiple times consecutively,
  * e.g. "lll" in German "Rollladen."
  */
-public class SameLetterConsecutive extends Evaluator<String, String> {
+public class SameLetterConsecutive extends Evaluator<String> {
 
   @Override
   public void processWord(String word, String rawWord) {

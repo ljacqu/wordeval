@@ -5,7 +5,7 @@ package ch.ljacqu.wordeval.evaluation;
  * forwards or backwards. For example, in German "einst", each following letter
  * comes later in the alphabet.
  */
-public class AlphabeticalOrder extends Evaluator<Integer, String> {
+public class AlphabeticalOrder extends Evaluator<Integer> {
 
   private static final int FORWARDS = -1;
   private static final int BACKWARDS = 1;

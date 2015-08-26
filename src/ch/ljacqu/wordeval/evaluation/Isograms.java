@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Finds isograms (word with all different letters).
  */
-public class Isograms extends Evaluator<Integer, String> {
+public class Isograms extends Evaluator<Integer> {
 
   @Override
   public void processWord(String word, String rawWord) {

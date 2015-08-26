@@ -20,7 +20,7 @@ public class DictionarySanitationTest {
     dictionary.processDictionary();
   }
 
-  private class TestEvaluator extends Evaluator<String, String> {
+  private class TestEvaluator extends Evaluator<String> {
 
     private final char[] disallowedChars = { '/', ',', '\n', '(', ')', '[',
         ']', ' ' };

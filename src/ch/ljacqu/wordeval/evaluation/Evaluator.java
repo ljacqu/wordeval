@@ -1,22 +1,22 @@
 package ch.ljacqu.wordeval.evaluation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 import ch.ljacqu.wordeval.language.WordForm;
 
 /**
  * Evaluator base class. An evaluator checks words for a given property and adds
  * it to its collection if it was deemed as relevant.
- * @param <K> The key the evaluator uses
- * @param <V> The value the evaluator uses
+ * @param <K> The key the evaluator uses to store special words (typically: the
+ *        sequences the evaluator identifies, or the word length)
  */
-public abstract class Evaluator<K, V> {
+public abstract class Evaluator<K> {
 
   /** Collection of relevant words. */
-  protected Map<K, List<V>> results = new HashMap<K, List<V>>();
+  protected Map<K, List<String>> results = new TreeMap<K, List<String>>();
 
   /**
    * Processes a word and add it to results if it is relevant.
@@ -29,7 +29,7 @@ public abstract class Evaluator<K, V> {
    * Gets the results of the evaluator.
    * @return A map with the results (key = property, entry = list of values)
    */
-  public Map<K, List<V>> getResults() {
+  public Map<K, List<String>> getResults() {
     return results;
   }
 
@@ -46,18 +46,18 @@ public abstract class Evaluator<K, V> {
    * @param key The key for the new entry
    * @param entry The entry to add for the key
    */
-  protected void addEntry(K key, V entry) {
+  protected void addEntry(K key, String entry) {
     if (results.get(key) == null) {
-      results.put(key, new ArrayList<V>());
+      results.put(key, new ArrayList<String>());
     }
     results.get(key).add(entry);
   }
 
   /**
-   * Outputs the evaluator's results.
+   * Outputs the evaluator's results for debug / quick viewing purposes.
    */
   public void outputAggregatedResult() {
-    for (Entry<K, List<V>> entry : results.entrySet()) {
+    for (Entry<K, List<String>> entry : results.entrySet()) {
       outputEntry(entry.getKey(), entry.getValue());
     }
   }
@@ -67,7 +67,7 @@ public abstract class Evaluator<K, V> {
    * @param key The key in the results map
    * @param entry The list of entries to output
    */
-  protected void outputEntry(K key, List<V> entry) {
+  protected void outputEntry(K key, List<String> entry) {
     if (entry.size() > 50) {
       System.out.println(key + ": " + entry.size());
     } else {
