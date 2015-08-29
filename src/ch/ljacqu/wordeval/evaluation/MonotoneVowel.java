@@ -9,7 +9,7 @@ import ch.ljacqu.wordeval.language.WordForm;
  * Filters long words which only use one different vowel or consonant, like
  * "abracadabra".
  */
-public class MonotoneVowel extends Evaluator<Integer> {
+public class MonotoneVowel extends WordStatEvaluator {
 
   private List<Character> letters;
 

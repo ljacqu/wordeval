@@ -10,7 +10,7 @@ import ch.ljacqu.wordeval.language.WordForm;
  * German "Angstschweiss". The same word can appear multiple times in the
  * results, e.g. "poignée" will count twice as 2 ("oi", "ée").
  */
-public class ConsecutiveVowelCount extends Evaluator<Integer> {
+public class ConsecutiveVowelCount extends WordStatEvaluator {
 
   private List<Character> recognizedLetters;
 

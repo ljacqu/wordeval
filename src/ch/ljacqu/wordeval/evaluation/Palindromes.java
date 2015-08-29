@@ -7,7 +7,7 @@ import ch.ljacqu.wordeval.language.WordForm;
  * Finds palindromes or palindrome-parts inside a word, e.g. "awkwa" in
  * "awkward".
  */
-public class Palindromes extends Evaluator<String> {
+public class Palindromes extends PartWordEvaluator {
 
   @Override
   public void processWord(String word, String rawWord) {

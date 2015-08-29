@@ -4,7 +4,7 @@ package ch.ljacqu.wordeval.evaluation;
  * Filters that checks if there is a group of letters in a word that is an
  * alphabetical sequence, e.g. "rstu" in German "Erstuntersuchung."
  */
-public class AlphabeticSequence extends Evaluator<String> {
+public class AlphabeticSequence extends PartWordEvaluator {
 
   private static final int FORWARDS = -1;
   private static final int BACKWARDS = 1;

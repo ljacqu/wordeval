@@ -5,8 +5,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.SortedMap;
+import java.util.NavigableMap;
 import java.util.TreeMap;
+import ch.ljacqu.wordeval.evaluation.export.ExportResult;
+import ch.ljacqu.wordeval.evaluation.export.NumericExportResult;
+import ch.ljacqu.wordeval.evaluation.export.StringExportResult;
 import ch.ljacqu.wordeval.language.WordForm;
 
 /**
@@ -18,7 +21,7 @@ import ch.ljacqu.wordeval.language.WordForm;
 public abstract class Evaluator<K> {
 
   /** Collection of relevant words. */
-  protected SortedMap<K, List<String>> results = new TreeMap<K, List<String>>();
+  protected NavigableMap<K, List<String>> results = new TreeMap<K, List<String>>();
 
   /**
    * Processes a word and add it to results if it is relevant.
@@ -28,11 +31,19 @@ public abstract class Evaluator<K> {
   public abstract void processWord(String word, String rawWord);
 
   /**
+   * Converts the evaluator's results to an export result object.
+   * @return The converted ExportResult object
+   */
+  public ExportResult toExportResult() {
+    return ExportResult.create(this.getClass().getSimpleName(), 5, this);
+  }
+
+  /**
    * Gets the results of the evaluator.
    * @return A map with the results (key = property, entry = list of values)
    */
-  public Map<K, List<String>> getResults() {
-    return Collections.unmodifiableMap(results);
+  public NavigableMap<K, List<String>> getResults() {
+    return Collections.unmodifiableNavigableMap(results);
   }
 
   /**

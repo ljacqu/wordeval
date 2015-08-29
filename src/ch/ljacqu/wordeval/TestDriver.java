@@ -34,8 +34,9 @@ public class TestDriver {
     dictionary.processDictionary();
 
     for (Evaluator evaluator : evaluators) {
-      System.out.println("-------\n" + evaluator.getClass().getSimpleName());
-      evaluator.outputAggregatedResult();
+      //System.out.println("-------\n" + evaluator.getClass().getSimpleName());
+      //evaluator.outputAggregatedResult();
+      System.out.println(evaluator.toExportResult());
     }
 
   }

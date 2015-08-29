@@ -4,7 +4,7 @@ package ch.ljacqu.wordeval.evaluation;
  * Filters the words by length, with the intention to get the longest words of
  * the dictionary.
  */
-public class LongWords extends Evaluator<Integer> {
+public class LongWords extends WordStatEvaluator {
 
   /** Ignore any words whose length is less than the minimum length. */
   public static final int DEFAULT_MIN_LENGTH = 6;
