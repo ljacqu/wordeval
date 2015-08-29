@@ -2,48 +2,41 @@ package ch.ljacqu.wordeval.evaluation.export;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableMap;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
  * Aggregated version of an evaluator's results to export.
- * @param <K> The class the evaluator uses as key
  */
-public final class NumericExportResult extends ExportResult {
+public class WordStatExport extends ExportObject {
 
-  private final String identifier;
+  private static final long serialVersionUID = 1L;
+
   private final SortedMap<Integer, List<String>> topEntries;
   private final SortedMap<Integer, Integer> aggregatedEntries;
 
-  public NumericExportResult(String identifier,
+  public WordStatExport(String identifier,
       SortedMap<Integer, List<String>> topEntries,
       SortedMap<Integer, Integer> aggregatedEntries) {
-    this.identifier = identifier;
+    super(identifier);
     this.topEntries = topEntries;
     this.aggregatedEntries = aggregatedEntries;
   }
 
-  public String getIdentifier() {
-    return identifier;
-  }
-
-  public SortedMap<Integer, List<String>> getTopEntries() {
-    return Collections.unmodifiableSortedMap(topEntries);
-  }
-
-  public SortedMap<Integer, Integer> getAggregatedEntries() {
-    return Collections.unmodifiableSortedMap(aggregatedEntries);
+  @Override
+  public Map<Integer, List<String>> getTopEntries() {
+    return Collections.unmodifiableMap(topEntries);
   }
 
   @Override
-  public String toString() {
-    return "ExportResult [identifier=" + identifier + ", topEntries="
-        + topEntries + ", aggregatedEntries=" + aggregatedEntries + "]";
+  public Map<Integer, Integer> getAggregatedEntries() {
+    return Collections.unmodifiableMap(aggregatedEntries);
   }
 
-  public static NumericExportResult createInstance(String identifier,
-      int topKeys, NavigableMap<Integer, List<String>> map) {
+  public static WordStatExport createInstance(String identifier, int topKeys,
+      NavigableMap<Integer, List<String>> map) {
     NavigableMap<Integer, List<String>> topEntries = getBiggestKeys(map,
         topKeys);
 
@@ -54,6 +47,6 @@ public final class NumericExportResult extends ExportResult {
       Integer toKey = topEntries.firstKey();
       aggregatedEntries = computeAggregatedMap(map, toKey);
     }
-    return new NumericExportResult(identifier, topEntries, aggregatedEntries);
+    return new WordStatExport(identifier, topEntries, aggregatedEntries);
   }
 }

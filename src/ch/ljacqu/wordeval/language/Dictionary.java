@@ -9,7 +9,6 @@ import java.util.Locale;
 import ch.ljacqu.wordeval.LetterService;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 
-@SuppressWarnings("rawtypes")
 public class Dictionary {
 
   private String languageCode;

@@ -36,7 +36,7 @@ public class TestDriver {
     for (Evaluator evaluator : evaluators) {
       //System.out.println("-------\n" + evaluator.getClass().getSimpleName());
       //evaluator.outputAggregatedResult();
-      System.out.println(evaluator.toExportResult());
+      System.out.println(evaluator.toExportObject());
     }
 
   }

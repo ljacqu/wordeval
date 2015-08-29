@@ -3,13 +3,10 @@ package ch.ljacqu.wordeval.evaluation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.TreeMap;
-import ch.ljacqu.wordeval.evaluation.export.ExportResult;
-import ch.ljacqu.wordeval.evaluation.export.NumericExportResult;
-import ch.ljacqu.wordeval.evaluation.export.StringExportResult;
+import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.language.WordForm;
 
 /**
@@ -19,6 +16,8 @@ import ch.ljacqu.wordeval.language.WordForm;
  *        sequences the evaluator identifies, or the word length)
  */
 public abstract class Evaluator<K> {
+
+  protected static final int DEFAULT_TOP_ENTRY_NUMBER = 5;
 
   /** Collection of relevant words. */
   protected NavigableMap<K, List<String>> results = new TreeMap<K, List<String>>();
@@ -31,11 +30,16 @@ public abstract class Evaluator<K> {
   public abstract void processWord(String word, String rawWord);
 
   /**
-   * Converts the evaluator's results to an export result object.
-   * @return The converted ExportResult object
+   * Converts the evaluator's results to an export object.
+   * @return The converted ExportObject instance
    */
-  public ExportResult toExportResult() {
-    return ExportResult.create(this.getClass().getSimpleName(), 5, this);
+  public ExportObject toExportObject() {
+    return toExportObject(this.getClass().getSimpleName(),
+        DEFAULT_TOP_ENTRY_NUMBER);
+  }
+
+  protected final ExportObject toExportObject(String identifier, int topEntries) {
+    return ExportObject.create(identifier, topEntries, this);
   }
 
   /**

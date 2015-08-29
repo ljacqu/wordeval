@@ -1,6 +1,8 @@
 package ch.ljacqu.wordeval.evaluation;
 
 import org.apache.commons.lang3.StringUtils;
+import ch.ljacqu.wordeval.evaluation.export.ExportObject;
+import ch.ljacqu.wordeval.evaluation.export.PartWordExport;
 import ch.ljacqu.wordeval.language.WordForm;
 
 /**
@@ -24,6 +26,11 @@ public class SameLetterConsecutive extends PartWordEvaluator {
         counter = 1;
       }
     }
+  }
+  
+  @Override
+  public ExportObject toExportObject() {
+    return PartWordExport.createInstance("LongWords", 5, results, 3);
   }
 
   @Override

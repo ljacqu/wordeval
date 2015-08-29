@@ -11,17 +11,27 @@ import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.PartWordEvaluator;
 import ch.ljacqu.wordeval.evaluation.WordStatEvaluator;
 
-public abstract class ExportResult implements Serializable {
+public abstract class ExportObject implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  public static <K> ExportResult create(String identifier, int topKeys,
+  public final String identifier;
+
+  public ExportObject(String identifier) {
+    this.identifier = identifier;
+  }
+
+  public abstract <K, V> Map<K, List<V>> getTopEntries();
+
+  public abstract <K, V> Map<K, V> getAggregatedEntries();
+
+  public static <K> ExportObject create(String identifier, int topKeys,
       Evaluator<K> evaluator) {
     if (evaluator instanceof WordStatEvaluator) {
-      return NumericExportResult.createInstance(identifier, topKeys,
+      return WordStatExport.createInstance(identifier, topKeys,
           ((WordStatEvaluator) evaluator).getResults());
     } else if (evaluator instanceof PartWordEvaluator) {
-      return StringExportResult.createInstance(identifier, topKeys,
+      return PartWordExport.createInstance(identifier, topKeys,
           ((PartWordEvaluator) evaluator).getResults());
     }
     throw new UnsupportedOperationException(
@@ -50,6 +60,13 @@ public abstract class ExportResult implements Serializable {
       resultMap.put(entry.getKey(), entry.getValue().size());
     }
     return resultMap;
+  }
+
+  @Override
+  public String toString() {
+    return this.getClass().getSimpleName() + " [identifier=" + identifier
+        + ", topEntries=" + getTopEntries() + ", aggregatedEntries="
+        + getAggregatedEntries() + "]";
   }
 
 }
