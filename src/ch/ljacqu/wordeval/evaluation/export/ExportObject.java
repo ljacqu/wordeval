@@ -10,7 +10,7 @@ import java.util.TreeMap;
 
 /**
  * Class representing the results of an evaluator in a format suitable for
- * exportation.
+ * exporting.
  */
 public abstract class ExportObject implements Serializable {
 
