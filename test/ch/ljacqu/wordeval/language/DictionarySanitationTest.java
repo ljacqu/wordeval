@@ -2,6 +2,7 @@ package ch.ljacqu.wordeval.language;
 
 import static org.junit.Assert.fail;
 import java.io.IOException;
+import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +32,8 @@ public class DictionarySanitationTest {
   private static class TestEvaluator extends PartWordEvaluator {
 
     private static final char[] ILLEGAL_CHARACTERS = { '/', ',', '\n', '(',
-        ')', '[', ']', ' ', '!', '?', '_' };
+        ')', '[', ']', ' ', '!', '?', '_', '0', '1', '2', '3', '4', '5', '6',
+        '7', '8', '9' };
 
     private List<String> errors = new ArrayList<String>();
 
@@ -40,8 +42,6 @@ public class DictionarySanitationTest {
       for (char disallowedChar : ILLEGAL_CHARACTERS) {
         if (word.indexOf(disallowedChar) != -1) {
           errors.add(word + " has disallowed char '" + disallowedChar + "'");
-        } else if (word.matches("\\d")) {
-          errors.add(word + " contains a digit");
         }
       }
     }

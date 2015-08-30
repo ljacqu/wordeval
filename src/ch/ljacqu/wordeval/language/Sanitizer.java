@@ -27,7 +27,9 @@ public class Sanitizer {
   public final String sanitizeWord(String crudeWord) {
     String cleanWord = customSanitize(removeDelimiters(crudeWord));
     String cleanWordToLower = cleanWord.toLowerCase(locale);
-    if (seenWords.contains(cleanWordToLower)) {
+    if (cleanWordToLower.matches(".*\\d+.*")) {
+      return "";
+    } else if (seenWords.contains(cleanWordToLower)) {
       return "";
     }
     seenWords.add(cleanWordToLower);
