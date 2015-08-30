@@ -9,5 +9,9 @@ public abstract class WordStatEvaluator extends Evaluator<Integer> {
   protected ExportObject toExportObject(String identifier, int topEntries) {
     return WordStatExport.create(identifier, topEntries, results);
   }
+  
+  protected ExportObject toExportObject(String identifier, int topEntries, int minimum) {
+    return WordStatExport.create(identifier, topEntries, results, minimum);
+  }
 
 }

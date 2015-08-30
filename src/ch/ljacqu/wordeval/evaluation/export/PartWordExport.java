@@ -34,13 +34,13 @@ public final class PartWordExport extends ExportObject {
     return aggregatedEntries;
   }
 
-  public static PartWordExport create(String identifier,
-      int topLengths, NavigableMap<String, List<String>> map) {
+  public static PartWordExport create(String identifier, int topLengths,
+      NavigableMap<String, List<String>> map) {
     return create(identifier, topLengths, map, null);
   }
 
-  public static PartWordExport create(String identifier,
-      int topLengths, NavigableMap<String, List<String>> map, Integer minLength) {
+  public static PartWordExport create(String identifier, int topLengths,
+      NavigableMap<String, List<String>> map, Integer minLength) {
     // {key: [words] ..} to {length: [{key: [words]}, ...]}
     NavigableMap<Integer, List<KeyAndWords>> entriesByLength = new TreeMap<>();
     for (Map.Entry<String, List<String>> entry : map.entrySet()) {
@@ -53,12 +53,7 @@ public final class PartWordExport extends ExportObject {
 
     // Filter the top lengths in the new list
     SortedMap<Integer, List<KeyAndWords>> topEntries = getBiggestKeys(
-        entriesByLength, topLengths);
-    if (minLength != null) {
-      if (topEntries.firstKey() < minLength) {
-        topEntries = topEntries.tailMap(minLength);
-      }
-    }
+        entriesByLength, topLengths, minLength);
 
     // Replace everything else from KeyAndWords to key: length
     SortedMap<Integer, SortedMap<String, Integer>> aggregatedEntries;
@@ -107,7 +102,7 @@ public final class PartWordExport extends ExportObject {
 
     public KeyAndWords(String key, List<String> words) {
       this.key = key;
-      this.words = Collections.unmodifiableList(words);
+      this.words = words;
     }
 
     public KeyAndWords(Map.Entry<String, List<String>> entry) {

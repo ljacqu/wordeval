@@ -3,6 +3,7 @@ package ch.ljacqu.wordeval.evaluation;
 import java.util.List;
 import ch.ljacqu.wordeval.LetterService;
 import ch.ljacqu.wordeval.LetterType;
+import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.language.WordForm;
 
 /**
@@ -12,6 +13,7 @@ import ch.ljacqu.wordeval.language.WordForm;
 public class MonotoneVowel extends WordStatEvaluator {
 
   private List<Character> letters;
+  private LetterType letterType;
 
   /**
    * Creates a new MonotoneVowel evaluator.
@@ -19,6 +21,7 @@ public class MonotoneVowel extends WordStatEvaluator {
    */
   public MonotoneVowel(LetterType letterType) {
     letters = LetterService.getLetters(letterType);
+    this.letterType = letterType;
   }
 
   @Override
@@ -27,7 +30,7 @@ public class MonotoneVowel extends WordStatEvaluator {
     for (char letter : letters) {
       if (word.indexOf(letter) != -1) {
         if (foundLetter) {
-          // already found another letter of that category, so stop
+          // found another letter of that category, so stop
           return;
         } else {
           foundLetter = true;
@@ -41,6 +44,12 @@ public class MonotoneVowel extends WordStatEvaluator {
   public WordForm getWordForm() {
     // TODO: No accents, or just lowercase?
     return WordForm.NO_ACCENTS;
+  }
+  
+  @Override
+  public ExportObject toExportObject() {
+    String identifier = "MonotoneVowel_" + letterType.getName();
+    return toExportObject(identifier, DEFAULT_TOP_ENTRY_NUMBER);
   }
 
 }

@@ -34,10 +34,15 @@ public class WordStatExport extends ExportObject {
 
   public static WordStatExport create(String identifier, int topKeys,
       NavigableMap<Integer, List<String>> map) {
-    NavigableMap<Integer, List<String>> topEntries = getBiggestKeys(map,
-        topKeys);
+    return create(identifier, topKeys, map, null);
+  }
+  
+  public static WordStatExport create(String identifier, int topKeys,
+      NavigableMap<Integer, List<String>> map, Integer minimum) {
+    SortedMap<Integer, List<String>> topEntries = getBiggestKeys(map,
+        topKeys, minimum);
 
-    NavigableMap<Integer, Integer> aggregatedEntries;
+    SortedMap<Integer, Integer> aggregatedEntries;
     if (topEntries.isEmpty()) {
       aggregatedEntries = new TreeMap<>();
     } else {

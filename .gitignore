@@ -1,5 +1,7 @@
-*.dic
+.settings/
 bin/
+dict/*.dic
+export/*.json
 .classpath
 .project
-.settings/
+

@@ -4,6 +4,10 @@ public enum LetterType {
 
   VOWELS,
 
-  CONSONANTS
+  CONSONANTS;
+  
+  public String getName() {
+    return this.toString().toLowerCase();
+  }
 
 }

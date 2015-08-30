@@ -3,6 +3,8 @@ package ch.ljacqu.wordeval.evaluation;
 import java.util.List;
 import ch.ljacqu.wordeval.LetterService;
 import ch.ljacqu.wordeval.LetterType;
+import ch.ljacqu.wordeval.evaluation.export.ExportObject;
+import ch.ljacqu.wordeval.evaluation.export.WordStatExport;
 import ch.ljacqu.wordeval.language.WordForm;
 
 /**
@@ -12,14 +14,16 @@ import ch.ljacqu.wordeval.language.WordForm;
  */
 public class ConsecutiveVowelCount extends WordStatEvaluator {
 
-  private List<Character> recognizedLetters;
+  private List<Character> lettersToConsider;
+  private LetterType letterType;
 
   /**
    * Creates a new VowelCount evaluator instance.
    * @param type The letter type to consider
    */
   public ConsecutiveVowelCount(LetterType type) {
-    recognizedLetters = LetterService.getLetters(type);
+    lettersToConsider = LetterService.getLetters(type);
+    letterType = type;
   }
 
   @Override
@@ -31,7 +35,7 @@ public class ConsecutiveVowelCount extends WordStatEvaluator {
   public void processWord(String word, String rawWord) {
     int count = 0;
     for (int i = 0; i <= word.length(); ++i) {
-      if (i == word.length() || !recognizedLetters.contains(word.charAt(i))) {
+      if (i == word.length() || !lettersToConsider.contains(word.charAt(i))) {
         if (count > 1) {
           addEntry(count, rawWord);
         }
@@ -40,6 +44,12 @@ public class ConsecutiveVowelCount extends WordStatEvaluator {
         ++count;
       }
     }
+  }
+
+  @Override
+  public ExportObject toExportObject() {
+    String identifier = "ConsecutiveVowelCount_" + letterType.getName();
+    return WordStatExport.create(identifier, DEFAULT_TOP_ENTRY_NUMBER, results, 3);
   }
 
 }

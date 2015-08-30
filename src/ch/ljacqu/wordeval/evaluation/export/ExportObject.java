@@ -22,12 +22,16 @@ public abstract class ExportObject implements Serializable {
     this.identifier = identifier;
   }
 
-  protected static final <K, V> NavigableMap<K, V> getBiggestKeys(
-      NavigableMap<K, V> map, int number) {
-    Iterator<K> descendingIterator = map.descendingKeySet().iterator();
-    K key = null;
+  protected static final <V> NavigableMap<Integer, V> getBiggestKeys(
+      NavigableMap<Integer, V> map, int number, Integer minimum) {
+    Iterator<Integer> descendingIterator = map.descendingKeySet().iterator();
+    Integer key = null;
     for (int i = 0; i < number && descendingIterator.hasNext(); ++i) {
       key = descendingIterator.next();
+      if (minimum != null && key < minimum) {
+        key = minimum;
+        break;
+      }
     }
     if (key != null) {
       return Collections.unmodifiableNavigableMap(map.tailMap(key, true));
