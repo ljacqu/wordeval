@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import ch.ljacqu.wordeval.evaluation.AlphabeticalOrder;
@@ -16,7 +17,7 @@ import ch.ljacqu.wordeval.language.Dictionary;
 
 public class TestDriver {
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) throws IOException {
     List<Evaluator> evaluators = new ArrayList<Evaluator>();
     evaluators.add(new ConsecutiveLetterPairs());
     evaluators.add(new LongWords());
@@ -34,9 +35,8 @@ public class TestDriver {
     dictionary.processDictionary();
 
     for (Evaluator evaluator : evaluators) {
-      //System.out.println("-------\n" + evaluator.getClass().getSimpleName());
-      //evaluator.outputAggregatedResult();
-      System.out.println(evaluator.toExportObject());
+      System.out.println("-------\n" + evaluator.getClass().getSimpleName());
+      evaluator.outputAggregatedResult();
     }
 
   }

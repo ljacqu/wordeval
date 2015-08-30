@@ -1,17 +1,19 @@
 package ch.ljacqu.wordeval.language;
 
-import static org.junit.Assert.fail;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.junit.Ignore;
 import org.junit.Test;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.PartWordEvaluator;
 
-public class DictionarySanitationTest {
+public class UtilDoesWordExist {
 
   private static final String languageCode = "hu";
 
+  @Ignore
   @Test
   public void shouldNotReturnNonWordChars() throws Exception {
     TestEvaluator testEvaluator = new TestEvaluator();
@@ -20,34 +22,36 @@ public class DictionarySanitationTest {
         evaluators);
 
     dictionary.processDictionary();
-    List<String> errors = testEvaluator.getErrors();
 
-    if (!errors.isEmpty()) {
-      fail("Found " + errors.size() + " errors: " + errors);
+    List<String> missingWords = testEvaluator.getMissingWords();
+    if (missingWords.isEmpty()) {
+      System.out.println("Success -- found all words");
+    } else {
+      System.out.println("Words missing: " + missingWords);
     }
   }
 
   private static class TestEvaluator extends PartWordEvaluator {
 
-    private static final char[] ILLEGAL_CHARACTERS = { '/', ',', '\n', '(',
-        ')', '[', ']', ' ', '!', '?', '_' };
+    public static final String[] WORDS_TO_FIND = { 
+      "üzembe", "helyezés", "is", "bogusWord"
+    };
 
-    private List<String> errors = new ArrayList<String>();
+    private List<String> missingWords = new ArrayList<String>(
+        Arrays.asList(WORDS_TO_FIND));
 
     @Override
     public void processWord(String word, String rawWord) {
-      for (char disallowedChar : ILLEGAL_CHARACTERS) {
-        if (word.indexOf(disallowedChar) != -1) {
-          errors.add(word + " has disallowed char '" + disallowedChar + "'");
-        } else if (word.matches("\\d")) {
-          errors.add(word + " contains a digit");
+      for (String wordToFind : WORDS_TO_FIND) {
+        if (word.equals(wordToFind)) {
+          missingWords.remove(wordToFind);
+          System.out.println("Found word '" + wordToFind + "'");
         }
       }
     }
 
-    public List<String> getErrors() {
-      return errors;
+    public List<String> getMissingWords() {
+      return missingWords;
     }
-
   }
 }

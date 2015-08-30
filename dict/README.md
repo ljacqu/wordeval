@@ -16,6 +16,9 @@ https://code.google.com/p/zemberek/downloads/detail?name=full.txt.tr.tar.gz&can=
 Hunspell UTF-8 dictionaries (gold mine!)
 https://github.com/titoBouzout/Dictionaries
 
+Mozilla gaia; dictionaries in .dict format
+https://github.com/mozilla-b2g/gaia/tree/master/apps/keyboard/js/imes/latin/dictionaries
+
 
 Features many dictionaries but seem outdated:
 http://www.winedt.org/Dict/
