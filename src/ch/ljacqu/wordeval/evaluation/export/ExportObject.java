@@ -7,10 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
-import ch.ljacqu.wordeval.evaluation.Evaluator;
-import ch.ljacqu.wordeval.evaluation.PartWordEvaluator;
-import ch.ljacqu.wordeval.evaluation.WordStatEvaluator;
 
+/**
+ * Class representing the results of an evaluator in a format suitable for
+ * exportation.
+ */
 public abstract class ExportObject implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -19,20 +20,6 @@ public abstract class ExportObject implements Serializable {
 
   public ExportObject(String identifier) {
     this.identifier = identifier;
-  }
-
-  public static <K> ExportObject create(String identifier, int topKeys,
-      Evaluator<K> evaluator) {
-    if (evaluator instanceof WordStatEvaluator) {
-      return WordStatExport.createInstance(identifier, topKeys,
-          ((WordStatEvaluator) evaluator).getResults());
-    } else if (evaluator instanceof PartWordEvaluator) {
-      return PartWordExport.createInstance(identifier, topKeys,
-          ((PartWordEvaluator) evaluator).getResults());
-    }
-    throw new UnsupportedOperationException(
-        "Unknown how to create an ExportResult for evaluator with class "
-            + evaluator.getClass());
   }
 
   protected static final <K, V> NavigableMap<K, V> getBiggestKeys(

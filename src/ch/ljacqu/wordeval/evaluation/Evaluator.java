@@ -16,7 +16,7 @@ import ch.ljacqu.wordeval.language.WordForm;
  *        sequences the evaluator identifies, or the word length)
  */
 public abstract class Evaluator<K> {
-
+  /** The default number of "top entries" to keep in the ExportObject. */
   protected static final int DEFAULT_TOP_ENTRY_NUMBER = 5;
 
   /** Collection of relevant words. */
@@ -38,9 +38,14 @@ public abstract class Evaluator<K> {
         DEFAULT_TOP_ENTRY_NUMBER);
   }
 
-  protected final ExportObject toExportObject(String identifier, int topEntries) {
-    return ExportObject.create(identifier, topEntries, this);
-  }
+  /**
+   * Converts the evaluator's results to an export object.
+   * @param identifier The identifier of the export object
+   * @param topEntries The number of entries to keep non-aggregated
+   * @return The converted ExportObject instance
+   */
+  protected abstract ExportObject toExportObject(String identifier,
+      int topEntries);
 
   /**
    * Gets the results of the evaluator.

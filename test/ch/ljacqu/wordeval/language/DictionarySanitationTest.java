@@ -1,6 +1,7 @@
 package ch.ljacqu.wordeval.language;
 
 import static org.junit.Assert.fail;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,7 +14,7 @@ public class DictionarySanitationTest {
   private static final String languageCode = "hu";
 
   @Test
-  public void shouldNotReturnNonWordChars() throws Exception {
+  public void shouldNotReturnNonWordChars() throws IOException {
     TestEvaluator testEvaluator = new TestEvaluator();
     List<Evaluator> evaluators = Collections.singletonList(testEvaluator);
     Dictionary dictionary = Dictionary.getLanguageDictionary(languageCode,

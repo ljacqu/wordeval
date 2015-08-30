@@ -9,8 +9,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
- * Aggregated version of an evaluator's results to export.
- * @param <K> The class the evaluator uses as key
+ * ExportObject class for evaluators of type PartWordEvaluator.
  */
 public final class PartWordExport extends ExportObject {
 
@@ -35,12 +34,12 @@ public final class PartWordExport extends ExportObject {
     return aggregatedEntries;
   }
 
-  public static PartWordExport createInstance(String identifier,
+  public static PartWordExport create(String identifier,
       int topLengths, NavigableMap<String, List<String>> map) {
-    return createInstance(identifier, topLengths, map, null);
+    return create(identifier, topLengths, map, null);
   }
 
-  public static PartWordExport createInstance(String identifier,
+  public static PartWordExport create(String identifier,
       int topLengths, NavigableMap<String, List<String>> map, Integer minLength) {
     // {key: [words] ..} to {length: [{key: [words]}, ...]}
     NavigableMap<Integer, List<KeyAndWords>> entriesByLength = new TreeMap<>();

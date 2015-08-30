@@ -1,18 +1,22 @@
 package ch.ljacqu.wordeval.language;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
-class Sanitizer {
+public class Sanitizer {
 
   private char[] delimiters;
   private Locale locale;
+  private Set<String> seenWords;
 
-  Sanitizer(Locale locale, char... delimiters) {
+  public Sanitizer(Locale locale, char... delimiters) {
     this.locale = locale;
     this.delimiters = delimiters;
+    this.seenWords = new HashSet<>();
   }
 
-  Sanitizer(String languageCode, char... delimiters) {
+  public Sanitizer(String languageCode, char... delimiters) {
     this(new Locale(languageCode), delimiters);
   }
 
@@ -20,9 +24,14 @@ class Sanitizer {
     return word;
   }
 
-  final String sanitizeWord(String crudeWord) {
-    String cleanWord = removeDelimiters(crudeWord);
-    return customSanitize(cleanWord);
+  public final String sanitizeWord(String crudeWord) {
+    String cleanWord = customSanitize(removeDelimiters(crudeWord));
+    String cleanWordToLower = cleanWord.toLowerCase(locale);
+    if (seenWords.contains(cleanWordToLower)) {
+      return "";
+    }
+    seenWords.add(cleanWordToLower);
+    return cleanWord;
   }
 
   private String removeDelimiters(String crudeWord) {
@@ -36,7 +45,7 @@ class Sanitizer {
     return crudeWord.substring(0, minIndex).trim();
   }
 
-  Locale getLocale() {
+  public Locale getLocale() {
     return locale;
   }
 }

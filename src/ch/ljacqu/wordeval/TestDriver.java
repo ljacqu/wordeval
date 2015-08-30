@@ -3,16 +3,16 @@ package ch.ljacqu.wordeval;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import ch.ljacqu.wordeval.evaluation.AlphabeticalOrder;
 import ch.ljacqu.wordeval.evaluation.AlphabeticSequence;
+import ch.ljacqu.wordeval.evaluation.AlphabeticalOrder;
 import ch.ljacqu.wordeval.evaluation.ConsecutiveLetterPairs;
+import ch.ljacqu.wordeval.evaluation.ConsecutiveVowelCount;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.Isograms;
 import ch.ljacqu.wordeval.evaluation.LongWords;
 import ch.ljacqu.wordeval.evaluation.MonotoneVowel;
 import ch.ljacqu.wordeval.evaluation.Palindromes;
 import ch.ljacqu.wordeval.evaluation.SameLetterConsecutive;
-import ch.ljacqu.wordeval.evaluation.ConsecutiveVowelCount;
 import ch.ljacqu.wordeval.language.Dictionary;
 
 public class TestDriver {

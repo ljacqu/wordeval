@@ -7,7 +7,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
- * Aggregated version of an evaluator's results to export.
+ * ExportObject class for evaluators of type WordStatEvaluator.
  */
 public class WordStatExport extends ExportObject {
 
@@ -32,7 +32,7 @@ public class WordStatExport extends ExportObject {
     return Collections.unmodifiableSortedMap(aggregatedEntries);
   }
 
-  public static WordStatExport createInstance(String identifier, int topKeys,
+  public static WordStatExport create(String identifier, int topKeys,
       NavigableMap<Integer, List<String>> map) {
     NavigableMap<Integer, List<String>> topEntries = getBiggestKeys(map,
         topKeys);

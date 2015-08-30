@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval.language;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,7 +16,7 @@ public class UtilDoesWordExist {
 
   @Ignore
   @Test
-  public void shouldNotReturnNonWordChars() throws Exception {
+  public void shouldNotReturnNonWordChars() throws IOException {
     TestEvaluator testEvaluator = new TestEvaluator();
     List<Evaluator> evaluators = Collections.singletonList(testEvaluator);
     Dictionary dictionary = Dictionary.getLanguageDictionary(languageCode,

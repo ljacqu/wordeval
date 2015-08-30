@@ -67,7 +67,8 @@ public class ConsecutiveVowelCountTest {
   }
 
   @Ignore
-  // TODO: implement Cyrillic logic
+  @Test
+  // TODO #12: implement Cyrillic logic
   public void shouldProcessCyrillicWords() {
     String[] word = { "Википедия", "Вооружённый" };
 

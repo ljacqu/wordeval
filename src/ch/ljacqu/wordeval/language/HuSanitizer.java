@@ -1,28 +1,35 @@
 package ch.ljacqu.wordeval.language;
 
-import java.util.Locale;
+public class HuSanitizer extends Sanitizer {
 
-class HuSanitizer extends Sanitizer {
+  private boolean skipWords = false;
 
-  private boolean skipTillEnd = false;
-
-  HuSanitizer(Locale locale, char... delimiters) {
-    super(locale, delimiters);
-  }
-
-  HuSanitizer(char... delimiters) {
+  public HuSanitizer(char... delimiters) {
     super("hu", delimiters);
   }
 
   @Override
   protected String customSanitize(String word) {
+    // Skip Roman numerals; they are in range:
+    // "xxxviii." to "v.", "lxxxviii." to "l."
+    // "ix." to "i.", "cxxxviii." to "cv."
+    // "clxxxviii." to "c."
+    if (skipWords && wordEqualsOne(word, "v.", "l.", "i.", "cv.", "c.")) {
+      skipWords = false;
+      return "";
+    } else if (wordEqualsOne(word, "xxxviii.", "lxxxviii.", "ix.", "cxxxviii.",
+        "clxxxviii.")) {
+      skipWords = true;
+      return "";
+    } else
+
     // From ATP-vé to the end of the file, only abbreviation-like words are
     // present and number/Greek stuff we don't mind skipping (e.g. 20.-kal,
     // ‰-nyi, Φ-vé).
     if (word.equals("ATP-vé")) {
-      skipTillEnd = true;
+      skipWords = true;
     }
-    if (skipTillEnd) {
+    if (skipWords) {
       return "";
     }
 
@@ -36,8 +43,8 @@ class HuSanitizer extends Sanitizer {
     if (containsPart(word, "(vinil", "(izobutilén)", "(akril", "(metil")) {
       return "";
     }
-    
-    if (word.equals("[") || word.equals("]")) {
+
+    if (wordEqualsOne(word, "[", "]")) {
       return "";
     }
 
@@ -46,9 +53,8 @@ class HuSanitizer extends Sanitizer {
     // so we take two other entries and re-appropriate them to send them.
     String foundPart = getFirstFound(word, " alak", " kor", " közben",
         " módra", " szer", " vég", " vége", " végén", " végi", " vevő");
-    if (!foundPart.isEmpty()) {
-      if (word.equals("hó vége") || word.equals("papagáj módra")
-          || word.equals("tél végi")) {
+    if (foundPart != null) {
+      if (wordEqualsOne(word, "hó vége", "papagáj módra", "tél végi")) {
         // Return the second word in these exceptional cases
         return word.substring(word.indexOf(" ") + 1);
       }
@@ -66,9 +72,9 @@ class HuSanitizer extends Sanitizer {
 
     // Remove yahoo! and dog breeds causing trouble
     // Csak azért is are all in the dictionary individually so let's skip it
-    if (containsPart(word, "yahoo!", "Yahoo!") || word.equals("lhasa apso")
-        || word.equals("yorkshire terrier") || word.equals("csak azért is")
-        || word.equals("papír zsebkendő") || word.equals("nota bene")) {
+    if (containsPart(word, "yahoo!", "Yahoo!")
+        || wordEqualsOne(word, "lhasa apso", "yorkshire terrier",
+            "csak azért is", "papír zsebkendő", "nota bene")) {
       return "";
     }
 
@@ -92,7 +98,7 @@ class HuSanitizer extends Sanitizer {
   }
 
   private boolean containsPart(String word, String... parts) {
-    return !getFirstFound(word, parts).isEmpty();
+    return getFirstFound(word, parts) != null;
   }
 
   private String getFirstFound(String word, String... parts) {
@@ -101,7 +107,16 @@ class HuSanitizer extends Sanitizer {
         return part;
       }
     }
-    return "";
+    return null;
+  }
+
+  private boolean wordEqualsOne(String word, String... parts) {
+    for (String part : parts) {
+      if (word.equals(part)) {
+        return true;
+      }
+    }
+    return false;
   }
 
 }
