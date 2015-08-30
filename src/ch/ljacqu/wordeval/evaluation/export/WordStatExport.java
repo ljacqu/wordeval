@@ -2,7 +2,6 @@ package ch.ljacqu.wordeval.evaluation.export;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.NavigableMap;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -25,14 +24,12 @@ public class WordStatExport extends ExportObject {
     this.aggregatedEntries = aggregatedEntries;
   }
 
-  @Override
-  public Map<Integer, List<String>> getTopEntries() {
-    return Collections.unmodifiableMap(topEntries);
+  public SortedMap<Integer, List<String>> getTopEntries() {
+    return Collections.unmodifiableSortedMap(topEntries);
   }
 
-  @Override
-  public Map<Integer, Integer> getAggregatedEntries() {
-    return Collections.unmodifiableMap(aggregatedEntries);
+  public SortedMap<Integer, Integer> getAggregatedEntries() {
+    return Collections.unmodifiableSortedMap(aggregatedEntries);
   }
 
   public static WordStatExport createInstance(String identifier, int topKeys,

@@ -2,6 +2,7 @@ package ch.ljacqu.wordeval.evaluation.export;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.google.gson.Gson;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.LongWords;
 import ch.ljacqu.wordeval.evaluation.SameLetterConsecutive;
@@ -11,18 +12,20 @@ public class TestDriver {
 
   public static void main(String[] args) throws Exception {
     List<Evaluator> evaluators = new ArrayList<Evaluator>();
-    //evaluators.add(new LongWords());
+    evaluators.add(new LongWords());
     evaluators.add(new SameLetterConsecutive());
+    
+    List<ExportObject> exportObjects = new ArrayList<ExportObject>(evaluators.size());
 
-    Dictionary dictionary = Dictionary.getLanguageDictionary("af", evaluators);
+    Dictionary dictionary = Dictionary.getLanguageDictionary("hu", evaluators);
     dictionary.processDictionary();
 
-    ResultsExporter exporter = new ResultsExporter();
-
     for (Evaluator evaluator : evaluators) {
-      System.out.println(exporter.toJson(evaluator.toExportObject()));
-      //System.out.println(evaluator.toExportObject());
+      exportObjects.add(evaluator.toExportObject());
     }
+    
+    Gson gson = new Gson();
+    System.out.println(gson.toJson(exportObjects));
 
   }
 

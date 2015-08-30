@@ -21,10 +21,6 @@ public abstract class ExportObject implements Serializable {
     this.identifier = identifier;
   }
 
-  public abstract <K, V> Map<K, List<V>> getTopEntries();
-
-  public abstract <K, V> Map<K, V> getAggregatedEntries();
-
   public static <K> ExportObject create(String identifier, int topKeys,
       Evaluator<K> evaluator) {
     if (evaluator instanceof WordStatEvaluator) {
@@ -64,9 +60,6 @@ public abstract class ExportObject implements Serializable {
 
   @Override
   public String toString() {
-    return this.getClass().getSimpleName() + " [identifier=" + identifier
-        + ", topEntries=" + getTopEntries() + ", aggregatedEntries="
-        + getAggregatedEntries() + "]";
+    return this.getClass().getSimpleName() + " [identifier=" + identifier + "]";
   }
-
 }

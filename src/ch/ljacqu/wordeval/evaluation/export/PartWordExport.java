@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -17,25 +16,23 @@ public final class PartWordExport extends ExportObject {
 
   private static final long serialVersionUID = 1L;
 
-  private final SortedMap<Integer, List<KeyAndWords>> topEntries;
-  private final SortedMap<Integer, List<KeyAndTotal>> aggregatedEntries;
+  private final SortedMap<Integer, SortedMap<String, String[]>> topEntries;
+  private final SortedMap<Integer, SortedMap<String, Integer>> aggregatedEntries;
 
   public PartWordExport(String identifier,
-      SortedMap<Integer, List<KeyAndWords>> topEntries,
-      SortedMap<Integer, List<KeyAndTotal>> aggregatedEntries) {
+      SortedMap<Integer, SortedMap<String, String[]>> topEntries,
+      SortedMap<Integer, SortedMap<String, Integer>> aggregatedEntries) {
     super(identifier);
     this.topEntries = topEntries;
     this.aggregatedEntries = aggregatedEntries;
   }
 
-  @Override
-  public Map<Integer, List<KeyAndWords>> getTopEntries() {
+  public SortedMap<Integer, SortedMap<String, String[]>> getTopEntries() {
     return topEntries;
   }
 
-  @Override
-  public Map<Integer, List<KeyAndTotal>> getAggregatedEntries() {
-    return Collections.unmodifiableMap(aggregatedEntries);
+  public SortedMap<Integer, SortedMap<String, Integer>> getAggregatedEntries() {
+    return aggregatedEntries;
   }
 
   public static PartWordExport createInstance(String identifier,
@@ -59,11 +56,13 @@ public final class PartWordExport extends ExportObject {
     SortedMap<Integer, List<KeyAndWords>> topEntries = getBiggestKeys(
         entriesByLength, topLengths);
     if (minLength != null) {
-      topEntries = topEntries.tailMap(minLength);
+      if (topEntries.firstKey() < minLength) {
+        topEntries = topEntries.tailMap(minLength);
+      }
     }
 
-    // Replace everything else from KeyAndWords to KeyAndLength
-    SortedMap<Integer, List<KeyAndTotal>> aggregatedEntries;
+    // Replace everything else from KeyAndWords to key: length
+    SortedMap<Integer, SortedMap<String, Integer>> aggregatedEntries;
     if (topEntries.isEmpty()) {
       aggregatedEntries = new TreeMap<>();
     } else {
@@ -71,18 +70,33 @@ public final class PartWordExport extends ExportObject {
       aggregatedEntries = aggregateSmallerEntries(entriesByLength, key);
     }
 
-    return new PartWordExport(identifier, topEntries, aggregatedEntries);
+    return new PartWordExport(identifier, keyAndWordsToMap(topEntries),
+        aggregatedEntries);
   }
 
-  private static SortedMap<Integer, List<KeyAndTotal>> aggregateSmallerEntries(
+  private static SortedMap<Integer, SortedMap<String, Integer>> aggregateSmallerEntries(
       SortedMap<Integer, List<KeyAndWords>> map, int beforeKey) {
-    SortedMap<Integer, List<KeyAndTotal>> resultMap = new TreeMap<>();
+    SortedMap<Integer, SortedMap<String, Integer>> resultMap = new TreeMap<>();
     for (Map.Entry<Integer, List<KeyAndWords>> entry : map.headMap(beforeKey)
         .entrySet()) {
       int length = entry.getKey();
-      resultMap.put(length, new ArrayList<KeyAndTotal>());
+      resultMap.put(length, new TreeMap<>());
       for (KeyAndWords wordGroup : entry.getValue()) {
-        resultMap.get(length).add(wordGroup.toKeyAndLength());
+        resultMap.get(length).put(wordGroup.key, wordGroup.words.size());
+      }
+    }
+    return resultMap;
+  }
+
+  private static SortedMap<Integer, SortedMap<String, String[]>> keyAndWordsToMap(
+      SortedMap<Integer, List<KeyAndWords>> map) {
+    SortedMap<Integer, SortedMap<String, String[]>> resultMap = new TreeMap<>();
+    for (Map.Entry<Integer, List<KeyAndWords>> entry : map.entrySet()) {
+      resultMap.put(entry.getKey(), new TreeMap<>());
+      for (KeyAndWords keyAndWords : entry.getValue()) {
+        String[] stringArray = new String[keyAndWords.words.size()];
+        resultMap.get(entry.getKey()).put(keyAndWords.key,
+            keyAndWords.words.toArray(stringArray));
       }
     }
     return resultMap;
@@ -97,32 +111,8 @@ public final class PartWordExport extends ExportObject {
       this.words = Collections.unmodifiableList(words);
     }
 
-    public KeyAndWords(Entry<String, List<String>> entry) {
+    public KeyAndWords(Map.Entry<String, List<String>> entry) {
       this(entry.getKey(), entry.getValue());
-    }
-
-    public KeyAndTotal toKeyAndLength() {
-      return new KeyAndTotal(key, words.size());
-    }
-
-    @Override
-    public String toString() {
-      return "{" + key + ": " + words + "}";
-    }
-  }
-
-  public static class KeyAndTotal {
-    public final String key;
-    public final int total;
-
-    public KeyAndTotal(String key, int total) {
-      this.key = key;
-      this.total = total;
-    }
-
-    @Override
-    public String toString() {
-      return "{" + key + ": " + total + "}";
     }
   }
 
