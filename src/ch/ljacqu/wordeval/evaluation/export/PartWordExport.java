@@ -33,13 +33,13 @@ public final class PartWordExport extends ExportObject {
     return aggregatedEntries;
   }
 
-  public static PartWordExport create(String identifier, int topLengths,
+  public static PartWordExport create(String identifier,
       NavigableMap<String, List<String>> map) {
-    return create(identifier, topLengths, map, null);
+    return create(identifier, map, new ExportParamsBuilder().build());
   }
 
-  public static PartWordExport create(String identifier, int topLengths,
-      NavigableMap<String, List<String>> map, Integer minLength) {
+  public static PartWordExport create(String identifier,
+      NavigableMap<String, List<String>> map, ExportParams params) {
     // {key: [words] ..} to {length: [{key: [words]}, ...]}
     NavigableMap<Integer, List<KeyAndWords>> entriesByLength = new TreeMap<>();
     for (Map.Entry<String, List<String>> entry : map.entrySet()) {
@@ -52,7 +52,7 @@ public final class PartWordExport extends ExportObject {
 
     // Filter the top lengths in the new list
     SortedMap<Integer, List<KeyAndWords>> topEntries = getBiggestKeys(
-        entriesByLength, topLengths, minLength);
+        entriesByLength, params);
 
     // Replace everything else from KeyAndWords to key: length
     SortedMap<Integer, SortedMap<String, Integer>> aggregatedEntries;

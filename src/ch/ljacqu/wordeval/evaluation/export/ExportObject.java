@@ -14,8 +14,9 @@ import java.util.TreeMap;
  */
 public abstract class ExportObject implements Serializable {
 
+  public static final String INDEX_TOTAL = "/total";
+  public static final String INDEX_REST = "/rest";
   private static final long serialVersionUID = 1L;
-
   public final String identifier;
 
   public ExportObject(String identifier) {
@@ -23,26 +24,35 @@ public abstract class ExportObject implements Serializable {
   }
 
   protected static final <V> NavigableMap<Integer, V> getBiggestKeys(
-      NavigableMap<Integer, V> map, int number, Integer minimum) {
+      NavigableMap<Integer, V> map, ExportParams params) {
     Iterator<Integer> descendingIterator = map.descendingKeySet().iterator();
     Integer key = null;
-    for (int i = 0; i < number && descendingIterator.hasNext(); ++i) {
+    for (int i = 0; i < params.number && descendingIterator.hasNext(); ++i) {
       key = descendingIterator.next();
-      if (minimum != null && key < minimum) {
-        key = minimum;
+      if (params.minimum != null && key < params.minimum) {
+        key = params.minimum;
         break;
       }
     }
     if (key != null) {
-      return Collections.unmodifiableNavigableMap(map.tailMap(key, true));
+      NavigableMap<Integer, V> resultsMap = map.tailMap(key, true);
+      if (params.isDescending) {
+        return resultsMap.descendingMap();
+      }
+      return resultsMap;
     }
     return new TreeMap<>();
   }
 
   protected static final <K, V> NavigableMap<K, Integer> computeAggregatedMap(
-      NavigableMap<K, List<V>> map, K toKey) {
+      NavigableMap<K, List<V>> map, K toKey, ExportParams params) {
     NavigableMap<K, List<V>> headMap = map.headMap(toKey, false);
-    NavigableMap<K, Integer> resultMap = new TreeMap<>();
+    NavigableMap<K, Integer> resultMap;
+    if (params.isDescending) {
+      resultMap = new TreeMap<>(Collections.reverseOrder());
+    } else {
+      resultMap = new TreeMap<>();
+    }
     for (Map.Entry<K, List<V>> entry : headMap.entrySet()) {
       resultMap.put(entry.getKey(), entry.getValue().size());
     }

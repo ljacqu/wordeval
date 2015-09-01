@@ -16,7 +16,7 @@ import ch.ljacqu.wordeval.evaluation.PartWordEvaluator;
 
 public class DictionarySanitationTest {
 
-  private static final String languageCode = "hu";
+  private static final String languageCode = "tr";
 
   @Test
   public void shouldNotHaveForbiddenChars() throws IOException {

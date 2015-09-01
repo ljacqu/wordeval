@@ -28,12 +28,10 @@ public class ResultsExporter {
       throws IOException {
     String jsonOutput = toJson(evaluators);
 
-    try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-        new FileOutputStream(filename), "utf-8"))) {
-      writer.write(jsonOutput);
-    } catch (IOException e) {
-      throw e; // ???
-    }
+    Writer writer = new BufferedWriter(new OutputStreamWriter(
+        new FileOutputStream(filename), "utf-8"));
+    writer.write(jsonOutput);
+    writer.close();
   }
 
   private static Gson getGson() {

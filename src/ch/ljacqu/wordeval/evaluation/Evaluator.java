@@ -16,8 +16,6 @@ import ch.ljacqu.wordeval.language.WordForm;
  *        sequences the evaluator identifies, or the word length)
  */
 public abstract class Evaluator<K> {
-  /** The default number of "top entries" to keep in the ExportObject. */
-  protected static final int DEFAULT_TOP_ENTRY_NUMBER = 5;
 
   /** Collection of relevant words. */
   protected NavigableMap<K, List<String>> results = new TreeMap<K, List<String>>();
@@ -34,8 +32,7 @@ public abstract class Evaluator<K> {
    * @return The converted ExportObject instance
    */
   public ExportObject toExportObject() {
-    return toExportObject(this.getClass().getSimpleName(),
-        DEFAULT_TOP_ENTRY_NUMBER);
+    return toExportObject(this.getClass().getSimpleName(), null);
   }
 
   /**
@@ -45,7 +42,7 @@ public abstract class Evaluator<K> {
    * @return The converted ExportObject instance
    */
   protected abstract ExportObject toExportObject(String identifier,
-      int topEntries);
+      Integer topEntries);
 
   /**
    * Gets the results of the evaluator.

@@ -4,6 +4,7 @@ import java.util.List;
 import ch.ljacqu.wordeval.LetterService;
 import ch.ljacqu.wordeval.LetterType;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
+import ch.ljacqu.wordeval.evaluation.export.WordStatExport;
 import ch.ljacqu.wordeval.language.WordForm;
 
 /**
@@ -37,7 +38,9 @@ public class MonotoneVowel extends WordStatEvaluator {
         }
       }
     }
-    addEntry(word.length(), rawWord);
+    if (foundLetter) {
+      addEntry(word.length(), rawWord);
+    }
   }
 
   @Override
@@ -45,11 +48,11 @@ public class MonotoneVowel extends WordStatEvaluator {
     // TODO: No accents, or just lowercase?
     return WordForm.NO_ACCENTS;
   }
-  
+
   @Override
   public ExportObject toExportObject() {
     String identifier = "MonotoneVowel_" + letterType.getName();
-    return toExportObject(identifier, DEFAULT_TOP_ENTRY_NUMBER);
+    return WordStatExport.create(identifier, results);
   }
 
 }
