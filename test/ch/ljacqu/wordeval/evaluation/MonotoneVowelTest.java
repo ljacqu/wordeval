@@ -30,9 +30,9 @@ public class MonotoneVowelTest {
 
   @Test
   public void shouldProcessWordsCorrectly() {
-    // lengths are 10, 9, 5, 5, 10, 8, 8
+    // lengths are 10, 9, 5, 5, 10, 8, 8, 0
     String[] words = { "assosiasie", "something", "flûte", "geëet",
-        "mâdagascar", "tatoťute", "čocaçoći" };
+        "mâdagascar", "tatoťute", "čocaçoći", "eau" };
     process(words);
 
     Map<Integer, List<String>> vowelResults = vowelEvaluator.getResults();

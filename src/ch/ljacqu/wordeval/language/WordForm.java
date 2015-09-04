@@ -6,13 +6,12 @@ package ch.ljacqu.wordeval.language;
  */
 public enum WordForm {
 
-  /** The literal line read from the file. */
-  RAW_UNSAFE,
   /** The raw form after basic sanitation. */
   RAW,
   /** Word in all lowercase. */
   LOWERCASE,
   /** All lowercase word with diacritics removed. */
-  NO_ACCENTS
-
+  NO_ACCENTS,
+  /** All lowercase without diacritics and no hyphens or apostrophes. */
+  NO_ACCENTS_WORD_CHARS_ONLY
 }

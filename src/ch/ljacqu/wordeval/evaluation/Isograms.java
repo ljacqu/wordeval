@@ -10,6 +10,7 @@ public class Isograms extends WordStatEvaluator {
 
   @Override
   public void processWord(String word, String rawWord) {
+    word = word.replace("-", "").replace("'", "");
     List<Character> charList = new ArrayList<Character>();
     for (int i = 0; i < word.length(); ++i) {
       char currentChar = word.charAt(i);

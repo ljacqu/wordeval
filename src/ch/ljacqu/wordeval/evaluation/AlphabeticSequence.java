@@ -1,5 +1,7 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import ch.ljacqu.wordeval.language.WordForm;
+
 /**
  * Filters that checks if there is a group of letters in a word that is an
  * alphabetical sequence, e.g. "rstu" in German "Erstuntersuchung."
@@ -13,6 +15,12 @@ public class AlphabeticSequence extends PartWordEvaluator {
   public void processWord(String word, String rawWord) {
     checkForSequence(word, rawWord, FORWARDS);
     checkForSequence(word, rawWord, BACKWARDS);
+  }
+  
+  @Override
+  public WordForm getWordForm() {
+    // TODO #15 Make locale-aware instead
+    return WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
   }
 
   /**

@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 import ch.ljacqu.wordeval.LetterService;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
+import static ch.ljacqu.wordeval.language.WordForm.*;
 
 /**
  * A dictionary to process.
@@ -74,7 +75,7 @@ public class Dictionary {
     try (BufferedReader br = new BufferedReader(isr)) {
       for (String line; (line = br.readLine()) != null;) {
         String[] wordForms = computeWordForms(line);
-        if (!getWordForm(wordForms, WordForm.RAW).isEmpty()) {
+        if (!getWordForm(wordForms, RAW).isEmpty()) {
           processWord(wordForms);
         }
       }
@@ -89,7 +90,7 @@ public class Dictionary {
   private void processWord(String[] wordForms) {
     for (Evaluator evaluator : evaluators) {
       evaluator.processWord(getWordForm(wordForms, evaluator.getWordForm()),
-          getWordForm(wordForms, WordForm.RAW));
+          getWordForm(wordForms, RAW));
     }
   }
 
@@ -101,14 +102,15 @@ public class Dictionary {
    */
   private String[] computeWordForms(String crudeWord) {
     String[] wordForms = new String[WordForm.values().length];
-    wordForms[WordForm.RAW_UNSAFE.ordinal()] = crudeWord;
     String rawWord = sanitizer.sanitizeWord(crudeWord);
-    wordForms[WordForm.RAW.ordinal()] = rawWord;
+    wordForms[RAW.ordinal()] = rawWord;
 
     String lowerCaseWord = rawWord.toLowerCase(sanitizer.getLocale());
-    wordForms[WordForm.LOWERCASE.ordinal()] = lowerCaseWord;
-    wordForms[WordForm.NO_ACCENTS.ordinal()] = LetterService
+    wordForms[LOWERCASE.ordinal()] = lowerCaseWord;
+    wordForms[NO_ACCENTS.ordinal()] = LetterService
         .removeAccentsFromWord(lowerCaseWord);
+    wordForms[NO_ACCENTS_WORD_CHARS_ONLY.ordinal()] = wordForms[NO_ACCENTS.ordinal()]
+        .replace("-", "").replace("'", "");
     return wordForms;
   }
 

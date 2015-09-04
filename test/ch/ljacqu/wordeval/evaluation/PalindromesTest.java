@@ -20,7 +20,7 @@ public class PalindromesTest {
   public void shouldRecognizePalindromes() {
     // otto, bagab, -, awkwa, bab, bab/ili
     String[] words = { "trottoir", "ebagabo", "palindrome", "awkward",
-        "probable", "probability" };
+        "probable", "probability", "o" };
 
     for (String word : words) {
       evaluator.processWord(word, word);

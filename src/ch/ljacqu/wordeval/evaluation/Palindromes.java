@@ -21,7 +21,7 @@ public class Palindromes extends PartWordEvaluator {
 
   @Override
   public WordForm getWordForm() {
-    return WordForm.NO_ACCENTS;
+    return WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
   }
 
   /**

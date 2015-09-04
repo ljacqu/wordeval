@@ -1,5 +1,7 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import ch.ljacqu.wordeval.language.WordForm;
+
 /**
  * Filter that saves words whose letters are alphabetical from beginning to end,
  * forwards or backwards. For example, in German "einst", each following letter
@@ -20,6 +22,12 @@ public class AlphabeticalOrder extends WordStatEvaluator {
     if (length > 0) {
       addEntry(length, rawWord);
     }
+  }
+
+  @Override
+  public WordForm getWordForm() {
+    // TODO #15 Make locale-aware instead
+    return WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
   }
 
   private int checkIsOrdered(String word, int searchDirection) {
