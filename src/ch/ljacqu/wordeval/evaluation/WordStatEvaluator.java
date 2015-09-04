@@ -10,7 +10,7 @@ public abstract class WordStatEvaluator extends Evaluator<Integer> {
   protected ExportObject toExportObject(String identifier, Integer topEntries) {
     ExportParamsBuilder paramsBuilder = new ExportParamsBuilder();
     if (topEntries != null) {
-      paramsBuilder.setNumber(topEntries);
+      paramsBuilder.setTopKeys(topEntries);
     }
     return WordStatExport.create(identifier, results, paramsBuilder.build());
   }

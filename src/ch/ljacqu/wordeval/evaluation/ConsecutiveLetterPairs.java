@@ -43,7 +43,7 @@ public class ConsecutiveLetterPairs extends WordStatEvaluator {
   @Override
   public ExportObject toExportObject() {
     return WordStatExport.create("ConsecutiveLetterPairs", results,
-        new ExportParamsBuilder().setNumber(3).setMinimum(3).build());
+        new ExportParamsBuilder().setTopKeys(3).setMinimum(3).build());
   }
 
 }

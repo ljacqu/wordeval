@@ -32,7 +32,7 @@ public class SameLetterConsecutive extends PartWordEvaluator {
 
   @Override
   public ExportObject toExportObject() {
-    ExportParams params = new ExportParamsBuilder().setNumber(5).setMinimum(3)
+    ExportParams params = new ExportParamsBuilder().setTopKeys(5).setMinimum(3)
         .build();
     return PartWordExport.create("LongWords", results, params);
   }
