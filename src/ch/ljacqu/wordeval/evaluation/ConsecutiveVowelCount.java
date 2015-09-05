@@ -10,7 +10,7 @@ import ch.ljacqu.wordeval.language.WordForm;
 /**
  * Searches words for clusters of vowels or consonants, e.g. "ngstschw" in
  * German "Angstschweiss". The same word can appear multiple times in the
- * results, e.g. "poignée" will count twice as 2 ("oi", "ée").
+ * results, e.g. "poignée" will count twice ("oi", "ée").
  */
 public class ConsecutiveVowelCount extends WordStatEvaluator {
 

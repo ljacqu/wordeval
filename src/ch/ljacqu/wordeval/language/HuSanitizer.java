@@ -5,11 +5,15 @@ public class HuSanitizer extends Sanitizer {
   private boolean skipWords = false;
 
   public HuSanitizer(char... delimiters) {
-    super("hu", delimiters);
+    super("hu", delimiters, new String[0]);
   }
 
   @Override
   protected String customSanitize(String word) {
+    if (word.isEmpty()) {
+      return "";
+    }
+
     // Skip Roman numerals; they are in range:
     // "xxxviii." to "v.", "lxxxviii." to "l."
     // "ix." to "i.", "cxxxviii." to "cv."
@@ -21,7 +25,7 @@ public class HuSanitizer extends Sanitizer {
         "clxxxviii.")) {
       skipWords = true;
       return "";
-    } else
+    }
 
     // From ATP-vé to the end of the file, only abbreviation-like words are
     // present and number/Greek stuff we don't mind skipping (e.g. 20.-kal,
@@ -39,12 +43,24 @@ public class HuSanitizer extends Sanitizer {
       return "";
     }
 
+    // Some words have a starting '|' for some reason
+    if (word.charAt(0) == '|') {
+      return word.substring(1);
+    }
+
     // Skip some chemical words because they have parentheses, which is annoying
     if (containsPart(word, "(vinil", "(izobutilén)", "(akril", "(metil")) {
       return "";
     }
 
-    if (wordEqualsOne(word, "[", "]")) {
+    // Skip all entries with a period (.) as they really are only abbreviations
+    // we are not really interested in. Some entries also use other odd symbols
+    // that aren't very natural words, so skip those too
+    if (containsPart(word, ".", "+", "±", "ø", "ʻ", "’", "­")) {
+      return "";
+    }
+
+    if (wordEqualsOne(word, "[", "]", "{", "}", "#")) {
       return "";
     }
 
@@ -92,6 +108,8 @@ public class HuSanitizer extends Sanitizer {
 
     if (word.equals("adieu[ph:agyő]")) {
       return "adieu";
+    } else if (word.equals("ancien}")) {
+      return "ancien";
     }
 
     return word;

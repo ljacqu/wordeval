@@ -3,7 +3,6 @@ package ch.ljacqu.wordeval.evaluation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
@@ -71,28 +70,6 @@ public abstract class Evaluator<K> {
       results.put(key, new ArrayList<String>());
     }
     results.get(key).add(word);
-  }
-
-  /**
-   * Outputs the evaluator's results for debug / quick viewing purposes.
-   */
-  public void outputAggregatedResult() {
-    for (Entry<K, List<String>> entry : results.entrySet()) {
-      outputEntry(entry.getKey(), entry.getValue());
-    }
-  }
-
-  /**
-   * Outputs an entry of the results map.
-   * @param key The key in the results map
-   * @param entry The list of entries to output
-   */
-  protected void outputEntry(K key, List<String> entry) {
-    if (entry.size() > 50) {
-      System.out.println(key + ": " + entry.size());
-    } else {
-      System.out.println(key + ": " + entry);
-    }
   }
 
 }

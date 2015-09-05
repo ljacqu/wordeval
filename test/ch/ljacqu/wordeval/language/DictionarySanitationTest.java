@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import org.junit.Ignore;
 import org.junit.Test;
 import ch.ljacqu.wordeval.LetterService;
 import ch.ljacqu.wordeval.LetterType;
@@ -16,30 +15,13 @@ import ch.ljacqu.wordeval.evaluation.PartWordEvaluator;
 
 public class DictionarySanitationTest {
 
-  private static final String languageCode = "tr";
+  private static final String languageCode = "af";
 
   @Test
-  public void shouldNotHaveForbiddenChars() throws IOException {
-    ForbiddenCharsEvaluator testEvaluator = new ForbiddenCharsEvaluator();
-    List<Evaluator> evaluators = Collections.singletonList(testEvaluator);
-    Dictionary dictionary = Dictionary.getLanguageDictionary(languageCode,
-        evaluators);
-
-    dictionary.processDictionary();
-    List<String> errors = testEvaluator.getErrors();
-
-    if (!errors.isEmpty()) {
-      fail("Found " + errors.size() + " errors: " + errors);
-    }
-    assertTrue(errors.isEmpty());
-  }
-
-  @Test
-  @Ignore
-  // TODO #20: Make test work with according sanitation
   public void shouldNotHaveNonWordCharacters() throws IOException {
     List<Character> allowedChars = new ArrayList<>();
     allowedChars.add('-');
+    allowedChars.add('\'');
     allowedChars.addAll(LetterService.getLetters(LetterType.VOWELS));
     allowedChars.addAll(LetterService.getLetters(LetterType.CONSONANTS));
     NoOtherCharsEvaluator testEvaluator = new NoOtherCharsEvaluator(
@@ -53,31 +35,12 @@ public class DictionarySanitationTest {
     Map<String, List<String>> errors = testEvaluator.getResults();
 
     if (!errors.isEmpty()) {
-      testEvaluator.outputAggregatedResult();
+      for (Map.Entry<String, List<String>> entry : errors.entrySet()) {
+        System.err.println(entry.getKey() + ": " + entry.getValue());
+      }
       fail("Found errors");
     } else {
       assertTrue(errors.isEmpty());
-    }
-  }
-
-  private static class ForbiddenCharsEvaluator extends PartWordEvaluator {
-    private static final char[] ILLEGAL_CHARACTERS = { '/', ',', '\n', '(',
-        ')', '[', ']', ' ', '!', '?', '_', '0', '1', '2', '3', '4', '5', '6',
-        '7', '8', '9' };
-
-    private List<String> errors = new ArrayList<>();
-
-    @Override
-    public void processWord(String word, String rawWord) {
-      for (char disallowedChar : ILLEGAL_CHARACTERS) {
-        if (word.indexOf(disallowedChar) != -1) {
-          errors.add(word + " has disallowed char '" + disallowedChar + "'");
-        }
-      }
-    }
-
-    public List<String> getErrors() {
-      return errors;
     }
   }
 

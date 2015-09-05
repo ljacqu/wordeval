@@ -12,7 +12,7 @@ public final class LetterService {
 
   public static List<Character> getLetters(LetterType letterType) {
     if (letterType == LetterType.VOWELS) {
-      Character[] charArray = { 'a', 'e', 'i', 'o', 'u', 'y' };
+      Character[] charArray = { 'a', 'e', 'i', 'ı', 'o', 'u', 'y' };
       return new ArrayList<Character>(Arrays.asList(charArray));
     } else {
       Character[] charArray = { 'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l',
@@ -23,7 +23,9 @@ public final class LetterService {
 
   public static String removeAccentsFromWord(String word) {
     word = Normalizer.normalize(word, Normalizer.Form.NFD);
-    return word.replaceAll("\\p{M}", "");
+    // Only add lower-case manual replacements as we will intend to only use
+    // this with words in the all lower-case form
+    return word.replaceAll("\\p{M}", "").replace("ł", "l");
   }
 
 }

@@ -46,7 +46,7 @@ public class MonotoneVowel extends WordStatEvaluator {
   @Override
   public WordForm getWordForm() {
     // TODO: No accents, or just lowercase?
-    return WordForm.NO_ACCENTS;
+    return WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
   }
 
   @Override

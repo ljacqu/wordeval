@@ -1,10 +1,12 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
@@ -46,7 +48,7 @@ public abstract class ExportObject implements Serializable {
    * @param params The export parameters
    * @return The trimmed map with the top entries
    */
-  protected static final <V> NavigableMap<Integer, V> getBiggestKeys(
+  protected static final <V> NavigableMap<Integer, V> isolateTopEntries(
       NavigableMap<Integer, V> map, ExportParams params) {
     Iterator<Integer> descendingIterator = map.descendingKeySet().iterator();
     Integer key = null;
@@ -59,10 +61,7 @@ public abstract class ExportObject implements Serializable {
     }
     if (key != null) {
       NavigableMap<Integer, V> resultsMap = map.tailMap(key, true);
-      if (params.isDescending) {
-        return resultsMap.descendingMap();
-      }
-      return resultsMap;
+      return checkDescending(resultsMap, params);
     }
     return new TreeMap<>();
   }
@@ -79,10 +78,20 @@ public abstract class ExportObject implements Serializable {
     for (Map.Entry<K, List<V>> entry : map.entrySet()) {
       result.put(entry.getKey(), entry.getValue().size());
     }
+    return checkDescending(result, params);
+  }
+
+  protected static final <K, V> NavigableMap<K, V> checkDescending(
+      NavigableMap<K, V> map, ExportParams params) {
     if (params.isDescending) {
-      return result.descendingMap();
+      return map.descendingMap();
     }
-    return result;
+    return map;
+  }
+
+  protected static final <K, V> K getBiggestKey(SortedMap<K, V> map) {
+    return map.comparator().equals(Collections.reverseOrder()) ? map.lastKey()
+        : map.firstKey();
   }
 
 }

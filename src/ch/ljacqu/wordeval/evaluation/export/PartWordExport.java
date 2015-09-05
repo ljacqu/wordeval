@@ -1,7 +1,6 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -46,7 +45,7 @@ public final class PartWordExport extends ExportObject {
         map, params);
 
     // Filter the top lengths in the new list
-    SortedMap<Integer, List<KeyAndWords>> topEntries = getBiggestKeys(
+    SortedMap<Integer, List<KeyAndWords>> topEntries = isolateTopEntries(
         entriesByLength, params);
 
     // Replace everything else from KeyAndWords to key: length
@@ -54,8 +53,7 @@ public final class PartWordExport extends ExportObject {
     if (topEntries.isEmpty()) {
       aggregatedEntries = aggregateSmallerEntries(entriesByLength, params);
     } else {
-      int key = params.isDescending ? topEntries.lastKey() : topEntries
-          .firstKey();
+      int key = getBiggestKey(topEntries);
       aggregatedEntries = aggregateSmallerEntries(
           entriesByLength.headMap(key, false), params);
     }
@@ -66,12 +64,7 @@ public final class PartWordExport extends ExportObject {
 
   private static SortedMap<Integer, SortedMap<String, Integer>> aggregateSmallerEntries(
       SortedMap<Integer, List<KeyAndWords>> map, ExportParams params) {
-    SortedMap<Integer, SortedMap<String, Integer>> result;
-    if (params.isDescending) {
-      result = new TreeMap<>(Collections.reverseOrder());
-    } else {
-      result = new TreeMap<>();
-    }
+    NavigableMap<Integer, SortedMap<String, Integer>> result = new TreeMap<>();
     for (Map.Entry<Integer, List<KeyAndWords>> entry : map.entrySet()) {
       int length = entry.getKey();
       result.put(length, new TreeMap<>());
@@ -79,7 +72,7 @@ public final class PartWordExport extends ExportObject {
         result.get(length).put(wordGroup.key, wordGroup.words.size());
       }
     }
-    return result;
+    return checkDescending(result, params);
   }
 
   private static NavigableMap<Integer, List<KeyAndWords>> groupByLength(
@@ -97,16 +90,11 @@ public final class PartWordExport extends ExportObject {
 
   private static SortedMap<Integer, SortedMap<String, Object>> trimTopEntries(
       SortedMap<Integer, List<KeyAndWords>> map, ExportParams params) {
-    SortedMap<Integer, SortedMap<String, Object>> result;
-    if (params.isDescending) {
-      result = new TreeMap<>(Collections.reverseOrder());
-    } else {
-      result = new TreeMap<>();
-    }
+    NavigableMap<Integer, SortedMap<String, Object>> result = new TreeMap<>();
     for (Map.Entry<Integer, List<KeyAndWords>> entry : map.entrySet()) {
       result.put(entry.getKey(), trimKeyAndWordsList(entry.getValue(), params));
     }
-    return result;
+    return checkDescending(result, params);
   }
 
   /**

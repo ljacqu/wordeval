@@ -51,15 +51,14 @@ public class WordStatExport extends ExportObject {
    */
   public static WordStatExport create(String identifier,
       NavigableMap<Integer, List<String>> map, ExportParams params) {
-    SortedMap<Integer, List<String>> topEntries = getBiggestKeys(map, params);
+    SortedMap<Integer, List<String>> topEntries = isolateTopEntries(map, params);
     topEntries = trimLargeTopEntries(topEntries, params);
 
-    SortedMap<Integer, Integer> aggregatedEntries;
+    NavigableMap<Integer, Integer> aggregatedEntries;
     if (topEntries.isEmpty()) {
       aggregatedEntries = aggregateMap(map, params);
     } else {
-      Integer toKey = params.isDescending ? topEntries.lastKey() : topEntries
-          .firstKey();
+      Integer toKey = getBiggestKey(topEntries);
       aggregatedEntries = aggregateMap(map.headMap(toKey, false), params);
     }
     return new WordStatExport(identifier, topEntries, aggregatedEntries);

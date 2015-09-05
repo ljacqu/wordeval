@@ -1,8 +1,6 @@
 package ch.ljacqu.wordeval.language;
 
-import java.util.HashSet;
 import java.util.Locale;
-import java.util.Set;
 
 /**
  * Class responsible for sanitizing a dictionary's entries such that only the
@@ -13,29 +11,32 @@ public class Sanitizer {
 
   /** The characters whose occurrence mark the end of the word on the line. */
   private char[] delimiters;
+  /** Words containing any entry of skipSequences are discarded. */
+  private String[] skipSequences;
   /** The locale of the current language. */
   private Locale locale;
-  /** Collection of all processed words. */
-  private Set<String> seenWords;
 
   /**
    * Creates a new Sanitizer object.
    * @param locale The locale of the language
    * @param delimiters The delimiters used in the dictionary file
+   * @param skipSequences Sequences that words may not contain
    */
-  public Sanitizer(Locale locale, char... delimiters) {
+  public Sanitizer(Locale locale, char[] delimiters, String[] skipSequences) {
     this.locale = locale;
     this.delimiters = delimiters;
-    this.seenWords = new HashSet<>();
+    this.skipSequences = skipSequences;
   }
 
   /**
    * Creates a new Sanitizer object.
    * @param languageCode The code of the language (ISO-639-1)
    * @param delimiters The delimiters used in the dictionary file
+   * @param skipSequences Sequences that words may not contain
    */
-  public Sanitizer(String languageCode, char... delimiters) {
-    this(new Locale(languageCode), delimiters);
+  public Sanitizer(String languageCode, char[] delimiters,
+      String[] skipSequences) {
+    this(new Locale(languageCode), delimiters, skipSequences);
   }
 
   /**
@@ -55,15 +56,11 @@ public class Sanitizer {
    * @return The sanitized word (empty string to signal skip)
    */
   public final String sanitizeWord(String crudeWord) {
-    String cleanWord = customSanitize(removeDelimiters(crudeWord));
-    String cleanWordToLower = cleanWord.toLowerCase(locale);
-    if (cleanWordToLower.matches(".*\\d+.*")) {
-      return "";
-    } else if (seenWords.contains(cleanWordToLower)) {
+    String rawWord = removeDelimiters(crudeWord);
+    if (shouldBeSkipped(rawWord)) {
       return "";
     }
-    seenWords.add(cleanWordToLower);
-    return cleanWord;
+    return customSanitize(rawWord);
   }
 
   /**
@@ -81,7 +78,25 @@ public class Sanitizer {
         minIndex = delimiterIndex;
       }
     }
-    return crudeWord.substring(0, minIndex).trim();
+    return crudeWord.substring(0, minIndex).trim().replace('–', '-');
+  }
+
+  /**
+   * Checks whether the word contains any of the skip sequences or if it has
+   * digits, in which case the word should be skipped.
+   * @param word The word to process
+   * @return True if the word should be skipped, false otherwise
+   */
+  private boolean shouldBeSkipped(String word) {
+    for (String skipSequence : skipSequences) {
+      if (word.contains(skipSequence)) {
+        return true;
+      }
+    }
+    if (word.matches(".*\\d+.*")) {
+      return true;
+    }
+    return false;
   }
 
   /**
