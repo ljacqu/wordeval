@@ -5,7 +5,7 @@ import static ch.ljacqu.wordeval.LetterType.VOWELS;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import ch.ljacqu.wordeval.evaluation.AlphabeticSequence;
+import ch.ljacqu.wordeval.evaluation.AlphabeticalSequence;
 import ch.ljacqu.wordeval.evaluation.AlphabeticalOrder;
 import ch.ljacqu.wordeval.evaluation.ConsecutiveLetterPairs;
 import ch.ljacqu.wordeval.evaluation.ConsecutiveVowelCount;
@@ -30,7 +30,7 @@ public class TestDriver {
     evaluators.add(new ConsecutiveVowelCount(VOWELS));
     evaluators.add(new ConsecutiveVowelCount(CONSONANTS));
     evaluators.add(new AlphabeticalOrder());
-    evaluators.add(new AlphabeticSequence());
+    evaluators.add(new AlphabeticalSequence());
     evaluators.add(new MonotoneVowel(VOWELS));
     evaluators.add(new MonotoneVowel(CONSONANTS));
     evaluators.add(new Isograms());

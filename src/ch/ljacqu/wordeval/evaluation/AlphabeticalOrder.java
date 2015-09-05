@@ -15,11 +15,11 @@ public class AlphabeticalOrder extends WordStatEvaluator {
   @Override
   public void processWord(String word, String rawWord) {
     int length = checkIsOrdered(word, FORWARDS);
-    if (length > 0) {
+    if (length > 1) {
       addEntry(length, rawWord);
     }
     length = checkIsOrdered(word, BACKWARDS);
-    if (length > 0) {
+    if (length > 1) {
       addEntry(length, rawWord);
     }
   }

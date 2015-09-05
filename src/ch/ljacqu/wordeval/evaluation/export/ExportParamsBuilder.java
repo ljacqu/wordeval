@@ -4,7 +4,7 @@ public class ExportParamsBuilder {
 
   private int topKeys = 5;
   private Integer minimum = null;
-  private boolean isDescending = false;
+  private boolean isDescending = true;
   private Integer maxTopEntrySize = 50;
   private Integer maxPartWordListSize = null;
 

@@ -1,12 +1,14 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import ch.ljacqu.wordeval.evaluation.export.ExportObject;
+import ch.ljacqu.wordeval.evaluation.export.ExportParamsBuilder;
 import ch.ljacqu.wordeval.language.WordForm;
 
 /**
  * Filters that checks if there is a group of letters in a word that is an
  * alphabetical sequence, e.g. "rstu" in German "Erstuntersuchung."
  */
-public class AlphabeticSequence extends PartWordEvaluator {
+public class AlphabeticalSequence extends PartWordEvaluator {
 
   private static final int FORWARDS = -1;
   private static final int BACKWARDS = 1;
@@ -16,11 +18,17 @@ public class AlphabeticSequence extends PartWordEvaluator {
     checkForSequence(word, rawWord, FORWARDS);
     checkForSequence(word, rawWord, BACKWARDS);
   }
-  
+
   @Override
   public WordForm getWordForm() {
     // TODO #15 Make locale-aware instead
     return WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
+  }
+
+  @Override
+  public ExportObject toExportObject() {
+    return toExportObject(new ExportParamsBuilder().setMaxPartWordListSize(50)
+        .setMaxTopEntrySize(null).setTopKeys(4).build());
   }
 
   /**

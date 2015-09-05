@@ -6,13 +6,13 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-public class AlphabeticSequenceTest {
+public class AlphabeticalSequenceTest {
 
-  private AlphabeticSequence evaluator;
+  private AlphabeticalSequence evaluator;
 
   @Before
   public void initializeEvaluator() {
-    evaluator = new AlphabeticSequence();
+    evaluator = new AlphabeticalSequence();
   }
 
   @Test
