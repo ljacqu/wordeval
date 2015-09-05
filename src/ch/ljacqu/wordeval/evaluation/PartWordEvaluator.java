@@ -1,13 +1,26 @@
 package ch.ljacqu.wordeval.evaluation;
 
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
+import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 import ch.ljacqu.wordeval.evaluation.export.PartWordExport;
 
 public abstract class PartWordEvaluator extends Evaluator<String> {
 
   @Override
-  protected ExportObject toExportObject(String identifier, Integer topEntries) {
-    return PartWordExport.create(identifier, results);
+  protected ExportObject toExportObject(String identifier, ExportParams params) {
+    if (params == null) {
+      return PartWordExport.create(identifier, results);
+    }
+    return PartWordExport.create(identifier, results, params);
+  }
+
+  /**
+   * Creates an export object with the given export parameters.
+   * @param params The export parameters to use
+   * @return The generated export object
+   */
+  protected ExportObject toExportObject(ExportParams params) {
+    return toExportObject(this.getClass().getSimpleName(), params);
   }
 
 }

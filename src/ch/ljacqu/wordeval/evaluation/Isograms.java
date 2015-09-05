@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Finds isograms (word with all different letters).
+ * Finds isograms (words with all different letters).
  */
 public class Isograms extends WordStatEvaluator {
 

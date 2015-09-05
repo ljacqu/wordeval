@@ -80,8 +80,8 @@ public class WordStatExport extends ExportObject {
     for (Map.Entry<K, List<String>> entry : topEntries.entrySet()) {
       if (entry.getValue().size() > params.maxTopEntrySize) {
         int restSize = entry.getValue().size() - params.maxTopEntrySize;
-        // TODO Find better way to shorten list if it makes sense to only keep
-        // one word with the same start, for instance
+        // TODO #22: Find better way to shorten list if it makes sense to only
+        // keep one word with the same start, for instance
         topEntries.put(entry.getKey(),
             entry.getValue().subList(0, params.maxTopEntrySize));
         topEntries.get(entry.getKey()).add(ExportObject.INDEX_REST + restSize);

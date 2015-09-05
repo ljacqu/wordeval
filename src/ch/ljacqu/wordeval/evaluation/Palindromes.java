@@ -1,6 +1,7 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import java.util.List;
+import ch.ljacqu.wordeval.evaluation.export.ExportObject;
+import ch.ljacqu.wordeval.evaluation.export.ExportParamsBuilder;
 import ch.ljacqu.wordeval.language.WordForm;
 
 /**
@@ -22,6 +23,11 @@ public class Palindromes extends PartWordEvaluator {
   @Override
   public WordForm getWordForm() {
     return WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
+  }
+
+  @Override
+  public ExportObject toExportObject() {
+    return toExportObject(new ExportParamsBuilder().setMinimum(4).build());
   }
 
   /**
@@ -70,11 +76,5 @@ public class Palindromes extends PartWordEvaluator {
     }
     return null;
   }
-  
-  @Override
-  protected void outputEntry(String key, List<String> entry) {
-    if (key.length() > 4) {
-      super.outputEntry(key, entry);
-    }
-  }
+
 }

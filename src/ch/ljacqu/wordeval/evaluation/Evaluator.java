@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
+import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 import ch.ljacqu.wordeval.language.WordForm;
 
 /**
@@ -38,11 +39,11 @@ public abstract class Evaluator<K> {
   /**
    * Converts the evaluator's results to an export object.
    * @param identifier The identifier of the export object
-   * @param topEntries The number of entries to keep non-aggregated
+   * @param params The export params; can be null
    * @return The converted ExportObject instance
    */
   protected abstract ExportObject toExportObject(String identifier,
-      Integer topEntries);
+      ExportParams params);
 
   /**
    * Gets the results of the evaluator.

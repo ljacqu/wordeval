@@ -2,7 +2,6 @@ package ch.ljacqu.wordeval.evaluation;
 
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParamsBuilder;
-import ch.ljacqu.wordeval.evaluation.export.WordStatExport;
 import ch.ljacqu.wordeval.language.WordForm;
 
 /**
@@ -42,8 +41,8 @@ public class ConsecutiveLetterPairs extends WordStatEvaluator {
 
   @Override
   public ExportObject toExportObject() {
-    return WordStatExport.create("ConsecutiveLetterPairs", results,
-        new ExportParamsBuilder().setTopKeys(3).setMinimum(3).build());
+    return toExportObject(new ExportParamsBuilder().setTopKeys(3).setMinimum(3)
+        .build());
   }
 
 }

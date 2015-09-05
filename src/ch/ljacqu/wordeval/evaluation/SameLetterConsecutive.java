@@ -2,9 +2,7 @@ package ch.ljacqu.wordeval.evaluation;
 
 import org.apache.commons.lang3.StringUtils;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
-import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 import ch.ljacqu.wordeval.evaluation.export.ExportParamsBuilder;
-import ch.ljacqu.wordeval.evaluation.export.PartWordExport;
 import ch.ljacqu.wordeval.language.WordForm;
 
 /**
@@ -32,9 +30,8 @@ public class SameLetterConsecutive extends PartWordEvaluator {
 
   @Override
   public ExportObject toExportObject() {
-    ExportParams params = new ExportParamsBuilder().setTopKeys(5).setMinimum(3)
-        .build();
-    return PartWordExport.create("LongWords", results, params);
+    return toExportObject(new ExportParamsBuilder().setTopKeys(5).setMinimum(3)
+        .build());
   }
 
   @Override
