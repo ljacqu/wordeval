@@ -1,5 +1,9 @@
 package ch.ljacqu.wordeval.language;
 
+import static ch.ljacqu.wordeval.language.WordForm.LOWERCASE;
+import static ch.ljacqu.wordeval.language.WordForm.NO_ACCENTS;
+import static ch.ljacqu.wordeval.language.WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
+import static ch.ljacqu.wordeval.language.WordForm.RAW;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -7,7 +11,6 @@ import java.io.InputStreamReader;
 import java.util.List;
 import ch.ljacqu.wordeval.LetterService;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
-import static ch.ljacqu.wordeval.language.WordForm.*;
 
 /**
  * A dictionary to process.
@@ -109,8 +112,8 @@ public class Dictionary {
     wordForms[LOWERCASE.ordinal()] = lowerCaseWord;
     wordForms[NO_ACCENTS.ordinal()] = LetterService
         .removeAccentsFromWord(lowerCaseWord);
-    wordForms[NO_ACCENTS_WORD_CHARS_ONLY.ordinal()] = wordForms[NO_ACCENTS.ordinal()]
-        .replace("-", "").replace("'", "");
+    wordForms[NO_ACCENTS_WORD_CHARS_ONLY.ordinal()] = wordForms[NO_ACCENTS
+        .ordinal()].replace("-", "").replace("'", "");
     return wordForms;
   }
 

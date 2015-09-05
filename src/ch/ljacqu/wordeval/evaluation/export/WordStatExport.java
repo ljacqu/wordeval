@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.SortedMap;
-import java.util.TreeMap;
 
 /**
  * ExportObject class for evaluators of type WordStatEvaluator.
@@ -57,10 +56,11 @@ public class WordStatExport extends ExportObject {
 
     SortedMap<Integer, Integer> aggregatedEntries;
     if (topEntries.isEmpty()) {
-      aggregatedEntries = new TreeMap<>();
+      aggregatedEntries = aggregateMap(map, params);
     } else {
-      Integer toKey = topEntries.firstKey();
-      aggregatedEntries = computeAggregatedMap(map, toKey, params);
+      Integer toKey = params.isDescending ? topEntries.lastKey() : topEntries
+          .firstKey();
+      aggregatedEntries = aggregateMap(map.headMap(toKey, false), params);
     }
     return new WordStatExport(identifier, topEntries, aggregatedEntries);
   }

@@ -1,7 +1,6 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -68,23 +67,22 @@ public abstract class ExportObject implements Serializable {
     return new TreeMap<>();
   }
 
-  protected static final <K, V> NavigableMap<K, Integer> computeAggregatedMap(
-      NavigableMap<K, List<V>> map, K toKey, ExportParams params) {
-    NavigableMap<K, List<V>> headMap = map.headMap(toKey, false);
-    NavigableMap<K, Integer> resultMap;
+  /**
+   * For maps with lists as values, it replaces the lists with their length
+   * instead.
+   * @param map The map to transform
+   * @return The map with the original list's length
+   */
+  protected static final <K, V> NavigableMap<K, Integer> aggregateMap(
+      NavigableMap<K, List<V>> map, ExportParams params) {
+    NavigableMap<K, Integer> result = new TreeMap<>();
+    for (Map.Entry<K, List<V>> entry : map.entrySet()) {
+      result.put(entry.getKey(), entry.getValue().size());
+    }
     if (params.isDescending) {
-      resultMap = new TreeMap<>(Collections.reverseOrder());
-    } else {
-      resultMap = new TreeMap<>();
+      return result.descendingMap();
     }
-    for (Map.Entry<K, List<V>> entry : headMap.entrySet()) {
-      resultMap.put(entry.getKey(), entry.getValue().size());
-    }
-    return resultMap;
+    return result;
   }
 
-  @Override
-  public String toString() {
-    return this.getClass().getSimpleName() + " [identifier=" + identifier + "]";
-  }
 }

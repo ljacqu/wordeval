@@ -74,20 +74,6 @@ public final class PartWordExport extends ExportObject {
     return resultMap;
   }
 
-  private static SortedMap<Integer, SortedMap<String, String[]>> convertKeyAndWordsMap(
-      SortedMap<Integer, List<KeyAndWords>> map) {
-    SortedMap<Integer, SortedMap<String, String[]>> resultMap = new TreeMap<>();
-    for (Map.Entry<Integer, List<KeyAndWords>> entry : map.entrySet()) {
-      resultMap.put(entry.getKey(), new TreeMap<>());
-      for (KeyAndWords keyAndWords : entry.getValue()) {
-        String[] stringArray = new String[keyAndWords.words.size()];
-        resultMap.get(entry.getKey()).put(keyAndWords.key,
-            keyAndWords.words.toArray(stringArray));
-      }
-    }
-    return resultMap;
-  }
-
   private static NavigableMap<Integer, List<KeyAndWords>> groupByLength(
       Map<String, List<String>> map) {
     NavigableMap<Integer, List<KeyAndWords>> result = new TreeMap<>();
