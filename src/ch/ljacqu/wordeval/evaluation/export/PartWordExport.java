@@ -1,6 +1,7 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -41,7 +42,8 @@ public final class PartWordExport extends ExportObject {
   public static PartWordExport create(String identifier,
       NavigableMap<String, List<String>> map, ExportParams params) {
     // {key: [words] ..} to {length: [{key: [words]}, ...]}
-    NavigableMap<Integer, List<KeyAndWords>> entriesByLength = groupByLength(map);
+    NavigableMap<Integer, List<KeyAndWords>> entriesByLength = groupByLength(
+        map, params);
 
     // Filter the top lengths in the new list
     SortedMap<Integer, List<KeyAndWords>> topEntries = getBiggestKeys(
@@ -50,10 +52,12 @@ public final class PartWordExport extends ExportObject {
     // Replace everything else from KeyAndWords to key: length
     SortedMap<Integer, SortedMap<String, Integer>> aggregatedEntries;
     if (topEntries.isEmpty()) {
-      aggregatedEntries = new TreeMap<>();
+      aggregatedEntries = aggregateSmallerEntries(entriesByLength, params);
     } else {
-      Integer key = topEntries.firstKey();
-      aggregatedEntries = aggregateSmallerEntries(entriesByLength, key);
+      int key = params.isDescending ? topEntries.lastKey() : topEntries
+          .firstKey();
+      aggregatedEntries = aggregateSmallerEntries(
+          entriesByLength.headMap(key, false), params);
     }
 
     return new PartWordExport(identifier, trimTopEntries(topEntries, params),
@@ -61,21 +65,25 @@ public final class PartWordExport extends ExportObject {
   }
 
   private static SortedMap<Integer, SortedMap<String, Integer>> aggregateSmallerEntries(
-      SortedMap<Integer, List<KeyAndWords>> map, int beforeKey) {
-    SortedMap<Integer, SortedMap<String, Integer>> resultMap = new TreeMap<>();
-    for (Map.Entry<Integer, List<KeyAndWords>> entry : map.headMap(beforeKey)
-        .entrySet()) {
+      SortedMap<Integer, List<KeyAndWords>> map, ExportParams params) {
+    SortedMap<Integer, SortedMap<String, Integer>> result;
+    if (params.isDescending) {
+      result = new TreeMap<>(Collections.reverseOrder());
+    } else {
+      result = new TreeMap<>();
+    }
+    for (Map.Entry<Integer, List<KeyAndWords>> entry : map.entrySet()) {
       int length = entry.getKey();
-      resultMap.put(length, new TreeMap<>());
+      result.put(length, new TreeMap<>());
       for (KeyAndWords wordGroup : entry.getValue()) {
-        resultMap.get(length).put(wordGroup.key, wordGroup.words.size());
+        result.get(length).put(wordGroup.key, wordGroup.words.size());
       }
     }
-    return resultMap;
+    return result;
   }
 
   private static NavigableMap<Integer, List<KeyAndWords>> groupByLength(
-      Map<String, List<String>> map) {
+      Map<String, List<String>> map, ExportParams params) {
     NavigableMap<Integer, List<KeyAndWords>> result = new TreeMap<>();
     for (Map.Entry<String, List<String>> entry : map.entrySet()) {
       int length = entry.getKey().length();
@@ -89,7 +97,12 @@ public final class PartWordExport extends ExportObject {
 
   private static SortedMap<Integer, SortedMap<String, Object>> trimTopEntries(
       SortedMap<Integer, List<KeyAndWords>> map, ExportParams params) {
-    SortedMap<Integer, SortedMap<String, Object>> result = new TreeMap<>();
+    SortedMap<Integer, SortedMap<String, Object>> result;
+    if (params.isDescending) {
+      result = new TreeMap<>(Collections.reverseOrder());
+    } else {
+      result = new TreeMap<>();
+    }
     for (Map.Entry<Integer, List<KeyAndWords>> entry : map.entrySet()) {
       result.put(entry.getKey(), trimKeyAndWordsList(entry.getValue(), params));
     }
@@ -115,7 +128,7 @@ public final class PartWordExport extends ExportObject {
     // This still exports just fine as Json
     SortedMap<String, Object> result = new TreeMap<>();
     for (KeyAndWords kaw : list) {
-      result.put(kaw.key, kaw.mergedWordsArray(params.maxTopEntrySize));
+      result.put(kaw.key, kaw.getMergedWordsArray(params.maxPartWordListSize));
     }
     if (restSize > 0) {
       result.put(ExportObject.INDEX_REST, restSize);
@@ -132,7 +145,7 @@ public final class PartWordExport extends ExportObject {
       words = entry.getValue();
     }
 
-    public String[] mergedWordsArray(Integer maxSize) {
+    public String[] getMergedWordsArray(Integer maxSize) {
       List<String> words = this.words;
       if (maxSize != null && words.size() > maxSize) {
         int restSize = words.size() - maxSize;

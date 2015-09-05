@@ -6,9 +6,11 @@ public class ExportParamsBuilder {
   private Integer minimum = null;
   private boolean isDescending = false;
   private Integer maxTopEntrySize = 50;
+  private Integer maxPartWordListSize = null;
 
   public ExportParams build() {
-    return new ExportParams(topKeys, minimum, isDescending, maxTopEntrySize);
+    return new ExportParams(topKeys, minimum, isDescending, maxTopEntrySize,
+        maxPartWordListSize);
   }
 
   public ExportParamsBuilder setTopKeys(int number) {
@@ -28,6 +30,11 @@ public class ExportParamsBuilder {
 
   public ExportParamsBuilder setMaxTopEntrySize(Integer maxEntry) {
     this.maxTopEntrySize = maxEntry;
+    return this;
+  }
+
+  public ExportParamsBuilder setMaxPartWordListSize(Integer maxPartWordListSize) {
+    this.maxPartWordListSize = maxPartWordListSize;
     return this;
   }
 

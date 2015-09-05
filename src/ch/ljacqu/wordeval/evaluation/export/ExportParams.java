@@ -13,13 +13,16 @@ public class ExportParams {
   public final boolean isDescending;
   /** The maximum number of entries per key to keep. */
   public final Integer maxTopEntrySize;
+  /** For PartWordExport: the maximum size a word list may have. */
+  public final Integer maxPartWordListSize;
 
   ExportParams(int number, Integer minimum, boolean isDescending,
-      Integer maxEntry) {
+      Integer maxEntry, Integer maxPartWordListSize) {
     this.topKeys = number;
     this.minimum = minimum;
     this.isDescending = isDescending;
     this.maxTopEntrySize = maxEntry;
+    this.maxPartWordListSize = maxPartWordListSize;
   }
 
 }
