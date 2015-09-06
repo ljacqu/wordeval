@@ -1,6 +1,7 @@
 package ch.ljacqu.wordeval.language;
 
 import java.util.Locale;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Class responsible for sanitizing a dictionary's entries such that only the
@@ -9,23 +10,33 @@ import java.util.Locale;
  */
 public class Sanitizer {
 
+  /** The locale of the current language. */
+  private Locale locale;
   /** The characters whose occurrence mark the end of the word on the line. */
   private char[] delimiters;
   /** Words containing any entry of skipSequences are discarded. */
   private String[] skipSequences;
-  /** The locale of the current language. */
-  private Locale locale;
+  /**
+   * Additional letters that should be kept for the language. For characters
+   * with diacritics, this means that they should not be replaced to the
+   * accent-less version, ever.
+   */
+  private String[] additionalLetters;
 
   /**
    * Creates a new Sanitizer object.
    * @param locale The locale of the language
    * @param delimiters The delimiters used in the dictionary file
    * @param skipSequences Sequences that words may not contain
+   * @param additionalLetters Additional letters outside the regular alphabet
+   *        that should be recognized for the given language.
    */
-  public Sanitizer(Locale locale, char[] delimiters, String[] skipSequences) {
+  public Sanitizer(Locale locale, char[] delimiters, String[] skipSequences,
+      String[] additionalLetters) {
     this.locale = locale;
     this.delimiters = delimiters;
     this.skipSequences = skipSequences;
+    this.additionalLetters = additionalLetters;
   }
 
   /**
@@ -33,10 +44,12 @@ public class Sanitizer {
    * @param languageCode The code of the language (ISO-639-1)
    * @param delimiters The delimiters used in the dictionary file
    * @param skipSequences Sequences that words may not contain
+   * @param additionalLetters Additional letters outside the regular alphabet
+   *        that should be recognized for the given language.
    */
   public Sanitizer(String languageCode, char[] delimiters,
-      String[] skipSequences) {
-    this(new Locale(languageCode), delimiters, skipSequences);
+      String[] skipSequences, String[] additionalLetters) {
+    this(new Locale(languageCode), delimiters, skipSequences, additionalLetters);
   }
 
   /**
@@ -71,14 +84,11 @@ public class Sanitizer {
    * @return The sanitized word (empty string to signal skip)
    */
   private String removeDelimiters(String crudeWord) {
-    int minIndex = crudeWord.length();
-    for (char delimiter : delimiters) {
-      int delimiterIndex = crudeWord.indexOf(delimiter);
-      if (delimiterIndex > -1 && delimiterIndex < minIndex) {
-        minIndex = delimiterIndex;
-      }
+    int wordEndIndex = StringUtils.indexOfAny(crudeWord, delimiters);
+    if (wordEndIndex == -1) {
+      wordEndIndex = crudeWord.length();
     }
-    return crudeWord.substring(0, minIndex).trim().replace('–', '-');
+    return crudeWord.substring(0, wordEndIndex).trim().replace('–', '-');
   }
 
   /**
@@ -88,12 +98,9 @@ public class Sanitizer {
    * @return True if the word should be skipped, false otherwise
    */
   private boolean shouldBeSkipped(String word) {
-    for (String skipSequence : skipSequences) {
-      if (word.contains(skipSequence)) {
-        return true;
-      }
-    }
-    if (word.matches(".*\\d+.*")) {
+    if (StringUtils.containsAny(word, skipSequences)) {
+      return true;
+    } else if (word.matches(".*\\d+.*")) {
       return true;
     }
     return false;

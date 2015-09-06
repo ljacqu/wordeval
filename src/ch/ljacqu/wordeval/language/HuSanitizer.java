@@ -5,7 +5,7 @@ public class HuSanitizer extends Sanitizer {
   private boolean skipWords = false;
 
   public HuSanitizer(char... delimiters) {
-    super("hu", delimiters, new String[0]);
+    super("hu", delimiters, new String[0], new String[0]);
   }
 
   @Override

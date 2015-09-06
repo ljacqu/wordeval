@@ -8,13 +8,13 @@ final class DictionaryLoader {
   private DictionaryLoader() {
   }
 
-  private static Map<String, Language> languages = new HashMap<String, Language>();
+  private static Map<String, LanguageSettings> languages = new HashMap<String, LanguageSettings>();
 
   static {
-    Language.create("af").setDelimiters('/')
-        .setSkipSequences(".", "µ", "Ð", "ø");
-    Language.create("hu", new HuSanitizer('/', '\t'));
-    Language.create("tr").setDelimiters(' ');
+    save(new Language("af").setDelimiters('/')
+           .setSkipSequences(".", "µ", "Ð", "ø"));
+    save(new HuLanguage());
+    save(new Language("tr").setDelimiters(' '));
   }
 
   static Sanitizer getLanguageDictionary(String languageCode) {
@@ -25,8 +25,28 @@ final class DictionaryLoader {
     return languages.get(languageCode).getSanitizer();
   }
 
-  static void registerLanguage(Language language) {
-    languages.put(language.code, language);
+  static void save(LanguageSettings language) {
+    languages.put(language.getCode(), language);
+  }
+
+  // ---------
+  // Custom language classes
+  // ---------
+  private static class HuLanguage implements LanguageSettings {
+    private Sanitizer sanitizer;
+
+    @Override
+    public Sanitizer getSanitizer() {
+      if (sanitizer == null) {
+        sanitizer = new HuSanitizer('/', '\t');
+      }
+      return sanitizer;
+    }
+
+    @Override
+    public String getCode() {
+      return "hu";
+    }
   }
 
 }

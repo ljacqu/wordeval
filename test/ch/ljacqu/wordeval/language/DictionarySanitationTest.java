@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import ch.ljacqu.wordeval.LetterService;
 import ch.ljacqu.wordeval.LetterType;
@@ -45,19 +47,19 @@ public class DictionarySanitationTest {
   }
 
   private static class NoOtherCharsEvaluator extends PartWordEvaluator {
-    private final List<Character> allowedChars;
+    private final char[] allowedChars;
 
     public NoOtherCharsEvaluator(List<Character> allowedChars) {
-      this.allowedChars = allowedChars;
+      Character[] allowedCharsArray = allowedChars
+          .toArray(new Character[allowedChars.size()]);
+      this.allowedChars = ArrayUtils.toPrimitive(allowedCharsArray);
     }
 
     @Override
     public void processWord(String word, String rawWord) {
-      for (int i = 0; i < word.length(); ++i) {
-        char curChar = word.charAt(i);
-        if (!allowedChars.contains(curChar)) {
-          addEntry(new Character(curChar).toString(), word);
-        }
+      if (!StringUtils.containsOnly(word, allowedChars)) {
+        int subIndex = StringUtils.indexOfAnyBut(word, allowedChars);
+        addEntry(word.substring(subIndex, subIndex + 1), word);
       }
     }
 
