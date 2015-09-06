@@ -5,7 +5,7 @@ class Language implements LanguageSettings {
   private Sanitizer sanitizer;
   private char[] delimiters = {};
   private String[] skipSequences = {};
-  private String[] additionalLetters = {};
+  private char[] additionalLetters = {};
 
   Language(String code) {
     this.code = code;
@@ -21,7 +21,7 @@ class Language implements LanguageSettings {
     return this;
   }
 
-  Language setAdditionalLetters(String... additionalLetters) {
+  Language setAdditionalLetters(char... additionalLetters) {
     this.additionalLetters = additionalLetters;
     return this;
   }

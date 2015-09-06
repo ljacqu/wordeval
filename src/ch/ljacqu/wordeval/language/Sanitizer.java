@@ -21,7 +21,7 @@ public class Sanitizer {
    * with diacritics, this means that they should not be replaced to the
    * accent-less version, ever.
    */
-  private String[] additionalLetters;
+  private char[] additionalLetters;
 
   /**
    * Creates a new Sanitizer object.
@@ -32,7 +32,7 @@ public class Sanitizer {
    *        that should be recognized for the given language.
    */
   public Sanitizer(Locale locale, char[] delimiters, String[] skipSequences,
-      String[] additionalLetters) {
+      char[] additionalLetters) {
     this.locale = locale;
     this.delimiters = delimiters;
     this.skipSequences = skipSequences;
@@ -48,7 +48,7 @@ public class Sanitizer {
    *        that should be recognized for the given language.
    */
   public Sanitizer(String languageCode, char[] delimiters,
-      String[] skipSequences, String[] additionalLetters) {
+      String[] skipSequences, char[] additionalLetters) {
     this(new Locale(languageCode), delimiters, skipSequences, additionalLetters);
   }
 
@@ -112,5 +112,14 @@ public class Sanitizer {
    */
   public Locale getLocale() {
     return locale;
+  }
+
+  /**
+   * Returns the collection of letters that should be considered as separate
+   * letters for the language and not as diacritic variants.
+   * @return The list of additional letters
+   */
+  public char[] getAdditionalLetters() {
+    return additionalLetters;
   }
 }

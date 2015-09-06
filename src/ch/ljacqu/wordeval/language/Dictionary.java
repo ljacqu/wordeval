@@ -1,15 +1,11 @@
 package ch.ljacqu.wordeval.language;
 
-import static ch.ljacqu.wordeval.language.WordForm.LOWERCASE;
-import static ch.ljacqu.wordeval.language.WordForm.NO_ACCENTS;
-import static ch.ljacqu.wordeval.language.WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
 import static ch.ljacqu.wordeval.language.WordForm.RAW;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
-import ch.ljacqu.wordeval.LetterService;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 
 /**
@@ -25,6 +21,7 @@ public class Dictionary {
   private List<Evaluator> evaluators;
   /** Sanitizer to sanitize the dictionary's words. */
   private Sanitizer sanitizer;
+  private WordFormsGenerator wordFormsGenerator;
 
   /**
    * Creates a new Dictionary instance with custom options. See also
@@ -40,6 +37,7 @@ public class Dictionary {
     this.fileName = fileName;
     this.evaluators = evaluators;
     this.sanitizer = sanitizer;
+    wordFormsGenerator = new WordFormsGenerator(sanitizer);
   }
 
   /**
@@ -77,8 +75,8 @@ public class Dictionary {
 
     try (BufferedReader br = new BufferedReader(isr)) {
       for (String line; (line = br.readLine()) != null;) {
-        String[] wordForms = computeWordForms(line);
-        if (!getWordForm(wordForms, RAW).isEmpty()) {
+        String[] wordForms = wordFormsGenerator.computeForms(line);
+        if (wordForms.length != 0) {
           processWord(wordForms);
         }
       }
@@ -95,26 +93,6 @@ public class Dictionary {
       evaluator.processWord(getWordForm(wordForms, evaluator.getWordForm()),
           getWordForm(wordForms, RAW));
     }
-  }
-
-  /**
-   * Computes the different word forms (all lowercase, accents removed, etc.)
-   * for the given word.
-   * @param crudeWord The word to process
-   * @return List of all word forms
-   */
-  private String[] computeWordForms(String crudeWord) {
-    String[] wordForms = new String[WordForm.values().length];
-    String rawWord = sanitizer.sanitizeWord(crudeWord);
-    wordForms[RAW.ordinal()] = rawWord;
-
-    String lowerCaseWord = rawWord.toLowerCase(sanitizer.getLocale());
-    wordForms[LOWERCASE.ordinal()] = lowerCaseWord;
-    wordForms[NO_ACCENTS.ordinal()] = LetterService
-        .removeAccentsFromWord(lowerCaseWord);
-    wordForms[NO_ACCENTS_WORD_CHARS_ONLY.ordinal()] = wordForms[NO_ACCENTS
-        .ordinal()].replace("-", "").replace("'", "");
-    return wordForms;
   }
 
   /**

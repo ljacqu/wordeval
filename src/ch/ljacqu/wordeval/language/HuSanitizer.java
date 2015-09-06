@@ -5,7 +5,8 @@ public class HuSanitizer extends Sanitizer {
   private boolean skipWords = false;
 
   public HuSanitizer(char... delimiters) {
-    super("hu", delimiters, new String[0], new String[0]);
+    super("hu", delimiters, asArray(".", "+", "±", "ø", "ʻ", "’", "­"),
+        new char[0]);
   }
 
   @Override
@@ -50,13 +51,6 @@ public class HuSanitizer extends Sanitizer {
 
     // Skip some chemical words because they have parentheses, which is annoying
     if (containsPart(word, "(vinil", "(izobutilén)", "(akril", "(metil")) {
-      return "";
-    }
-
-    // Skip all entries with a period (.) as they really are only abbreviations
-    // we are not really interested in. Some entries also use other odd symbols
-    // that aren't very natural words, so skip those too
-    if (containsPart(word, ".", "+", "±", "ø", "ʻ", "’", "­")) {
       return "";
     }
 
@@ -126,6 +120,10 @@ public class HuSanitizer extends Sanitizer {
       }
     }
     return null;
+  }
+
+  private static String[] asArray(String... elems) {
+    return elems;
   }
 
   private boolean wordEqualsOne(String word, String... parts) {
