@@ -54,8 +54,8 @@ public class WordStatExportTest {
     assertEquals(getLast(topEntries.get(4)), ExportObject.INDEX_REST + "2");
 
     assertEquals(export.getAggregatedEntries().size(), 2);
-    assertEquals(export.getAggregatedEntries().get(3), new Integer(4));
-    assertEquals(export.getAggregatedEntries().get(2), new Integer(8));
+    assertEqlInt(export.getAggregatedEntries().get(3), 4);
+    assertEqlInt(export.getAggregatedEntries().get(2), 8);
   }
 
   @Test
@@ -90,15 +90,15 @@ public class WordStatExportTest {
 
     SortedMap<Integer, List<String>> topEntries = export.getTopEntries();
     assertEquals(topEntries.size(), 2);
-    assertEquals(topEntries.firstKey(), new Integer(7));
-    assertEquals(topEntries.lastKey(), new Integer(6));
+    assertEqlInt(topEntries.firstKey(), 7);
+    assertEqlInt(topEntries.lastKey(), 6);
     assertEquals(topEntries.get(6).get(3), "leeueaandeel");
 
     SortedMap<Integer, Integer> aggregatedEntries = export
         .getAggregatedEntries();
     assertEquals(aggregatedEntries.size(), 4);
-    assertEquals(aggregatedEntries.firstKey(), new Integer(5));
-    assertEquals(aggregatedEntries.lastKey(), new Integer(2));
+    assertEqlInt(aggregatedEntries.firstKey(), 5);
+    assertEqlInt(aggregatedEntries.lastKey(), 2);
   }
 
   @Test
@@ -109,13 +109,14 @@ public class WordStatExportTest {
     assertNotNull(export.getAggregatedEntries());
     assertNotNull(export.getTopEntries());
   }
-  
+
   @Test
   public void shouldHandleEmptyResult() {
     ExportParams params = new ExportParamsBuilder().build();
-    
-    WordStatExport export = WordStatExport.create("empty", new TreeMap<>(), params);
-    
+
+    WordStatExport export = WordStatExport.create("empty", new TreeMap<>(),
+        params);
+
     assertEquals(export.identifier, "empty");
     assertTrue(export.getAggregatedEntries().isEmpty());
     assertTrue(export.getTopEntries().isEmpty());
@@ -131,6 +132,15 @@ public class WordStatExportTest {
       return null;
     }
     return list.get(list.size() - 1);
+  }
+
+  /**
+   * Quick fix for assertEquals(Integer, int) not being possible.
+   * @param i The left-hand side
+   * @param j The right-hand side
+   */
+  private static void assertEqlInt(Integer i, int j) {
+    assertEquals(i.intValue(), j);
   }
 
 }

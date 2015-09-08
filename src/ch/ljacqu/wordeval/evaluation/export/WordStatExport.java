@@ -82,7 +82,7 @@ public class WordStatExport extends ExportObject {
         // TODO #22: Find better way to shorten list if it makes sense to only
         // keep one word with the same start, for instance
         topEntries.put(entry.getKey(),
-            entry.getValue().subList(0, params.maxTopEntrySize));
+            reduceList(entry.getValue(), params.maxTopEntrySize));
         topEntries.get(entry.getKey()).add(ExportObject.INDEX_REST + restSize);
       }
     }

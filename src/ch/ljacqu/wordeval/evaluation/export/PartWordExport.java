@@ -110,7 +110,7 @@ public final class PartWordExport extends ExportObject {
     int restSize = 0;
     if (params.maxTopEntrySize != null && list.size() > params.maxTopEntrySize) {
       restSize = list.size() - params.maxTopEntrySize;
-      list = list.subList(0, params.maxTopEntrySize);
+      list = reduceList(list, params.maxTopEntrySize);
     }
 
     // Object instead of String[] allows us to add the rest size simply as value
@@ -138,7 +138,7 @@ public final class PartWordExport extends ExportObject {
       List<String> words = this.words;
       if (maxSize != null && words.size() > maxSize) {
         int restSize = words.size() - maxSize;
-        words = words.subList(0, maxSize);
+        words = reduceList(words, maxSize);
         words.add(ExportObject.INDEX_REST + restSize);
       }
       return words.toArray(new String[words.size()]);

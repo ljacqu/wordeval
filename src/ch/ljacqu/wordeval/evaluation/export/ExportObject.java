@@ -1,11 +1,13 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.Random;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -79,6 +81,24 @@ public abstract class ExportObject implements Serializable {
       result.put(entry.getKey(), entry.getValue().size());
     }
     return checkDescending(result, params);
+  }
+
+  protected static final <T> List<T> reduceList(List<T> words, int toSize) {
+    int size = words.size();
+    if (size <= toSize) {
+      return words;
+    }
+
+    Random random = new Random();
+    int delta = Math.max(size / toSize, 1);
+    int key = random.nextInt(delta);
+    List<T> result = new ArrayList<>();
+    while (result.size() < toSize) {
+      result.add(words.get(key));
+      --size;
+      key += delta;
+    }
+    return result;
   }
 
   protected static final <K, V> NavigableMap<K, V> checkDescending(

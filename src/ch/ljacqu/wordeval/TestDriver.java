@@ -23,7 +23,7 @@ public class TestDriver {
   public static void main(String[] args) throws IOException {
     exportLanguage("af");
     exportLanguage("hu");
-    exportLanguage("tr");
+    //exportLanguage("tr");
   }
 
   public static void exportLanguage(String language) throws IOException {

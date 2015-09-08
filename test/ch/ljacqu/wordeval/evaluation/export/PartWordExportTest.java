@@ -100,9 +100,8 @@ public class PartWordExportTest {
         "deurmekaarraak");
 
     assertEquals(topEntries.get(7).size(), 1);
-    String[] expected2 = { "spesifisering", "gespesifiseerd",
-        ExportObject.INDEX_REST + "2" };
-    assertArrayEquals(toArray(topEntries.get(7).get("esifise")), expected2);
+    checkReducedList(toArray(topEntries.get(7).get("esifise")),
+        results.get("esifise"), 2);
 
     assertEquals(topEntries.get(6).size(), 5);
     assertEquals(topEntries.get(6).firstKey(), ExportObject.INDEX_REST);
@@ -155,6 +154,16 @@ public class PartWordExportTest {
    */
   private static void assertEqlInt(Integer i, int j) {
     assertEquals(i.intValue(), j);
+  }
+
+  private static void checkReducedList(String[] list,
+      Set<String> originalWords, int restTotal) {
+    for (int i = 0; i < list.length - 1; ++i) {
+      if (!originalWords.contains(list[i])) {
+        fail("Found word '" + list[i] + "' which is not in given array.");
+      }
+    }
+    assertEquals(list[list.length - 1], ExportObject.INDEX_REST + restTotal);
   }
 
   /**
