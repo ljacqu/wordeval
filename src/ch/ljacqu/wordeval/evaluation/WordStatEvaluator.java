@@ -9,9 +9,9 @@ public abstract class WordStatEvaluator extends Evaluator<Integer> {
   @Override
   protected ExportObject toExportObject(String identifier, ExportParams params) {
     if (params == null) {
-      return WordStatExport.create(identifier, results);
+      return WordStatExport.create(identifier, getNavigableResults());
     }
-    return WordStatExport.create(identifier, results, params);
+    return WordStatExport.create(identifier, getNavigableResults(), params);
   }
 
   /**

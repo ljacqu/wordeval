@@ -20,9 +20,18 @@ import ch.ljacqu.wordeval.language.Dictionary;
 
 public class TestDriver {
 
-  private static final String LANGUAGE = "tr";
-
   public static void main(String[] args) throws IOException {
+    exportLanguage("af");
+    exportLanguage("hu");
+    exportLanguage("tr");
+  }
+
+  public static void exportLanguage(String language) throws IOException {
+    System.out.println("Exporting language '" + language + "'");
+    List<Long> times = new ArrayList<Long>();
+    times.add(System.nanoTime());
+
+    @SuppressWarnings("rawtypes")
     List<Evaluator> evaluators = new ArrayList<Evaluator>();
     evaluators.add(new AlphabeticalOrder());
     evaluators.add(new AlphabeticalSequence());
@@ -35,12 +44,27 @@ public class TestDriver {
     evaluators.add(new MonotoneVowel(CONSONANTS));
     evaluators.add(new Palindromes());
     evaluators.add(new SameLetterConsecutive());
+    outputDiff(times, "instantiated evaluators");
 
-    Dictionary dictionary = Dictionary.getLanguageDictionary(LANGUAGE,
+    Dictionary dictionary = Dictionary.getLanguageDictionary(language,
         evaluators);
+    outputDiff(times, "got dictionary object");
+    
     dictionary.processDictionary();
+    outputDiff(times, "processed dictionary");
 
-    ResultsExporter.exportToFile(evaluators, "export/" + LANGUAGE + ".json");
-
+    ResultsExporter.exportToFile(evaluators, "export/" + language + ".json");
+    outputDiff(times, "finished export");
+    
+    times.add(times.get(0)); // ;)
+    outputDiff(times, "= total time");
+    System.out.println("-------------");
   }
+
+  private static void outputDiff(List<Long> times, String description) {
+    double difference = (System.nanoTime() - times.get(times.size() - 1)) / 1000000000.0;
+    times.add(System.nanoTime());
+    System.out.println(difference + "\t\t" + description);
+  }
+
 }

@@ -17,13 +17,13 @@ public class AlphabeticalSequenceTest {
 
   @Test
   public void shouldRecognizeWordsWithForwardsSequence() {
-    String[] words = { "STUdent", "neMNOgo", "HIJKen", "potato", "HIJK",
+    String[] words = { "STUdent", "neMNOgo", "HIJK", "potato", "HIJKen",
         "funGHI", "acdfgg" };
 
     for (String word : words) {
       evaluator.processWord(word.toLowerCase(), word);
     }
-    Map<String, List<String>> results = evaluator.getResults();
+    Map<String, List<String>> results = evaluator.getNavigableResults();
 
     assertEquals(results.size(), 4);
     assertEquals(results.get("hijk").size(), 2);
@@ -31,7 +31,7 @@ public class AlphabeticalSequenceTest {
     assertEquals(results.get("mno").size(), 1);
 
     assertEquals(results.get("mno").get(0), "neMNOgo");
-    assertEquals(results.get("hijk").get(1), "HIJK");
+    assertEquals(results.get("hijk").get(1), "HIJKen");
   }
 
   @Test
@@ -42,7 +42,7 @@ public class AlphabeticalSequenceTest {
     for (String word : words) {
       evaluator.processWord(word.toLowerCase(), word);
     }
-    Map<String, List<String>> results = evaluator.getResults();
+    Map<String, List<String>> results = evaluator.getNavigableResults();
 
     assertEquals(results.size(), 5);
     assertEquals(results.get("fed").size(), 1);

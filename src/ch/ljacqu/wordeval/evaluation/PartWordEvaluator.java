@@ -9,9 +9,9 @@ public abstract class PartWordEvaluator extends Evaluator<String> {
   @Override
   protected ExportObject toExportObject(String identifier, ExportParams params) {
     if (params == null) {
-      return PartWordExport.create(identifier, results);
+      return PartWordExport.create(identifier, getResults());
     }
-    return PartWordExport.create(identifier, results, params);
+    return PartWordExport.create(identifier, getResults(), params);
   }
 
   /**

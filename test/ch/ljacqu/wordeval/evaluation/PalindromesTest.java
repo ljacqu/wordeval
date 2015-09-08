@@ -18,14 +18,14 @@ public class PalindromesTest {
 
   @Test
   public void shouldRecognizePalindromes() {
-    // otto, bagab, -, awkwa, bab, bab/ili
+    // otto, bagab, -, awkwa, bab/ili, bab, -
     String[] words = { "trottoir", "ebagabo", "palindrome", "awkward",
-        "probable", "probability", "o" };
+        "probability", "probable", "o" };
 
     for (String word : words) {
       evaluator.processWord(word, word);
     }
-    Map<String, List<String>> results = evaluator.getResults();
+    Map<String, List<String>> results = evaluator.getNavigableResults();
 
     assertEquals(results.size(), 5);
     assertNotNull(results.get("otto"));
@@ -34,8 +34,8 @@ public class PalindromesTest {
     assertNotNull(results.get("bab"));
     assertEquals(results.get("awkwa").get(0), "awkward");
     assertEquals(results.get("bab").size(), 2);
-    assertEquals(results.get("bab").get(0), "probable");
-    assertEquals(results.get("bab").get(1), results.get("ili").get(0));
+    assertEquals(results.get("bab").get(0), results.get("ili").get(0));
+    assertEquals(results.get("bab").get(1), "probable");
   }
 
   @Test
@@ -45,7 +45,7 @@ public class PalindromesTest {
     for (String word : words) {
       evaluator.processWord(word, word);
     }
-    Map<String, List<String>> results = evaluator.getResults();
+    Map<String, List<String>> results = evaluator.getNavigableResults();
 
     assertEquals(results.size(), 1);
     assertEquals(results.get("ette").get(0), "letter");

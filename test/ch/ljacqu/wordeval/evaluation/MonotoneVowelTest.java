@@ -35,9 +35,10 @@ public class MonotoneVowelTest {
         "mâdagascar", "tatoťute", "čocaçoći", "eau" };
     process(words);
 
-    Map<Integer, List<String>> vowelResults = vowelEvaluator.getResults();
+    Map<Integer, List<String>> vowelResults = vowelEvaluator
+        .getNavigableResults();
     Map<Integer, List<String>> consonantResults = consonantEvaluator
-        .getResults();
+        .getNavigableResults();
 
     assertEquals(vowelResults.size(), 2);
     assertEquals(vowelResults.get(10).size(), 1);

@@ -1,10 +1,13 @@
 package ch.ljacqu.wordeval.evaluation;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableMap;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 import ch.ljacqu.wordeval.language.WordForm;
@@ -18,7 +21,7 @@ import ch.ljacqu.wordeval.language.WordForm;
 public abstract class Evaluator<K> {
 
   /** Collection of relevant words. */
-  protected NavigableMap<K, List<String>> results = new TreeMap<K, List<String>>();
+  private Map<K, Set<String>> results = new HashMap<K, Set<String>>();
 
   /**
    * Processes a word and add it to results if it is relevant.
@@ -48,8 +51,16 @@ public abstract class Evaluator<K> {
    * Gets the results of the evaluator.
    * @return A map with the results (key = property, entry = list of values)
    */
-  public NavigableMap<K, List<String>> getResults() {
-    return Collections.unmodifiableNavigableMap(results);
+  public NavigableMap<K, List<String>> getNavigableResults() {
+    NavigableMap<K, List<String>> cleanResult = new TreeMap<>();
+    for (Map.Entry<K, Set<String>> entry : results.entrySet()) {
+      cleanResult.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+    }
+    return cleanResult;
+  }
+  
+  public Map<K, Set<String>> getResults() {
+    return results;
   }
 
   /**
@@ -67,7 +78,9 @@ public abstract class Evaluator<K> {
    */
   protected void addEntry(K key, String word) {
     if (results.get(key) == null) {
-      results.put(key, new ArrayList<String>());
+      // It is massively faster to instantiate a TreeSet here rather than
+      // using a HashSet and then converting it to TreeSet
+      results.put(key, new TreeSet<String>());
     }
     results.get(key).add(word);
   }

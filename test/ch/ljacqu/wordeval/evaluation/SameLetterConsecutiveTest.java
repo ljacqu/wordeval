@@ -25,7 +25,7 @@ public class SameLetterConsecutiveTest {
     for (int i = 0; i < cleanWords.length; ++i) {
       evaluator.processWord(cleanWords[i], words[i]);
     }
-    Map<String, List<String>> results = evaluator.getResults();
+    Map<String, List<String>> results = evaluator.getNavigableResults();
 
     assertEquals(results.size(), 3);
     assertEquals(results.get("ll").size(), 3);
@@ -43,7 +43,7 @@ public class SameLetterConsecutiveTest {
     for (String word : words) {
       evaluator.processWord(word, word);
     }
-    Map<String, List<String>> results = evaluator.getResults();
+    Map<String, List<String>> results = evaluator.getNavigableResults();
 
     assertEquals(results.size(), 9);
     assertEquals(results.get("sss").size(), 1);
@@ -58,22 +58,23 @@ public class SameLetterConsecutiveTest {
 
   @Test
   public void shouldProcessCyrillicWords() {
-    String[] words = { "старинного", "величайший", "поддержки", "Избранные",
+    String[] words = { "Избранные", "величайший", "поддержки", "старинного",
         "независимая" };
-    String[] cleanWords = { "старинного", "величайший", "поддержки",
-        "избранные", "независимая" };
+    // нн, -, дд, нн, -
+    String[] cleanWords = { "избранные", "величайший", "поддержки",
+        "старинного", "независимая" };
 
     // TODO ensure that ё and е are considered equivalent here
 
     for (int i = 0; i < cleanWords.length; ++i) {
       evaluator.processWord(cleanWords[i], words[i]);
     }
-    Map<String, List<String>> results = evaluator.getResults();
+    Map<String, List<String>> results = evaluator.getNavigableResults();
 
     assertEquals(results.size(), 2);
     assertEquals(results.get("дд").size(), 1);
     assertEquals(results.get("нн").size(), 2);
-    assertEquals(results.get("нн").get(1), "Избранные");
+    assertEquals(results.get("нн").get(0), "Избранные");
   }
 
 }

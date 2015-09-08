@@ -52,7 +52,7 @@ public class MonotoneVowel extends WordStatEvaluator {
   @Override
   public ExportObject toExportObject() {
     String identifier = "Monotone_" + letterType.getName();
-    return WordStatExport.create(identifier, results);
+    return WordStatExport.create(identifier, getNavigableResults());
   }
 
 }

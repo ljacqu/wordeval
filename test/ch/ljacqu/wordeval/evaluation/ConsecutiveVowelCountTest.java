@@ -33,28 +33,32 @@ public class ConsecutiveVowelCountTest {
 
   @Test
   public void shouldProcessVowelClusters() {
-    String[] words = { "sequoia", "geëet", "abodef", "eaux", "oicąeèl", "ůý" };
+    // 4, 3, 0, 3, 3
+    String[] words = { "sequoia", "eaux", "abodef", "geëet", "oicąeèl", "ůý" };
 
     processWords(words);
-    Map<Integer, List<String>> vowelResults = vowelCount.getResults();
-    Map<Integer, List<String>> consonantResults = consonantCount.getResults();
+    Map<Integer, List<String>> vowelResults = vowelCount.getNavigableResults();
+    Map<Integer, List<String>> consonantResults = consonantCount
+        .getNavigableResults();
 
     assertTrue(consonantResults.isEmpty());
     assertFalse(vowelResults.isEmpty());
     assertEquals(vowelResults.get(4).size(), 1);
     assertEquals(vowelResults.get(4).get(0), "sequoia");
     assertEquals(vowelResults.get(3).size(), 3);
-    assertEquals(vowelResults.get(3).get(1), "eaux");
+    assertEquals(vowelResults.get(3).get(1), "geëet");
     assertEquals(vowelResults.get(2).size(), 2);
   }
 
   @Test
   public void shouldProcessConsonantClusters() {
+    // 3, 0, 3, 4, 0
     String[] words = { "pfrund", "potato", "przy", "wśrżystkęm", "arigato" };
 
     processWords(words);
-    Map<Integer, List<String>> vowelResults = vowelCount.getResults();
-    Map<Integer, List<String>> consonantResults = consonantCount.getResults();
+    Map<Integer, List<String>> vowelResults = vowelCount.getNavigableResults();
+    Map<Integer, List<String>> consonantResults = consonantCount
+        .getNavigableResults();
 
     assertTrue(vowelResults.isEmpty());
     assertFalse(consonantResults.isEmpty());
@@ -74,15 +78,16 @@ public class ConsecutiveVowelCountTest {
 
     processWords(word);
 
-    Map<Integer, List<String>> vowelResults = vowelCount.getResults();
-    Map<Integer, List<String>> consonantResults = consonantCount.getResults();
+    Map<Integer, List<String>> vowelResults = vowelCount.getNavigableResults();
+    Map<Integer, List<String>> consonantResults = consonantCount
+        .getNavigableResults();
 
     assertEquals(vowelResults.size(), 1);
     assertEquals(consonantResults.size(), 1);
     assertEquals(vowelResults.get(2), 2);
     assertEquals(consonantResults.get(2), 1);
 
-    // TODO: test Bulgarian-specific words
+    // TODO #12: test Bulgarian-specific words
   }
 
 }

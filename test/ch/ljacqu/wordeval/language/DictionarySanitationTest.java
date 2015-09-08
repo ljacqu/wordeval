@@ -34,7 +34,7 @@ public class DictionarySanitationTest {
         evaluators);
 
     dictionary.processDictionary();
-    Map<String, List<String>> errors = testEvaluator.getResults();
+    Map<String, List<String>> errors = testEvaluator.getNavigableResults();
 
     if (!errors.isEmpty()) {
       for (Map.Entry<String, List<String>> entry : errors.entrySet()) {

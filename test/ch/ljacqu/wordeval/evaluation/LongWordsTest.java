@@ -23,19 +23,20 @@ public class LongWordsTest {
 
   @Test
   public void shouldAddLongWords() {
-    String[] words = { "test", "something", "piszących", "köszönöm", "žodžių",
+    // 8, 9, 9, 4, 6, 4
+    String[] words = { "köszönöm", "piszących", "something", "test", "žodžių",
         "šalį" };
 
     for (String word : words) {
       processWord(word);
     }
-    Map<Integer, List<String>> results = longWords.getResults();
+    Map<Integer, List<String>> results = longWords.getNavigableResults();
 
     assertNull(results.get(4));
     assertEquals(results.size(), 3);
     assertEquals(results.get(9).size(), 2);
-    assertEquals(results.get(9).get(0), "something");
-    assertEquals(results.get(9).get(1), "piszących");
+    assertEquals(results.get(9).get(0), "piszących");
+    assertEquals(results.get(9).get(1), "something");
     assertFalse(results.get(8).isEmpty());
     assertEquals(results.get(6).size(), 1);
     assertEquals(results.get(6).get(0), "žodžių");
@@ -43,16 +44,17 @@ public class LongWordsTest {
 
   @Test
   public void shouldProcessCyrillicWords() {
-    String[] words = { "Морфологические", "наречие", "ушёл", "градина" };
+    String[] words = { "Морфологические", "градина", "ушёл", "наречие" };
 
     for (String word : words) {
       processWord(word);
     }
-    Map<Integer, List<String>> results = longWords.getResults();
+    Map<Integer, List<String>> results = longWords.getNavigableResults();
     assertEquals(results.size(), 2);
     assertEquals(results.get(15).get(0), "Морфологические");
     assertEquals(results.get(7).size(), 2);
-    assertEquals(results.get(7).get(1), "градина");
+    assertEquals(results.get(7).get(0), "градина");
+    assertEquals(results.get(7).get(1), "наречие");
   }
 
 }

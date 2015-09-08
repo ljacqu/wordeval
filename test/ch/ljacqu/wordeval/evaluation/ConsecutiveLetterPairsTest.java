@@ -24,18 +24,18 @@ public class ConsecutiveLetterPairsTest {
   @Test
   public void shouldRecognizeLetterPairs() {
     // 2, 0, 0, 2, 3, 2, 2, 4
-    String[] words = { "reennag", "potato", "klokken", "oppaan", "maaiill",
-        "aallorr", "baaggage", "voorraaddra" };
+    String[] words = { "aallorr", "potato", "klokken", "maaiill", "oppaan",
+        "reennag", "baaggage", "voorraaddra" };
 
     processWords(words);
-    Map<Integer, List<String>> results = evaluator.getResults();
+    Map<Integer, List<String>> results = evaluator.getNavigableResults();
 
     assertEquals(results.size(), 3);
     assertEquals(results.get(2).size(), 4);
     assertEquals(results.get(3).size(), 1);
     assertEquals(results.get(4).size(), 1);
 
-    assertEquals(results.get(2).get(2), "aallorr");
+    assertEquals(results.get(2).get(2), "oppaan");
     assertEquals(results.get(3).get(0), "maaiill");
   }
 
@@ -45,13 +45,13 @@ public class ConsecutiveLetterPairsTest {
     String[] words = { "massaage", "aabbcdefgghhiij", "something" };
 
     processWords(words);
-    Map<Integer, List<String>> results = evaluator.getResults();
+    Map<Integer, List<String>> results = evaluator.getNavigableResults();
 
     assertEquals(results.size(), 2);
     assertEquals(results.get(2).size(), 2);
     assertEquals(results.get(3).size(), 1);
 
-    assertEquals(results.get(3).get(0), results.get(2).get(1));
+    assertEquals(results.get(3).get(0), results.get(2).get(0));
   }
 
   @Test
@@ -65,7 +65,7 @@ public class ConsecutiveLetterPairsTest {
         "walking" };
 
     processWords(words);
-    Map<Integer, List<String>> results = evaluator.getResults();
+    Map<Integer, List<String>> results = evaluator.getNavigableResults();
 
     assertEquals(results.size(), 3);
     assertEquals(results.get(2).size(), 1);

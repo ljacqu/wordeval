@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -34,12 +35,12 @@ public final class PartWordExport extends ExportObject {
   }
 
   public static PartWordExport create(String identifier,
-      NavigableMap<String, List<String>> map) {
+      Map<String, Set<String>> map) {
     return create(identifier, map, new ExportParamsBuilder().build());
   }
 
   public static PartWordExport create(String identifier,
-      NavigableMap<String, List<String>> map, ExportParams params) {
+      Map<String, Set<String>> map, ExportParams params) {
     // {key: [words] ..} to {length: [{key: [words]}, ...]}
     NavigableMap<Integer, List<KeyAndWords>> entriesByLength = groupByLength(
         map, params);
@@ -76,9 +77,9 @@ public final class PartWordExport extends ExportObject {
   }
 
   private static NavigableMap<Integer, List<KeyAndWords>> groupByLength(
-      Map<String, List<String>> map, ExportParams params) {
+      Map<String, Set<String>> map, ExportParams params) {
     NavigableMap<Integer, List<KeyAndWords>> result = new TreeMap<>();
-    for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+    for (Map.Entry<String, Set<String>> entry : map.entrySet()) {
       int length = entry.getKey().length();
       if (result.get(length) == null) {
         result.put(length, new ArrayList<>());
@@ -128,9 +129,9 @@ public final class PartWordExport extends ExportObject {
     public final String key;
     public final List<String> words;
 
-    public KeyAndWords(Map.Entry<String, List<String>> entry) {
+    public KeyAndWords(Map.Entry<String, Set<String>> entry) {
       key = entry.getKey();
-      words = entry.getValue();
+      words = new ArrayList<>(entry.getValue());
     }
 
     public String[] getMergedWordsArray(Integer maxSize) {

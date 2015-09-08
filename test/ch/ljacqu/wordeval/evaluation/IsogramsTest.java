@@ -22,7 +22,7 @@ public class IsogramsTest {
     for (String word : words) {
       evaluator.processWord(word, word);
     }
-    Map<Integer, List<String>> results = evaluator.getResults();
+    Map<Integer, List<String>> results = evaluator.getNavigableResults();
 
     assertEquals(results.size(), 2);
     assertEquals(results.get(6).size(), 1);

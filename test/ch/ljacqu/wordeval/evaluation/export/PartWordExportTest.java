@@ -4,11 +4,10 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.NavigableMap;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import org.junit.Before;
@@ -16,7 +15,7 @@ import org.junit.Test;
 
 public class PartWordExportTest {
 
-  private NavigableMap<String, List<String>> results;
+  private Map<String, Set<String>> results;
 
   @Before
   public void initialize() {
@@ -24,34 +23,34 @@ public class PartWordExportTest {
     results = new TreeMap<>();
 
     // Length 9
-    results.put("taalplaat", asList("metaalplaat", "staalplaat"));
-    results.put("ittesetti", asList("hittesetting"));
-    results.put("sigologis", asList("psigologisme"));
+    results.put("taalplaat", asSet("metaalplaat", "staalplaat"));
+    results.put("ittesetti", asSet("hittesetting"));
+    results.put("sigologis", asSet("psigologisme"));
 
     // Length 8
-    results.put("aarddraa", asList("aarddraad"));
-    results.put("erettere", asList("veretterende"));
-    results.put("kaarraak", asList("deurmekaarraak"));
+    results.put("aarddraa", asSet("aarddraad"));
+    results.put("erettere", asSet("veretterende"));
+    results.put("kaarraak", asSet("deurmekaarraak"));
 
     // Length 7
-    List<String> wordList = asList("spesifisering", "gespesifiseer",
+    Set<String> wordList = asSet("spesifisering", "gespesifiseer",
         "gespesifiseerd", "spesifiseer");
     results.put("esifise", wordList);
 
     // Length 6
-    results.put("millim", asList("millimeter"));
-    results.put("neffen", asList("neffens", "hierneffens", "oneffenheid"));
-    results.put("marram", asList("marram"));
-    results.put("leggel", asList("inleggeld"));
-    results.put("gerreg", asList("burgerreg"));
-    results.put("eellee", asList("teëllêer"));
-    results.put("arkkra", asList("markkrag"));
+    results.put("millim", asSet("millimeter"));
+    results.put("neffen", asSet("neffens", "hierneffens", "oneffenheid"));
+    results.put("marram", asSet("marram"));
+    results.put("leggel", asSet("inleggeld"));
+    results.put("gerreg", asSet("burgerreg"));
+    results.put("eellee", asSet("teëllêer"));
+    results.put("arkkra", asSet("markkrag"));
 
     // Length 5
     results.put("alkla",
-        asList("smalklap", "taalklas", "vokaalklank", "taalklank"));
-    results.put("anana", asList("ananas"));
-    results.put("aadaa", asList("daeraadaap"));
+        asSet("smalklap", "taalklas", "vokaalklank", "taalklank"));
+    results.put("anana", asSet("ananas"));
+    results.put("aadaa", asSet("daeraadaap"));
   }
 
   @Test
@@ -101,7 +100,7 @@ public class PartWordExportTest {
         "deurmekaarraak");
 
     assertEquals(topEntries.get(7).size(), 1);
-    String[] expected2 = { "spesifisering", "gespesifiseer",
+    String[] expected2 = { "spesifisering", "gespesifiseerd",
         ExportObject.INDEX_REST + "2" };
     assertArrayEquals(toArray(topEntries.get(7).get("esifise")), expected2);
 
@@ -133,7 +132,7 @@ public class PartWordExportTest {
     Map<Integer, SortedMap<String, Integer>> aggregatedEntries = export
         .getAggregatedEntries();
     assertEquals(aggregatedEntries.size(), 3);
-    Integer[] expectedKeys2 = {7, 6, 5};
+    Integer[] expectedKeys2 = { 7, 6, 5 };
     assertArrayEquals(aggregatedEntries.keySet().toArray(), expectedKeys2);
     assertEqlInt(aggregatedEntries.get(6).get("neffen"), 3);
     assertEqlInt(aggregatedEntries.get(6).get("eellee"), 1);
@@ -172,9 +171,8 @@ public class PartWordExportTest {
     return null;
   }
 
-  private static List<String> asList(String... words) {
-    // Arrays.asList does not allow add(), so wrap it with ArrayList
-    return new ArrayList<String>(Arrays.asList(words));
+  private static Set<String> asSet(String... words) {
+    return new HashSet<String>(Arrays.asList(words));
   }
 
 }

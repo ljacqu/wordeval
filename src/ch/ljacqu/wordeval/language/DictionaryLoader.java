@@ -11,9 +11,9 @@ final class DictionaryLoader {
   private static Map<String, LanguageSettings> languages = new HashMap<String, LanguageSettings>();
 
   static {
-    save(new Language("af").setDelimiters('/')
-           .setSkipSequences(".", "µ", "Ð", "ø"));
-    save(new HuLanguage());
+    save(new Language("af").setDelimiters('/').setSkipSequences(".", "µ", "Ð",
+        "ø"));
+    save(new CustomLanguage("hu", HuSanitizer.class));
     save(new Language("tr").setDelimiters(' '));
   }
 
@@ -32,20 +32,31 @@ final class DictionaryLoader {
   // ---------
   // Custom language classes
   // ---------
-  private static class HuLanguage implements LanguageSettings {
+  private static class CustomLanguage implements LanguageSettings {
     private Sanitizer sanitizer;
+    private String code;
+    private Class<? extends Sanitizer> sanitizerClass;
+
+    public CustomLanguage(String code, Class<? extends Sanitizer> sanitizerClass) {
+      this.code = code;
+      this.sanitizerClass = sanitizerClass;
+    }
 
     @Override
     public Sanitizer getSanitizer() {
       if (sanitizer == null) {
-        sanitizer = new HuSanitizer('/', '\t');
+        try {
+          sanitizer = sanitizerClass.newInstance();
+        } catch (IllegalAccessException | InstantiationException e) {
+          throw new UnsupportedOperationException("Could not get sanitizer", e);
+        }
       }
       return sanitizer;
     }
 
     @Override
     public String getCode() {
-      return "hu";
+      return code;
     }
   }
 
