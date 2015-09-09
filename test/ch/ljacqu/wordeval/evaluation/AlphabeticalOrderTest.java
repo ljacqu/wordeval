@@ -1,6 +1,7 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 import java.util.List;
 import java.util.Map;
 import org.junit.Before;
@@ -25,15 +26,15 @@ public class AlphabeticalOrderTest {
     }
     Map<Integer, List<String>> results = evaluator.getNavigableResults();
 
-    assertEquals(results.size(), 3);
-    assertEquals(results.get(4).size(), 3);
-    assertEquals(results.get(5).size(), 2);
-    assertEquals(results.get(8).size(), 1);
+    assertThat(results.size(), equalTo(3));
+    assertThat(results.get(4).size(), equalTo(3));
+    assertThat(results.get(5).size(), equalTo(2));
+    assertThat(results.get(8).size(), equalTo(1));
 
-    assertEquals(results.get(4).get(1), "mopr");
-    assertEquals(results.get(5).get(0), "bruxz");
-    assertEquals(results.get(5).get(1), "zymga");
-    assertEquals(results.get(8).get(0), "ahpqtvwx");
+    assertThat(results.get(4).get(1), equalTo("mopr"));
+    assertThat(results.get(5).get(0), equalTo("bruxz"));
+    assertThat(results.get(5).get(1), equalTo("zymga"));
+    assertThat(results.get(8).get(0), equalTo("ahpqtvwx"));
   }
 
 }

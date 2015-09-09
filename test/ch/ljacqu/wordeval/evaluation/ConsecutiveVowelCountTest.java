@@ -9,7 +9,6 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import ch.ljacqu.wordeval.LetterService;
 import ch.ljacqu.wordeval.LetterType;
 
 public class ConsecutiveVowelCountTest {
@@ -23,11 +22,10 @@ public class ConsecutiveVowelCountTest {
     consonantCount = new ConsecutiveVowelCount(LetterType.CONSONANTS);
   }
 
-  private void processWords(String[] words) {
-    for (String word : words) {
-      String accentLessWord = LetterService.removeAccentsFromWord(word);
-      vowelCount.processWord(accentLessWord, word);
-      consonantCount.processWord(accentLessWord, word);
+  private void processWords(String[] cleanWords, String[] words) {
+    for (int i = 0; i < cleanWords.length; ++i) {
+      vowelCount.processWord(cleanWords[i], words[i]);
+      consonantCount.processWord(cleanWords[i], words[i]);
     }
   }
 
@@ -35,8 +33,9 @@ public class ConsecutiveVowelCountTest {
   public void shouldProcessVowelClusters() {
     // 4, 3, 0, 3, 3
     String[] words = { "sequoia", "eaux", "abodef", "geëet", "oicąeèl", "ůý" };
+    String[] clean = { "sequoia", "eaux", "abodef", "geeet", "oicaeel", "uy" };
 
-    processWords(words);
+    processWords(clean, words);
     Map<Integer, List<String>> vowelResults = vowelCount.getNavigableResults();
     Map<Integer, List<String>> consonantResults = consonantCount
         .getNavigableResults();
@@ -54,8 +53,9 @@ public class ConsecutiveVowelCountTest {
   public void shouldProcessConsonantClusters() {
     // 3, 0, 3, 4, 0
     String[] words = { "pfrund", "potato", "przy", "wśrżystkęm", "arigato" };
+    String[] clean = { "pfrund", "potato", "przy", "wsrzystkem", "arigato" };
 
-    processWords(words);
+    processWords(clean, words);
     Map<Integer, List<String>> vowelResults = vowelCount.getNavigableResults();
     Map<Integer, List<String>> consonantResults = consonantCount
         .getNavigableResults();
@@ -74,9 +74,10 @@ public class ConsecutiveVowelCountTest {
   @Test
   // TODO #12: implement Cyrillic logic
   public void shouldProcessCyrillicWords() {
-    String[] word = { "Википедия", "Вооружённый" };
+    String[] words = { "Википедия", "Вооружённый" };
+    String[] clean = { "Википедия", "Вооруженный" };
 
-    processWords(word);
+    processWords(clean, words);
 
     Map<Integer, List<String>> vowelResults = vowelCount.getNavigableResults();
     Map<Integer, List<String>> consonantResults = consonantCount

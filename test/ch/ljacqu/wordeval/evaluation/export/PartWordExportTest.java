@@ -1,7 +1,10 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
+import static org.hamcrest.Matchers.aMapWithSize;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import java.util.Arrays;
@@ -63,7 +66,7 @@ public class PartWordExportTest {
     assertEquals(export.identifier, "a test");
 
     Map<Integer, SortedMap<String, Object>> topEntries = export.getTopEntries();
-    assertEquals(topEntries.size(), 3);
+    assertThat(topEntries, aMapWithSize(3));
     assertEquals(topEntries.get(9).size(), 3);
     assertEquals(toArray(topEntries.get(9).get("taalplaat")).length, 2);
     assertEquals(topEntries.get(8).size(), 3);
@@ -75,12 +78,12 @@ public class PartWordExportTest {
 
     Map<Integer, SortedMap<String, Integer>> aggregatedEntries = export
         .getAggregatedEntries();
-    assertEquals(aggregatedEntries.size(), 2);
+    assertThat(aggregatedEntries, aMapWithSize(2));
     assertEquals(aggregatedEntries.get(6).size(), 7);
-    assertEqlInt(aggregatedEntries.get(6).get("gerreg"), 1);
-    assertEqlInt(aggregatedEntries.get(6).get("neffen"), 3);
+    assertThat(aggregatedEntries.get(6).get("gerreg"), equalTo(1));
+    assertThat(aggregatedEntries.get(6).get("neffen"), equalTo(3));
     assertEquals(aggregatedEntries.get(5).size(), 3);
-    assertEqlInt(aggregatedEntries.get(5).get("alkla"), 4);
+    assertThat(aggregatedEntries.get(5).get("alkla"), equalTo(4));
   }
 
   @Test
@@ -91,7 +94,7 @@ public class PartWordExportTest {
     PartWordExport export = PartWordExport.create("test", results, params);
 
     Map<Integer, SortedMap<String, Object>> topEntries = export.getTopEntries();
-    assertEquals(topEntries.size(), 4);
+    assertThat(topEntries, aMapWithSize(4));
     assertEquals(topEntries.get(9).size(), 3);
     String[] expected = { "metaalplaat", "staalplaat" };
     assertArrayEquals(toArray(topEntries.get(9).get("taalplaat")), expected);
@@ -111,7 +114,7 @@ public class PartWordExportTest {
         .getAggregatedEntries();
     assertEquals(aggregatedEntries.size(), 1);
     assertEquals(aggregatedEntries.get(5).size(), 3);
-    assertEqlInt(aggregatedEntries.get(5).get("anana"), 1);
+    assertThat(aggregatedEntries.get(5).get("anana"), equalTo(1));
   }
 
   @Test
@@ -133,8 +136,8 @@ public class PartWordExportTest {
     assertEquals(aggregatedEntries.size(), 3);
     Integer[] expectedKeys2 = { 7, 6, 5 };
     assertArrayEquals(aggregatedEntries.keySet().toArray(), expectedKeys2);
-    assertEqlInt(aggregatedEntries.get(6).get("neffen"), 3);
-    assertEqlInt(aggregatedEntries.get(6).get("eellee"), 1);
+    assertThat(aggregatedEntries.get(6).get("neffen"), equalTo(3));
+    assertThat(aggregatedEntries.get(6).get("eellee"), equalTo(1));
   }
 
   @Test
@@ -145,15 +148,6 @@ public class PartWordExportTest {
     assertEquals(export.identifier, "empty test");
     assertTrue(export.getTopEntries().isEmpty());
     assertTrue(export.getAggregatedEntries().isEmpty());
-  }
-
-  /**
-   * Quick fix for assertEquals(Integer, int) not being possible.
-   * @param i The left-hand side
-   * @param j The right-hand side
-   */
-  private static void assertEqlInt(Integer i, int j) {
-    assertEquals(i.intValue(), j);
   }
 
   private static void checkReducedList(String[] list,

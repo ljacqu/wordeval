@@ -1,6 +1,7 @@
 package ch.ljacqu.wordeval;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 import java.text.Collator;
 import java.util.Locale;
 import org.junit.Test;
@@ -73,7 +74,7 @@ public class LocaleAlphabeticalTest {
 
   public static void shouldCompareTo(Collator collator, int expected,
       String... words) {
-    assertEquals(expected, collator.compare(words[0], words[1]));
+    assertThat(collator.compare(words[0], words[1]), equalTo(expected));
   }
 
   // From https://docs.oracle.com/javase/tutorial/i18n/text/locale.html

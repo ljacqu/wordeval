@@ -1,6 +1,7 @@
 package ch.ljacqu.wordeval;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 import org.junit.Test;
 
 public class LetterServiceTest {
@@ -13,8 +14,8 @@ public class LetterServiceTest {
         "dlugo moga trwac wystepy koreanskich ze", "poziuriu" };
 
     for (int i = 0; i < givenWords.length; ++i) {
-      assertEquals(LetterService.removeAccentsFromWord(givenWords[i]),
-          expected[i]);
+      assertThat(LetterService.removeAccentsFromWord(givenWords[i]),
+          equalTo(expected[i]));
     }
   }
 

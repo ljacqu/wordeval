@@ -1,6 +1,7 @@
 package ch.ljacqu.wordeval;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import java.util.Locale;
 import org.junit.Test;
 
@@ -16,9 +17,9 @@ public class LocaleTest {
     String plLowerCase = plText.toLowerCase(new Locale("pl"));
     String skLowerCase = skText.toLowerCase(new Locale("sk"));
 
-    assertEquals(lowerCase, "aç êè oč ïś");
-    assertEquals(plLowerCase, "stanowiącej część rodziny języków");
-    assertEquals(skLowerCase, "tu žiadna veľká jazyková čistka");
+    assertThat(lowerCase, equalTo("aç êè oč ïś"));
+    assertThat(plLowerCase, equalTo("stanowiącej część rodziny języków"));
+    assertThat(skLowerCase, equalTo("tu žiadna veľká jazyková čistka"));
   }
 
   @Test
@@ -31,10 +32,10 @@ public class LocaleTest {
     String ptUpperCase = ptText.toUpperCase(new Locale("pt"));
     String ltUpperCase = ltText.toUpperCase(new Locale("lt"));
 
-    assertEquals(huUpperCase, "SZÓÖSSZETÉTELEKBEN");
-    assertEquals(ptUpperCase, "POPULAÇÃO");
-    assertEquals(ltUpperCase,
-        "SOVIETMEČIU MŪŠOS TYRELIO PELKĖ BUVO NUMATYTA DURPIŲ");
+    assertThat(huUpperCase, equalTo("SZÓÖSSZETÉTELEKBEN"));
+    assertThat(ptUpperCase, equalTo("POPULAÇÃO"));
+    assertThat(ltUpperCase,
+        equalTo("SOVIETMEČIU MŪŠOS TYRELIO PELKĖ BUVO NUMATYTA DURPIŲ"));
   }
 
   @Test
@@ -45,8 +46,8 @@ public class LocaleTest {
     String upper = text1.toUpperCase(new Locale("tr"));
     String lower = text2.toLowerCase(new Locale("tr"));
 
-    assertEquals(upper, "TUNÇTAN YAPILMIŞ OLAN HEYKELİN YÜKSEKLİĞİ");
-    assertEquals(lower, "yapmış olduğu özverili çalışmaları");
+    assertThat(upper, equalTo("TUNÇTAN YAPILMIŞ OLAN HEYKELİN YÜKSEKLİĞİ"));
+    assertThat(lower, equalTo("yapmış olduğu özverili çalışmaları"));
   }
 
 }

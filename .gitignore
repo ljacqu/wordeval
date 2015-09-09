@@ -2,6 +2,7 @@
 bin/
 dict/*.dic
 export/*.json
+target/
+
 .classpath
 .project
-

@@ -34,6 +34,8 @@ public abstract class ExportObject implements Serializable {
    * evaluator/configuration).
    */
   public final String identifier;
+  
+  private static Random random = new Random();
 
   /**
    * Creates a new ExportObject instance.
@@ -89,7 +91,6 @@ public abstract class ExportObject implements Serializable {
       return words;
     }
 
-    Random random = new Random();
     int delta = Math.max(size / toSize, 1);
     int key = random.nextInt(delta);
     List<T> result = new ArrayList<>();
