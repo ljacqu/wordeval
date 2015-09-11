@@ -4,29 +4,33 @@ import static ch.ljacqu.wordeval.language.WordForm.LOWERCASE;
 import static ch.ljacqu.wordeval.language.WordForm.NO_ACCENTS;
 import static ch.ljacqu.wordeval.language.WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
 import static ch.ljacqu.wordeval.language.WordForm.RAW;
+import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import ch.ljacqu.wordeval.LetterService;
 
-class WordFormsGenerator {
+/**
+ * Utility class to generate the various word forms of a word.
+ */
+class WordFormsBuilder {
 
-  private Sanitizer sanitizer;
-  private String lettersToKeep;
-  private String tempReplacements;
+  private final Locale locale;
+  private final String lettersToKeep;
+  private final String tempReplacements;
 
-  public WordFormsGenerator(Sanitizer sanitizer) {
-    this.sanitizer = sanitizer;
-    lettersToKeep = charArrayToString(sanitizer.getAdditionalLetters());
+  WordFormsBuilder(Language language) {
+    lettersToKeep = charsToString(language.getLettersToPreserve());
     tempReplacements = initializeTempReplacements(lettersToKeep);
+    locale = language.buildLocale();
   }
 
   /**
    * Computes the different word forms (all lowercase, accents removed, etc.)
    * for the given word.
-   * @param crudeWord The word to process
-   * @return List of all word forms, empty array if the word should be skipped
+   * @param word The word to process
+   * @return Collection of all word forms; empty array if the word should be
+   *         skipped
    */
-  String[] computeForms(String line) {
-    String word = sanitizer.sanitizeWord(line);
+  String[] computeForms(String word) {
     if (word.isEmpty()) {
       return new String[0];
     }
@@ -34,7 +38,7 @@ class WordFormsGenerator {
     String[] wordForms = new String[WordForm.values().length];
     wordForms[RAW.ordinal()] = word;
 
-    String lowerCaseWord = word.toLowerCase(sanitizer.getLocale());
+    String lowerCaseWord = word.toLowerCase(locale);
     wordForms[LOWERCASE.ordinal()] = lowerCaseWord;
     wordForms[NO_ACCENTS.ordinal()] = removeNonLetterAccents(lowerCaseWord);
     wordForms[NO_ACCENTS_WORD_CHARS_ONLY.ordinal()] = wordForms[NO_ACCENTS
@@ -53,12 +57,12 @@ class WordFormsGenerator {
         lettersToKeep);
   }
 
-  private static String charArrayToString(char[] arr) {
-    StringBuilder builder = new StringBuilder();
-    for (char c : arr) {
-      builder.append(c);
+  private static String charsToString(char[] letters) {
+    StringBuilder sb = new StringBuilder();
+    for (char letter : letters) {
+      sb.append(letter);
     }
-    return builder.toString();
+    return sb.toString();
   }
 
   private static String initializeTempReplacements(String lettersToKeep) {

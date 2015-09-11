@@ -30,10 +30,10 @@ public class DictionarySanitationTest {
         allowedChars);
 
     List<Evaluator> evaluators = Collections.singletonList(testEvaluator);
-    Dictionary dictionary = Dictionary.getLanguageDictionary(languageCode,
+    Dictionary dictionary = Dictionary.getDictionary(languageCode,
         evaluators);
 
-    dictionary.processDictionary();
+    dictionary.process();
     Map<String, List<String>> errors = testEvaluator.getNavigableResults();
 
     if (!errors.isEmpty()) {

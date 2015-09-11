@@ -23,7 +23,7 @@ public class TestDriver {
   public static void main(String[] args) throws IOException {
     exportLanguage("af");
     exportLanguage("hu");
-    //exportLanguage("tr");
+    exportLanguage("tr");
   }
 
   public static void exportLanguage(String language) throws IOException {
@@ -46,16 +46,15 @@ public class TestDriver {
     evaluators.add(new SameLetterConsecutive());
     outputDiff(times, "instantiated evaluators");
 
-    Dictionary dictionary = Dictionary.getLanguageDictionary(language,
-        evaluators);
+    Dictionary dictionary = Dictionary.getDictionary(language, evaluators);
     outputDiff(times, "got dictionary object");
-    
-    dictionary.processDictionary();
+
+    dictionary.process();
     outputDiff(times, "processed dictionary");
 
     ResultsExporter.exportToFile(evaluators, "export/" + language + ".json");
     outputDiff(times, "finished export");
-    
+
     times.add(times.get(0)); // ;)
     outputDiff(times, "= total time");
     System.out.println("-------------");

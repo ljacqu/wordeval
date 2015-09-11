@@ -1,6 +1,5 @@
 package ch.ljacqu.wordeval.language;
 
-import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -10,46 +9,17 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class Sanitizer {
 
-  /** The locale of the current language. */
-  private Locale locale;
   /** The characters whose occurrence mark the end of the word on the line. */
-  private char[] delimiters;
+  private final char[] delimiters;
   /** Words containing any entry of skipSequences are discarded. */
-  private String[] skipSequences;
-  /**
-   * Additional letters that should be kept for the language. For characters
-   * with diacritics, this means that they should not be replaced to the
-   * accent-less version, ever.
-   */
-  private char[] additionalLetters;
+  private final String[] skipSequences;
 
-  /**
-   * Creates a new Sanitizer object.
-   * @param locale The locale of the language
-   * @param delimiters The delimiters used in the dictionary file
-   * @param skipSequences Sequences that words may not contain
-   * @param additionalLetters Additional letters outside the regular alphabet
-   *        that should be recognized for the given language.
-   */
-  public Sanitizer(Locale locale, char[] delimiters, String[] skipSequences,
-      char[] additionalLetters) {
-    this.locale = locale;
-    this.delimiters = delimiters;
-    this.skipSequences = skipSequences;
-    this.additionalLetters = additionalLetters;
-  }
+  private final WordFormsBuilder formsBuilder;
 
-  /**
-   * Creates a new Sanitizer object.
-   * @param languageCode The code of the language (ISO-639-1)
-   * @param delimiters The delimiters used in the dictionary file
-   * @param skipSequences Sequences that words may not contain
-   * @param additionalLetters Additional letters outside the regular alphabet
-   *        that should be recognized for the given language.
-   */
-  public Sanitizer(String languageCode, char[] delimiters,
-      String[] skipSequences, char[] additionalLetters) {
-    this(new Locale(languageCode), delimiters, skipSequences, additionalLetters);
+  public Sanitizer(Language language, DictionarySettings settings) {
+    delimiters = settings.getDelimiters();
+    skipSequences = settings.getSkipSequences();
+    formsBuilder = new WordFormsBuilder(language);
   }
 
   /**
@@ -68,12 +38,12 @@ public class Sanitizer {
    * @param crudeWord The word (line) to process
    * @return The sanitized word (empty string to signal skip)
    */
-  public final String sanitizeWord(String crudeWord) {
+  public final String[] computeForms(String crudeWord) {
     String rawWord = removeDelimiters(crudeWord);
     if (shouldBeSkipped(rawWord)) {
-      return "";
+      return new String[0];
     }
-    return customSanitize(rawWord);
+    return formsBuilder.computeForms(customSanitize(rawWord));
   }
 
   /**
@@ -106,20 +76,4 @@ public class Sanitizer {
     return false;
   }
 
-  /**
-   * Returns the locale of the given language.
-   * @return The locale
-   */
-  public Locale getLocale() {
-    return locale;
-  }
-
-  /**
-   * Returns the collection of letters that should be considered as separate
-   * letters for the language and not as diacritic variants.
-   * @return The list of additional letters
-   */
-  public char[] getAdditionalLetters() {
-    return additionalLetters;
-  }
 }

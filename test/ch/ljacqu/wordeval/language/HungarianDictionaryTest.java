@@ -33,9 +33,9 @@ public class HungarianDictionaryTest {
     List<Evaluator> evaluatorList = Arrays.asList(evaluator1, evaluator2,
         evaluator3);
 
-    Dictionary dictionary = Dictionary.getLanguageDictionary("hu",
+    Dictionary dictionary = Dictionary.getDictionary("hu",
         evaluatorList);
-    dictionary.processDictionary();
+    dictionary.process();
 
     for (Evaluator evaluator : evaluatorList) {
       MissingWordsEvaluator testEvaluator = (MissingWordsEvaluator) evaluator;

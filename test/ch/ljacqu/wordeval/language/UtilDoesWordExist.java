@@ -19,10 +19,10 @@ public class UtilDoesWordExist {
   public void shouldNotReturnNonWordChars() throws IOException {
     TestEvaluator testEvaluator = new TestEvaluator();
     List<Evaluator> evaluators = Collections.singletonList(testEvaluator);
-    Dictionary dictionary = Dictionary.getLanguageDictionary(languageCode,
+    Dictionary dictionary = Dictionary.getDictionary(languageCode,
         evaluators);
 
-    dictionary.processDictionary();
+    dictionary.process();
 
     List<String> missingWords = testEvaluator.getMissingWords();
     if (missingWords.isEmpty()) {

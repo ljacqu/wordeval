@@ -13,69 +13,49 @@ import ch.ljacqu.wordeval.evaluation.Evaluator;
  */
 public class Dictionary {
 
-  /** The code of the language; should correspond to ISO-639-1. */
-  private String languageCode;
-  /** The dictionary file to read from. */
-  private String fileName;
-  /** The list of evaluators to make the dictionary use. */
-  private List<Evaluator> evaluators;
-  /** Sanitizer to sanitize the dictionary's words. */
-  private Sanitizer sanitizer;
-  private WordFormsGenerator wordFormsGenerator;
+  private static final String DICT_PATH = "dict/";
 
-  /**
-   * Creates a new Dictionary instance with custom options. See also
-   * {@link #getLanguageDictionary()}.
-   * @param languageCode The code of the language
-   * @param fileName The file of the dictionary
-   * @param evaluators The list of evaluators to use on the words
-   * @param sanitizer The sanitizer for the dictionary entries
-   */
-  public Dictionary(String languageCode, String fileName,
-      List<Evaluator> evaluators, Sanitizer sanitizer) {
-    this.languageCode = languageCode;
+  private final String languageCode;
+  /** The dictionary file to read from. */
+  private final String fileName;
+  /** The list of evaluators to make the dictionary use. */
+  private final List<Evaluator> evaluators;
+  /** Sanitizer to sanitize the dictionary's words. */
+  private final Sanitizer sanitizer;
+
+  public Dictionary(String fileName, Language language, Sanitizer sanitizer,
+      List<Evaluator> evaluators) {
     this.fileName = fileName;
     this.evaluators = evaluators;
     this.sanitizer = sanitizer;
-    wordFormsGenerator = new WordFormsGenerator(sanitizer);
+    this.languageCode = language.getCode();
   }
 
-  /**
-   * Returns a Dictionary object for one of the registered languages.
-   * @param languageCode The code of the language to retrieve
-   * @param evaluators The list of evaluators to use on the words
-   * @return A Dictionary object for the given language
-   */
-  public static Dictionary getLanguageDictionary(String languageCode,
+  public static Dictionary getDictionary(String languageCode,
       List<Evaluator> evaluators) {
-    return getLanguageDictionary(languageCode, evaluators, "dict/");
+    String fileName = DICT_PATH + languageCode + ".dic";
+    return getDictionary(languageCode, languageCode, fileName, evaluators);
   }
 
-  /**
-   * Returns a Dictionary object for one of the registered languages.
-   * @param languageCode The code of the language to retrieve
-   * @param evaluators The list of evaluators to use on the words
-   * @param path The path of the dictionary folder
-   * @return A Dictionary object for the given language
-   */
-  public static Dictionary getLanguageDictionary(String languageCode,
-      List<Evaluator> evaluators, String path) {
-    Sanitizer sanitizer = DictionaryLoader.getLanguageDictionary(languageCode);
-    String fileName = path + languageCode + ".dic";
-    return new Dictionary(languageCode, fileName, evaluators, sanitizer);
+  public static Dictionary getDictionary(String languageCode,
+      String sanitizerName, String fileName, List<Evaluator> evaluators) {
+    Language language = Language.get(languageCode);
+    DictionarySettings settings = DictionarySettings.get(sanitizerName);
+    return new Dictionary(fileName, language,
+        settings.buildSanitizer(language), evaluators);
   }
 
   /**
    * Processes a dictionary; each word is passed to the evaluators.
    * @throws IOException If the dictionary file cannot be read
    */
-  public final void processDictionary() throws IOException {
+  public final void process() throws IOException {
     FileInputStream fis = new FileInputStream(fileName);
     InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
 
     try (BufferedReader br = new BufferedReader(isr)) {
       for (String line; (line = br.readLine()) != null;) {
-        String[] wordForms = wordFormsGenerator.computeForms(line);
+        String[] wordForms = sanitizer.computeForms(line);
         if (wordForms.length != 0) {
           processWord(wordForms);
         }

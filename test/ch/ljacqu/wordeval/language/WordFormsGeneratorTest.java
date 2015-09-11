@@ -10,9 +10,8 @@ public class WordFormsGeneratorTest {
 
   @Test
   public void shouldKeepAdditionalLetters() {
-    Language language = new Language("da").setAdditionalLetters('æ', 'ø', 'å');
-    WordFormsGenerator generator = new WordFormsGenerator(
-        language.getSanitizer());
+    Language language = new Language("da").setAdditionalVowels("æ", "ø", "å");
+    WordFormsBuilder generator = new WordFormsBuilder(language);
     String[] words = { "forsøgte erklære trådte", "Å ǿ én býr" };
 
     List<String> result = new ArrayList<String>();
@@ -28,8 +27,7 @@ public class WordFormsGeneratorTest {
   @Test
   public void shouldRemoveAllAccentsByDefault() {
     Language language = new Language("fr");
-    WordFormsGenerator generator = new WordFormsGenerator(
-        language.getSanitizer());
+    WordFormsBuilder generator = new WordFormsBuilder(language);
 
     String result = getNoAccent(generator.computeForms("ÉÑÀÇÏÔ"));
 

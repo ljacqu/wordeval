@@ -1,12 +1,14 @@
 package ch.ljacqu.wordeval.language;
 
+/**
+ * Custom sanitizer implementing specific rules for the Hungarian dictionary.
+ */
 public class HuSanitizer extends Sanitizer {
 
   private boolean skipWords = false;
 
   public HuSanitizer() {
-    super("hu", asArray('/', '\t'), asArray(".", "+", "±", "ø", "ʻ", "’", "­"),
-        new char[0]);
+    super(Language.get("hu"), initSettings());
   }
 
   @Override
@@ -122,12 +124,9 @@ public class HuSanitizer extends Sanitizer {
     return null;
   }
 
-  private static String[] asArray(String... elems) {
-    return elems;
-  }
-
-  private static char[] asArray(char... elems) {
-    return elems;
+  private static DictionarySettings initSettings() {
+    return new DictionarySettings("hu").setDelimiters('/', '\t')
+        .setSkipSequences(".", "+", "±", "ø", "ʻ", "’", "­");
   }
 
   private boolean wordEqualsOne(String word, String... parts) {
