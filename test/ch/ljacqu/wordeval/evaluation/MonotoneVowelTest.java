@@ -1,11 +1,15 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.aMapWithSize;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertThat;
 import java.util.List;
 import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
-import ch.ljacqu.wordeval.language.LetterService;
+import ch.ljacqu.wordeval.language.Alphabet;
+import ch.ljacqu.wordeval.language.Language;
 import ch.ljacqu.wordeval.language.LetterType;
 
 public class MonotoneVowelTest {
@@ -15,24 +19,23 @@ public class MonotoneVowelTest {
 
   @Before
   public void initializeEvaluator() {
-    vowelEvaluator = new MonotoneVowel(LetterType.VOWELS);
-    consonantEvaluator = new MonotoneVowel(LetterType.CONSONANTS);
+    Language lang = new Language("zxx", Alphabet.LATIN);
+    vowelEvaluator = new MonotoneVowel(LetterType.VOWELS, lang);
+    consonantEvaluator = new MonotoneVowel(LetterType.CONSONANTS, lang);
   }
 
   private void process(String[] words) {
-
     for (String word : words) {
-      String noAccentWord = LetterService.removeAccentsFromWord(word);
-      vowelEvaluator.processWord(noAccentWord, word);
-      consonantEvaluator.processWord(noAccentWord, word);
+      vowelEvaluator.processWord(word, word);
+      consonantEvaluator.processWord(word, word);
     }
   }
 
   @Test
   public void shouldProcessWordsCorrectly() {
     // lengths are 10, 9, 5, 5, 10, 8, 8, 0
-    String[] words = { "assosiasie", "something", "flûte", "geëet",
-        "mâdagascar", "tatoťute", "čocaçoći", "eau" };
+    String[] words = { "assosiasie", "something", "flute", "geeet",
+        "madagascar", "tatotute", "cocacoci", "eau" };
     process(words);
 
     Map<Integer, List<String>> vowelResults = vowelEvaluator
@@ -40,15 +43,14 @@ public class MonotoneVowelTest {
     Map<Integer, List<String>> consonantResults = consonantEvaluator
         .getNavigableResults();
 
-    assertEquals(vowelResults.size(), 2);
-    assertEquals(vowelResults.get(10).size(), 1);
-    assertEquals(vowelResults.get(5).size(), 1);
-    assertEquals(vowelResults.get(10).get(0), "mâdagascar");
+    assertThat(vowelResults, aMapWithSize(2));
+    assertThat(vowelResults.get(10), contains("madagascar"));
+    assertThat(vowelResults.get(5), contains("geeet"));
 
-    assertEquals(consonantResults.size(), 2);
-    assertEquals(consonantResults.get(10).size(), 1);
-    assertEquals(consonantResults.get(10).get(0), "assosiasie");
-    assertEquals(consonantResults.get(8).size(), 2);
+    assertThat(consonantResults, aMapWithSize(2));
+    assertThat(consonantResults.get(10), contains("assosiasie"));
+    assertThat(consonantResults.get(8),
+        containsInAnyOrder("tatotute", "cocacoci"));
   }
 
 }

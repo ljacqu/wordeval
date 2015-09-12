@@ -4,6 +4,7 @@ import java.util.List;
 import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParamsBuilder;
+import ch.ljacqu.wordeval.language.Language;
 import ch.ljacqu.wordeval.language.LetterService;
 import ch.ljacqu.wordeval.language.LetterType;
 
@@ -14,15 +15,15 @@ import ch.ljacqu.wordeval.language.LetterType;
  */
 public class ConsecutiveVowelCount extends WordStatEvaluator {
 
-  private List<Character> lettersToConsider;
+  private List<String> lettersToConsider;
   private LetterType letterType;
 
   /**
    * Creates a new VowelCount evaluator instance.
    * @param type The letter type to consider
    */
-  public ConsecutiveVowelCount(LetterType type) {
-    lettersToConsider = LetterService.getLetters(type);
+  public ConsecutiveVowelCount(LetterType type, Language language) {
+    lettersToConsider = LetterService.getLetters(type, language);
     letterType = type;
   }
 
@@ -35,7 +36,8 @@ public class ConsecutiveVowelCount extends WordStatEvaluator {
   public void processWord(String word, String rawWord) {
     int count = 0;
     for (int i = 0; i <= word.length(); ++i) {
-      if (i == word.length() || !lettersToConsider.contains(word.charAt(i))) {
+      if (i == word.length()
+          || !lettersToConsider.contains(word.substring(i, i + 1))) {
         if (count > 1) {
           addEntry(count, rawWord);
         }

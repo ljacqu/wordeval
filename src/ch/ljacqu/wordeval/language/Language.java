@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval.language;
 
+import static ch.ljacqu.wordeval.language.Alphabet.LATIN;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
@@ -14,6 +15,7 @@ public final class Language {
   private static Map<String, Language> languages = new HashMap<>();
 
   private String code;
+  private Alphabet alphabet;
   private Set<Character> lettersToPreserve = new HashSet<>();
   private String[] additionalVowels = {};
   private String[] additionalConsonants = {};
@@ -21,9 +23,9 @@ public final class Language {
   // List of language data
   static {
     // TODO #7: Add additional letters (Hungarian not complete!)
-    add(new Language("af"));
-    add(new Language("hu").setAdditionalConsonants("cs", "dzs", "hy", "ny"));
-    add(new Language("tr"));
+    add("af", LATIN);
+    add("hu", LATIN).setAdditionalConsonants("cs", "dzs", "hy", "ny");
+    add("tr", LATIN).setAdditionalVowels("ı");
   }
 
   /**
@@ -40,16 +42,19 @@ public final class Language {
     return languages.get(code);
   }
 
-  private static void add(Language language) {
+  private static Language add(String code, Alphabet alphabet) {
+    Language language = new Language(code, alphabet);
     languages.put(language.code, language);
+    return language;
   }
 
   /**
    * Creates a new Language instance.
    * @param code The ISO-639-1 code of the language
    */
-  public Language(String code) {
+  public Language(String code, Alphabet alphabet) {
     this.code = code;
+    this.alphabet = alphabet;
   }
 
   /**
@@ -58,6 +63,10 @@ public final class Language {
    */
   public String getCode() {
     return code;
+  }
+
+  public Alphabet getAlphabet() {
+    return alphabet;
   }
 
   /**

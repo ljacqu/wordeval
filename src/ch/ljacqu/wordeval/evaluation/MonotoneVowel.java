@@ -4,6 +4,7 @@ import java.util.List;
 import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.WordStatExport;
+import ch.ljacqu.wordeval.language.Language;
 import ch.ljacqu.wordeval.language.LetterService;
 import ch.ljacqu.wordeval.language.LetterType;
 
@@ -13,22 +14,22 @@ import ch.ljacqu.wordeval.language.LetterType;
  */
 public class MonotoneVowel extends WordStatEvaluator {
 
-  private List<Character> letters;
+  private List<String> letters;
   private LetterType letterType;
 
   /**
    * Creates a new MonotoneVowel evaluator.
    * @param letterType The letter type (consonant, vowel) to consider
    */
-  public MonotoneVowel(LetterType letterType) {
-    letters = LetterService.getLetters(letterType);
+  public MonotoneVowel(LetterType letterType, Language language) {
+    letters = LetterService.getLetters(letterType, language);
     this.letterType = letterType;
   }
 
   @Override
   public void processWord(String word, String rawWord) {
     boolean foundLetter = false;
-    for (char letter : letters) {
+    for (String letter : letters) {
       if (word.indexOf(letter) != -1) {
         if (foundLetter) {
           // found another letter of that category, so stop

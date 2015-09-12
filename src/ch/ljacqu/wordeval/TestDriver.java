@@ -17,6 +17,7 @@ import ch.ljacqu.wordeval.evaluation.MonotoneVowel;
 import ch.ljacqu.wordeval.evaluation.Palindromes;
 import ch.ljacqu.wordeval.evaluation.SameLetterConsecutive;
 import ch.ljacqu.wordeval.evaluation.export.ResultsExporter;
+import ch.ljacqu.wordeval.language.Language;
 
 public class TestDriver {
 
@@ -26,8 +27,9 @@ public class TestDriver {
     exportLanguage("tr");
   }
 
-  public static void exportLanguage(String language) throws IOException {
-    System.out.println("Exporting language '" + language + "'");
+  public static void exportLanguage(String code) throws IOException {
+    System.out.println("Exporting language '" + code + "'");
+    Language language = Language.get(code);
     List<Long> times = new ArrayList<Long>();
     times.add(System.nanoTime());
 
@@ -36,23 +38,23 @@ public class TestDriver {
     evaluators.add(new AlphabeticalOrder());
     evaluators.add(new AlphabeticalSequence());
     evaluators.add(new ConsecutiveLetterPairs());
-    evaluators.add(new ConsecutiveVowelCount(VOWELS));
-    evaluators.add(new ConsecutiveVowelCount(CONSONANTS));
+    evaluators.add(new ConsecutiveVowelCount(VOWELS, language));
+    evaluators.add(new ConsecutiveVowelCount(CONSONANTS, language));
     evaluators.add(new Isograms());
     evaluators.add(new LongWords());
-    evaluators.add(new MonotoneVowel(VOWELS));
-    evaluators.add(new MonotoneVowel(CONSONANTS));
+    evaluators.add(new MonotoneVowel(VOWELS, language));
+    evaluators.add(new MonotoneVowel(CONSONANTS, language));
     evaluators.add(new Palindromes());
     evaluators.add(new SameLetterConsecutive());
     outputDiff(times, "instantiated evaluators");
 
-    Dictionary dictionary = Dictionary.getDictionary(language, evaluators);
+    Dictionary dictionary = Dictionary.getDictionary(code, evaluators);
     outputDiff(times, "got dictionary object");
 
     dictionary.process();
     outputDiff(times, "processed dictionary");
 
-    ResultsExporter.exportToFile(evaluators, "export/" + language + ".json");
+    ResultsExporter.exportToFile(evaluators, "export/" + code + ".json");
     outputDiff(times, "finished export");
 
     times.add(times.get(0)); // ;)

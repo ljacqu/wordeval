@@ -9,6 +9,8 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import ch.ljacqu.wordeval.language.Alphabet;
+import ch.ljacqu.wordeval.language.Language;
 import ch.ljacqu.wordeval.language.LetterType;
 
 public class ConsecutiveVowelCountTest {
@@ -18,8 +20,9 @@ public class ConsecutiveVowelCountTest {
 
   @Before
   public void initializeEvaluator() {
-    vowelCount = new ConsecutiveVowelCount(LetterType.VOWELS);
-    consonantCount = new ConsecutiveVowelCount(LetterType.CONSONANTS);
+    Language lang = new Language("zxx", Alphabet.LATIN);
+    vowelCount = new ConsecutiveVowelCount(LetterType.VOWELS, lang);
+    consonantCount = new ConsecutiveVowelCount(LetterType.CONSONANTS, lang);
   }
 
   private void processWords(String[] cleanWords, String[] words) {

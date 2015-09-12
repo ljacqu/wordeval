@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval.language;
 
+import static ch.ljacqu.wordeval.language.Alphabet.LATIN;
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.Matchers.emptyArray;
@@ -11,8 +12,8 @@ public class LanguageTest {
 
   @Test
   public void shouldRegisterLettersToPreserve() {
-    Language lang = new Language("zxx").setAdditionalConsonants("cs", "þ", "y")
-        .setAdditionalVowels("w", "eu", "ø", "öy");
+    Language lang = new Language("zxx", LATIN).setAdditionalConsonants("cs",
+        "þ", "y").setAdditionalVowels("w", "eu", "ø", "öy");
 
     assertThat(lang.getLettersToPreserve().toArray(),
         arrayContainingInAnyOrder('þ', 'ø'));
@@ -20,7 +21,7 @@ public class LanguageTest {
 
   @Test
   public void shouldHandleUnsetProperties() {
-    Language lang = new Language("zxx");
+    Language lang = new Language("zxx", LATIN);
 
     assertThat(lang.getCode(), equalTo("zxx"));
     assertThat(lang.getAdditionalConsonants(), emptyArray());
@@ -30,8 +31,8 @@ public class LanguageTest {
 
   @Test
   public void shouldNotHaveLettersToPreserveIfNonApplicable() {
-    Language lang = new Language("zxx").setAdditionalConsonants("cs", "ny")
-        .setAdditionalVowels("ij");
+    Language lang = new Language("zxx", LATIN).setAdditionalConsonants("cs",
+        "ny").setAdditionalVowels("ij");
 
     assertThat(lang.getLettersToPreserve().toArray(), emptyArray());
     assertThat(lang.getAdditionalVowels(), arrayWithSize(1));

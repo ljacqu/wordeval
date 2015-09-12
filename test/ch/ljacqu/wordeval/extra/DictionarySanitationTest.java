@@ -14,6 +14,7 @@ import ch.ljacqu.wordeval.dictionary.Dictionary;
 import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.PartWordEvaluator;
+import ch.ljacqu.wordeval.language.Language;
 import ch.ljacqu.wordeval.language.LetterService;
 import ch.ljacqu.wordeval.language.LetterType;
 
@@ -26,11 +27,7 @@ public class DictionarySanitationTest {
 
   @Test
   public void shouldNotHaveNonWordCharacters() throws IOException {
-    List<Character> allowedChars = new ArrayList<>();
-    allowedChars.add('-');
-    allowedChars.add('\'');
-    allowedChars.addAll(LetterService.getLetters(LetterType.VOWELS));
-    allowedChars.addAll(LetterService.getLetters(LetterType.CONSONANTS));
+    List<Character> allowedChars = computeAllowedCharsList();
     NoOtherCharsEvaluator testEvaluator = new NoOtherCharsEvaluator(
         allowedChars);
 
@@ -48,6 +45,22 @@ public class DictionarySanitationTest {
     } else {
       assertTrue(errors.isEmpty());
     }
+  }
+
+  private List<Character> computeAllowedCharsList() {
+    Language lang = Language.get(languageCode);
+    List<Character> allowedChars = new ArrayList<>();
+    for (String entry : LetterService.getLetters(LetterType.VOWELS, lang)) {
+      if (entry.length() == 1) {
+        allowedChars.add(entry.charAt(0));
+      }
+    }
+    for (String entry : LetterService.getLetters(LetterType.CONSONANTS, lang)) {
+      if (entry.length() == 1) {
+        allowedChars.add(entry.charAt(0));
+      }
+    }
+    return allowedChars;
   }
 
   private static class NoOtherCharsEvaluator extends PartWordEvaluator {
@@ -69,7 +82,7 @@ public class DictionarySanitationTest {
 
     @Override
     public WordForm getWordForm() {
-      return WordForm.NO_ACCENTS;
+      return WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
     }
   }
 }
