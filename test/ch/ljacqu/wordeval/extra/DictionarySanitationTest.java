@@ -1,4 +1,4 @@
-package ch.ljacqu.wordeval.language;
+package ch.ljacqu.wordeval.extra;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -10,11 +10,16 @@ import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
-import ch.ljacqu.wordeval.LetterService;
-import ch.ljacqu.wordeval.LetterType;
+import ch.ljacqu.wordeval.dictionary.Dictionary;
+import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.PartWordEvaluator;
+import ch.ljacqu.wordeval.language.LetterService;
+import ch.ljacqu.wordeval.language.LetterType;
 
+/**
+ * Utility test to verify how well a dictionary is being sanitized.
+ */
 public class DictionarySanitationTest {
 
   private static final String languageCode = "af";
@@ -30,8 +35,7 @@ public class DictionarySanitationTest {
         allowedChars);
 
     List<Evaluator> evaluators = Collections.singletonList(testEvaluator);
-    Dictionary dictionary = Dictionary.getDictionary(languageCode,
-        evaluators);
+    Dictionary dictionary = Dictionary.getDictionary(languageCode, evaluators);
 
     dictionary.process();
     Map<String, List<String>> errors = testEvaluator.getNavigableResults();

@@ -1,4 +1,6 @@
-package ch.ljacqu.wordeval.language;
+package ch.ljacqu.wordeval.dictionary;
+
+import ch.ljacqu.wordeval.language.Language;
 
 /**
  * Custom sanitizer implementing specific rules for the Hungarian dictionary.

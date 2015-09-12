@@ -1,6 +1,7 @@
-package ch.ljacqu.wordeval.language;
+package ch.ljacqu.wordeval.dictionary;
 
 import org.apache.commons.lang3.StringUtils;
+import ch.ljacqu.wordeval.language.Language;
 
 /**
  * Class responsible for sanitizing a dictionary's entries such that only the
@@ -35,11 +36,11 @@ public class Sanitizer {
   /**
    * Sanitation entry method: takes a line read from the dictionary and converts
    * it into its sanitized form.
-   * @param crudeWord The word (line) to process
+   * @param line The line (the word) to process
    * @return The sanitized word (empty string to signal skip)
    */
-  public final String[] computeForms(String crudeWord) {
-    String rawWord = removeDelimiters(crudeWord);
+  public final String[] computeForms(String line) {
+    String rawWord = removeDelimiters(line);
     if (shouldBeSkipped(rawWord)) {
       return new String[0];
     }
@@ -48,8 +49,8 @@ public class Sanitizer {
 
   /**
    * Takes a line and extracts the word (in its raw form) from it. The first
-   * occurrence of a {@code delimiter} (e.g. a space or '/') signals that the
-   * word has ended.
+   * occurrence of a <code>delimiter</code> (e.g. a space or '/') signals that
+   * the word has ended.
    * @param crudeWord The word (line) to process
    * @return The sanitized word (empty string to signal skip)
    */

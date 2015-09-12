@@ -1,8 +1,8 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParamsBuilder;
-import ch.ljacqu.wordeval.language.WordForm;
 
 /**
  * Finds words with multiple consecutive letter groups following each other,

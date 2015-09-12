@@ -1,6 +1,6 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import ch.ljacqu.wordeval.language.WordForm;
+import ch.ljacqu.wordeval.dictionary.WordForm;
 
 /**
  * Filter that saves words whose letters are alphabetical from beginning to end,

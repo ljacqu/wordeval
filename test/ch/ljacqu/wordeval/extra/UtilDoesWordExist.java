@@ -1,4 +1,4 @@
-package ch.ljacqu.wordeval.language;
+package ch.ljacqu.wordeval.extra;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
+import ch.ljacqu.wordeval.dictionary.Dictionary;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.PartWordEvaluator;
 

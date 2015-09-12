@@ -1,8 +1,9 @@
-package ch.ljacqu.wordeval;
+package ch.ljacqu.wordeval.language;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import org.junit.Test;
+import ch.ljacqu.wordeval.language.LetterService;
 
 public class LetterServiceTest {
 

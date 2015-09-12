@@ -1,4 +1,4 @@
-package ch.ljacqu.wordeval;
+package ch.ljacqu.wordeval.extra;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;

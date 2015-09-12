@@ -1,4 +1,4 @@
-package ch.ljacqu.wordeval.language;
+package ch.ljacqu.wordeval.dictionary;
 
 import static org.junit.Assert.fail;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import ch.ljacqu.wordeval.evaluation.PartWordEvaluator;
 /**
  * Test for the Hungarian dictionary (which has custom sanitation).
  */
-public class HungarianDictionaryTest {
+public class HuSanitizerTest {
 
   @Test
   public void shouldFindTheGivenWords() throws IOException {

@@ -1,11 +1,11 @@
 package ch.ljacqu.wordeval.evaluation;
 
 import java.util.List;
-import ch.ljacqu.wordeval.LetterService;
-import ch.ljacqu.wordeval.LetterType;
+import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParamsBuilder;
-import ch.ljacqu.wordeval.language.WordForm;
+import ch.ljacqu.wordeval.language.LetterService;
+import ch.ljacqu.wordeval.language.LetterType;
 
 /**
  * Searches words for clusters of vowels or consonants, e.g. "ngstschw" in

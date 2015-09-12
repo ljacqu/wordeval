@@ -8,9 +8,9 @@ import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParams;
-import ch.ljacqu.wordeval.language.WordForm;
 
 /**
  * Evaluator base class. An evaluator checks words for a given property and adds

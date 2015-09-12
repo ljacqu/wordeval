@@ -9,7 +9,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import ch.ljacqu.wordeval.LetterType;
+import ch.ljacqu.wordeval.language.LetterType;
 
 public class ConsecutiveVowelCountTest {
 

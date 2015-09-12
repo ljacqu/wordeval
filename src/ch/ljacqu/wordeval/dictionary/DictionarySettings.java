@@ -1,7 +1,8 @@
-package ch.ljacqu.wordeval.language;
+package ch.ljacqu.wordeval.dictionary;
 
 import java.util.HashMap;
 import java.util.Map;
+import ch.ljacqu.wordeval.language.Language;
 
 /**
  * Class containing dictionary-specific parameters, based on which a sanitizer

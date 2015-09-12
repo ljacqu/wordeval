@@ -1,10 +1,11 @@
 package ch.ljacqu.wordeval;
 
-import static ch.ljacqu.wordeval.LetterType.CONSONANTS;
-import static ch.ljacqu.wordeval.LetterType.VOWELS;
+import static ch.ljacqu.wordeval.language.LetterType.CONSONANTS;
+import static ch.ljacqu.wordeval.language.LetterType.VOWELS;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import ch.ljacqu.wordeval.dictionary.Dictionary;
 import ch.ljacqu.wordeval.evaluation.AlphabeticalSequence;
 import ch.ljacqu.wordeval.evaluation.AlphabeticalOrder;
 import ch.ljacqu.wordeval.evaluation.ConsecutiveLetterPairs;
@@ -16,7 +17,6 @@ import ch.ljacqu.wordeval.evaluation.MonotoneVowel;
 import ch.ljacqu.wordeval.evaluation.Palindromes;
 import ch.ljacqu.wordeval.evaluation.SameLetterConsecutive;
 import ch.ljacqu.wordeval.evaluation.export.ResultsExporter;
-import ch.ljacqu.wordeval.language.Dictionary;
 
 public class TestDriver {
 

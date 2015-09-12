@@ -1,12 +1,13 @@
-package ch.ljacqu.wordeval.language;
+package ch.ljacqu.wordeval.dictionary;
 
-import static ch.ljacqu.wordeval.language.WordForm.RAW;
+import static ch.ljacqu.wordeval.dictionary.WordForm.RAW;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
+import ch.ljacqu.wordeval.language.Language;
 
 /**
  * A dictionary to process.

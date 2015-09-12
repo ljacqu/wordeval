@@ -1,4 +1,4 @@
-package ch.ljacqu.wordeval.language;
+package ch.ljacqu.wordeval.dictionary;
 
 /**
  * Represents the different "word forms" of a word, i.e. the different types of

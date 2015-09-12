@@ -1,4 +1,4 @@
-package ch.ljacqu.wordeval;
+package ch.ljacqu.wordeval.language;
 
 import java.text.Normalizer;
 import java.util.ArrayList;

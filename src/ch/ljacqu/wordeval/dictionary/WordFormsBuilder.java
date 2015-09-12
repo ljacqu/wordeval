@@ -1,12 +1,13 @@
-package ch.ljacqu.wordeval.language;
+package ch.ljacqu.wordeval.dictionary;
 
-import static ch.ljacqu.wordeval.language.WordForm.LOWERCASE;
-import static ch.ljacqu.wordeval.language.WordForm.NO_ACCENTS;
-import static ch.ljacqu.wordeval.language.WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
-import static ch.ljacqu.wordeval.language.WordForm.RAW;
+import static ch.ljacqu.wordeval.dictionary.WordForm.LOWERCASE;
+import static ch.ljacqu.wordeval.dictionary.WordForm.NO_ACCENTS;
+import static ch.ljacqu.wordeval.dictionary.WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
+import static ch.ljacqu.wordeval.dictionary.WordForm.RAW;
 import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
-import ch.ljacqu.wordeval.LetterService;
+import ch.ljacqu.wordeval.language.Language;
+import ch.ljacqu.wordeval.language.LetterService;
 
 /**
  * Utility class to generate the various word forms of a word.
@@ -57,7 +58,7 @@ class WordFormsBuilder {
         lettersToKeep);
   }
 
-  private static String charsToString(char[] letters) {
+  private static String charsToString(Iterable<Character> letters) {
     StringBuilder sb = new StringBuilder();
     for (char letter : letters) {
       sb.append(letter);
