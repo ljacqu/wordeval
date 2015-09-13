@@ -15,7 +15,7 @@ public class LanguageTest {
     Language lang = new Language("zxx", LATIN).setAdditionalConsonants("cs",
         "þ", "y").setAdditionalVowels("w", "eu", "ø", "öy");
 
-    assertThat(lang.getLettersToPreserve().toArray(),
+    assertThat(lang.getCharsToPreserve().toArray(),
         arrayContainingInAnyOrder('þ', 'ø'));
   }
 
@@ -26,7 +26,7 @@ public class LanguageTest {
     assertThat(lang.getCode(), equalTo("zxx"));
     assertThat(lang.getAdditionalConsonants(), emptyArray());
     assertThat(lang.getAdditionalVowels(), emptyArray());
-    assertThat(lang.getLettersToPreserve().toArray(), emptyArray());
+    assertThat(lang.getCharsToPreserve().toArray(), emptyArray());
   }
 
   @Test
@@ -34,7 +34,7 @@ public class LanguageTest {
     Language lang = new Language("zxx", LATIN).setAdditionalConsonants("cs",
         "ny").setAdditionalVowels("ij");
 
-    assertThat(lang.getLettersToPreserve().toArray(), emptyArray());
+    assertThat(lang.getCharsToPreserve().toArray(), emptyArray());
     assertThat(lang.getAdditionalVowels(), arrayWithSize(1));
     assertThat(lang.getAdditionalConsonants(), arrayWithSize(2));
   }

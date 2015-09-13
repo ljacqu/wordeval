@@ -16,16 +16,27 @@ public final class Language {
 
   private String code;
   private Alphabet alphabet;
-  private Set<Character> lettersToPreserve = new HashSet<>();
+  private Set<Character> charsToPreserve = new HashSet<>();
   private String[] additionalVowels = {};
   private String[] additionalConsonants = {};
 
   // List of language data
   static {
-    // TODO #7: Add additional letters (Hungarian not complete!)
     add("af", LATIN);
-    add("hu", LATIN).setAdditionalConsonants("cs", "dzs", "hy", "ny");
-    add("tr", LATIN).setAdditionalVowels("ı");
+    add("cs", LATIN)
+      // TODO: is stuff like "ň" really a distinct letter to preserve?
+      .setAdditionalConsonants("č", "ď", "ch", "ň", "ř", "š", "ť", "ž")
+      .setAdditionalVowels("á", "é", "ě", "í", "ó", "ú", "ů", "ý");
+    add("en", LATIN)
+      // TODO: how to deal with Y being consonant and vowel in English?
+      .setAdditionalConsonants("y");
+    add("hu", LATIN)
+      .setAdditionalConsonants("cs", "dz", "dzs", "gy", "ly", "ny", "sz", "ty", "zs")
+      .setAdditionalVowels("á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű");
+    add("tr", LATIN)
+      // TODO #29: Remove 'y' as vowel in Turkish
+      .setAdditionalConsonants("ç", "ğ", "ş", "y")
+      .setAdditionalVowels("ı", "ö", "ü");
   }
 
   /**
@@ -58,7 +69,7 @@ public final class Language {
   }
 
   /**
-   * Returns the ISO-639-1 code of the given language
+   * Returns the ISO-639-1 code of the given language.
    * @return The language code
    */
   public String getCode() {
@@ -70,7 +81,7 @@ public final class Language {
   }
 
   /**
-   * Creates a {@link Locale} object for the given language
+   * Creates a {@link Locale} object for the given language.
    * @return Locale object for language
    */
   public Locale buildLocale() {
@@ -79,12 +90,11 @@ public final class Language {
 
   // --- Additional vowels
   /**
-   * Set the list of additional vowels which should be recognized as fully
-   * distinct letters aside from the usual a, e, i, o and u. Only the lower-case
-   * versions of the custom vowels are required. Add additional characters (e.g.
-   * da "ø") as well as special vowels consisting of multiple characters as per
-   * the language's rules, e.g. nl "ij" if desired. The entries should be
-   * supplied all in lower-case.
+   * Sets the list of additional vowels which should be recognized as fully
+   * distinct letters aside from the usual a, e, i, o and u. Add additional
+   * characters (e.g. da "ø") as well as special vowels consisting of multiple
+   * characters as per the language's rules, e.g. nl "ij" if desired. The
+   * entries should be supplied all in lower-case.
    * @param vowels The list of additional vowels to recognize
    * @return The Language object
    */
@@ -125,8 +135,8 @@ public final class Language {
    * @return List of additional characters to preserve in the NO_ACCENTS word
    *         form
    */
-  public Set<Character> getLettersToPreserve() {
-    return lettersToPreserve;
+  public Set<Character> getCharsToPreserve() {
+    return charsToPreserve;
   }
 
   /**
@@ -139,7 +149,7 @@ public final class Language {
   private void addSingleLettersToPreserveList(String[] lettersArray) {
     for (String letter : lettersArray) {
       if (letter.length() == 1 && letter.charAt(0) > 127) {
-        lettersToPreserve.add(letter.charAt(0));
+        charsToPreserve.add(letter.charAt(0));
       }
     }
   }

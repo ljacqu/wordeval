@@ -6,27 +6,50 @@ import java.text.Collator;
 import java.util.Locale;
 import org.junit.Test;
 
+/**
+ * Tests that show the general behavior of the collator coupled with a specific
+ * locale.
+ */
 public class LocaleAlphabeticalTest {
 
+  /**
+   * Note that a collator may even return a specific sort order for letters with
+   * accents the language doesn't have. E.g. in Swedish, the order is that e
+   * comes before ê, and ê comes before è.
+   * 
+   * It's fine to use the collators to work with words in a language according
+   * to its rules, but it may be most sensible to use the NO_ACCENT word form
+   * such that only the real, distinct letters are retained.
+   */
   @Test
-  public void shouldCompareWithSwedishRules() {
+  public void generalComparison() {
     Collator collator = Collator.getInstance(new Locale("sv"));
 
-    shouldCompareTo(collator, 1, "ää", "az");
-    shouldCompareTo(collator, 1, "åa", "az");
-    shouldCompareTo(collator, 1, "öö", "zz");
-    shouldCompareTo(collator, 1, "f", "ê");
-    // Note, compare(ê, e) yields 1 even with Swedish locale. This means that
-    // the locale of the language can very well be used to determine whether
-    // something is alphabetical or not, but we should only do this with
-    // native-only characters, i.e. use the NO_ACCENT word form and retain the
-    // additional letters with the according setting in the Language class.
     shouldCompareTo(collator, 1, "ê", "e");
-    shouldCompareTo(collator, 1, "ê", "é");
+    shouldCompareTo(collator, 1, "ê", "è");
+    shouldCompareTo(collator, 1, "f", "ê");
   }
 
   @Test
-  public void shouldCompareWithGermanRules() {
+  public void csComparisonTest() {
+    // Ch is a separate letter: H < Ch < I
+    // CČ, RŘ, SŠ, ZŽ are seen as distinct letters following each other
+    // All other accents (e.g. NŇ, UÚŮ) have same sorting order
+    Collator collator = Collator.getInstance(new Locale("cs"));
+    String[] words = { "azerty", "ábc", "žal", "zzz", "děc", "ded", "déa",
+        "uchor", "uhor", "uko", "eša", "ese", "cut", "čat", "ory", "ořa",
+        "půe", "puf", "púb", "nob", "ňóa", "učar", "ucor", "vuse", "vuša" };
+
+    sortStrings(collator, words);
+
+    String[] results = { "ábc", "azerty", "cut", "čat", "déa", "děc", "ded",
+        "ese", "eša", "ňóa", "nob", "ory", "ořa", "púb", "půe", "puf", "ucor",
+        "učar", "uhor", "uchor", "uko", "vuse", "vuša", "zzz", "žal" };
+    assertThat(words, equalTo(results));
+  }
+
+  @Test
+  public void deComparisonTest() {
     Collator collator = Collator.getInstance(new Locale("de"));
 
     shouldCompareTo(collator, -1, "ää", "az");
@@ -36,7 +59,7 @@ public class LocaleAlphabeticalTest {
   }
 
   @Test
-  public void shouldCompareWithHungarianRules() {
+  public void huComparisonTest() {
     Collator collator = Collator.getInstance(new Locale("hu"));
 
     // D, Dz, Dzs; G, Gy; L, Ly; N, Ny; S, Sz; T, Ty; Z, Zs
@@ -59,7 +82,7 @@ public class LocaleAlphabeticalTest {
   }
 
   @Test
-  public void shouldCompareWithModernDutchRules() {
+  public void nlComparisonTest() {
     Collator collator = Collator.getInstance(new Locale("nl"));
 
     // The collator correctly uses the more modern sorting where ij is
@@ -72,13 +95,34 @@ public class LocaleAlphabeticalTest {
     // shouldCompareTo(collator, -1, "rĳ", "rz");
   }
 
-  public static void shouldCompareTo(Collator collator, int expected,
-      String... words) {
-    assertThat(collator.compare(words[0], words[1]), equalTo(expected));
+  @Test
+  public void svComparisonTest() {
+    Collator collator = Collator.getInstance(new Locale("sv"));
+
+    shouldCompareTo(collator, 1, "ää", "az");
+    shouldCompareTo(collator, 1, "åa", "az");
+    shouldCompareTo(collator, 1, "öö", "zz");
+  }
+
+  @Test
+  public void trComparisonTest() {
+    Collator collator = Collator.getInstance(new Locale("tr"));
+
+    // Ensure that {g, ı, o, s} come before {ğ, i, ö, ş}, respectively
+    shouldCompareTo(collator, -1, "gzz", "ğaa");
+    shouldCompareTo(collator, -1, "ızz", "iaa");
+    shouldCompareTo(collator, -1, "ozz", "öaa");
+    shouldCompareTo(collator, -1, "szz", "şaa");
+    shouldCompareTo(collator, -1, "şzz", "taa");
+  }
+
+  private static void shouldCompareTo(Collator collator, int expected,
+      String word1, String word2) {
+    assertThat(collator.compare(word1, word2), equalTo(expected));
   }
 
   // From https://docs.oracle.com/javase/tutorial/i18n/text/locale.html
-  public static void sortStrings(Collator collator, String[] words) {
+  private static void sortStrings(Collator collator, String[] words) {
     String tmp;
     for (int i = 0; i < words.length; i++) {
       for (int j = i + 1; j < words.length; j++) {

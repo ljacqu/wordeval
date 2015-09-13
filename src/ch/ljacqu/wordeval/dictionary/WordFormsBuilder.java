@@ -19,7 +19,7 @@ class WordFormsBuilder {
   private final String tempReplacements;
 
   WordFormsBuilder(Language language) {
-    lettersToKeep = charsToString(language.getLettersToPreserve());
+    lettersToKeep = charsToString(language.getCharsToPreserve());
     tempReplacements = initializeTempReplacements(lettersToKeep);
     locale = language.buildLocale();
   }
