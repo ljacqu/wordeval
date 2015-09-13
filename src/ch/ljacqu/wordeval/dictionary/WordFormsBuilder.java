@@ -7,7 +7,7 @@ import static ch.ljacqu.wordeval.dictionary.WordForm.RAW;
 import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import ch.ljacqu.wordeval.language.Language;
-import ch.ljacqu.wordeval.language.LetterService;
+import ch.ljacqu.wordeval.language.LanguageService;
 
 /**
  * Utility class to generate the various word forms of a word.
@@ -19,7 +19,8 @@ class WordFormsBuilder {
   private final String tempReplacements;
 
   WordFormsBuilder(Language language) {
-    lettersToKeep = charsToString(language.getCharsToPreserve());
+    lettersToKeep = charsToString(LanguageService
+        .computeCharsToPreserve(language));
     tempReplacements = initializeTempReplacements(lettersToKeep);
     locale = language.buildLocale();
   }
@@ -49,10 +50,10 @@ class WordFormsBuilder {
 
   private String removeNonLetterAccents(String word) {
     if (lettersToKeep.isEmpty()) {
-      return LetterService.removeAccentsFromWord(word);
+      return LanguageService.removeAccentsFromWord(word);
     }
 
-    String escapedWord = LetterService.removeAccentsFromWord(StringUtils
+    String escapedWord = LanguageService.removeAccentsFromWord(StringUtils
         .replaceChars(word, lettersToKeep, tempReplacements));
     return StringUtils.replaceChars(escapedWord, tempReplacements,
         lettersToKeep);

@@ -15,7 +15,7 @@ import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.PartWordEvaluator;
 import ch.ljacqu.wordeval.language.Language;
-import ch.ljacqu.wordeval.language.LetterService;
+import ch.ljacqu.wordeval.language.LanguageService;
 import ch.ljacqu.wordeval.language.LetterType;
 
 /**
@@ -50,12 +50,12 @@ public class DictionarySanitationTest {
   private List<Character> computeAllowedCharsList() {
     Language lang = Language.get(languageCode);
     List<Character> allowedChars = new ArrayList<>();
-    for (String entry : LetterService.getLetters(LetterType.VOWELS, lang)) {
+    for (String entry : LanguageService.getLetters(LetterType.VOWELS, lang)) {
       if (entry.length() == 1) {
         allowedChars.add(entry.charAt(0));
       }
     }
-    for (String entry : LetterService.getLetters(LetterType.CONSONANTS, lang)) {
+    for (String entry : LanguageService.getLetters(LetterType.CONSONANTS, lang)) {
       if (entry.length() == 1) {
         allowedChars.add(entry.charAt(0));
       }

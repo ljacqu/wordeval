@@ -14,7 +14,7 @@ public class LongWordsTest {
 
   @Before
   public void setUpLongWords() {
-    longWords = new LongWords(6);
+    longWords = new LongWords();
   }
 
   private void processWord(String word) {

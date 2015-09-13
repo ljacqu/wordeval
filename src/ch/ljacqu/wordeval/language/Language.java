@@ -2,10 +2,8 @@ package ch.ljacqu.wordeval.language;
 
 import static ch.ljacqu.wordeval.language.Alphabet.LATIN;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Class with language-specific details, independent of any dictionary format.
@@ -16,7 +14,6 @@ public final class Language {
 
   private String code;
   private Alphabet alphabet;
-  private Set<Character> charsToPreserve = new HashSet<>();
   private String[] additionalVowels = {};
   private String[] additionalConsonants = {};
 
@@ -100,7 +97,6 @@ public final class Language {
    */
   public Language setAdditionalVowels(String... vowels) {
     additionalVowels = vowels;
-    addSingleLettersToPreserveList(vowels);
     return this;
   }
 
@@ -118,7 +114,6 @@ public final class Language {
    */
   public Language setAdditionalConsonants(String... consonants) {
     additionalConsonants = consonants;
-    addSingleLettersToPreserveList(consonants);
     return this;
   }
 
@@ -126,31 +121,4 @@ public final class Language {
     return additionalConsonants;
   }
 
-  // --- Letters to preserve
-  /**
-   * Returns the list of additional characters that should be preserved in a
-   * language's words as they are considered distinct letters. This can be
-   * additional letters such as Icelandic þ, or Swedish ö, in which language it
-   * is considered a separate distinct vowel (as opposed to German).
-   * @return List of additional characters to preserve in the NO_ACCENTS word
-   *         form
-   */
-  public Set<Character> getCharsToPreserve() {
-    return charsToPreserve;
-  }
-
-  /**
-   * Adds the entries of a string array to the list of letters to preserve that
-   * consist of one character and have an ASCII code above 127.
-   * @param lettersArray
-   */
-  // Note that we do not provide a way to reset the list, so if someone were to
-  // use setAdditionalVowels() twice, we would still have the old vowels, too.
-  private void addSingleLettersToPreserveList(String[] lettersArray) {
-    for (String letter : lettersArray) {
-      if (letter.length() == 1 && letter.charAt(0) > 127) {
-        charsToPreserve.add(letter.charAt(0));
-      }
-    }
-  }
 }

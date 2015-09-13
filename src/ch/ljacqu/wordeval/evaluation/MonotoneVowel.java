@@ -5,7 +5,7 @@ import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.WordStatExport;
 import ch.ljacqu.wordeval.language.Language;
-import ch.ljacqu.wordeval.language.LetterService;
+import ch.ljacqu.wordeval.language.LanguageService;
 import ch.ljacqu.wordeval.language.LetterType;
 
 /**
@@ -22,7 +22,7 @@ public class MonotoneVowel extends WordStatEvaluator {
    * @param letterType The letter type (consonant, vowel) to consider
    */
   public MonotoneVowel(LetterType letterType, Language language) {
-    letters = LetterService.getLetters(letterType, language);
+    letters = LanguageService.getLetters(letterType, language);
     this.letterType = letterType;
   }
 
@@ -46,7 +46,6 @@ public class MonotoneVowel extends WordStatEvaluator {
 
   @Override
   public WordForm getWordForm() {
-    // TODO: No accents, or just lowercase?
     return WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
   }
 
