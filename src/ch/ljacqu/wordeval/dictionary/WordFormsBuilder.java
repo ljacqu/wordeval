@@ -6,6 +6,7 @@ import static ch.ljacqu.wordeval.dictionary.WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
 import static ch.ljacqu.wordeval.dictionary.WordForm.RAW;
 import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
+import ch.ljacqu.wordeval.language.Alphabet;
 import ch.ljacqu.wordeval.language.Language;
 import ch.ljacqu.wordeval.language.LanguageService;
 
@@ -17,12 +18,14 @@ class WordFormsBuilder {
   private final Locale locale;
   private final String lettersToKeep;
   private final String tempReplacements;
+  private final Alphabet alphabet;
 
   WordFormsBuilder(Language language) {
     lettersToKeep = charsToString(LanguageService
         .computeCharsToPreserve(language));
     tempReplacements = initializeTempReplacements(lettersToKeep);
     locale = language.buildLocale();
+    alphabet = language.getAlphabet();
   }
 
   /**
@@ -50,11 +53,12 @@ class WordFormsBuilder {
 
   private String removeNonLetterAccents(String word) {
     if (lettersToKeep.isEmpty()) {
-      return LanguageService.removeAccentsFromWord(word);
+      return LanguageService.removeAccentsFromWord(word, alphabet);
     }
 
-    String escapedWord = LanguageService.removeAccentsFromWord(StringUtils
-        .replaceChars(word, lettersToKeep, tempReplacements));
+    String escapedWord = LanguageService.removeAccentsFromWord(
+        StringUtils.replaceChars(word, lettersToKeep, tempReplacements),
+        alphabet);
     return StringUtils.replaceChars(escapedWord, tempReplacements,
         lettersToKeep);
   }

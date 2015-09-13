@@ -12,11 +12,16 @@ public final class LanguageService {
   private LanguageService() {
   }
 
-  public static String removeAccentsFromWord(String word) {
+  public static String removeAccentsFromWord(String word, Alphabet alphabet) {
+    if (alphabet.equals(CYRILLIC)) {
+      return word.replace("́", "").replace('ѝ', 'и');
+    }
+
     word = Normalizer.normalize(word, Normalizer.Form.NFD);
     // Only add lower-case manual replacements as we will intend to only use
     // this with words in the all lower-case form
-    return word.replaceAll("\\p{M}", "").replace("ł", "l");
+    // TODO: Not sure if ł replacement is still necessary
+    return word.replaceAll("\\p{M}", "");
   }
 
   public static List<String> getLetters(LetterType letterType, Language language) {
