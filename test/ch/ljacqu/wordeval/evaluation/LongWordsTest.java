@@ -1,10 +1,11 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import java.util.List;
+import static org.hamcrest.Matchers.aMapWithSize;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
 import java.util.Map;
+import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,31 +31,27 @@ public class LongWordsTest {
     for (String word : words) {
       processWord(word);
     }
-    Map<Integer, List<String>> results = longWords.getNavigableResults();
+    Map<Integer, Set<String>> results = longWords.getResults();
 
-    assertNull(results.get(4));
-    assertEquals(results.size(), 3);
-    assertEquals(results.get(9).size(), 2);
-    assertEquals(results.get(9).get(0), "piszących");
-    assertEquals(results.get(9).get(1), "something");
-    assertFalse(results.get(8).isEmpty());
-    assertEquals(results.get(6).size(), 1);
-    assertEquals(results.get(6).get(0), "žodžių");
+    assertThat(results, aMapWithSize(3));
+    assertThat(results.get(4), nullValue());
+    assertThat(results.get(6), containsInAnyOrder("žodžių"));
+    assertThat(results.get(8), containsInAnyOrder("köszönöm"));
+    assertThat(results.get(9), containsInAnyOrder("piszących", "something"));
   }
 
   @Test
   public void shouldProcessCyrillicWords() {
+    // 15, 7, 0, 7
     String[] words = { "Морфологические", "градина", "ушёл", "наречие" };
 
     for (String word : words) {
       processWord(word);
     }
-    Map<Integer, List<String>> results = longWords.getNavigableResults();
-    assertEquals(results.size(), 2);
-    assertEquals(results.get(15).get(0), "Морфологические");
-    assertEquals(results.get(7).size(), 2);
-    assertEquals(results.get(7).get(0), "градина");
-    assertEquals(results.get(7).get(1), "наречие");
+    Map<Integer, Set<String>> results = longWords.getResults();
+    assertThat(results, aMapWithSize(2));
+    assertThat(results.get(7), containsInAnyOrder("градина", "наречие"));
+    assertThat(results.get(15), containsInAnyOrder("Морфологические"));
   }
 
 }

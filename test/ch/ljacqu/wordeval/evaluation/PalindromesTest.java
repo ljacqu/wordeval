@@ -1,9 +1,11 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import java.util.List;
+import static org.hamcrest.Matchers.aMapWithSize;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertThat;
 import java.util.Map;
+import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,17 +27,15 @@ public class PalindromesTest {
     for (String word : words) {
       evaluator.processWord(word, word);
     }
-    Map<String, List<String>> results = evaluator.getNavigableResults();
+    Map<String, Set<String>> results = evaluator.getResults();
 
-    assertEquals(results.size(), 5);
-    assertNotNull(results.get("otto"));
-    assertNotNull(results.get("bagab"));
-    assertNotNull(results.get("awkwa"));
-    assertNotNull(results.get("bab"));
-    assertEquals(results.get("awkwa").get(0), "awkward");
-    assertEquals(results.get("bab").size(), 2);
-    assertEquals(results.get("bab").get(0), results.get("ili").get(0));
-    assertEquals(results.get("bab").get(1), "probable");
+    assertThat(results, aMapWithSize(5));
+    assertThat(results.get("bab"),
+        containsInAnyOrder("probability", "probable"));
+    assertThat(results.get("ili"), contains("probability"));
+    assertThat(results.get("otto"), contains("trottoir"));
+    assertThat(results.get("awkwa"), contains("awkward"));
+    assertThat(results.get("bagab"), contains("ebagabo"));
   }
 
   @Test
@@ -45,10 +45,10 @@ public class PalindromesTest {
     for (String word : words) {
       evaluator.processWord(word, word);
     }
-    Map<String, List<String>> results = evaluator.getNavigableResults();
+    Map<String, Set<String>> results = evaluator.getResults();
 
-    assertEquals(results.size(), 1);
-    assertEquals(results.get("ette").get(0), "letter");
+    assertThat(results, aMapWithSize(1));
+    assertThat(results.get("ette"), contains("letter"));
   }
 
 }

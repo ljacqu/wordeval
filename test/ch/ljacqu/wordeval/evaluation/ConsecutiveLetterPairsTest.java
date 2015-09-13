@@ -1,8 +1,11 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import static org.junit.Assert.assertEquals;
-import java.util.List;
+import static org.hamcrest.Matchers.aMapWithSize;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertThat;
 import java.util.Map;
+import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,20 +26,18 @@ public class ConsecutiveLetterPairsTest {
 
   @Test
   public void shouldRecognizeLetterPairs() {
-    // 2, 0, 0, 2, 3, 2, 2, 4
+    // 2, 0, 0, 3, 2, 2, 2, 4
     String[] words = { "aallorr", "potato", "klokken", "maaiill", "oppaan",
         "reennag", "baaggage", "voorraaddra" };
 
     processWords(words);
-    Map<Integer, List<String>> results = evaluator.getNavigableResults();
+    Map<Integer, Set<String>> results = evaluator.getResults();
 
-    assertEquals(results.size(), 3);
-    assertEquals(results.get(2).size(), 4);
-    assertEquals(results.get(3).size(), 1);
-    assertEquals(results.get(4).size(), 1);
-
-    assertEquals(results.get(2).get(2), "oppaan");
-    assertEquals(results.get(3).get(0), "maaiill");
+    assertThat(results, aMapWithSize(3));
+    assertThat(results.get(2),
+        containsInAnyOrder("aallorr", "oppaan", "reennag", "baaggage"));
+    assertThat(results.get(3), contains("maaiill"));
+    assertThat(results.get(4), contains("voorraaddra"));
   }
 
   @Test
@@ -45,13 +46,12 @@ public class ConsecutiveLetterPairsTest {
     String[] words = { "massaage", "aabbcdefgghhiij", "something" };
 
     processWords(words);
-    Map<Integer, List<String>> results = evaluator.getNavigableResults();
+    Map<Integer, Set<String>> results = evaluator.getResults();
 
-    assertEquals(results.size(), 2);
-    assertEquals(results.get(2).size(), 2);
-    assertEquals(results.get(3).size(), 1);
-
-    assertEquals(results.get(3).get(0), results.get(2).get(0));
+    assertThat(results, aMapWithSize(2));
+    assertThat(results.get(2),
+        containsInAnyOrder("massaage", "aabbcdefgghhiij"));
+    assertThat(results.get(3), containsInAnyOrder("aabbcdefgghhiij"));
   }
 
   @Test
@@ -65,15 +65,12 @@ public class ConsecutiveLetterPairsTest {
         "walking" };
 
     processWords(words);
-    Map<Integer, List<String>> results = evaluator.getNavigableResults();
+    Map<Integer, Set<String>> results = evaluator.getResults();
 
-    assertEquals(results.size(), 3);
-    assertEquals(results.get(2).size(), 1);
-    assertEquals(results.get(3).size(), 1);
-    assertEquals(results.get(4).size(), 1);
-
-    assertEquals(results.get(2).get(0), "laaaii");
-    assertEquals(results.get(4).get(0), "aabbbccdddef");
+    assertThat(results, aMapWithSize(3));
+    assertThat(results.get(2), contains("laaaii"));
+    assertThat(results.get(3), contains("poolooeeerr"));
+    assertThat(results.get(4), contains("aabbbccdddef"));
   }
 
 }

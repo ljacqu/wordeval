@@ -1,9 +1,11 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
-import java.util.List;
+import static org.hamcrest.Matchers.aMapWithSize;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertThat;
 import java.util.Map;
+import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,17 +26,12 @@ public class AlphabeticalOrderTest {
     for (String word : words) {
       evaluator.processWord(word, word);
     }
-    Map<Integer, List<String>> results = evaluator.getNavigableResults();
+    Map<Integer, Set<String>> results = evaluator.getResults();
 
-    assertThat(results.size(), equalTo(3));
-    assertThat(results.get(4).size(), equalTo(3));
-    assertThat(results.get(5).size(), equalTo(2));
-    assertThat(results.get(8).size(), equalTo(1));
-
-    assertThat(results.get(4).get(1), equalTo("mopr"));
-    assertThat(results.get(5).get(0), equalTo("bruxz"));
-    assertThat(results.get(5).get(1), equalTo("zymga"));
-    assertThat(results.get(8).get(0), equalTo("ahpqtvwx"));
+    assertThat(results, aMapWithSize(3));
+    assertThat(results.get(4), containsInAnyOrder("acer", "mopr", "pong"));
+    assertThat(results.get(5), containsInAnyOrder("bruxz", "zymga"));
+    assertThat(results.get(8), contains("ahpqtvwx"));
   }
 
 }

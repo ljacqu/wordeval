@@ -1,8 +1,10 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import static org.junit.Assert.assertEquals;
-import java.util.List;
+import static org.hamcrest.Matchers.aMapWithSize;
+import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.assertThat;
 import java.util.Map;
+import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,12 +24,11 @@ public class IsogramsTest {
     for (String word : words) {
       evaluator.processWord(word, word);
     }
-    Map<Integer, List<String>> results = evaluator.getNavigableResults();
+    Map<Integer, Set<String>> results = evaluator.getResults();
 
-    assertEquals(results.size(), 2);
-    assertEquals(results.get(6).size(), 1);
-    assertEquals(results.get(14).size(), 1);
-    assertEquals(results.get(14).get(0), "halfduimspyker");
+    assertThat(results, aMapWithSize(2));
+    assertThat(results.get(6), contains("jigsaw"));
+    assertThat(results.get(14), contains("halfduimspyker"));
   }
 
 }
