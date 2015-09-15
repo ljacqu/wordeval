@@ -45,6 +45,9 @@ public final class Language {
   public static Language get(String code) {
     Language language = languages.get(code);
     if (language == null) {
+      if (code.indexOf('-') != -1) {
+        return get(code.substring(0, code.indexOf('-')));
+      }
       throw new IllegalArgumentException("Language with code '" + code
           + "' is unknown");
     }

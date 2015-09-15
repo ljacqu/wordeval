@@ -31,10 +31,11 @@ class DictionarySettings {
 
   // List of known dictionary settings
   static {
-    add(new DictionarySettings("af").setDelimiters('/').setSkipSequences(".",
-        "µ", "Ð", "ø"));
+    add("af").setDelimiters('/').setSkipSequences(".",
+        "µ", "Ð", "ø");
+    add("en-us").setDelimiters('/');
     add(new CustomSettings("hu", HuSanitizer.class));
-    add(new DictionarySettings("tr").setDelimiters(' '));
+    add("tr").setDelimiters(' ');
   }
 
   DictionarySettings(String identifier) {
@@ -43,6 +44,12 @@ class DictionarySettings {
 
   private static void add(DictionarySettings dictionarySettings) {
     settings.put(dictionarySettings.identifier, dictionarySettings);
+  }
+  
+  private static DictionarySettings add(String code) {
+    DictionarySettings dictionarySettings = new DictionarySettings(code);
+    settings.put(code, dictionarySettings);
+    return dictionarySettings;
   }
 
   public static DictionarySettings get(String identifier) {

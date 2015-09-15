@@ -1,15 +1,19 @@
 package ch.ljacqu.wordeval.language;
 
-import static ch.ljacqu.wordeval.language.Alphabet.LATIN;
 import static ch.ljacqu.wordeval.language.Alphabet.CYRILLIC;
+import static ch.ljacqu.wordeval.language.Alphabet.LATIN;
 import static ch.ljacqu.wordeval.language.LetterType.CONSONANTS;
 import static ch.ljacqu.wordeval.language.LetterType.VOWELS;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
-import ch.ljacqu.wordeval.language.LanguageService;
 
 public class LanguageServiceTest {
 

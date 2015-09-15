@@ -21,7 +21,6 @@ public final class LanguageService {
     word = Normalizer.normalize(word, Normalizer.Form.NFD);
     // Only add lower-case manual replacements as we will intend to only use
     // this with words in the all lower-case form
-    // TODO: Not sure if ł replacement is still necessary
     return word.replaceAll("\\p{M}", "");
   }
 

@@ -22,9 +22,10 @@ import ch.ljacqu.wordeval.language.Language;
 public class TestDriver {
 
   public static void main(String[] args) throws IOException {
-    exportLanguage("af");
-    exportLanguage("hu");
-    exportLanguage("tr");
+//    exportLanguage("af");
+    exportLanguage("en-us");
+//    exportLanguage("hu");
+//    exportLanguage("tr");
   }
 
   public static void exportLanguage(String code) throws IOException {
