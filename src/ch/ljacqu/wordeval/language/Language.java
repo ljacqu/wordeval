@@ -12,10 +12,11 @@ public final class Language {
 
   private static Map<String, Language> languages = new HashMap<>();
 
-  private String code;
-  private Alphabet alphabet;
+  private final String code;
+  private final Alphabet alphabet;
   private String[] additionalVowels = {};
   private String[] additionalConsonants = {};
+  private String[] lettersToRemove = {};
 
   // List of language data
   static {
@@ -31,9 +32,9 @@ public final class Language {
       .setAdditionalConsonants("cs", "dz", "dzs", "gy", "ly", "ny", "sz", "ty", "zs")
       .setAdditionalVowels("á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű");
     add("tr", LATIN)
-      // TODO #29: Remove 'y' as vowel in Turkish
       .setAdditionalConsonants("ç", "ğ", "ş", "y")
-      .setAdditionalVowels("ı", "ö", "ü");
+      .setAdditionalVowels("ı", "ö", "ü")
+      .setLettersToRemove("y");
   }
 
   /**
@@ -119,6 +120,25 @@ public final class Language {
 
   public String[] getAdditionalConsonants() {
     return additionalConsonants;
+  }
+
+  // --- Letter to remove (from default lists)
+  /**
+   * Sets the list of letters to remove from the standard list. This has no
+   * effect on the additional vowels and consonant list but removes vowels or
+   * consonants from the default a-z list that is augmented with the additional
+   * letters. Typically if a letter is in this list, it should be in one of the
+   * "additional" lists.
+   * @param letters The letters to remove from default lists
+   * @return The Language object
+   */
+  public Language setLettersToRemove(String... letters) {
+    lettersToRemove = letters;
+    return this;
+  }
+
+  public String[] getLettersToRemove() {
+    return lettersToRemove;
   }
 
 }

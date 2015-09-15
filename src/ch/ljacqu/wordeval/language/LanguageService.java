@@ -6,6 +6,7 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.apache.commons.lang3.ArrayUtils;
 
 public final class LanguageService {
 
@@ -27,34 +28,36 @@ public final class LanguageService {
   public static List<String> getLetters(LetterType letterType, Language language) {
     List<String> charList;
     if (letterType.equals(LetterType.VOWELS)) {
-      charList = asList(getStandardVowels(language));
+      charList = getStandardVowels(language);
       charList.addAll(asList(language.getAdditionalVowels()));
     } else {
-      charList = asList(getStandardConsonants(language));
+      charList = getStandardConsonants(language);
       charList.addAll(asList(language.getAdditionalConsonants()));
     }
     return charList;
   }
 
-  private static String[] getStandardVowels(Language language) {
+  private static List<String> getStandardVowels(Language language) {
+    String[] exclusions = language.getLettersToRemove();
     if (language.getAlphabet().equals(LATIN)) {
-      return new String[] { "a", "e", "i", "o", "u", "y" };
+      return asList(exclusions, "a", "e", "i", "o", "u", "y");
     } else if (language.getAlphabet().equals(CYRILLIC)) {
-      return new String[] { "а", "е", "ё", "є", "и", "і", "ї", "о", "у", "ы",
-          "э", "ю", "я" };
+      return asList(exclusions, "а", "е", "ё", "є", "и", "і", "ї", "о", "у",
+          "ы", "э", "ю", "я");
     }
     throw new IllegalArgumentException("No vowel list known for alphabet "
         + language.getAlphabet());
   }
 
-  private static String[] getStandardConsonants(Language language) {
+  private static List<String> getStandardConsonants(Language language) {
+    String[] exclusions = language.getLettersToRemove();
     if (language.getAlphabet().equals(LATIN)) {
-      return new String[] { "b", "c", "d", "f", "g", "h", "j", "k", "l", "m",
-          "n", "p", "q", "r", "s", "t", "v", "w", "x", "z" };
+      return asList(exclusions, "b", "c", "d", "f", "g", "h", "j", "k", "l",
+          "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "z");
     } else if (language.getAlphabet().equals(CYRILLIC)) {
-      return new String[] { "б", "в", "г", "ґ", "д", "ђ", "ж", "з", "й", "ј",
-          "к", "л", "љ", "м", "н", "њ", "п", "р", "с", "т", "ћ", "ў", "ф", "х",
-          "ц", "ч", "џ", "ш", "щ" };
+      return asList(exclusions, "б", "в", "г", "ґ", "д", "ђ", "ж", "з", "й",
+          "ј", "к", "л", "љ", "м", "н", "њ", "п", "р", "с", "т", "ћ", "ў", "ф",
+          "х", "ц", "ч", "џ", "ш", "щ");
     }
     throw new IllegalArgumentException("No consonant list known for alphabet "
         + language.getAlphabet());
@@ -75,8 +78,12 @@ public final class LanguageService {
     return charsToPreserve;
   }
 
-  private static <T> List<T> asList(T[] items) {
-    return new ArrayList<T>(Arrays.asList(items));
+  private static List<String> asList(String... items) {
+    return new ArrayList<String>(Arrays.asList(items));
+  }
+
+  private static List<String> asList(String[] exclusions, String... items) {
+    return asList(ArrayUtils.removeElements(items, exclusions));
   }
 
 }
