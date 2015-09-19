@@ -27,7 +27,7 @@ public class Palindromes extends PartWordEvaluator {
 
   @Override
   public ExportObject toExportObject() {
-    return toExportObject(new ExportParamsBuilder().setMinimum(4).build());
+    return toExportObject(new ExportParamsBuilder().setMinimum(4.0).build());
   }
 
   /**

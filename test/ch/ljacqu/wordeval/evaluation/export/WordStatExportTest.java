@@ -65,7 +65,7 @@ public class WordStatExportTest {
 
   @Test
   public void shouldRespectMinimumKeyParam() {
-    ExportParams params = new ExportParamsBuilder().setMinimum(6)
+    ExportParams params = new ExportParamsBuilder().setMinimum(6.0)
         .setMaxTopEntrySize(null).build();
 
     WordStatExport export = WordStatExport.create("test", results, params);

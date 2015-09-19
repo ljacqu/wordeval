@@ -34,20 +34,18 @@ public final class PartWordExport extends ExportObject {
     return aggregatedEntries;
   }
 
-  public static PartWordExport create(String identifier,
-      Map<String, Set<String>> map) {
-    return create(identifier, map, new ExportParamsBuilder().build());
+  public static PartWordExport create(String identifier, Map<String, Set<String>> map) {
+    return create(identifier, map, new ExportParamsBuilder().build(), new PartWordReducer.ByLength());
   }
 
-  public static PartWordExport create(String identifier,
-      Map<String, Set<String>> map, ExportParams params) {
+  public static PartWordExport create(String identifier, Map<String, Set<String>> map, 
+      ExportParams params, PartWordReducer reducer) {
     // {key: [words] ..} to {length: [{key: [words]}, ...]}
-    NavigableMap<Integer, List<KeyAndWords>> entriesByLength = groupByLength(
-        map, params);
+    // TODO NavigableMap<Integer, List<PartWordReducer.Entry>> entriesByLength = reducer.reduce(map);
+    NavigableMap<Integer, List<KeyAndWords>> entriesByLength = groupByLength(map, params);
 
     // Filter the top lengths in the new list
-    SortedMap<Integer, List<KeyAndWords>> topEntries = isolateTopEntries(
-        entriesByLength, params);
+    SortedMap<Integer, List<KeyAndWords>> topEntries = isolateTopEntries(entriesByLength, params);
 
     // Replace everything else from KeyAndWords to key: length
     SortedMap<Integer, SortedMap<String, Integer>> aggregatedEntries;

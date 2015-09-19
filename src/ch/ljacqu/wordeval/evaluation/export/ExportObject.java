@@ -2,6 +2,7 @@ package ch.ljacqu.wordeval.evaluation.export;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -29,9 +30,9 @@ public abstract class ExportObject implements Serializable {
    * been trimmed.
    */
   public static final String INDEX_REST = "/rest";
+
   /**
-   * The identifier of the export object (unique name per
-   * evaluator/configuration).
+   * The identifier of the export object (unique name per evaluator/configuration).
    */
   public final String identifier;
   
@@ -41,7 +42,7 @@ public abstract class ExportObject implements Serializable {
    * Creates a new ExportObject instance.
    * @param identifier The identifier of the new object
    */
-  public ExportObject(String identifier) {
+  ExportObject(String identifier) {
     this.identifier = identifier;
   }
 
@@ -52,35 +53,50 @@ public abstract class ExportObject implements Serializable {
    * @param params The export parameters
    * @return The trimmed map with the top entries
    */
-  protected static final <V> NavigableMap<Integer, V> isolateTopEntries(
-      NavigableMap<Integer, V> map, ExportParams params) {
-    Iterator<Integer> descendingIterator = map.descendingKeySet().iterator();
-    Integer key = null;
+  static final <N extends Number, V> NavigableMap<N, V> isolateTopEntries(NavigableMap<N, V> map, ExportParams params) {
+    Iterator<N> descendingIterator = map.descendingKeySet().iterator();
+    N key = null;
     for (int i = 0; i < params.topKeys && descendingIterator.hasNext(); ++i) {
       key = descendingIterator.next();
-      if (params.minimum != null && key < params.minimum) {
-        key = params.minimum;
+      if (params.minimum != null && key.doubleValue() < params.minimum) {
+        key = returnTypedMinimum(key, params);
         break;
       }
     }
     if (key != null) {
-      NavigableMap<Integer, V> resultsMap = map.tailMap(key, true);
+      NavigableMap<N, V> resultsMap = map.tailMap(key, true);
       return checkDescending(resultsMap, params);
     }
     return new TreeMap<>();
   }
+  
+  private static <N extends Number> N returnTypedMinimum(N key, ExportParams params) {
+    if (key instanceof Integer) {
+      // Compiler doesn't understand that N == Integer, so we need to "cast"
+      return (N) Integer.valueOf(params.minimum.intValue());
+    } else if (key instanceof Double) {
+      return (N) Double.valueOf(params.minimum);
+    }
+    throw new IllegalStateException("Key is neither integer nor double!");
+  }
+  
 
   /**
-   * For maps with lists as values, it replaces the lists with their length
-   * instead.
+   * For maps with a collection or a map as values, it replaces the lists with their length instead.
    * @param map The map to transform
+   * @param params The export parameters
    * @return The map with the original list's length
    */
-  protected static final <K, V> NavigableMap<K, Integer> aggregateMap(
-      NavigableMap<K, List<V>> map, ExportParams params) {
+  static final <K, V> NavigableMap<K, Integer> aggregateMap(NavigableMap<K, V> map, ExportParams params) {
     NavigableMap<K, Integer> result = new TreeMap<>();
-    for (Map.Entry<K, List<V>> entry : map.entrySet()) {
-      result.put(entry.getKey(), entry.getValue().size());
+    for (Map.Entry<K, V> entry : map.entrySet()) {
+      if (entry.getValue() instanceof Collection) {
+        result.put(entry.getKey(), ((Collection) entry.getValue()).size());
+      } else if (entry.getValue() instanceof Map) {
+        result.put(entry.getKey(), ((Map) entry.getValue()).size());
+      } else {
+        throw new IllegalStateException("Entry is neither Collection nor Map");
+      }
     }
     return checkDescending(result, params);
   }
@@ -102,8 +118,7 @@ public abstract class ExportObject implements Serializable {
     return result;
   }
 
-  protected static final <K, V> NavigableMap<K, V> checkDescending(
-      NavigableMap<K, V> map, ExportParams params) {
+  protected static final <K, V> NavigableMap<K, V> checkDescending(NavigableMap<K, V> map, ExportParams params) {
     if (params.isDescending) {
       return map.descendingMap();
     }
@@ -111,8 +126,7 @@ public abstract class ExportObject implements Serializable {
   }
 
   protected static final <K, V> K getBiggestKey(SortedMap<K, V> map) {
-    return map.comparator().equals(Collections.reverseOrder()) ? map.lastKey()
-        : map.firstKey();
+    return map.comparator().equals(Collections.reverseOrder()) ? map.lastKey() : map.firstKey();
   }
 
 }

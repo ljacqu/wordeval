@@ -61,7 +61,7 @@ public class PartWordExportTest {
     ExportParams params = new ExportParamsBuilder().setTopKeys(3)
         .setMaxTopEntrySize(null).build();
 
-    PartWordExport export = PartWordExport.create("a test", results, params);
+    PartWordExport export = PartWordExport.create("a test", results, params, new PartWordReducer.ByLength());
 
     assertEquals(export.identifier, "a test");
 
@@ -89,9 +89,9 @@ public class PartWordExportTest {
   @Test
   public void shouldRespectMaxParams() {
     ExportParams params = new ExportParamsBuilder().setMaxTopEntrySize(4)
-        .setMaxPartWordListSize(2).setTopKeys(4).setMinimum(2).build();
+        .setMaxPartWordListSize(2).setTopKeys(4).setMinimum(2.0).build();
 
-    PartWordExport export = PartWordExport.create("test", results, params);
+    PartWordExport export = PartWordExport.create("test", results, params, new PartWordReducer.ByLength());
 
     Map<Integer, SortedMap<String, Object>> topEntries = export.getTopEntries();
     assertThat(topEntries, aMapWithSize(4));
@@ -120,9 +120,9 @@ public class PartWordExportTest {
   @Test
   public void shouldUseDescendingOrder() {
     ExportParams params = new ExportParamsBuilder().setDescending(true)
-        .setTopKeys(10).setMinimum(8).build();
+        .setTopKeys(10).setMinimum(8.0).build();
 
-    PartWordExport export = PartWordExport.create("test", results, params);
+    PartWordExport export = PartWordExport.create("test", results, params, new PartWordReducer.ByLength());
 
     Map<Integer, SortedMap<String, Object>> topEntries = export.getTopEntries();
     assertEquals(topEntries.size(), 2);

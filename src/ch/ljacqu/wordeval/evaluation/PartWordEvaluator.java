@@ -3,6 +3,7 @@ package ch.ljacqu.wordeval.evaluation;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 import ch.ljacqu.wordeval.evaluation.export.PartWordExport;
+import ch.ljacqu.wordeval.evaluation.export.PartWordReducer;
 
 public abstract class PartWordEvaluator extends Evaluator<String> {
 
@@ -11,7 +12,7 @@ public abstract class PartWordEvaluator extends Evaluator<String> {
     if (params == null) {
       return PartWordExport.create(identifier, getResults());
     }
-    return PartWordExport.create(identifier, getResults(), params);
+    return PartWordExport.create(identifier, getResults(), params, new PartWordReducer.ByLength());
   }
 
   /**
