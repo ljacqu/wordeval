@@ -3,16 +3,14 @@ package ch.ljacqu.wordeval.evaluation.export;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
-import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import lombok.Getter;
 
+@Getter
 public abstract class PartWordReducer {
 
-  @Getter
   private NavigableMap<Number, NavigableMap<String, List<String>>> topEntries;
-  @Getter
   private NavigableMap<Number, NavigableMap<String, Integer>> aggregatedEntries;
 
   public void compute(NavigableMap<String, List<String>> evaluatorResult, ExportParams params) {

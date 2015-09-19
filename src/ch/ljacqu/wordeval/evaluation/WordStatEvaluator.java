@@ -4,6 +4,10 @@ import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 import ch.ljacqu.wordeval.evaluation.export.WordStatExport;
 
+/**
+ * Base class for the word stat evaluator - evaluator that saves some figure
+ * with a word (typically its length).
+ */
 public abstract class WordStatEvaluator extends Evaluator<Integer> {
 
   @Override

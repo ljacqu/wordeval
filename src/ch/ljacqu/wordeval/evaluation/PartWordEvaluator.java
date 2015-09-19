@@ -5,6 +5,10 @@ import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 import ch.ljacqu.wordeval.evaluation.export.PartWordExport;
 import ch.ljacqu.wordeval.evaluation.export.PartWordReducer;
 
+/**
+ * Base class for part word evaluators. These evaluators save a part of the word
+ * as the key in their results.
+ */
 public abstract class PartWordEvaluator extends Evaluator<String> {
 
   @Override

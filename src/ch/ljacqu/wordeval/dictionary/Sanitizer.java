@@ -17,6 +17,11 @@ public class Sanitizer {
 
   private final WordFormsBuilder formsBuilder;
 
+  /**
+   * Creates a new sanitizer.
+   * @param language The language of the dictionary
+   * @param settings The dictionary settings
+   */
   public Sanitizer(Language language, DictionarySettings settings) {
     delimiters = settings.getDelimiters();
     skipSequences = settings.getSkipSequences();

@@ -8,11 +8,20 @@ import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 
+/**
+ * Service for Language objects.
+ */
 public final class LanguageService {
 
   private LanguageService() {
   }
 
+  /**
+   * Removes all accents from a word's characters.
+   * @param word The word to strip accents off
+   * @param alphabet The alphabet the word is written in
+   * @return The word without diacritics
+   */
   public static String removeAccentsFromWord(String word, Alphabet alphabet) {
     if (alphabet.equals(CYRILLIC)) {
       return word.replace("́", "").replace('ѝ', 'и');
@@ -24,6 +33,12 @@ public final class LanguageService {
     return word.replaceAll("\\p{M}", "");
   }
 
+  /**
+   * Returns a list of the given letter type for the given language.
+   * @param letterType The letter type to retrieve
+   * @param language The language of the list to retrieve
+   * @return The list according to the parameters
+   */
   public static List<String> getLetters(LetterType letterType, Language language) {
     List<String> charList;
     if (letterType.equals(LetterType.VOWELS)) {
@@ -41,27 +56,29 @@ public final class LanguageService {
     if (language.getAlphabet().equals(LATIN)) {
       return asList(exclusions, "a", "e", "i", "o", "u", "y");
     } else if (language.getAlphabet().equals(CYRILLIC)) {
-      return asList(exclusions, "а", "е", "ё", "є", "и", "і", "ї", "о", "у",
-          "ы", "э", "ю", "я");
+      return asList(exclusions, "а", "е", "ё", "є", "и", "і", "ї", "о", "у", "ы", "э", "ю", "я");
     }
-    throw new IllegalArgumentException("No vowel list known for alphabet "
-        + language.getAlphabet());
+    throw new IllegalArgumentException("No vowel list known for alphabet " + language.getAlphabet());
   }
 
   private static List<String> getStandardConsonants(Language language) {
     String[] exclusions = language.getLettersToRemove();
     if (language.getAlphabet().equals(LATIN)) {
-      return asList(exclusions, "b", "c", "d", "f", "g", "h", "j", "k", "l",
-          "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "z");
+      return asList(exclusions, "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v",
+          "w", "x", "z");
     } else if (language.getAlphabet().equals(CYRILLIC)) {
-      return asList(exclusions, "б", "в", "г", "ґ", "д", "ђ", "ж", "з", "й",
-          "ј", "к", "л", "љ", "м", "н", "њ", "п", "р", "с", "т", "ћ", "ў", "ф",
-          "х", "ц", "ч", "џ", "ш", "щ");
+      return asList(exclusions, "б", "в", "г", "ґ", "д", "ђ", "ж", "з", "й", "ј", "к", "л", "љ", "м", "н", "њ", "п",
+          "р", "с", "т", "ћ", "ў", "ф", "х", "ц", "ч", "џ", "ш", "щ");
     }
-    throw new IllegalArgumentException("No consonant list known for alphabet "
-        + language.getAlphabet());
+    throw new IllegalArgumentException("No consonant list known for alphabet " + language.getAlphabet());
   }
 
+  /**
+   * Returns the letters to preserve, i.e. the letters that should be recognized
+   * as separate letters, e.g. "ä" in Swedish.
+   * @param language The language to process
+   * @return The list of characters that are distinct letters
+   */
   public static List<Character> computeCharsToPreserve(Language language) {
     List<Character> charsToPreserve = new ArrayList<Character>();
     for (String letter : language.getAdditionalConsonants()) {
@@ -81,6 +98,12 @@ public final class LanguageService {
     return new ArrayList<String>(Arrays.asList(items));
   }
 
+  /**
+   * Returns a list with the given items besides the given exclusions.
+   * @param exclusions The characters to exclude
+   * @param items The items to process
+   * @return List of the items without any of the exclusions
+   */
   private static List<String> asList(String[] exclusions, String... items) {
     return asList(ArrayUtils.removeElements(items, exclusions));
   }

@@ -20,6 +20,7 @@ public class MonotoneVowel extends WordStatEvaluator {
   /**
    * Creates a new MonotoneVowel evaluator.
    * @param letterType The letter type (consonant, vowel) to consider
+   * @param language The language of the words to process
    */
   public MonotoneVowel(LetterType letterType, Language language) {
     letters = LanguageService.getLetters(letterType, language);

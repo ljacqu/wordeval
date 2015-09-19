@@ -35,7 +35,7 @@ public abstract class ExportObject implements Serializable {
    * The identifier of the export object (unique name per evaluator/configuration).
    */
   public final String identifier;
-  
+
   private static Random random = new Random();
 
   /**
@@ -69,7 +69,7 @@ public abstract class ExportObject implements Serializable {
     }
     return new TreeMap<>();
   }
-  
+
   private static <N extends Number> N returnTypedMinimum(N key, ExportParams params) {
     if (key instanceof Integer) {
       // Compiler doesn't understand that N == Integer, so we need to "cast"
@@ -79,10 +79,10 @@ public abstract class ExportObject implements Serializable {
     }
     throw new IllegalStateException("Key is neither integer nor double!");
   }
-  
 
   /**
-   * For maps with a collection or a map as values, it replaces the lists with their length instead.
+   * For maps with a collection or a map as values, it replaces the lists with
+   * their length instead.
    * @param map The map to transform
    * @param params The export parameters
    * @return The map with the original list's length
@@ -91,9 +91,9 @@ public abstract class ExportObject implements Serializable {
     NavigableMap<K, Integer> result = new TreeMap<>();
     for (Map.Entry<K, V> entry : map.entrySet()) {
       if (entry.getValue() instanceof Collection) {
-        result.put(entry.getKey(), ((Collection) entry.getValue()).size());
+        result.put(entry.getKey(), ((Collection<?>) entry.getValue()).size());
       } else if (entry.getValue() instanceof Map) {
-        result.put(entry.getKey(), ((Map) entry.getValue()).size());
+        result.put(entry.getKey(), ((Map<?, ?>) entry.getValue()).size());
       } else {
         throw new IllegalStateException("Entry is neither Collection nor Map");
       }

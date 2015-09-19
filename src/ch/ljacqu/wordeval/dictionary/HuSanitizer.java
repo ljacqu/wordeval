@@ -9,6 +9,9 @@ public class HuSanitizer extends Sanitizer {
 
   private boolean skipWords = false;
 
+  /**
+   * Creates a new instance of a sanitizer for the Hungarian dictionary.
+   */
   public HuSanitizer() {
     super(Language.get("hu"), initSettings());
   }

@@ -21,6 +21,7 @@ public class ConsecutiveVowelCount extends WordStatEvaluator {
   /**
    * Creates a new VowelCount evaluator instance.
    * @param type The letter type to consider
+   * @param language The language of the words to evaluate
    */
   public ConsecutiveVowelCount(LetterType type, Language language) {
     lettersToConsider = LanguageService.getLetters(type, language);
@@ -36,8 +37,7 @@ public class ConsecutiveVowelCount extends WordStatEvaluator {
   public void processWord(String word, String rawWord) {
     int count = 0;
     for (int i = 0; i <= word.length(); ++i) {
-      if (i == word.length()
-          || !lettersToConsider.contains(word.substring(i, i + 1))) {
+      if (i == word.length() || !lettersToConsider.contains(word.substring(i, i + 1))) {
         if (count > 1) {
           addEntry(count, rawWord);
         }
@@ -51,8 +51,7 @@ public class ConsecutiveVowelCount extends WordStatEvaluator {
   @Override
   public ExportObject toExportObject() {
     String identifier = "ConsecutiveVowelCount_" + letterType.getName();
-    return toExportObject(identifier, new ExportParamsBuilder().setMinimum(3.0)
-        .setTopKeys(4).build());
+    return toExportObject(identifier, new ExportParamsBuilder().setMinimum(3.0).setTopKeys(4).build());
   }
 
 }

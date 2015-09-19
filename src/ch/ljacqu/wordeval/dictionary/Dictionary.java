@@ -24,26 +24,23 @@ public class Dictionary {
   /** Sanitizer to sanitize the dictionary's words. */
   private final Sanitizer sanitizer;
 
-  public Dictionary(String fileName, Language language, Sanitizer sanitizer,
-      List<Evaluator> evaluators) {
+  public Dictionary(String fileName, Language language, Sanitizer sanitizer, List<Evaluator> evaluators) {
     this.fileName = fileName;
     this.evaluators = evaluators;
     this.sanitizer = sanitizer;
     this.languageCode = language.getCode();
   }
 
-  public static Dictionary getDictionary(String languageCode,
-      List<Evaluator> evaluators) {
+  public static Dictionary getDictionary(String languageCode, List<Evaluator> evaluators) {
     String fileName = DICT_PATH + languageCode + ".dic";
     return getDictionary(languageCode, languageCode, fileName, evaluators);
   }
 
-  public static Dictionary getDictionary(String languageCode,
-      String sanitizerName, String fileName, List<Evaluator> evaluators) {
+  public static Dictionary getDictionary(String languageCode, String sanitizerName, String fileName,
+      List<Evaluator> evaluators) {
     Language language = Language.get(languageCode);
     DictionarySettings settings = DictionarySettings.get(sanitizerName);
-    return new Dictionary(fileName, language,
-        settings.buildSanitizer(language), evaluators);
+    return new Dictionary(fileName, language, settings.buildSanitizer(language), evaluators);
   }
 
   /**
@@ -70,9 +67,8 @@ public class Dictionary {
    *        {@link #computeWordForms(String)}).
    */
   private void processWord(String[] wordForms) {
-    for (Evaluator evaluator : evaluators) {
-      evaluator.processWord(getWordForm(wordForms, evaluator.getWordForm()),
-          getWordForm(wordForms, RAW));
+    for (Evaluator<?> evaluator : evaluators) {
+      evaluator.processWord(getWordForm(wordForms, evaluator.getWordForm()), getWordForm(wordForms, RAW));
     }
   }
 

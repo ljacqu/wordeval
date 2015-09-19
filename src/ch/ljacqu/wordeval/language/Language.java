@@ -4,14 +4,17 @@ import static ch.ljacqu.wordeval.language.Alphabet.LATIN;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import lombok.Getter;
 
 /**
  * Class with language-specific details, independent of any dictionary format.
  */
+@Getter
 public final class Language {
 
   private static Map<String, Language> languages = new HashMap<>();
 
+  /** The ISO-369-1 abbreviation of the language. */
   private final String code;
   private final Alphabet alphabet;
   private String[] additionalVowels = {};
@@ -48,8 +51,7 @@ public final class Language {
       if (code.indexOf('-') != -1) {
         return get(code.substring(0, code.indexOf('-')));
       }
-      throw new IllegalArgumentException("Language with code '" + code
-          + "' is unknown");
+      throw new IllegalArgumentException("Language with code '" + code + "' is unknown");
     }
     return languages.get(code);
   }
@@ -63,22 +65,11 @@ public final class Language {
   /**
    * Creates a new Language instance.
    * @param code The ISO-639-1 code of the language
+   * @param alphabet The alphabet the language uses
    */
   public Language(String code, Alphabet alphabet) {
     this.code = code;
     this.alphabet = alphabet;
-  }
-
-  /**
-   * Returns the ISO-639-1 code of the given language.
-   * @return The language code
-   */
-  public String getCode() {
-    return code;
-  }
-
-  public Alphabet getAlphabet() {
-    return alphabet;
   }
 
   /**
@@ -104,10 +95,6 @@ public final class Language {
     return this;
   }
 
-  public String[] getAdditionalVowels() {
-    return additionalVowels;
-  }
-
   // --- Additional consonants
   /**
    * Sets the list of additional consonants that should be recognized as fully
@@ -119,10 +106,6 @@ public final class Language {
   public Language setAdditionalConsonants(String... consonants) {
     additionalConsonants = consonants;
     return this;
-  }
-
-  public String[] getAdditionalConsonants() {
-    return additionalConsonants;
   }
 
   // --- Letter to remove (from default lists)
@@ -138,10 +121,6 @@ public final class Language {
   public Language setLettersToRemove(String... letters) {
     lettersToRemove = letters;
     return this;
-  }
-
-  public String[] getLettersToRemove() {
-    return lettersToRemove;
   }
 
 }

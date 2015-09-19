@@ -8,6 +8,7 @@ import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import lombok.Getter;
 import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParams;
@@ -21,6 +22,7 @@ import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 public abstract class Evaluator<K> {
 
   /** Collection of relevant words. */
+  @Getter
   private Map<K, Set<String>> results = new HashMap<K, Set<String>>();
 
   /**
@@ -44,12 +46,11 @@ public abstract class Evaluator<K> {
    * @param params The export params; can be null
    * @return The converted ExportObject instance
    */
-  protected abstract ExportObject toExportObject(String identifier,
-      ExportParams params);
+  protected abstract ExportObject toExportObject(String identifier, ExportParams params);
 
   /**
-   * Gets the results of the evaluator.
-   * @return A map with the results (key = property, entry = list of values)
+   * Gets the results of the evaluator as a navigable map.
+   * @return A map with the results (key = property, entry = list of words)
    */
   public NavigableMap<K, List<String>> getNavigableResults() {
     NavigableMap<K, List<String>> cleanResult = new TreeMap<>();
@@ -57,10 +58,6 @@ public abstract class Evaluator<K> {
       cleanResult.put(entry.getKey(), new ArrayList<>(entry.getValue()));
     }
     return cleanResult;
-  }
-  
-  public Map<K, Set<String>> getResults() {
-    return results;
   }
 
   /**
