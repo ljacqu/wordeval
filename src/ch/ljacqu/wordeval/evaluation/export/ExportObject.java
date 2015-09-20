@@ -51,6 +51,8 @@ public abstract class ExportObject implements Serializable {
    * depends on ExportParam's <code>topKeys</code> and <code>minimum</code>.
    * @param map The map to process
    * @param params The export parameters
+   * @param <N> The specific Number subclass for the relevance (Integer or Double)
+   * @param <V> The value class of the given Map
    * @return The trimmed map with the top entries
    */
   protected static final <N extends Number, V> NavigableMap<N, V> isolateTopEntries(NavigableMap<N, V> map, 
@@ -71,6 +73,7 @@ public abstract class ExportObject implements Serializable {
     return new TreeMap<>();
   }
 
+  @SuppressWarnings("unchecked")
   private static <N extends Number> N returnTypedMinimum(N key, ExportParams params) {
     if (key instanceof Integer) {
       // Compiler doesn't understand that N == Integer, so we need to "cast"
@@ -86,6 +89,8 @@ public abstract class ExportObject implements Serializable {
    * their length instead.
    * @param map The map to transform
    * @param params The export parameters
+   * @param <K> The key class of the input map
+   * @param <V> The value class of the map (Collection or Map)
    * @return The map with the original list's length
    */
   protected static final <K, V> NavigableMap<K, Integer> aggregateMap(

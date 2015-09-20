@@ -20,6 +20,12 @@ public final class PartWordExport extends ExportObject {
   private final NavigableMap<Number, NavigableMap<String, Object>> topEntries;
   private final NavigableMap<Number, NavigableMap<String, Integer>> aggregatedEntries;
 
+  /**
+   * Creates a new PartWordExport object.
+   * @param identifier The identifier of the export object
+   * @param topEntries The collection of top entries
+   * @param aggregatedEntries The collection of aggregated entries
+   */
   public PartWordExport(String identifier,
       NavigableMap<Number, NavigableMap<String, Object>> topEntries,
       NavigableMap<Number, NavigableMap<String, Integer>> aggregatedEntries) {
@@ -28,10 +34,25 @@ public final class PartWordExport extends ExportObject {
     this.aggregatedEntries = aggregatedEntries;
   }
 
+  /**
+   * Generates a new PartWordExport object based on an evaluator's results and
+   * default export settings.
+   * @param identifier The identifier of the export object to create
+   * @param map The evaluator result
+   * @return The generated PartWordExport object
+   */
   public static PartWordExport create(String identifier, Map<String, Set<String>> map) {
     return create(identifier, map, new ExportParamsBuilder().build(), new PartWordReducer.ByLength());
   }
 
+  /**
+   * Generates a new PartWordExport object based on an evaluator's results and the given settings.
+   * @param identifier The identifier of the export object to create
+   * @param map The evaluator result
+   * @param params The export parameters
+   * @param reducer The reducer to use to identify top entries
+   * @return The generated PartWordExport object
+   */
   public static PartWordExport create(String identifier, Map<String, Set<String>> map, 
       ExportParams params, PartWordReducer reducer) {    
     NavigableMap<Number, NavigableMap<String, Set<String>>> orderedResults = order(map, reducer);
@@ -53,7 +74,7 @@ public final class PartWordExport extends ExportObject {
       Map<String, Set<String>> evaluatorResult, PartWordReducer reducer) {
     NavigableMap<Number, NavigableMap<String, Set<String>>> results = new TreeMap<>();
     for (Map.Entry<String, Set<String>> entry : evaluatorResult.entrySet()) {
-      addEntry(results, entry.getKey(), entry.getValue(), reducer);
+      addEntryByRelevance(results, entry.getKey(), entry.getValue(), reducer);
     }
     return results;
   }
@@ -78,7 +99,8 @@ public final class PartWordExport extends ExportObject {
     return checkDescending(result, params);
   }
   
-  private static void addEntry(SortedMap<Number, NavigableMap<String, Set<String>>> results, String key, 
+  // Helper method for order() to conveniently add an entry under its relevance
+  private static void addEntryByRelevance(SortedMap<Number, NavigableMap<String, Set<String>>> results, String key, 
       Set<String> words, PartWordReducer reducer) {
     Number relevance = reducer.computeRelevance(key, words);
     NavigableMap<String, Set<String>> entry = results.get(relevance);

@@ -2,12 +2,14 @@ package ch.ljacqu.wordeval.dictionary;
 
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Getter;
 import ch.ljacqu.wordeval.language.Language;
 
 /**
  * Class containing dictionary-specific parameters, based on which a sanitizer
  * can be generated for the dictionary.
  */
+@Getter
 class DictionarySettings {
 
   private static Map<String, DictionarySettings> settings = new HashMap<>();
@@ -31,8 +33,7 @@ class DictionarySettings {
 
   // List of known dictionary settings
   static {
-    add("af").setDelimiters('/').setSkipSequences(".",
-        "µ", "Ð", "ø");
+    add("af").setDelimiters('/').setSkipSequences(".", "µ", "Ð", "ø");
     add("en-us").setDelimiters('/');
     add(new CustomSettings("hu", HuSanitizer.class));
     add("tr").setDelimiters(' ');
@@ -72,18 +73,10 @@ class DictionarySettings {
     return this;
   }
 
-  public char[] getDelimiters() {
-    return delimiters;
-  }
-
   // --- Skip sequences
   DictionarySettings setSkipSequences(String... skipSequences) {
     this.skipSequences = skipSequences;
     return this;
-  }
-
-  public String[] getSkipSequences() {
-    return skipSequences;
   }
 
   /**

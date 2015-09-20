@@ -16,10 +16,13 @@ import ch.ljacqu.wordeval.evaluation.LongWords;
 import ch.ljacqu.wordeval.evaluation.MonotoneVowel;
 import ch.ljacqu.wordeval.evaluation.Palindromes;
 import ch.ljacqu.wordeval.evaluation.SameLetterConsecutive;
-import ch.ljacqu.wordeval.evaluation.export.ResultsExporter;
+import ch.ljacqu.wordeval.evaluation.export.ExportService;
 import ch.ljacqu.wordeval.language.Language;
 
-public class TestDriver {
+/**
+ * Entry point of the <i>wordeval</i> application.
+ */
+public class WordEvalMain {
 
   public static void main(String[] args) throws IOException {
 //    exportLanguage("af");
@@ -34,8 +37,7 @@ public class TestDriver {
     List<Long> times = new ArrayList<Long>();
     times.add(System.nanoTime());
 
-    @SuppressWarnings("rawtypes")
-    List<Evaluator> evaluators = new ArrayList<Evaluator>();
+    List<Evaluator<?>> evaluators = new ArrayList<>();
     evaluators.add(new AlphabeticalOrder());
     evaluators.add(new AlphabeticalSequence());
     evaluators.add(new ConsecutiveLetterPairs());
@@ -55,7 +57,7 @@ public class TestDriver {
     dictionary.process();
     outputDiff(times, "processed dictionary");
 
-    ResultsExporter.exportToFile(evaluators, "export/" + code + ".json");
+    ExportService.exportToFile(evaluators, "export/" + code + ".json");
     outputDiff(times, "finished export");
 
     times.add(times.get(0)); // ;)

@@ -19,7 +19,7 @@ public class UtilDoesWordExist {
   @Test
   public void shouldNotReturnNonWordChars() throws IOException {
     TestEvaluator testEvaluator = new TestEvaluator();
-    List<Evaluator> evaluators = Collections.singletonList(testEvaluator);
+    List<Evaluator<?>> evaluators = Collections.singletonList(testEvaluator);
     Dictionary dictionary = Dictionary.getDictionary(languageCode,
         evaluators);
 

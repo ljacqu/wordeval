@@ -21,8 +21,7 @@ class WordFormsBuilder {
   private final Alphabet alphabet;
 
   WordFormsBuilder(Language language) {
-    lettersToKeep = charsToString(LanguageService
-        .computeCharsToPreserve(language));
+    lettersToKeep = charsToString(LanguageService.computeCharsToPreserve(language));
     tempReplacements = initializeTempReplacements(lettersToKeep);
     locale = language.buildLocale();
     alphabet = language.getAlphabet();
@@ -46,8 +45,8 @@ class WordFormsBuilder {
     String lowerCaseWord = word.toLowerCase(locale);
     wordForms[LOWERCASE.ordinal()] = lowerCaseWord;
     wordForms[NO_ACCENTS.ordinal()] = removeNonLetterAccents(lowerCaseWord);
-    wordForms[NO_ACCENTS_WORD_CHARS_ONLY.ordinal()] = wordForms[NO_ACCENTS
-        .ordinal()].replace("-", "").replace("'", "");
+    wordForms[NO_ACCENTS_WORD_CHARS_ONLY.ordinal()] = wordForms[NO_ACCENTS.ordinal()]
+        .replace("-", "").replace("'", "");
     return wordForms;
   }
 
@@ -57,10 +56,8 @@ class WordFormsBuilder {
     }
 
     String escapedWord = LanguageService.removeAccentsFromWord(
-        StringUtils.replaceChars(word, lettersToKeep, tempReplacements),
-        alphabet);
-    return StringUtils.replaceChars(escapedWord, tempReplacements,
-        lettersToKeep);
+        StringUtils.replaceChars(word, lettersToKeep, tempReplacements), alphabet);
+    return StringUtils.replaceChars(escapedWord, tempReplacements, lettersToKeep);
   }
 
   private static String charsToString(Iterable<Character> letters) {
@@ -73,9 +70,8 @@ class WordFormsBuilder {
 
   private static String initializeTempReplacements(String lettersToKeep) {
     if (lettersToKeep.length() > 10) {
-      throw new IllegalStateException(
-          "Can only support up to 10 additional letters currently; "
-              + "please update WordFormsGenerator with more replacements.");
+      throw new IllegalStateException("Can only support up to 10 additional letters currently; "
+          + "please update WordFormsGenerator with more replacements.");
     }
 
     return "0123456789".substring(0, lettersToKeep.length());

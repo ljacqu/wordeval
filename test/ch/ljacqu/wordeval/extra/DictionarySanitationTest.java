@@ -31,7 +31,7 @@ public class DictionarySanitationTest {
     NoOtherCharsEvaluator testEvaluator = new NoOtherCharsEvaluator(
         allowedChars);
 
-    List<Evaluator> evaluators = Collections.singletonList(testEvaluator);
+    List<Evaluator<?>> evaluators = Collections.singletonList(testEvaluator);
     Dictionary dictionary = Dictionary.getDictionary(languageCode, evaluators);
 
     dictionary.process();

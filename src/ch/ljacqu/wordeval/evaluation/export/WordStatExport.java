@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.SortedMap;
+import lombok.Getter;
 
 /**
  * ExportObject class for evaluators of type WordStatEvaluator.
  */
+@Getter
 public class WordStatExport extends ExportObject {
 
   private static final long serialVersionUID = 1L;
@@ -15,20 +17,18 @@ public class WordStatExport extends ExportObject {
   private final SortedMap<Integer, List<String>> topEntries;
   private final SortedMap<Integer, Integer> aggregatedEntries;
 
+  /**
+   * Creates a new WordStatExport object.
+   * @param identifier The identifier of the export object
+   * @param topEntries The collection of top entries
+   * @param aggregatedEntries The collection of aggregated entries
+   */
   public WordStatExport(String identifier,
       SortedMap<Integer, List<String>> topEntries,
       SortedMap<Integer, Integer> aggregatedEntries) {
     super(identifier);
     this.topEntries = topEntries;
     this.aggregatedEntries = aggregatedEntries;
-  }
-
-  public SortedMap<Integer, List<String>> getTopEntries() {
-    return topEntries;
-  }
-
-  public SortedMap<Integer, Integer> getAggregatedEntries() {
-    return aggregatedEntries;
   }
 
   /**

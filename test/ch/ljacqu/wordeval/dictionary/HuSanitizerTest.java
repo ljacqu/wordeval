@@ -30,14 +30,13 @@ public class HuSanitizerTest {
     MissingWordsEvaluator evaluator3 = new MissingWordsEvaluator(
         "should get other words that have special treatment", words3);
 
-    List<Evaluator> evaluatorList = Arrays.asList(evaluator1, evaluator2,
+    List<Evaluator<?>> evaluatorList = Arrays.asList(evaluator1, evaluator2,
         evaluator3);
 
-    Dictionary dictionary = Dictionary.getDictionary("hu",
-        evaluatorList);
+    Dictionary dictionary = Dictionary.getDictionary("hu", evaluatorList);
     dictionary.process();
 
-    for (Evaluator evaluator : evaluatorList) {
+    for (Evaluator<?> evaluator : evaluatorList) {
       MissingWordsEvaluator testEvaluator = (MissingWordsEvaluator) evaluator;
       List<String> missingWords = testEvaluator.getMissingWords();
       if (!missingWords.isEmpty()) {

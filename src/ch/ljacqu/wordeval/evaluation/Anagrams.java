@@ -1,34 +1,36 @@
-package ch.ljacqu.wordeval.anagrams;
+package ch.ljacqu.wordeval.evaluation;
 
 import java.util.Arrays;
 import ch.ljacqu.wordeval.dictionary.WordForm;
-import ch.ljacqu.wordeval.evaluation.PartWordEvaluator;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 import ch.ljacqu.wordeval.evaluation.export.ExportParamsBuilder;
 import ch.ljacqu.wordeval.evaluation.export.PartWordExport;
 import ch.ljacqu.wordeval.evaluation.export.PartWordReducer;
 
-public class AnagramCollector extends PartWordEvaluator {
-
-  public AnagramCollector() {
-  }
+/**
+ * Collects anagram groups (e.g. "acre", "care", "race").
+ */
+public class Anagrams extends PartWordEvaluator {
 
   @Override
   public void processWord(String word, String rawWord) {
-    char[] r = word.toCharArray();
-    Arrays.sort(r);
-    addEntry(new String(r), rawWord.toLowerCase());
+    char[] chars = word.toCharArray();
+    Arrays.sort(chars);
+    addEntry(new String(chars), rawWord.toLowerCase());
   }
 
   @Override
   public WordForm getWordForm() {
-    return WordForm.NO_ACCENTS;
+    return WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
   }
   
   @Override
   public ExportObject toExportObject() {
-    ExportParams params = new ExportParamsBuilder().setDescending(true).build();
+    ExportParams params = new ExportParamsBuilder()
+      .setDescending(true)
+      .setMaxTopEntrySize(2)
+      .build();
     return PartWordExport.create("anagrams", getResults(), params, new PartWordReducer.BySize());
   }
 
