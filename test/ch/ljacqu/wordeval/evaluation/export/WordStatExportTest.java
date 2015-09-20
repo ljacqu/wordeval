@@ -2,11 +2,14 @@ package ch.ljacqu.wordeval.evaluation.export;
 
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.anEmptyMap;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import java.util.Arrays;
 import java.util.List;
@@ -47,14 +50,13 @@ public class WordStatExportTest {
 
     WordStatExport export = WordStatExport.create("test", results, params);
 
-    assertThat(export.identifier, equalTo("test"));
+    assertEquals(export.identifier, "test");
 
     Map<Integer, List<String>> topEntries = export.getTopEntries();
     assertThat(topEntries.size(), equalTo(params.topKeys));
     for (int i = 7; i > 3; --i) {
       assertThat(topEntries.get(i), notNullValue());
-      assertThat(topEntries.get(i).size(),
-          not(greaterThan(params.maxTopEntrySize + 1)));
+      assertThat(topEntries.get(i).size(), not(greaterThan(params.maxTopEntrySize + 1)));
     }
     assertThat(topEntries.get(6), hasItem(ExportObject.INDEX_REST + "1"));
     assertThat(topEntries.get(5), hasItem(ExportObject.INDEX_REST + "3"));
@@ -75,10 +77,11 @@ public class WordStatExportTest {
     WordStatExport export = WordStatExport.create("test", results, params);
 
     assertThat(export.getTopEntries(), aMapWithSize(2));
-    // TODO: Do not compare with results directly
-    assertThat(export.getTopEntries().get(7), equalTo(results.get(7)));
-    assertThat(export.getTopEntries().get(6), equalTo(results.get(6)));
-    assertThat(export.getAggregatedEntries(), aMapWithSize(4));
+    assertThat(export.getTopEntries().get(7), contains("eeueoue"));
+    assertThat(export.getTopEntries().get(6), 
+        containsInAnyOrder("weggooiooi", "eeueoud", "spreeueier", "leeueaandeel"));
+    
+    assertThat(export.getAggregatedEntries().keySet(), contains(5, 4, 3, 2));
   }
 
   @Test
@@ -97,28 +100,29 @@ public class WordStatExportTest {
         .isDescending(true)
         .topKeys(2)
         .minimum(-1.0)
+        .maxTopEntrySize(-1)
         .build();
 
     WordStatExport export = WordStatExport.create("test", results, params);
 
     SortedMap<Integer, List<String>> topEntries = export.getTopEntries();
-    assertThat(topEntries, aMapWithSize(2));
+    assertThat(topEntries.keySet(), contains(7, 6));
     assertThat(topEntries.firstKey(), equalTo(7));
-    assertThat(topEntries.lastKey(), equalTo(6));
-    assertThat(topEntries.get(6), hasItem("leeueaandeel"));
+    assertThat(topEntries.get(7), containsInAnyOrder("eeueoue"));
+    assertThat(topEntries.get(6), containsInAnyOrder("weggooiooi", "eeueoud", "spreeueier", "leeueaandeel"));
 
-    SortedMap<Integer, Integer> aggregatedEntries = export
-        .getAggregatedEntries();
-    assertThat(aggregatedEntries, aMapWithSize(4));
-    assertThat(aggregatedEntries.firstKey(), equalTo(5));
-    assertThat(aggregatedEntries.lastKey(), equalTo(2));
+    SortedMap<Integer, Integer> aggregatedEntries = export.getAggregatedEntries();
+    assertThat(aggregatedEntries.keySet(), contains(5, 4, 3, 2));
+    assertThat(aggregatedEntries.get(4), equalTo(5));
+    assertThat(aggregatedEntries.get(3), equalTo(4));
+    assertThat(aggregatedEntries.get(2), equalTo(8));
   }
 
   @Test
   public void shouldExportWithDefaultParams() {
     WordStatExport export = WordStatExport.create("default test", results);
 
-    assertThat(export.identifier, equalTo("default test"));
+    assertEquals(export.identifier, "default test");
     assertThat(export.getAggregatedEntries(), notNullValue());
     assertThat(export.getTopEntries(), notNullValue());
   }
@@ -127,7 +131,7 @@ public class WordStatExportTest {
   public void shouldHandleEmptyResult() {
     WordStatExport export = WordStatExport.create("empty", new TreeMap<>());
 
-    assertThat(export.identifier, equalTo("empty"));
+    assertEquals(export.identifier, "empty");
     assertThat(export.getAggregatedEntries(), anEmptyMap());
     assertThat(export.getTopEntries(), anEmptyMap());
   }

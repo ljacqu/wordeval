@@ -19,9 +19,9 @@ public class AlphabeticalOrderTest {
 
   @Test
   public void shouldRecognizeWordsWithAlphabeticalOrder() {
-    // 4, 0, 5, 0, 4, 4, 5, 0, 8
+    // 4, 0, 5, 0, 4, 4, 5, 0, 8, 4
     String[] words = { "acer", "paper", "bruxz", "jigsaw", "mopr", "pong",
-        "zymga", "contact", "ahpqtvwx" };
+        "zymga", "contact", "ahpqtvwx", "beer" };
 
     for (String word : words) {
       evaluator.processWord(word, word);
@@ -29,7 +29,7 @@ public class AlphabeticalOrderTest {
     Map<Integer, Set<String>> results = evaluator.getResults();
 
     assertThat(results, aMapWithSize(3));
-    assertThat(results.get(4), containsInAnyOrder("acer", "mopr", "pong"));
+    assertThat(results.get(4), containsInAnyOrder("acer", "mopr", "pong", "beer"));
     assertThat(results.get(5), containsInAnyOrder("bruxz", "zymga"));
     assertThat(results.get(8), contains("ahpqtvwx"));
   }

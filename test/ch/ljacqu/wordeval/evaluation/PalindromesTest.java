@@ -30,8 +30,7 @@ public class PalindromesTest {
     Map<String, Set<String>> results = evaluator.getResults();
 
     assertThat(results, aMapWithSize(5));
-    assertThat(results.get("bab"),
-        containsInAnyOrder("probability", "probable"));
+    assertThat(results.get("bab"), containsInAnyOrder("probability", "probable"));
     assertThat(results.get("ili"), contains("probability"));
     assertThat(results.get("otto"), contains("trottoir"));
     assertThat(results.get("awkwa"), contains("awkward"));
