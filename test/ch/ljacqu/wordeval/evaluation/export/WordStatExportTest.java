@@ -40,8 +40,10 @@ public class WordStatExportTest {
 
   @Test
   public void shouldBuildExportObjectAccordingToParams() {
-    ExportParams params = new ExportParamsBuilder().setMaxTopEntrySize(3)
-        .setTopKeys(4).build();
+    ExportParams params = ExportParams.builder()
+        .maxTopEntrySize(3)
+        .topKeys(4)
+        .build();
 
     WordStatExport export = WordStatExport.create("test", results, params);
 
@@ -65,8 +67,10 @@ public class WordStatExportTest {
 
   @Test
   public void shouldRespectMinimumKeyParam() {
-    ExportParams params = new ExportParamsBuilder().setMinimum(6.0)
-        .setMaxTopEntrySize(null).build();
+    ExportParams params = ExportParams.builder()
+        .minimum(6.0)
+        .maxTopEntrySize(-1)
+        .build();
 
     WordStatExport export = WordStatExport.create("test", results, params);
 
@@ -79,7 +83,7 @@ public class WordStatExportTest {
 
   @Test
   public void shouldHandleEmptyTopEntries() {
-    ExportParams params = new ExportParamsBuilder().setTopKeys(0).build();
+    ExportParams params = ExportParams.builder().topKeys(0).build();
 
     WordStatExport export = WordStatExport.create("test", results, params);
 
@@ -89,8 +93,11 @@ public class WordStatExportTest {
 
   @Test
   public void shouldBeInDescendingOrder() {
-    ExportParams params = new ExportParamsBuilder().setDescending(true)
-        .setTopKeys(2).setMinimum(null).build();
+    ExportParams params = ExportParams.builder()
+        .isDescending(true)
+        .topKeys(2)
+        .minimum(-1.0)
+        .build();
 
     WordStatExport export = WordStatExport.create("test", results, params);
 
@@ -118,10 +125,7 @@ public class WordStatExportTest {
 
   @Test
   public void shouldHandleEmptyResult() {
-    ExportParams params = new ExportParamsBuilder().build();
-
-    WordStatExport export = WordStatExport.create("empty", new TreeMap<>(),
-        params);
+    WordStatExport export = WordStatExport.create("empty", new TreeMap<>());
 
     assertThat(export.identifier, equalTo("empty"));
     assertThat(export.getAggregatedEntries(), anEmptyMap());

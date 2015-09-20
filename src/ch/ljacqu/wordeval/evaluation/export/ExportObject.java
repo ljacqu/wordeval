@@ -61,7 +61,7 @@ public abstract class ExportObject implements Serializable {
     N key = null;
     for (int i = 0; i < params.topKeys && descendingIterator.hasNext(); ++i) {
       key = descendingIterator.next();
-      if (params.minimum != null && key.doubleValue() < params.minimum) {
+      if (params.minimum >= 0 && key.doubleValue() < params.minimum) {
         key = returnTypedMinimum(key, params);
         break;
       }
@@ -77,7 +77,7 @@ public abstract class ExportObject implements Serializable {
   private static <N extends Number> N returnTypedMinimum(N key, ExportParams params) {
     if (key instanceof Integer) {
       // Compiler doesn't understand that N == Integer, so we need to "cast"
-      return (N) Integer.valueOf(params.minimum.intValue());
+      return (N) Integer.valueOf((int) params.minimum);
     } else if (key instanceof Double) {
       return (N) Double.valueOf(params.minimum);
     }
@@ -133,7 +133,7 @@ public abstract class ExportObject implements Serializable {
   }
 
   protected static final <K, V> K getBiggestKey(SortedMap<K, V> map) {
-    return map.comparator().equals(Collections.reverseOrder()) ? map.lastKey() : map.firstKey();
+    return Collections.reverseOrder().equals(map.comparator()) ? map.lastKey() : map.firstKey();
   }
 
 }

@@ -39,7 +39,7 @@ public class WordStatExport extends ExportObject {
    */
   public static WordStatExport create(String identifier,
       NavigableMap<Integer, List<String>> map) {
-    return create(identifier, map, new ExportParamsBuilder().build());
+    return create(identifier, map, ExportParams.builder().build());
   }
 
   /**
@@ -73,7 +73,7 @@ public class WordStatExport extends ExportObject {
    */
   private static <K> SortedMap<K, List<String>> trimLargeTopEntries(
       SortedMap<K, List<String>> topEntries, ExportParams params) {
-    if (params.maxTopEntrySize == null) {
+    if (params.maxTopEntrySize < 0) {
       return topEntries;
     }
     for (Map.Entry<K, List<String>> entry : topEntries.entrySet()) {

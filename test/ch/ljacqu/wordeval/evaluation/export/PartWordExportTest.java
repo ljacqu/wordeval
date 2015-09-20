@@ -61,7 +61,10 @@ public class PartWordExportTest {
 
   @Test
   public void shouldExportWithTopKeys() {
-    ExportParams params = new ExportParamsBuilder().setTopKeys(3).setMaxTopEntrySize(null).build();
+    ExportParams params = ExportParams.builder()
+        .topKeys(3)
+        .maxTopEntrySize(-1)
+        .build();
 
     PartWordExport export = PartWordExport.create("a test", results, params, new PartWordReducer.ByLength());
 
@@ -94,8 +97,12 @@ public class PartWordExportTest {
 
   @Test
   public void shouldRespectMaxParams() {
-    ExportParams params = new ExportParamsBuilder().setMaxTopEntrySize(4).setMaxPartWordListSize(2).setTopKeys(4)
-        .setMinimum(2.0).build();
+    ExportParams params = ExportParams.builder()
+        .maxTopEntrySize(4)
+        .maxPartWordListSize(2)
+        .topKeys(4)
+        .minimum(2.0)
+        .build();
 
     PartWordExport export = PartWordExport.create("test", results, params, new PartWordReducer.ByLength());
 
@@ -129,7 +136,11 @@ public class PartWordExportTest {
 
   @Test
   public void shouldUseDescendingOrder() {
-    ExportParams params = new ExportParamsBuilder().setDescending(true).setTopKeys(10).setMinimum(8.0).build();
+    ExportParams params = ExportParams.builder()
+        .isDescending(true)
+        .topKeys(10)
+        .minimum(8.0)
+        .build();
 
     PartWordExport export = PartWordExport.create("test", results, params, new PartWordReducer.ByLength());
 
@@ -168,6 +179,7 @@ public class PartWordExportTest {
     assertThat(foundItems, hasSize(params.maxPartWordListSize + 1));
   }
 
+  @SuppressWarnings("unchecked")
   private static List<Object> toList(Object entry) {
     if (entry instanceof List<?>) {
       return (List<Object>) entry;

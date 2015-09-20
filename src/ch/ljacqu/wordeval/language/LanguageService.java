@@ -27,10 +27,10 @@ public final class LanguageService {
       return word.replace("́", "").replace('ѝ', 'и');
     }
 
-    word = Normalizer.normalize(word, Normalizer.Form.NFD);
+    String decomposedWord = Normalizer.normalize(word, Normalizer.Form.NFD);
     // Only add lower-case manual replacements as we will intend to only use
     // this with words in the all lower-case form
-    return word.replaceAll("\\p{M}", "");
+    return decomposedWord.replaceAll("\\p{M}", "");
   }
 
   /**

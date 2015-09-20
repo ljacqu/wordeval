@@ -2,7 +2,7 @@ package ch.ljacqu.wordeval.evaluation;
 
 import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
-import ch.ljacqu.wordeval.evaluation.export.ExportParamsBuilder;
+import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 
 /**
  * Filters that checks if there is a group of letters in a word that is an
@@ -27,8 +27,11 @@ public class AlphabeticalSequence extends PartWordEvaluator {
 
   @Override
   public ExportObject toExportObject() {
-    return toExportObject(new ExportParamsBuilder().setMaxPartWordListSize(50)
-        .setMaxTopEntrySize(null).setTopKeys(4).build());
+    return toExportObject(ExportParams.builder()
+        .maxPartWordListSize(50)
+        .maxTopEntrySize(-1)
+        .topKeys(4)
+        .build());
   }
 
   /**

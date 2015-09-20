@@ -3,7 +3,7 @@ package ch.ljacqu.wordeval.evaluation;
 import java.util.List;
 import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
-import ch.ljacqu.wordeval.evaluation.export.ExportParamsBuilder;
+import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 import ch.ljacqu.wordeval.language.Language;
 import ch.ljacqu.wordeval.language.LanguageService;
 import ch.ljacqu.wordeval.language.LetterType;
@@ -29,11 +29,6 @@ public class ConsecutiveVowelCount extends WordStatEvaluator {
   }
 
   @Override
-  public WordForm getWordForm() {
-    return WordForm.NO_ACCENTS;
-  }
-
-  @Override
   public void processWord(String word, String rawWord) {
     int count = 0;
     for (int i = 0; i <= word.length(); ++i) {
@@ -49,9 +44,14 @@ public class ConsecutiveVowelCount extends WordStatEvaluator {
   }
 
   @Override
+  public WordForm getWordForm() {
+    return WordForm.NO_ACCENTS;
+  }
+
+  @Override
   public ExportObject toExportObject() {
     String identifier = "ConsecutiveVowelCount_" + letterType.getName();
-    return toExportObject(identifier, new ExportParamsBuilder().setMinimum(3.0).setTopKeys(4).build());
+    return toExportObject(identifier, ExportParams.builder().minimum(3.0).topKeys(4).build());
   }
 
 }

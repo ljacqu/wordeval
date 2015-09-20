@@ -23,14 +23,26 @@ import ch.ljacqu.wordeval.language.Language;
  * Entry point of the <i>wordeval</i> application.
  */
 public class WordEvalMain {
-
-  public static void main(String[] args) throws IOException {
-//    exportLanguage("af");
-    exportLanguage("en-us");
-//    exportLanguage("hu");
-//    exportLanguage("tr");
+  private WordEvalMain() {
   }
 
+  /**
+   * Entry point method.
+   * @param args .
+   * @throws IOException If a dictionary could not be read
+   */
+  public static void main(String[] args) throws IOException {
+    // exportLanguage("af");
+    exportLanguage("en-us");
+    // exportLanguage("hu");
+    // exportLanguage("tr");
+  }
+
+  /**
+   * Exports the evaluator results for a dictionary into the /export folder.
+   * @param code The code of the dictionary to evaluate
+   * @throws IOException If the dictionary cannot be read
+   */
   public static void exportLanguage(String code) throws IOException {
     System.out.println("Exporting language '" + code + "'");
     Language language = Language.get(code);

@@ -3,7 +3,7 @@ package ch.ljacqu.wordeval.evaluation;
 import org.apache.commons.lang3.StringUtils;
 import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
-import ch.ljacqu.wordeval.evaluation.export.ExportParamsBuilder;
+import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 
 /**
  * Finds words wherein the same letter appears multiple times consecutively,
@@ -30,8 +30,7 @@ public class SameLetterConsecutive extends PartWordEvaluator {
 
   @Override
   public ExportObject toExportObject() {
-    return toExportObject(new ExportParamsBuilder().setTopKeys(5).setMinimum(3.0)
-        .build());
+    return toExportObject(ExportParams.builder().topKeys(5).minimum(3.0).build());
   }
 
   @Override

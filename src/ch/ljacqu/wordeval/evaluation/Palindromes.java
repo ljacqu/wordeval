@@ -2,7 +2,7 @@ package ch.ljacqu.wordeval.evaluation;
 
 import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
-import ch.ljacqu.wordeval.evaluation.export.ExportParamsBuilder;
+import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 
 /**
  * Finds palindromes or palindrome-parts inside a word, e.g. "awkwa" in
@@ -27,7 +27,7 @@ public class Palindromes extends PartWordEvaluator {
 
   @Override
   public ExportObject toExportObject() {
-    return toExportObject(new ExportParamsBuilder().setMinimum(4.0).build());
+    return toExportObject(ExportParams.builder().minimum(4.0).build());
   }
 
   /**

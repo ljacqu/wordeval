@@ -42,7 +42,7 @@ public final class PartWordExport extends ExportObject {
    * @return The generated PartWordExport object
    */
   public static PartWordExport create(String identifier, Map<String, Set<String>> map) {
-    return create(identifier, map, new ExportParamsBuilder().build(), new PartWordReducer.ByLength());
+    return create(identifier, map, ExportParams.builder().build(), new PartWordReducer.ByLength());
   }
 
   /**
@@ -116,12 +116,12 @@ public final class PartWordExport extends ExportObject {
     NavigableMap<String, Object> result = new TreeMap<>();
     int addedEntries = 0;
     for (Map.Entry<String, Set<String>> entry : subMap.entrySet()) {
-      if (params.maxTopEntrySize != null && addedEntries >= params.maxTopEntrySize) {
+      if (params.maxTopEntrySize >= 0 && addedEntries >= params.maxTopEntrySize) {
         result.put(INDEX_REST, "" + (subMap.size() - addedEntries));
         break;
       }
       
-      if (params.maxPartWordListSize != null && entry.getValue().size() > params.maxPartWordListSize) {
+      if (params.maxPartWordListSize >= 0 && entry.getValue().size() > params.maxPartWordListSize) {
         int initialSize = entry.getValue().size();
         List<String> words = reduceList(new ArrayList<>(entry.getValue()), params.maxPartWordListSize);
         words.add(INDEX_REST + (initialSize - params.maxPartWordListSize));

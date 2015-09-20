@@ -28,7 +28,6 @@ public class AnagramsTest {
     assertThat(results.get("eghimnost"), contains("something"));
     assertThat(results.get("estt"), contains("test"));
     assertThat(results.get("a"), contains("a"));
-    assertThat(results.get("a"), contains("a"));
   }
 
 }

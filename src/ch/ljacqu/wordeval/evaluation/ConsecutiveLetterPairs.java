@@ -2,7 +2,7 @@ package ch.ljacqu.wordeval.evaluation;
 
 import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
-import ch.ljacqu.wordeval.evaluation.export.ExportParamsBuilder;
+import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 
 /**
  * Finds words with multiple consecutive letter groups following each other,
@@ -41,7 +41,7 @@ public class ConsecutiveLetterPairs extends WordStatEvaluator {
 
   @Override
   public ExportObject toExportObject() {
-    return toExportObject(new ExportParamsBuilder().setTopKeys(3).build());
+    return toExportObject(ExportParams.builder().topKeys(3).build());
   }
 
 }
