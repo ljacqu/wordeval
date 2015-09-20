@@ -1,17 +1,23 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
 import static org.hamcrest.Matchers.aMapWithSize;
+import static org.hamcrest.Matchers.anEmptyMap;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertArrayEquals;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Set;
-import java.util.SortedMap;
 import java.util.TreeMap;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,9 +42,7 @@ public class PartWordExportTest {
     results.put("kaarraak", asSet("deurmekaarraak"));
 
     // Length 7
-    Set<String> wordList = asSet("spesifisering", "gespesifiseer",
-        "gespesifiseerd", "spesifiseer");
-    results.put("esifise", wordList);
+    results.put("esifise", asSet("spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer"));
 
     // Length 6
     results.put("millim", asSet("millimeter"));
@@ -50,127 +54,128 @@ public class PartWordExportTest {
     results.put("arkkra", asSet("markkrag"));
 
     // Length 5
-    results.put("alkla",
-        asSet("smalklap", "taalklas", "vokaalklank", "taalklank"));
+    results.put("alkla", asSet("smalklap", "taalklas", "vokaalklank", "taalklank"));
     results.put("anana", asSet("ananas"));
     results.put("aadaa", asSet("daeraadaap"));
   }
 
   @Test
   public void shouldExportWithTopKeys() {
-    ExportParams params = new ExportParamsBuilder().setTopKeys(3)
-        .setMaxTopEntrySize(null).build();
+    ExportParams params = new ExportParamsBuilder().setTopKeys(3).setMaxTopEntrySize(null).build();
 
     PartWordExport export = PartWordExport.create("a test", results, params, new PartWordReducer.ByLength());
 
     assertEquals(export.identifier, "a test");
 
-    Map<Integer, SortedMap<String, Object>> topEntries = export.getTopEntries();
+    Map<Number, NavigableMap<String, Object>> topEntries = export.getTopEntries();
     assertThat(topEntries, aMapWithSize(3));
-    assertEquals(topEntries.get(9).size(), 3);
-    assertEquals(toArray(topEntries.get(9).get("taalplaat")).length, 2);
-    assertEquals(topEntries.get(8).size(), 3);
-    assertEquals(toArray(topEntries.get(8).get("erettere"))[0], "veretterende");
-    assertEquals(toArray(topEntries.get(8).get("kaarraak"))[0],
-        "deurmekaarraak");
-    assertEquals(topEntries.get(7).size(), 1);
-    assertEquals(toArray(topEntries.get(7).get("esifise")).length, 4);
+    assertThat(topEntries.get(9), aMapWithSize(3));
+    assertThat(toList(topEntries.get(9).get("taalplaat")), containsInAnyOrder("metaalplaat", "staalplaat"));
+    assertThat(toList(topEntries.get(9).get("ittesetti")), contains("hittesetting"));
+    assertThat(toList(topEntries.get(9).get("sigologis")), contains("psigologisme"));
+    assertThat(topEntries.get(8).keySet(), containsInAnyOrder("aarddraa", "erettere", "kaarraak"));
+    assertThat(toList(topEntries.get(8).get("kaarraak")), contains("deurmekaarraak"));
+    assertThat(topEntries.get(7), aMapWithSize(1));
+    assertThat(toList(topEntries.get(7).get("esifise")),
+        containsInAnyOrder("spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer"));
 
-    Map<Integer, SortedMap<String, Integer>> aggregatedEntries = export
-        .getAggregatedEntries();
+    Map<Number, NavigableMap<String, Integer>> aggregatedEntries = export.getAggregatedEntries();
     assertThat(aggregatedEntries, aMapWithSize(2));
-    assertEquals(aggregatedEntries.get(6).size(), 7);
-    assertThat(aggregatedEntries.get(6).get("gerreg"), equalTo(1));
+    assertThat(aggregatedEntries.get(6).keySet(),
+        containsInAnyOrder("millim", "neffen", "marram", "leggel", "gerreg", "eellee", "arkkra"));
+    assertThat(aggregatedEntries.get(6).get("millim"), equalTo(1));
     assertThat(aggregatedEntries.get(6).get("neffen"), equalTo(3));
-    assertEquals(aggregatedEntries.get(5).size(), 3);
+    assertThat(aggregatedEntries.get(6).get("eellee"), equalTo(1));
+    assertThat(aggregatedEntries.get(5).keySet(), containsInAnyOrder("alkla", "anana", "aadaa"));
     assertThat(aggregatedEntries.get(5).get("alkla"), equalTo(4));
+    assertThat(aggregatedEntries.get(5).get("anana"), equalTo(1));
+    assertThat(aggregatedEntries.get(5).get("aadaa"), equalTo(1));
   }
 
   @Test
   public void shouldRespectMaxParams() {
-    ExportParams params = new ExportParamsBuilder().setMaxTopEntrySize(4)
-        .setMaxPartWordListSize(2).setTopKeys(4).setMinimum(2.0).build();
+    ExportParams params = new ExportParamsBuilder().setMaxTopEntrySize(4).setMaxPartWordListSize(2).setTopKeys(4)
+        .setMinimum(2.0).build();
 
     PartWordExport export = PartWordExport.create("test", results, params, new PartWordReducer.ByLength());
 
-    Map<Integer, SortedMap<String, Object>> topEntries = export.getTopEntries();
+    Map<Number, NavigableMap<String, Object>> topEntries = export.getTopEntries();
     assertThat(topEntries, aMapWithSize(4));
-    assertEquals(topEntries.get(9).size(), 3);
-    String[] expected = { "metaalplaat", "staalplaat" };
-    assertArrayEquals(toArray(topEntries.get(9).get("taalplaat")), expected);
-    assertEquals(topEntries.get(8).size(), 3);
-    assertEquals(toArray(topEntries.get(8).get("kaarraak"))[0],
-        "deurmekaarraak");
+    assertThat(topEntries.get(9), aMapWithSize(3));
+    assertThat(toList(topEntries.get(9).get("taalplaat")), containsInAnyOrder("metaalplaat", "staalplaat"));
+    assertThat(toList(topEntries.get(9).get("ittesetti")), contains("hittesetting"));
+    assertThat(toList(topEntries.get(9).get("sigologis")), contains("psigologisme"));
+    assertThat(topEntries.get(8).keySet(), containsInAnyOrder("aarddraa", "erettere", "kaarraak"));
+    assertThat(toList(topEntries.get(8).get("erettere")), contains("veretterende"));
+    
+    assertThat(topEntries.get(7), aMapWithSize(1));
+    Object[] allowedItems = { "spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer" };
+    checkReducedList(topEntries.get(7).get("esifise"), params, allowedItems);
 
-    assertEquals(topEntries.get(7).size(), 1);
-    checkReducedList(toArray(topEntries.get(7).get("esifise")),
-        results.get("esifise"), 2);
+    assertThat(topEntries.get(6), aMapWithSize(params.maxTopEntrySize + 1));
+    Set<String> foundKeysSet = topEntries.get(6).keySet();
+    String[] foundKeys = foundKeysSet.toArray(new String[foundKeysSet.size()]);
+    assertThat(asSet("millim", "neffen", "marram", "leggel", "gerreg", "eellee", "arkkra", ExportObject.INDEX_REST),
+        hasItems(foundKeys));
+    assertThat(topEntries.get(6).get(ExportObject.INDEX_REST), equalTo("3"));
 
-    assertEquals(topEntries.get(6).size(), 5);
-    assertEquals(topEntries.get(6).firstKey(), ExportObject.INDEX_REST);
-    assertEquals(topEntries.get(6).get(ExportObject.INDEX_REST), 3);
-
-    Map<Integer, SortedMap<String, Integer>> aggregatedEntries = export
-        .getAggregatedEntries();
-    assertEquals(aggregatedEntries.size(), 1);
-    assertEquals(aggregatedEntries.get(5).size(), 3);
+    Map<Number, NavigableMap<String, Integer>> aggregatedEntries = export.getAggregatedEntries();
+    assertThat(aggregatedEntries, aMapWithSize(1));
+    assertThat(aggregatedEntries.get(5).keySet(), containsInAnyOrder("alkla", "anana", "aadaa"));
     assertThat(aggregatedEntries.get(5).get("anana"), equalTo(1));
+    assertThat(aggregatedEntries.get(5).get("alkla"), equalTo(4));
+    assertThat(aggregatedEntries.get(5).get("aadaa"), equalTo(1));
   }
 
   @Test
   public void shouldUseDescendingOrder() {
-    ExportParams params = new ExportParamsBuilder().setDescending(true)
-        .setTopKeys(10).setMinimum(8.0).build();
+    ExportParams params = new ExportParamsBuilder().setDescending(true).setTopKeys(10).setMinimum(8.0).build();
 
     PartWordExport export = PartWordExport.create("test", results, params, new PartWordReducer.ByLength());
 
-    Map<Integer, SortedMap<String, Object>> topEntries = export.getTopEntries();
-    assertEquals(topEntries.size(), 2);
-    Integer[] expectedKeys = { 9, 8 };
-    assertArrayEquals(topEntries.keySet().toArray(), expectedKeys);
-    assertEquals(topEntries.get(9).size(), 3);
-    assertEquals(topEntries.get(8).size(), 3);
+    Map<Number, NavigableMap<String, Object>> topEntries = export.getTopEntries();
+    assertThat(topEntries, aMapWithSize(2));
+    assertThat(topEntries.keySet(), contains(9, 8));
+    assertThat(topEntries.get(9), aMapWithSize(3));
+    assertThat(topEntries.get(8), aMapWithSize(3));
 
-    Map<Integer, SortedMap<String, Integer>> aggregatedEntries = export
-        .getAggregatedEntries();
-    assertEquals(aggregatedEntries.size(), 3);
-    Integer[] expectedKeys2 = { 7, 6, 5 };
-    assertArrayEquals(aggregatedEntries.keySet().toArray(), expectedKeys2);
+    Map<Number, NavigableMap<String, Integer>> aggregatedEntries = export.getAggregatedEntries();
+    assertThat(aggregatedEntries.keySet(), contains(7, 6, 5));
     assertThat(aggregatedEntries.get(6).get("neffen"), equalTo(3));
     assertThat(aggregatedEntries.get(6).get("eellee"), equalTo(1));
   }
 
   @Test
   public void shouldHandleEmptyResult() {
-    PartWordExport export = PartWordExport
-        .create("empty test", new TreeMap<>());
+    PartWordExport export = PartWordExport.create("empty test", new TreeMap<>());
 
     assertEquals(export.identifier, "empty test");
-    assertTrue(export.getTopEntries().isEmpty());
-    assertTrue(export.getAggregatedEntries().isEmpty());
+    assertThat(export.getTopEntries(), anEmptyMap());
+    assertThat(export.getAggregatedEntries(), anEmptyMap());
+  }
+  
+  private static void checkReducedList(Object result, ExportParams params, Object... allowedItems) {
+    List<Object> foundItems = toList(result);
+    List<Object> allowedItemsList = new ArrayList<>(Arrays.asList(allowedItems));
+    String restIndex = ExportObject.INDEX_REST + (allowedItems.length - foundItems.size() + 1);
+    allowedItemsList.add(restIndex);
+    
+    // foundItems may only have elements given in allowedItemsList, but not necessarily all
+    // We can check this by changing the usual order in the assert
+    assertThat(allowedItemsList, hasItems(foundItems.toArray()));
+    // Make specifically sure that the rest index is also present and that the size is correct
+    assertThat(foundItems, hasItem(restIndex));
+    assertThat(foundItems, hasSize(params.maxPartWordListSize + 1));
   }
 
-  private static void checkReducedList(String[] list,
-      Set<String> originalWords, int restTotal) {
-    for (int i = 0; i < list.length - 1; ++i) {
-      if (!originalWords.contains(list[i])) {
-        fail("Found word '" + list[i] + "' which is not in given array.");
-      }
+  private static List<Object> toList(Object entry) {
+    if (entry instanceof List<?>) {
+      return (List<Object>) entry;
+    } else if (entry instanceof Set<?>) {
+      Set<Object> set = (Set<Object>) entry;
+      return new ArrayList<>(set);
     }
-    assertEquals(list[list.length - 1], ExportObject.INDEX_REST + restTotal);
-  }
-
-  /**
-   * Checks if an Object type is a String array and returns the cast version if
-   * this is the case. Fails otherwise.
-   * @param entry The entry to process and cast
-   * @return The cast version of the object
-   */
-  private static String[] toArray(Object entry) {
-    if (entry instanceof String[]) {
-      return (String[]) entry;
-    }
-    fail("Entry '" + entry + "' is not a string array!");
+    fail("Entry '" + entry + "' is not a collection!");
     return null;
   }
 

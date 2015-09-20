@@ -53,7 +53,8 @@ public abstract class ExportObject implements Serializable {
    * @param params The export parameters
    * @return The trimmed map with the top entries
    */
-  static final <N extends Number, V> NavigableMap<N, V> isolateTopEntries(NavigableMap<N, V> map, ExportParams params) {
+  protected static final <N extends Number, V> NavigableMap<N, V> isolateTopEntries(NavigableMap<N, V> map, 
+      ExportParams params) {
     Iterator<N> descendingIterator = map.descendingKeySet().iterator();
     N key = null;
     for (int i = 0; i < params.topKeys && descendingIterator.hasNext(); ++i) {
@@ -87,7 +88,8 @@ public abstract class ExportObject implements Serializable {
    * @param params The export parameters
    * @return The map with the original list's length
    */
-  static final <K, V> NavigableMap<K, Integer> aggregateMap(NavigableMap<K, V> map, ExportParams params) {
+  protected static final <K, V> NavigableMap<K, Integer> aggregateMap(
+      NavigableMap<K, V> map, ExportParams params) {
     NavigableMap<K, Integer> result = new TreeMap<>();
     for (Map.Entry<K, V> entry : map.entrySet()) {
       if (entry.getValue() instanceof Collection) {

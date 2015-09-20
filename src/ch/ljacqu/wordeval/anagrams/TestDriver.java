@@ -20,13 +20,10 @@ public class TestDriver {
     Dictionary dictionary = Dictionary.getDictionary(languageCode, asList(collector));
 
     dictionary.process();
-    
-    ExportParams params = new ExportParamsBuilder().build();
-    PartWordReducer reducer = new PartWordReducer.BySize();
-    reducer.compute(collector.getNavigableResults(), params);
+
     Gson gson = new Gson();
     // TODO #14: Get biggest groups instead of biggest length, or combine both
-    System.out.println(gson.toJson(reducer.getTopEntries()));
+    System.out.println(gson.toJson(collector.toExportObject()));
   }
 
 }
