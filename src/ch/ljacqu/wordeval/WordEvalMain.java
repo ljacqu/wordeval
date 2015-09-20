@@ -5,9 +5,11 @@ import static ch.ljacqu.wordeval.language.LetterType.VOWELS;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import ch.ljacqu.wordeval.dictionary.Dictionary;
 import ch.ljacqu.wordeval.evaluation.AlphabeticalSequence;
 import ch.ljacqu.wordeval.evaluation.AlphabeticalOrder;
+import ch.ljacqu.wordeval.evaluation.Anagrams;
 import ch.ljacqu.wordeval.evaluation.ConsecutiveLetterPairs;
 import ch.ljacqu.wordeval.evaluation.ConsecutiveVowelCount;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
@@ -32,10 +34,12 @@ public class WordEvalMain {
    * @throws IOException If a dictionary could not be read
    */
   public static void main(String[] args) throws IOException {
-    // exportLanguage("af");
-    exportLanguage("en-us");
-    // exportLanguage("hu");
-    // exportLanguage("tr");
+    //Set<String> codes = Dictionary.getAllCodes();
+    String[] codes = { "eu", "fr", "ru" };
+    
+    for (String code : codes) {
+      exportLanguage(code);
+    }
   }
 
   /**
@@ -52,6 +56,7 @@ public class WordEvalMain {
     List<Evaluator<?>> evaluators = new ArrayList<>();
     evaluators.add(new AlphabeticalOrder());
     evaluators.add(new AlphabeticalSequence());
+    evaluators.add(new Anagrams());
     evaluators.add(new ConsecutiveLetterPairs());
     evaluators.add(new ConsecutiveVowelCount(VOWELS, language));
     evaluators.add(new ConsecutiveVowelCount(CONSONANTS, language));

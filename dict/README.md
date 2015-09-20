@@ -9,6 +9,12 @@ any licensing issues.
 **_en-us_ – English (American)**<br />
 Hunspell repo
 
+**_eu_ – Basque**<br />
+Hunspell repo
+
+**_fr_ – French**<br />
+Hunspell repo
+
 **_hu_ – Hungarian**<br />
 Hunspell repo
 
@@ -24,8 +30,14 @@ https://github.com/titoBouzout/Dictionaries
 
 **Potential Sources**
 
+* Elastic Hunspell
+https://github.com/elastic/hunspell
+
 * Features many dictionaries but seems outdated:
 http://www.winedt.org/Dict/
+
+* Gitextensions
+[gitextensions](https://github.com/gitextensions/gitextensions/tree/master/Bin/Dictionaries)
 
 * Dictionaries in binary .dict format:
 [Mozilla gaia](https://github.com/mozilla-b2g/gaia/tree/master/apps/keyboard/js/imes/latin/dictionaries)

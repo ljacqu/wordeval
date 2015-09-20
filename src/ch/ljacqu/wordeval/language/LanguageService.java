@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Service for Language objects.
@@ -30,7 +31,7 @@ public final class LanguageService {
     String decomposedWord = Normalizer.normalize(word, Normalizer.Form.NFD);
     // Only add lower-case manual replacements as we will intend to only use
     // this with words in the all lower-case form
-    return decomposedWord.replaceAll("\\p{M}", "");
+    return StringUtils.replaceChars(decomposedWord.replaceAll("\\p{M}", ""), "łœæ", "loa");
   }
 
   /**

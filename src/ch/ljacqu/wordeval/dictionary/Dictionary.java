@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Set;
 import lombok.Getter;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.language.Language;
@@ -65,6 +66,14 @@ public class Dictionary {
     DictionarySettings settings = DictionarySettings.get(sanitizerName);
     return new Dictionary(fileName, language, settings.buildSanitizer(language), evaluators);
   }
+  
+  /**
+   * Returns all known dictionary codes.
+   * @return All known dictionary codes
+   */
+  public static Set<String> getAllCodes() {
+    return DictionarySettings.getAllCodes();
+  }
 
   /**
    * Processes a dictionary; each word is passed to the evaluators.
@@ -86,8 +95,7 @@ public class Dictionary {
 
   /**
    * Passes the the current word to the evaluators in their desired form.
-   * @param wordForms The array of word forms of the current word (see
-   *        {@link #computeWordForms(String)}).
+   * @param wordForms The array of word forms of the current word.
    */
   private void processWord(String[] wordForms) {
     for (Evaluator<?> evaluator : evaluators) {

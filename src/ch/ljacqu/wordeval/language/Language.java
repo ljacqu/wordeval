@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval.language;
 
+import static ch.ljacqu.wordeval.language.Alphabet.CYRILLIC;
 import static ch.ljacqu.wordeval.language.Alphabet.LATIN;
 import java.util.HashMap;
 import java.util.Locale;
@@ -31,9 +32,13 @@ public final class Language {
     add("en", LATIN)
       // TODO: how to deal with Y being consonant and vowel in English?
       .setAdditionalConsonants("y");
+    add("eu", LATIN)
+      .setAdditionalConsonants("ñ");
+    add("fr", LATIN);
     add("hu", LATIN)
       .setAdditionalConsonants("cs", "dz", "dzs", "gy", "ly", "ny", "sz", "ty", "zs")
       .setAdditionalVowels("á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű");
+    add("ru", CYRILLIC);
     add("tr", LATIN)
       .setAdditionalConsonants("ç", "ğ", "ş", "y")
       .setAdditionalVowels("ı", "ö", "ü")

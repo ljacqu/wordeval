@@ -2,6 +2,7 @@ package ch.ljacqu.wordeval.dictionary;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import lombok.Getter;
 import ch.ljacqu.wordeval.language.Language;
 
@@ -35,16 +36,16 @@ class DictionarySettings {
   static {
     add("af").setDelimiters('/').setSkipSequences(".", "µ", "Ð", "ø");
     add("en-us").setDelimiters('/');
-    add(new CustomSettings("hu", HuSanitizer.class));
+    // TODO Basque: Some entries have _ but most parts seem to be present alone
+    add("eu").setDelimiters('/').setSkipSequences(".", "+", "_");
+    add("fr", FrSanitizer.class);
+    add("hu", HuSanitizer.class);
+    add("ru").setDelimiters('/').setSkipSequences(".");
     add("tr").setDelimiters(' ');
   }
 
   DictionarySettings(String identifier) {
     this.identifier = identifier;
-  }
-
-  private static void add(DictionarySettings dictionarySettings) {
-    settings.put(dictionarySettings.identifier, dictionarySettings);
   }
   
   private static DictionarySettings add(String code) {
@@ -52,8 +53,13 @@ class DictionarySettings {
     settings.put(code, dictionarySettings);
     return dictionarySettings;
   }
+  
+  private static void add(String code, Class<? extends Sanitizer> sanitizerClass) {
+    DictionarySettings dictionarySettings = new CustomSettings(code, sanitizerClass);
+    settings.put(code, dictionarySettings);
+  }
 
-  public static DictionarySettings get(String identifier) {
+  static DictionarySettings get(String identifier) {
     DictionarySettings result = settings.get(identifier);
     if (result == null) {
       throw new IllegalArgumentException(
@@ -61,9 +67,13 @@ class DictionarySettings {
     }
     return result;
   }
+  
+  static Set<String> getAllCodes() {
+    return settings.keySet();
+  }
 
   // --- Build sanitizer
-  public Sanitizer buildSanitizer(Language language) {
+  Sanitizer buildSanitizer(Language language) {
     return new Sanitizer(language, this);
   }
 
@@ -83,17 +93,16 @@ class DictionarySettings {
    * Subtype of dictionary settings for dictionaries that have a custom
    * sanitizer. The custom sanitizer must have a no-args constructor.
    */
-  public static class CustomSettings extends DictionarySettings {
+  static class CustomSettings extends DictionarySettings {
     private final Class<? extends Sanitizer> sanitizerClass;
 
-    public CustomSettings(String identifier,
-        Class<? extends Sanitizer> sanitizerClass) {
+    CustomSettings(String identifier, Class<? extends Sanitizer> sanitizerClass) {
       super(identifier);
       this.sanitizerClass = sanitizerClass;
     }
 
     @Override
-    public Sanitizer buildSanitizer(Language language) {
+    Sanitizer buildSanitizer(Language language) {
       try {
         return sanitizerClass.newInstance();
       } catch (IllegalAccessException | InstantiationException e) {
