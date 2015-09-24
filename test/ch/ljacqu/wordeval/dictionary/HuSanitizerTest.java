@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import ch.ljacqu.wordeval.AppData;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.PartWordEvaluator;
 
@@ -13,6 +15,11 @@ import ch.ljacqu.wordeval.evaluation.PartWordEvaluator;
  * Test for the Hungarian dictionary (which has custom sanitation).
  */
 public class HuSanitizerTest {
+  
+  @BeforeClass
+  public static void initData() {
+    AppData.init();
+  }
 
   @Test
   public void shouldFindTheGivenWords() throws IOException {
@@ -30,11 +37,10 @@ public class HuSanitizerTest {
     MissingWordsEvaluator evaluator3 = new MissingWordsEvaluator(
         "should get other words that have special treatment", words3);
 
-    List<Evaluator<?>> evaluatorList = Arrays.asList(evaluator1, evaluator2,
-        evaluator3);
+    List<Evaluator<?>> evaluatorList = Arrays.asList(evaluator1, evaluator2, evaluator3);
 
-    Dictionary dictionary = Dictionary.getDictionary("hu", evaluatorList);
-    dictionary.process();
+    Dictionary dictionary = Dictionary.getDictionary("hu");
+    dictionary.process(evaluatorList);
 
     for (Evaluator<?> evaluator : evaluatorList) {
       MissingWordsEvaluator testEvaluator = (MissingWordsEvaluator) evaluator;

@@ -11,7 +11,7 @@ import ch.ljacqu.wordeval.language.Language;
  * can be generated for the dictionary.
  */
 @Getter
-class DictionarySettings {
+public class DictionarySettings {
 
   private static Map<String, DictionarySettings> settings = new HashMap<>();
 
@@ -34,32 +34,25 @@ class DictionarySettings {
 
   // List of known dictionary settings
   static {
-    add("af").setDelimiters('/').setSkipSequences(".", "µ", "Ð", "ø");
-    add("en-us").setDelimiters('/');
-    // TODO Basque: Some entries have _ but most parts seem to be present alone
-    add("eu").setDelimiters('/').setSkipSequences(".", "+", "_");
-    add("fr", FrSanitizer.class);
-    add("hu", HuSanitizer.class);
-    add("ru").setDelimiters('/').setSkipSequences(".");
-    add("tr").setDelimiters(' ');
+
   }
 
   DictionarySettings(String identifier) {
     this.identifier = identifier;
   }
   
-  private static DictionarySettings add(String code) {
-    DictionarySettings dictionarySettings = new DictionarySettings(code);
-    settings.put(code, dictionarySettings);
+  public static DictionarySettings add(String identifier) {
+    DictionarySettings dictionarySettings = new DictionarySettings(identifier);
+    settings.put(dictionarySettings.identifier, dictionarySettings);
     return dictionarySettings;
   }
   
-  private static void add(String code, Class<? extends Sanitizer> sanitizerClass) {
+  public static void add(String code, Class<? extends Sanitizer> sanitizerClass) {
     DictionarySettings dictionarySettings = new CustomSettings(code, sanitizerClass);
     settings.put(code, dictionarySettings);
   }
 
-  static DictionarySettings get(String identifier) {
+  public static DictionarySettings get(String identifier) {
     DictionarySettings result = settings.get(identifier);
     if (result == null) {
       throw new IllegalArgumentException(
@@ -68,7 +61,7 @@ class DictionarySettings {
     return result;
   }
   
-  static Set<String> getAllCodes() {
+  public static Set<String> getAllCodes() {
     return settings.keySet();
   }
 
@@ -78,13 +71,13 @@ class DictionarySettings {
   }
 
   // --- Delimiters
-  DictionarySettings setDelimiters(char... delimiters) {
+  public DictionarySettings setDelimiters(char... delimiters) {
     this.delimiters = delimiters;
     return this;
   }
 
   // --- Skip sequences
-  DictionarySettings setSkipSequences(String... skipSequences) {
+  public DictionarySettings setSkipSequences(String... skipSequences) {
     this.skipSequences = skipSequences;
     return this;
   }

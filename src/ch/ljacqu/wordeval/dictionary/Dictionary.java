@@ -22,8 +22,6 @@ public class Dictionary {
   private final String languageCode;
   /** The dictionary file to read from. */
   private final String fileName;
-  /** The list of evaluators to make the dictionary use. */
-  private final List<Evaluator<?>> evaluators;
   /** Sanitizer to sanitize the dictionary's words. */
   private final Sanitizer sanitizer;
 
@@ -32,11 +30,9 @@ public class Dictionary {
    * @param fileName The file name where the dictionary is located
    * @param language The language of the dictionary
    * @param sanitizer The sanitizer to use while reading the dictionary
-   * @param evaluators The list of evaluators
    */
-  public Dictionary(String fileName, Language language, Sanitizer sanitizer, List<Evaluator<?>> evaluators) {
+  public Dictionary(String fileName, Language language, Sanitizer sanitizer) {
     this.fileName = fileName;
-    this.evaluators = evaluators;
     this.sanitizer = sanitizer;
     this.languageCode = language.getCode();
   }
@@ -44,12 +40,11 @@ public class Dictionary {
   /**
    * Gets a known dictionary.
    * @param languageCode The language code of the dictionary to get
-   * @param evaluators The list of evaluators to process the words with
    * @return The dictionary of the given language code
    */
-  public static Dictionary getDictionary(String languageCode, List<Evaluator<?>> evaluators) {
+  public static Dictionary getDictionary(String languageCode) {
     String fileName = DICT_PATH + languageCode + ".dic";
-    return getDictionary(languageCode, languageCode, fileName, evaluators);
+    return getDictionary(languageCode, languageCode, fileName);
   }
 
   /**
@@ -57,14 +52,12 @@ public class Dictionary {
    * @param languageCode The language code of the dictionary to get
    * @param sanitizerName The name of the sanitizer (typically same as dictionary)
    * @param fileName The file name where the dictionary is located
-   * @param evaluators The list of evaluators to process the words with
    * @return The dictionary object with the given settings
    */
-  public static Dictionary getDictionary(String languageCode, String sanitizerName, String fileName,
-      List<Evaluator<?>> evaluators) {
+  public static Dictionary getDictionary(String languageCode, String sanitizerName, String fileName) {
     Language language = Language.get(languageCode);
     DictionarySettings settings = DictionarySettings.get(sanitizerName);
-    return new Dictionary(fileName, language, settings.buildSanitizer(language), evaluators);
+    return new Dictionary(fileName, language, settings.buildSanitizer(language));
   }
   
   /**
@@ -77,9 +70,10 @@ public class Dictionary {
 
   /**
    * Processes a dictionary; each word is passed to the evaluators.
+   * @param evaluators The list of evaluators to pass the words to
    * @throws IOException If the dictionary file cannot be read
    */
-  public final void process() throws IOException {
+  public void process(Iterable<Evaluator<?>> evaluators) throws IOException {
     FileInputStream fis = new FileInputStream(fileName);
     InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
 
@@ -87,7 +81,7 @@ public class Dictionary {
       for (String line; (line = br.readLine()) != null;) {
         String[] wordForms = sanitizer.computeForms(line);
         if (wordForms.length != 0) {
-          processWord(wordForms);
+          processWord(wordForms, evaluators);
         }
       }
     }
@@ -97,7 +91,7 @@ public class Dictionary {
    * Passes the the current word to the evaluators in their desired form.
    * @param wordForms The array of word forms of the current word.
    */
-  private void processWord(String[] wordForms) {
+  private void processWord(String[] wordForms, Iterable<Evaluator<?>> evaluators) {
     for (Evaluator<?> evaluator : evaluators) {
       evaluator.processWord(getWordForm(wordForms, evaluator.getWordForm()), getWordForm(wordForms, RAW));
     }
@@ -109,7 +103,7 @@ public class Dictionary {
    * @param wordForm The word form type to get
    * @return The requested word form
    */
-  private String getWordForm(String[] wordForms, WordForm wordForm) {
+  private static String getWordForm(String[] wordForms, WordForm wordForm) {
     return wordForms[wordForm.ordinal()];
   }
 

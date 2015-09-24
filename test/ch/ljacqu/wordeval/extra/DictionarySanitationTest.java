@@ -11,8 +11,12 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
+import ch.ljacqu.wordeval.AppData;
 import ch.ljacqu.wordeval.dictionary.Dictionary;
+import ch.ljacqu.wordeval.dictionary.DictionarySettings;
 import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.PartWordEvaluator;
@@ -25,18 +29,23 @@ import ch.ljacqu.wordeval.language.LetterType;
  */
 public class DictionarySanitationTest {
   
+  @BeforeClass
+  public static void initData() {
+    AppData.init();
+  }
+  
   @Test
+  @Ignore
   public void shouldSanitizeDictionaries() {
-    Map<String, Map<?, ?>> sanitationResult = new HashMap<>();
-    //String[] languageCodes = { "af", "en-us", "eu", "fr", "hu", "ru", "tr" };
-    String[] languageCodes = { "fr", "ru" }; 
+    Map<String, Map<String, Set<String>>> sanitationResult = new HashMap<>();
+    Iterable<String> languageCodes = DictionarySettings.getAllCodes();
     
     for (String languageCode : languageCodes) {
       sanitationResult.put(languageCode, findBadWords(languageCode));
     }
     
     boolean isEmpty = true;
-    for (Map<?, ?> entry : sanitationResult.values()) {
+    for (Map<String, Set<String>> entry : sanitationResult.values()) {
       if (!entry.isEmpty()) {
         isEmpty = false;
         break;
@@ -54,10 +63,10 @@ public class DictionarySanitationTest {
     List<Character> allowedChars = computeAllowedCharsList(languageCode);
     NoOtherCharsEvaluator testEvaluator = new NoOtherCharsEvaluator(allowedChars);
     List<Evaluator<?>> evaluators = Collections.singletonList(testEvaluator);
-    Dictionary dictionary = Dictionary.getDictionary(languageCode, evaluators);
+    Dictionary dictionary = Dictionary.getDictionary(languageCode);
 
     try {
-      dictionary.process();
+      dictionary.process(evaluators);
     } catch (IOException e) {
       fail("Cannot read dictionary for '" + languageCode + "'");
       throw new IllegalStateException("Cannot read dictionary for '" + languageCode + "'", e);

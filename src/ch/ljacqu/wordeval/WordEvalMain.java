@@ -5,7 +5,6 @@ import static ch.ljacqu.wordeval.language.LetterType.VOWELS;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import ch.ljacqu.wordeval.dictionary.Dictionary;
 import ch.ljacqu.wordeval.evaluation.AlphabeticalSequence;
 import ch.ljacqu.wordeval.evaluation.AlphabeticalOrder;
@@ -27,6 +26,10 @@ import ch.ljacqu.wordeval.language.Language;
 public class WordEvalMain {
   private WordEvalMain() {
   }
+  
+  static {
+    AppData.init();
+  }
 
   /**
    * Entry point method.
@@ -34,7 +37,7 @@ public class WordEvalMain {
    * @throws IOException If a dictionary could not be read
    */
   public static void main(String[] args) throws IOException {
-    //Set<String> codes = Dictionary.getAllCodes();
+    //Iterable<String> codes = Dictionary.getAllCodes();
     String[] codes = { "eu", "fr", "ru" };
     
     for (String code : codes) {
@@ -52,6 +55,9 @@ public class WordEvalMain {
     Language language = Language.get(code);
     List<Long> times = new ArrayList<Long>();
     times.add(System.nanoTime());
+    
+    Dictionary dictionary = Dictionary.getDictionary(code);
+    outputDiff(times, "got dictionary object");
 
     List<Evaluator<?>> evaluators = new ArrayList<>();
     evaluators.add(new AlphabeticalOrder());
@@ -68,10 +74,7 @@ public class WordEvalMain {
     evaluators.add(new SameLetterConsecutive());
     outputDiff(times, "instantiated evaluators");
 
-    Dictionary dictionary = Dictionary.getDictionary(code, evaluators);
-    outputDiff(times, "got dictionary object");
-
-    dictionary.process();
+    dictionary.process(evaluators);
     outputDiff(times, "processed dictionary");
 
     ExportService.exportToFile(evaluators, "export/" + code + ".json");

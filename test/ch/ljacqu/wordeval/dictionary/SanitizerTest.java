@@ -12,8 +12,7 @@ public class SanitizerTest {
 
   @Test
   public void shouldRemoveDelimiters() {
-    DictionarySettings settings = new DictionarySettings("zxx").setDelimiters(
-        '/', '#');
+    DictionarySettings settings = new DictionarySettings("zxx").setDelimiters('/', '#');
     Sanitizer sanitizer = new Sanitizer(new Language("zxx", LATIN), settings);
     String[] lines = { "tëst/23", "abcdef#abc", "Vutsr/abc#ef", "emptyWord" };
 

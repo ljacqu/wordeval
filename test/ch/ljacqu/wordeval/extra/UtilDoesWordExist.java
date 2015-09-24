@@ -5,25 +5,39 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import ch.ljacqu.wordeval.AppData;
 import ch.ljacqu.wordeval.dictionary.Dictionary;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.PartWordEvaluator;
 
+/**
+ * Utility test to verify if a certain word appears in a given dictionary.
+ * (Useful to make sure a custom sanitizer is not too strict.)
+ */
 public class UtilDoesWordExist {
 
-  private static final String languageCode = "hu";
+  private static final String LANGUAGE = "hu";
+  
+  private static final String[] WORDS_TO_FIND = { 
+    "üzembe", "helyezés", "is", "bogusWord"
+  };
+  
+  @BeforeClass
+  public static void initData() {
+    AppData.init();
+  }
 
   @Ignore
   @Test
   public void shouldNotReturnNonWordChars() throws IOException {
     TestEvaluator testEvaluator = new TestEvaluator();
     List<Evaluator<?>> evaluators = Collections.singletonList(testEvaluator);
-    Dictionary dictionary = Dictionary.getDictionary(languageCode,
-        evaluators);
+    Dictionary dictionary = Dictionary.getDictionary(LANGUAGE);
 
-    dictionary.process();
+    dictionary.process(evaluators);
 
     List<String> missingWords = testEvaluator.getMissingWords();
     if (missingWords.isEmpty()) {
@@ -34,10 +48,6 @@ public class UtilDoesWordExist {
   }
 
   private static class TestEvaluator extends PartWordEvaluator {
-
-    public static final String[] WORDS_TO_FIND = { 
-      "üzembe", "helyezés", "is", "bogusWord"
-    };
 
     private List<String> missingWords = new ArrayList<String>(
         Arrays.asList(WORDS_TO_FIND));

@@ -34,8 +34,7 @@ public class ConsecutiveLetterPairsTest {
     Map<Integer, Set<String>> results = evaluator.getResults();
 
     assertThat(results, aMapWithSize(3));
-    assertThat(results.get(2),
-        containsInAnyOrder("aallorr", "oppaan", "reennag", "baaggage"));
+    assertThat(results.get(2), containsInAnyOrder("aallorr", "oppaan", "reennag", "baaggage"));
     assertThat(results.get(3), contains("maaiill"));
     assertThat(results.get(4), contains("voorraaddra"));
   }
@@ -49,8 +48,7 @@ public class ConsecutiveLetterPairsTest {
     Map<Integer, Set<String>> results = evaluator.getResults();
 
     assertThat(results, aMapWithSize(2));
-    assertThat(results.get(2),
-        containsInAnyOrder("massaage", "aabbcdefgghhiij"));
+    assertThat(results.get(2), containsInAnyOrder("massaage", "aabbcdefgghhiij"));
     assertThat(results.get(3), containsInAnyOrder("aabbcdefgghhiij"));
   }
 

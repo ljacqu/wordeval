@@ -1,7 +1,5 @@
 package ch.ljacqu.wordeval.language;
 
-import static ch.ljacqu.wordeval.language.Alphabet.CYRILLIC;
-import static ch.ljacqu.wordeval.language.Alphabet.LATIN;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -22,29 +20,6 @@ public final class Language {
   private String[] additionalConsonants = {};
   private String[] lettersToRemove = {};
 
-  // List of language data
-  static {
-    add("af", LATIN);
-    add("cs", LATIN)
-      // TODO: is stuff like "ň" really a distinct letter to preserve?
-      .setAdditionalConsonants("č", "ď", "ch", "ň", "ř", "š", "ť", "ž")
-      .setAdditionalVowels("á", "é", "ě", "í", "ó", "ú", "ů", "ý");
-    add("en", LATIN)
-      // TODO: how to deal with Y being consonant and vowel in English?
-      .setAdditionalConsonants("y");
-    add("eu", LATIN)
-      .setAdditionalConsonants("ñ");
-    add("fr", LATIN);
-    add("hu", LATIN)
-      .setAdditionalConsonants("cs", "dz", "dzs", "gy", "ly", "ny", "sz", "ty", "zs")
-      .setAdditionalVowels("á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű");
-    add("ru", CYRILLIC);
-    add("tr", LATIN)
-      .setAdditionalConsonants("ç", "ğ", "ş", "y")
-      .setAdditionalVowels("ı", "ö", "ü")
-      .setLettersToRemove("y");
-  }
-
   /**
    * Gets the settings of a language by its ISO-639-1 abbreviation.
    * @param code The code of the language
@@ -61,10 +36,12 @@ public final class Language {
     return languages.get(code);
   }
 
-  private static Language add(String code, Alphabet alphabet) {
-    Language language = new Language(code, alphabet);
+  /**
+   * Adds a new language to the list of known languages.
+   * @param language The Language object to add
+   */
+  public static void add(Language language) {
     languages.put(language.code, language);
-    return language;
   }
 
   /**
@@ -113,7 +90,7 @@ public final class Language {
     return this;
   }
 
-  // --- Letter to remove (from default lists)
+  // --- Letters to remove
   /**
    * Sets the list of letters to remove from the standard list. This has no
    * effect on the additional vowels and consonant list but removes vowels or
