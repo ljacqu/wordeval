@@ -32,51 +32,77 @@ public class DictionarySettings {
    */
   private String[] skipSequences;
 
-  // List of known dictionary settings
-  static {
-
-  }
-
   DictionarySettings(String identifier) {
     this.identifier = identifier;
   }
   
+  /**
+   * Creates and saves a new set of dictionary settings for the given identifier.
+   * @param identifier The dictionary identifier to create settings for
+   * @return The created DictionarySettings object
+   */
   public static DictionarySettings add(String identifier) {
     DictionarySettings dictionarySettings = new DictionarySettings(identifier);
     settings.put(dictionarySettings.identifier, dictionarySettings);
     return dictionarySettings;
   }
   
-  public static void add(String code, Class<? extends Sanitizer> sanitizerClass) {
-    DictionarySettings dictionarySettings = new CustomSettings(code, sanitizerClass);
-    settings.put(code, dictionarySettings);
+  /**
+   * Saves a new dictionary settings entry with a custom sanitizer.
+   * @param identifier The identifier of the dictionary
+   * @param sanitizerClass The class of the custom sanitizer. It must have a
+   * public no-arguments constructor.
+   */
+  public static void add(String identifier, Class<? extends Sanitizer> sanitizerClass) {
+    DictionarySettings dictionarySettings = new CustomSettings(identifier, sanitizerClass);
+    settings.put(identifier, dictionarySettings);
   }
 
+  /**
+   * Gets the dictionary settings for the given identifier.
+   * @param identifier The identifier to retrieve the settings for
+   * @return The dictionary settings
+   */
   public static DictionarySettings get(String identifier) {
     DictionarySettings result = settings.get(identifier);
     if (result == null) {
-      throw new IllegalArgumentException(
-          "Dictionary settings with identifier '" + identifier + "' is unknown");
+      throw new IllegalArgumentException("Dictionary settings with identifier '" + identifier + "' is unknown");
     }
     return result;
   }
-  
+
+  /**
+   * Returns all known dictionary settings.
+   * @return List of all dictionary codes
+   */
   public static Set<String> getAllCodes() {
     return settings.keySet();
   }
 
-  // --- Build sanitizer
+  /**
+   * Builds a sanitizer with the required information.
+   * @param language The language of the dictionary
+   * @return The created sanitizer
+   */
   Sanitizer buildSanitizer(Language language) {
     return new Sanitizer(language, this);
   }
 
-  // --- Delimiters
+  /**
+   * Sets the delimiters for the dictionary.
+   * @param delimiters The delimiters to set
+   * @return The current DictionarySettings object
+   */
   public DictionarySettings setDelimiters(char... delimiters) {
     this.delimiters = delimiters;
     return this;
   }
 
-  // --- Skip sequences
+  /**
+   * Sets the skip sequences for the dictionary.
+   * @param skipSequences The skip sequences to set
+   * @return The current DictionarySettings object
+   */
   public DictionarySettings setSkipSequences(String... skipSequences) {
     this.skipSequences = skipSequences;
     return this;
@@ -99,7 +125,7 @@ public class DictionarySettings {
       try {
         return sanitizerClass.newInstance();
       } catch (IllegalAccessException | InstantiationException e) {
-        throw new UnsupportedOperationException("Could not get sanitizer", e);
+        throw new UnsupportedOperationException("Could not create sanitizer", e);
       }
     }
   }

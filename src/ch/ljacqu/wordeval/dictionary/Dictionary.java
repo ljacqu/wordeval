@@ -5,10 +5,10 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import lombok.Getter;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
+import ch.ljacqu.wordeval.evaluation.EvaluatorService;
 import ch.ljacqu.wordeval.language.Language;
 
 /**
@@ -59,14 +59,6 @@ public class Dictionary {
     DictionarySettings settings = DictionarySettings.get(sanitizerName);
     return new Dictionary(fileName, language, settings.buildSanitizer(language));
   }
-  
-  /**
-   * Returns all known dictionary codes.
-   * @return All known dictionary codes
-   */
-  public static Set<String> getAllCodes() {
-    return DictionarySettings.getAllCodes();
-  }
 
   /**
    * Processes a dictionary; each word is passed to the evaluators.
@@ -74,10 +66,10 @@ public class Dictionary {
    * @throws IOException If the dictionary file cannot be read
    */
   public void process(Iterable<Evaluator<?>> evaluators) throws IOException {
-    FileInputStream fis = new FileInputStream(fileName);
-    InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
-
-    try (BufferedReader br = new BufferedReader(isr)) {
+    Map<Evaluator<?>, Evaluator<?>> postEvaluators = EvaluatorService.getPostEvaluators(evaluators);
+    
+    try (BufferedReader br = new BufferedReader(new InputStreamReader(
+        new FileInputStream(fileName), "utf-8"))) {
       for (String line; (line = br.readLine()) != null;) {
         String[] wordForms = sanitizer.computeForms(line);
         if (wordForms.length != 0) {
@@ -85,6 +77,8 @@ public class Dictionary {
         }
       }
     }
+
+    EvaluatorService.executePostEvaluators(postEvaluators);
   }
 
   /**

@@ -6,12 +6,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import ch.ljacqu.wordeval.dictionary.Dictionary;
+import ch.ljacqu.wordeval.dictionary.DictionarySettings;
 import ch.ljacqu.wordeval.evaluation.AlphabeticalSequence;
 import ch.ljacqu.wordeval.evaluation.AlphabeticalOrder;
 import ch.ljacqu.wordeval.evaluation.Anagrams;
 import ch.ljacqu.wordeval.evaluation.ConsecutiveLetterPairs;
 import ch.ljacqu.wordeval.evaluation.ConsecutiveVowelCount;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
+import ch.ljacqu.wordeval.evaluation.FullPalindromes;
 import ch.ljacqu.wordeval.evaluation.Isograms;
 import ch.ljacqu.wordeval.evaluation.LongWords;
 import ch.ljacqu.wordeval.evaluation.MonotoneVowel;
@@ -37,8 +39,7 @@ public class WordEvalMain {
    * @throws IOException If a dictionary could not be read
    */
   public static void main(String[] args) throws IOException {
-    //Iterable<String> codes = Dictionary.getAllCodes();
-    String[] codes = { "eu", "fr", "ru" };
+    Iterable<String> codes = DictionarySettings.getAllCodes();
     
     for (String code : codes) {
       exportLanguage(code);
@@ -66,6 +67,7 @@ public class WordEvalMain {
     evaluators.add(new ConsecutiveLetterPairs());
     evaluators.add(new ConsecutiveVowelCount(VOWELS, language));
     evaluators.add(new ConsecutiveVowelCount(CONSONANTS, language));
+    evaluators.add(new FullPalindromes());
     evaluators.add(new Isograms());
     evaluators.add(new LongWords());
     evaluators.add(new MonotoneVowel(VOWELS, language));
