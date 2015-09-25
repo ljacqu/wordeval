@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import static ch.ljacqu.wordeval.TestUtil.processWords;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -26,9 +27,7 @@ public class SameLetterConsecutiveTest {
     String[] cleanWords = { "hello", "schifffahrt", "geeet", "window",
         "töfffahrer", "schnell", "llama" };
 
-    for (int i = 0; i < cleanWords.length; ++i) {
-      evaluator.processWord(cleanWords[i], words[i]);
-    }
+    processWords(evaluator, cleanWords, words);
     Map<String, Set<String>> results = evaluator.getResults();
 
     assertThat(results, aMapWithSize(3));
@@ -44,9 +43,7 @@ public class SameLetterConsecutiveTest {
     // {sss,bb}, {ss,pp}, {aa,ss}, {ooo,ee,oo}
     String[] words = { "Massstabbrecher", "Reisstopp", "aabesso", "oooeemoo" };
 
-    for (String word : words) {
-      evaluator.processWord(word, word);
-    }
+    processWords(evaluator, words);
     Map<String, Set<String>> results = evaluator.getResults();
 
     assertThat(results, aMapWithSize(8));
@@ -68,9 +65,7 @@ public class SameLetterConsecutiveTest {
     String[] cleanWords = { "избранные", "величайший", "поддержки",
         "старинного", "независимая" };
 
-    for (int i = 0; i < cleanWords.length; ++i) {
-      evaluator.processWord(cleanWords[i], words[i]);
-    }
+    processWords(evaluator, cleanWords, words);
     Map<String, Set<String>> results = evaluator.getResults();
 
     assertThat(results, aMapWithSize(2));

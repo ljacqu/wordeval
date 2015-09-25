@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import static ch.ljacqu.wordeval.TestUtil.processWords;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -16,9 +17,7 @@ public class AnagramsTest {
     // {race, care, acre}, {tea, eat}, {fro, for}, a, something, test
     String[] words = { "race", "for", "a", "eat", "care", "something", "acre", "fro", "tea", "test", "test" };
 
-    for (String word : words) {
-      evaluator.processWord(word, word);
-    }
+    processWords(evaluator, words);
 
     Map<String, Set<String>> results = evaluator.getResults();
     assertThat(results, aMapWithSize(6));

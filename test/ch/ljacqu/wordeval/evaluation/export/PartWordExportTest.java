@@ -1,5 +1,8 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
+import static ch.ljacqu.wordeval.TestUtil.asSet;
+import static ch.ljacqu.wordeval.TestUtil.toSet;
+import static ch.ljacqu.wordeval.TestUtil.toColl;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.anEmptyMap;
 import static org.hamcrest.Matchers.contains;
@@ -10,10 +13,9 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -73,13 +75,13 @@ public class PartWordExportTest {
     Map<Number, NavigableMap<String, Object>> topEntries = export.getTopEntries();
     assertThat(topEntries, aMapWithSize(3));
     assertThat(topEntries.get(9), aMapWithSize(3));
-    assertThat(toList(topEntries.get(9).get("taalplaat")), containsInAnyOrder("metaalplaat", "staalplaat"));
-    assertThat(toList(topEntries.get(9).get("ittesetti")), contains("hittesetting"));
-    assertThat(toList(topEntries.get(9).get("sigologis")), contains("psigologisme"));
+    assertThat(toSet(topEntries.get(9).get("taalplaat")), containsInAnyOrder("metaalplaat", "staalplaat"));
+    assertThat(toSet(topEntries.get(9).get("ittesetti")), contains("hittesetting"));
+    assertThat(toSet(topEntries.get(9).get("sigologis")), contains("psigologisme"));
     assertThat(topEntries.get(8).keySet(), containsInAnyOrder("aarddraa", "erettere", "kaarraak"));
-    assertThat(toList(topEntries.get(8).get("kaarraak")), contains("deurmekaarraak"));
+    assertThat(toSet(topEntries.get(8).get("kaarraak")), contains("deurmekaarraak"));
     assertThat(topEntries.get(7), aMapWithSize(1));
-    assertThat(toList(topEntries.get(7).get("esifise")),
+    assertThat(toSet(topEntries.get(7).get("esifise")),
         containsInAnyOrder("spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer"));
 
     Map<Number, NavigableMap<String, Integer>> aggregatedEntries = export.getAggregatedEntries();
@@ -109,11 +111,11 @@ public class PartWordExportTest {
     Map<Number, NavigableMap<String, Object>> topEntries = export.getTopEntries();
     assertThat(topEntries, aMapWithSize(4));
     assertThat(topEntries.get(9), aMapWithSize(3));
-    assertThat(toList(topEntries.get(9).get("taalplaat")), containsInAnyOrder("metaalplaat", "staalplaat"));
-    assertThat(toList(topEntries.get(9).get("ittesetti")), contains("hittesetting"));
-    assertThat(toList(topEntries.get(9).get("sigologis")), contains("psigologisme"));
+    assertThat(toSet(topEntries.get(9).get("taalplaat")), containsInAnyOrder("metaalplaat", "staalplaat"));
+    assertThat(toSet(topEntries.get(9).get("ittesetti")), contains("hittesetting"));
+    assertThat(toSet(topEntries.get(9).get("sigologis")), contains("psigologisme"));
     assertThat(topEntries.get(8).keySet(), containsInAnyOrder("aarddraa", "erettere", "kaarraak"));
-    assertThat(toList(topEntries.get(8).get("erettere")), contains("veretterende"));
+    assertThat(toSet(topEntries.get(8).get("erettere")), contains("veretterende"));
     
     assertThat(topEntries.get(7), aMapWithSize(1));
     Object[] allowedItems = { "spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer" };
@@ -166,7 +168,7 @@ public class PartWordExportTest {
   }
   
   private static void checkReducedList(Object result, ExportParams params, Object... allowedItems) {
-    List<Object> foundItems = toList(result);
+    Collection<Object> foundItems = toColl(result);
     List<Object> allowedItemsList = new ArrayList<>(Arrays.asList(allowedItems));
     String restIndex = ExportObject.INDEX_REST + (allowedItems.length - foundItems.size() + 1);
     allowedItemsList.add(restIndex);
@@ -177,22 +179,6 @@ public class PartWordExportTest {
     // Make specifically sure that the rest index is also present and that the size is correct
     assertThat(foundItems, hasItem(restIndex));
     assertThat(foundItems, hasSize(params.maxPartWordListSize + 1));
-  }
-
-  @SuppressWarnings("unchecked")
-  private static List<Object> toList(Object entry) {
-    if (entry instanceof List<?>) {
-      return (List<Object>) entry;
-    } else if (entry instanceof Set<?>) {
-      Set<Object> set = (Set<Object>) entry;
-      return new ArrayList<>(set);
-    }
-    fail("Entry '" + entry + "' is not a collection!");
-    return null;
-  }
-
-  private static Set<String> asSet(String... words) {
-    return new HashSet<String>(Arrays.asList(words));
   }
 
 }

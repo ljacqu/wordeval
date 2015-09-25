@@ -5,6 +5,10 @@ import static org.hamcrest.Matchers.equalTo;
 import java.util.Locale;
 import org.junit.Test;
 
+/**
+ * Tests the general behavior of different Java locales.
+ */
+@LightWeight
 public class LocaleTest {
 
   @Test

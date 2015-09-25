@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import static ch.ljacqu.wordeval.TestUtil.processWords;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.nullValue;
@@ -8,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
+import ch.ljacqu.wordeval.TestUtil;
 
 public class LongWordsTest {
 
@@ -18,19 +20,13 @@ public class LongWordsTest {
     longWords = new LongWords();
   }
 
-  private void processWord(String word) {
-    longWords.processWord(word, word);
-  }
-
   @Test
   public void shouldAddLongWords() {
     // 8, 9, 9, 4, 6, 4
     String[] words = { "köszönöm", "piszących", "something", "test", "žodžių",
         "šalį" };
 
-    for (String word : words) {
-      processWord(word);
-    }
+    processWords(longWords, words);
     Map<Integer, Set<String>> results = longWords.getResults();
 
     assertThat(results, aMapWithSize(3));
@@ -45,9 +41,7 @@ public class LongWordsTest {
     // 15, 7, 0, 7
     String[] words = { "Морфологические", "градина", "ушёл", "наречие" };
 
-    for (String word : words) {
-      processWord(word);
-    }
+    processWords(longWords, words);
     Map<Integer, Set<String>> results = longWords.getResults();
     assertThat(results, aMapWithSize(2));
     assertThat(results.get(7), containsInAnyOrder("градина", "наречие"));

@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import static ch.ljacqu.wordeval.TestUtil.processWords;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -8,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
+import ch.ljacqu.wordeval.TestUtil;
 
 public class PalindromesTest {
 
@@ -24,9 +26,7 @@ public class PalindromesTest {
     String[] words = { "trottoir", "ebagabo", "palindrome", "awkward",
         "probability", "probable", "o" };
 
-    for (String word : words) {
-      evaluator.processWord(word, word);
-    }
+    processWords(evaluator, words);
     Map<String, Set<String>> results = evaluator.getResults();
 
     assertThat(results, aMapWithSize(5));
@@ -41,9 +41,7 @@ public class PalindromesTest {
   public void shouldNotAddSimplePairs() {
     String[] words = { "gaaf", "aardvaark", "letter", "boot", "bleed" };
 
-    for (String word : words) {
-      evaluator.processWord(word, word);
-    }
+    processWords(evaluator, words);
     Map<String, Set<String>> results = evaluator.getResults();
 
     assertThat(results, aMapWithSize(1));

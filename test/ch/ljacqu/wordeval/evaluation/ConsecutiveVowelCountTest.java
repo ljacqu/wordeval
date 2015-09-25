@@ -8,6 +8,7 @@ import static org.junit.Assert.assertThat;
 import java.util.List;
 import java.util.Map;
 import org.junit.Test;
+import ch.ljacqu.wordeval.TestUtil;
 import ch.ljacqu.wordeval.language.Alphabet;
 import ch.ljacqu.wordeval.language.Language;
 import ch.ljacqu.wordeval.language.LetterType;
@@ -109,10 +110,8 @@ public class ConsecutiveVowelCountTest {
   }
 
   private void processWords(String[] cleanWords, String[] words) {
-    for (int i = 0; i < cleanWords.length; ++i) {
-      vowelCount.processWord(cleanWords[i], words[i]);
-      consonantCount.processWord(cleanWords[i], words[i]);
-    }
+    TestUtil.processWords(vowelCount, cleanWords, words);
+    TestUtil.processWords(consonantCount, cleanWords, words);
   }
 
 }

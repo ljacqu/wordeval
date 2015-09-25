@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import static ch.ljacqu.wordeval.TestUtil.processWords;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -23,9 +24,7 @@ public class AlphabeticalOrderTest {
     String[] words = { "acer", "paper", "bruxz", "jigsaw", "mopr", "pong",
         "zymga", "contact", "ahpqtvwx", "beer" };
 
-    for (String word : words) {
-      evaluator.processWord(word, word);
-    }
+    processWords(evaluator, words);
     Map<Integer, Set<String>> results = evaluator.getResults();
 
     assertThat(results, aMapWithSize(3));

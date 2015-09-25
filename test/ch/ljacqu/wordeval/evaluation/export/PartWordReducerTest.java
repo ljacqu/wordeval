@@ -1,18 +1,19 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
+import static ch.ljacqu.wordeval.TestUtil.asSet;
+import static ch.ljacqu.wordeval.TestUtil.toSet;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
 import org.junit.Before;
 import org.junit.Test;
+import ch.ljacqu.wordeval.TestUtil;
 
 public class PartWordReducerTest {
   
@@ -94,17 +95,6 @@ public class PartWordReducerTest {
     assertThat(aggregatedEntries.get(4.0).keySet(), contains("marram"));
     assertThat(aggregatedEntries.get(4.0).get("marram"), equalTo(1));
     assertThat(aggregatedEntries.get(3.5).keySet(), contains("anana"));
-  }
-  
-  private static Set<String> asSet(String... elements) {
-    return new HashSet<>(Arrays.asList(elements));
-  }
-  
-  private static Set<Object> toSet(Object entry) {
-    if (entry instanceof Set<?>) {
-      return (Set<Object>) entry;
-    }
-    throw new IllegalStateException("Entry '" + entry + "' is not a Set");
   }
 
 }

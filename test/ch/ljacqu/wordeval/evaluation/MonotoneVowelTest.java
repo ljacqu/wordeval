@@ -6,8 +6,10 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
+import ch.ljacqu.wordeval.TestUtil;
 import ch.ljacqu.wordeval.language.Alphabet;
 import ch.ljacqu.wordeval.language.Language;
 import ch.ljacqu.wordeval.language.LetterType;
@@ -25,10 +27,8 @@ public class MonotoneVowelTest {
   }
 
   private void process(String[] words) {
-    for (String word : words) {
-      vowelEvaluator.processWord(word, word);
-      consonantEvaluator.processWord(word, word);
-    }
+    TestUtil.processWords(vowelEvaluator, words);
+    TestUtil.processWords(consonantEvaluator, words);
   }
 
   @Test
@@ -38,10 +38,8 @@ public class MonotoneVowelTest {
         "madagascar", "tatotute", "cocacoci", "eau" };
     process(words);
 
-    Map<Integer, List<String>> vowelResults = vowelEvaluator
-        .getNavigableResults();
-    Map<Integer, List<String>> consonantResults = consonantEvaluator
-        .getNavigableResults();
+    Map<Integer, Set<String>> vowelResults = vowelEvaluator.getResults();
+    Map<Integer, Set<String>> consonantResults = consonantEvaluator.getResults();
 
     assertThat(vowelResults, aMapWithSize(2));
     assertThat(vowelResults.get(10), contains("madagascar"));

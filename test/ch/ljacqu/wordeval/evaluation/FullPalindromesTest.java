@@ -1,12 +1,11 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import static ch.ljacqu.wordeval.TestUtil.asSet;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.junit.Test;
@@ -32,10 +31,6 @@ public class FullPalindromesTest {
     assertThat(fullResults, aMapWithSize(2));
     assertThat(fullResults.get(3), containsInAnyOrder("eve"));
     assertThat(fullResults.get(10), containsInAnyOrder("lagerregal"));
-  }
-
-  private static Set<String> asSet(String... words) {
-    return new HashSet<>(Arrays.asList(words));
   }
 
 }

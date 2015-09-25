@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import static ch.ljacqu.wordeval.TestUtil.processWords;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertThat;
@@ -21,9 +22,7 @@ public class IsogramsTest {
   public void shouldRecognizeIsograms() {
     String[] words = { "halfduimspyker", "abcdefga", "abcdefgcijk", "jigsaw" };
 
-    for (String word : words) {
-      evaluator.processWord(word, word);
-    }
+    processWords(evaluator, words);
     Map<Integer, Set<String>> results = evaluator.getResults();
 
     assertThat(results, aMapWithSize(2));

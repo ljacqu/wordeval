@@ -10,6 +10,7 @@ import org.junit.Test;
  * Tests that show the general behavior of the collator coupled with a specific
  * locale.
  */
+@LightWeight
 public class LocaleAlphabeticalTest {
 
   /**
