@@ -6,8 +6,13 @@ different criteria. The results are exported as JSON so they can be displayed by
 
 Status
 ------
-In development — a lot of refactoring and major changes are still taking place.
+In development – a lot of refactoring and major changes are still taking place.
 
+Setup
+-----
+This project is set up with Maven. If you don't have Maven, you need to download the depencies defined in the pom.xml file manually.
+
+Additionally, Lombok requires you install the [Lombok plugin](https://projectlombok.org/download.html) for your IDE or you won't see the accessors and builders it generates.
 
 Technical layout
 ----------------
@@ -20,7 +25,7 @@ exported as JSON.
 Certain _evaluators_ yield a lot of results; we only keep the most interesting results in the export object 
 and all others are aggregated, i.e. we only store the number of words found for the remaining entries.
 
-The unit tests currently cover 80% of the source code and can serve as a good entry point to understand the
+The current tests yield a coverage of 80% and can serve as a good entry point to understand the
 purpose of a class.
 
 

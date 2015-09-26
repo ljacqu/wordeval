@@ -6,9 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import ch.ljacqu.wordeval.dictionary.Dictionary;
-import ch.ljacqu.wordeval.dictionary.DictionarySettings;
-import ch.ljacqu.wordeval.evaluation.AlphabeticalSequence;
 import ch.ljacqu.wordeval.evaluation.AlphabeticalOrder;
+import ch.ljacqu.wordeval.evaluation.AlphabeticalSequence;
 import ch.ljacqu.wordeval.evaluation.Anagrams;
 import ch.ljacqu.wordeval.evaluation.ConsecutiveLetterPairs;
 import ch.ljacqu.wordeval.evaluation.ConsecutiveVowelCount;
@@ -25,7 +24,7 @@ import ch.ljacqu.wordeval.language.Language;
 /**
  * Entry point of the <i>wordeval</i> application.
  */
-public class WordEvalMain {
+public final class WordEvalMain {
   private WordEvalMain() {
   }
   
@@ -39,7 +38,8 @@ public class WordEvalMain {
    * @throws IOException If a dictionary could not be read
    */
   public static void main(String[] args) throws IOException {
-    Iterable<String> codes = DictionarySettings.getAllCodes();
+    //Iterable<String> codes = DictionarySettings.getAllCodes();
+    String[] codes = { "en-us" };
     
     for (String code : codes) {
       exportLanguage(code);

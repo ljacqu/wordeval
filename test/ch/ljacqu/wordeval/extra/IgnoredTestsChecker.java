@@ -3,6 +3,7 @@ package ch.ljacqu.wordeval.extra;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import java.io.File;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,24 +20,22 @@ public class IgnoredTestsChecker {
   private static final File FOLDER = new File("test/ch/ljacqu/wordeval/extra");
   private static final String PACKAGE = "ch.ljacqu.wordeval.extra";
 
-  @SuppressWarnings({ "rawtypes", "unchecked" })
+  
+  @SuppressWarnings("rawtypes")
   @Test
   public void shouldAllBeIgnored() {
     List<Class> classes = getClasses();
     List<Method> badMethods = new ArrayList<>();
     for (final Class clazz : classes) {
-      if (clazz.isAnnotationPresent(LightWeight.class)) {
-        System.out.println("Class '" + clazz.getSimpleName() + "' skipped: has @LightWeight");
-        continue;
-      } else if (clazz.isAnnotationPresent(Ignore.class)) {
+      if (isValidElement(clazz)) {
+        System.out.println("Class '" + clazz.getSimpleName() + "' skipped");
         continue;
       }
-
+      
       for (final Method method : clazz.getMethods()) {
-        if (method.isAnnotationPresent(Test.class) && !method.isAnnotationPresent(Ignore.class)) {
-          if (method.isAnnotationPresent(LightWeight.class)) {
-            System.out.println("Method '" + method.getName() + "' in '" + clazz.getSimpleName()
-                + "' skipped: has @LightWeight");
+        if (method.isAnnotationPresent(Test.class)) {
+          if (isValidElement(method)) {
+            System.out.println("Method '" + method.getName() + "' in '" + clazz.getSimpleName() + "' skipped");
           } else {
             badMethods.add(method);
           }
@@ -46,14 +45,14 @@ public class IgnoredTestsChecker {
     evaluateMethods(classes, badMethods);
   }
 
-  private List<Class> getClasses() {
+  private static List<Class> getClasses() {
     List<Class> classes = new ArrayList<>();
     for (final File file : FOLDER.listFiles()) {
       if (file.isFile() && file.getName().endsWith(".java")) {
         try {
           String fileName = file.getName();
-          String className = PACKAGE + "." + fileName.substring(0, fileName.length() - 5);
-          classes.add(Class.forName(className));
+          String className = fileName.substring(0, fileName.length() - 5);
+          classes.add(Class.forName(PACKAGE + "." + className));
         } catch (ClassNotFoundException e) {
           throw new IllegalArgumentException(e);
         }
@@ -62,7 +61,7 @@ public class IgnoredTestsChecker {
     return classes;
   }
 
-  private void evaluateMethods(List<Class> classes, List<Method> methods) {
+  private static void evaluateMethods(List<Class> classes, List<Method> methods) {
     if (classes.isEmpty()) {
       fail("Error loading classes; class list is empty");
     }
@@ -70,6 +69,10 @@ public class IgnoredTestsChecker {
       System.err.println(method.getDeclaringClass() + "#" + method.getName());
     }
     assertTrue(methods.isEmpty());
+  }
+  
+  private static boolean isValidElement(AnnotatedElement member) {
+    return member.isAnnotationPresent(LightWeight.class) || member.isAnnotationPresent(Ignore.class);
   }
 
 }

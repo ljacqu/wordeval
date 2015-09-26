@@ -97,8 +97,8 @@ public final class EvaluatorService {
         if (parameters.length == 1 && Evaluator.class.isAssignableFrom(parameters[0])) {
           return method;
         }
-        throw new IllegalStateException("Method annotated with @PostEvaluator does not have one parameter"
-            + " for evaluator '" + evaluator.getClass() + "' in method '" + method.getName() + "'");
+        throw new IllegalStateException("Method '" + method.getName() + "' in '" + evaluator.getClass()
+            + "' does not have exactly one parameter of (sub)type Evaluator");
       }
     }
     return null;

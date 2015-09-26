@@ -18,6 +18,9 @@ Hunspell repo
 **_hu_ – Hungarian**<br />
 Hunspell repo
 
+**_ru_ – Russian**<br />
+Hunspell repo
+
 **_tr_ – Turkish**<br />
 [Zemberek](https://code.google.com/p/zemberek/downloads/detail?name=full.txt.tr.tar.gz&can=2&q=)
 

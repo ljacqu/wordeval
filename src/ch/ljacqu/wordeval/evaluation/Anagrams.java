@@ -28,7 +28,8 @@ public class Anagrams extends PartWordEvaluator {
   public ExportObject toExportObject() {
     ExportParams params = ExportParams.builder()
       .isDescending(true)
-      .maxTopEntrySize(2)
+      .maxTopEntrySize(10)
+      .maxPartWordListSize(3)
       .build();
     return PartWordExport.create("anagrams", getResults(), params, new PartWordReducer.BySize());
   }
