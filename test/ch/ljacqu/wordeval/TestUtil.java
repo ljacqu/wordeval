@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.Set;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 
-public class TestUtil {
+public final class TestUtil {
+
+  private TestUtil() {
+  }
   
   public static Set<String> asSet(String... item) {
     return new HashSet<>(Arrays.asList(item));
@@ -33,6 +36,7 @@ public class TestUtil {
     }
   }
   
+  @SuppressWarnings("unchecked")
   public static Set<Object> toSet(Object o) {
     if (o instanceof Set<?>) {
       return (Set<Object>) o;
@@ -40,6 +44,7 @@ public class TestUtil {
     throw new IllegalArgumentException("Object '" + o + "' of type '" + o.getClass() + "' is not a Set");
   }
   
+  @SuppressWarnings("unchecked")
   public static Collection<Object> toColl(Object o) {
     if (o instanceof Collection<?>) {
       return (Collection<Object>) o;

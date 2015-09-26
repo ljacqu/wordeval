@@ -10,7 +10,7 @@ import java.util.Map.Entry;
  * Service for evaluators, particularly for the handling of
  * {@link PostEvaluator} methods.
  */
-public class EvaluatorService {
+public final class EvaluatorService {
 
   private EvaluatorService() {
   }
@@ -61,20 +61,20 @@ public class EvaluatorService {
   private static Map<Evaluator<?>, Evaluator<?>> mapBaseClassToEvaluator(
       Map<Evaluator, Class<? extends Evaluator>> postEvaluators, Iterable<Evaluator<?>> givenEvaluators) {
     Map<Evaluator<?>, Evaluator<?>> evaluators = new HashMap<>();
-    for (Evaluator evaluator : givenEvaluators) {
-      Class<? extends Evaluator> clazz = evaluator.getClass();
-      // TODO: Fix painfully inefficient way of matching argument to evaluator
-      for (Entry<Evaluator, Class<? extends Evaluator>> entry : postEvaluators.entrySet()) {
-        if (clazz.isAssignableFrom(entry.getValue())) {
-          postEvaluators.remove(entry.getKey());
+    
+    for (Entry<Evaluator, Class<? extends Evaluator>> entry : postEvaluators.entrySet()) {
+      boolean foundMatch = false;
+      for (Evaluator evaluator : givenEvaluators) {
+        if (evaluator.getClass().isAssignableFrom(entry.getValue())) {
           evaluators.put(entry.getKey(), evaluator);
+          foundMatch = true;
+          break;
         }
       }
-    }
-
-    if (!postEvaluators.isEmpty()) {
-      throw new IllegalStateException("Could not match all post evaluators to evaluators. Remaining: " 
-          + postEvaluators);
+      if (!foundMatch) {
+        throw new IllegalStateException("Could not match '" + entry.getValue() + "' for post evaluator '" 
+            + entry.getKey().getClass() + "'");
+      }
     }
     return evaluators;
   }
@@ -89,8 +89,10 @@ public class EvaluatorService {
    */
   private static Method findPostEvaluatorMethod(Evaluator<?> evaluator) {
     for (Method method : evaluator.getClass().getMethods()) {
+      if (Object.class.equals(method.getDeclaringClass())) {
+        continue;
+      }
       if (method.isAnnotationPresent(PostEvaluator.class)) {
-        // TODO don't check Object methods
         Class<?>[] parameters = method.getParameterTypes();
         if (parameters.length == 1 && Evaluator.class.isAssignableFrom(parameters[0])) {
           return method;
