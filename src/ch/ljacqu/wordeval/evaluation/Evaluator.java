@@ -77,7 +77,10 @@ public abstract class Evaluator<K> {
     if (results.get(key) == null) {
       // It is massively faster to instantiate a TreeSet here rather than
       // using a HashSet and then converting it to TreeSet
-      results.put(key, new TreeSet<String>());
+      results.put(key, new TreeSet<String>(String.CASE_INSENSITIVE_ORDER));
+    }
+    if (word.toLowerCase().equals(word) && results.get(key).contains(word)) {
+      results.get(key).remove(word);
     }
     results.get(key).add(word);
   }
