@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import org.junit.Before;
@@ -65,7 +66,7 @@ public class PartWordExportTest {
   public void shouldExportWithTopKeys() {
     ExportParams params = ExportParams.builder()
         .topKeys(3)
-        .maxTopEntrySize(-1)
+        .maxTopEntrySize(Optional.empty())
         .build();
 
     PartWordExport export = PartWordExport.create("a test", results, params, new PartWordReducer.ByLength());
@@ -121,7 +122,7 @@ public class PartWordExportTest {
     Object[] allowedItems = { "spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer" };
     checkReducedList(topEntries.get(7).get("esifise"), params, allowedItems);
 
-    assertThat(topEntries.get(6), aMapWithSize(params.maxTopEntrySize + 1));
+    assertThat(topEntries.get(6), aMapWithSize(params.maxTopEntrySize.get() + 1));
     Set<String> foundKeysSet = topEntries.get(6).keySet();
     String[] foundKeys = foundKeysSet.toArray(new String[foundKeysSet.size()]);
     assertThat(asSet("millim", "neffen", "marram", "leggel", "gerreg", "eellee", "arkkra", ExportObject.INDEX_REST),
@@ -178,7 +179,7 @@ public class PartWordExportTest {
     assertThat(allowedItemsList, hasItems(foundItems.toArray()));
     // Make specifically sure that the rest index is also present and that the size is correct
     assertThat(foundItems, hasItem(restIndex));
-    assertThat(foundItems, hasSize(params.maxPartWordListSize + 1));
+    assertThat(foundItems, hasSize(params.maxPartWordListSize.get() + 1));
   }
 
 }

@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import org.junit.Before;
@@ -56,7 +57,7 @@ public class WordStatExportTest {
     assertThat(topEntries.size(), equalTo(params.topKeys));
     for (int i = 7; i > 3; --i) {
       assertThat(topEntries.get(i), notNullValue());
-      assertThat(topEntries.get(i).size(), not(greaterThan(params.maxTopEntrySize + 1)));
+      assertThat(topEntries.get(i).size(), not(greaterThan(params.maxTopEntrySize.get() + 1)));
     }
     assertThat(topEntries.get(6), hasItem(ExportObject.INDEX_REST + "1"));
     assertThat(topEntries.get(5), hasItem(ExportObject.INDEX_REST + "3"));
@@ -71,7 +72,7 @@ public class WordStatExportTest {
   public void shouldRespectMinimumKeyParam() {
     ExportParams params = ExportParams.builder()
         .minimum(6.0)
-        .maxTopEntrySize(-1)
+        .maxTopEntrySize(Optional.empty())
         .build();
 
     WordStatExport export = WordStatExport.create("test", results, params);
@@ -99,8 +100,8 @@ public class WordStatExportTest {
     ExportParams params = ExportParams.builder()
         .isDescending(true)
         .topKeys(2)
-        .minimum(-1.0)
-        .maxTopEntrySize(-1)
+        .minimum(Optional.empty())
+        .maxTopEntrySize(Optional.empty())
         .build();
 
     WordStatExport export = WordStatExport.create("test", results, params);

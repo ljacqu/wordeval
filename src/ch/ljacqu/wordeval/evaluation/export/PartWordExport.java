@@ -116,15 +116,15 @@ public final class PartWordExport extends ExportObject {
     NavigableMap<String, Object> result = new TreeMap<>();
     int addedEntries = 0;
     for (Map.Entry<String, Set<String>> entry : subMap.entrySet()) {
-      if (params.maxTopEntrySize >= 0 && addedEntries >= params.maxTopEntrySize) {
+      if (params.maxTopEntrySize.isPresent() && addedEntries >= params.maxTopEntrySize.get()) {
         result.put(INDEX_REST, "" + (subMap.size() - addedEntries));
         break;
       }
-      
-      if (params.maxPartWordListSize >= 0 && entry.getValue().size() > params.maxPartWordListSize) {
+
+      if (params.maxPartWordListSize.isPresent() && entry.getValue().size() > params.maxPartWordListSize.get()) {
         int initialSize = entry.getValue().size();
-        List<String> words = reduceList(new ArrayList<>(entry.getValue()), params.maxPartWordListSize);
-        words.add(INDEX_REST + (initialSize - params.maxPartWordListSize));
+        List<String> words = reduceList(new ArrayList<String>(entry.getValue()), params.maxPartWordListSize.get());
+        words.add(INDEX_REST + (initialSize - params.maxPartWordListSize.get()));
         result.put(entry.getKey(), words);
       } else {
         result.put(entry.getKey(), entry.getValue());

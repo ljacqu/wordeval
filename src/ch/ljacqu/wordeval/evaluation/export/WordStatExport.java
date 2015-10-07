@@ -73,16 +73,15 @@ public class WordStatExport extends ExportObject {
    */
   private static <K> SortedMap<K, List<String>> trimLargeTopEntries(
       SortedMap<K, List<String>> topEntries, ExportParams params) {
-    if (params.maxTopEntrySize < 0) {
+    if (!params.maxTopEntrySize.isPresent()) {
       return topEntries;
     }
     for (Map.Entry<K, List<String>> entry : topEntries.entrySet()) {
-      if (entry.getValue().size() > params.maxTopEntrySize) {
-        int restSize = entry.getValue().size() - params.maxTopEntrySize;
+      if (entry.getValue().size() > params.maxTopEntrySize.get()) {
+        int restSize = entry.getValue().size() - params.maxTopEntrySize.get();
         // TODO #22: Find better way to shorten list if it makes sense to only
         // keep one word with the same start, for instance
-        topEntries.put(entry.getKey(),
-            reduceList(entry.getValue(), params.maxTopEntrySize));
+        topEntries.put(entry.getKey(), reduceList(entry.getValue(), params.maxTopEntrySize.get()));
         topEntries.get(entry.getKey()).add(ExportObject.INDEX_REST + restSize);
       }
     }

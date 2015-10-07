@@ -61,7 +61,7 @@ public abstract class ExportObject implements Serializable {
     N key = null;
     for (int i = 0; i < params.topKeys && descendingIterator.hasNext(); ++i) {
       key = descendingIterator.next();
-      if (params.minimum >= 0 && key.doubleValue() < params.minimum) {
+      if (params.minimum.isPresent() && key.doubleValue() < params.minimum.get()) {
         key = returnTypedMinimum(key, params);
         break;
       }
@@ -75,11 +75,11 @@ public abstract class ExportObject implements Serializable {
 
   @SuppressWarnings("unchecked")
   private static <N extends Number> N returnTypedMinimum(N key, ExportParams params) {
-    if (key instanceof Integer) {
-      // Compiler doesn't understand that N == Integer, so we need to "cast"
-      return (N) Integer.valueOf((int) params.minimum);
-    } else if (key instanceof Double) {
-      return (N) Double.valueOf(params.minimum);
+	if (key instanceof Integer) {
+	  // Compiler doesn't understand that N == Integer, so we need to "cast"
+	  return (N) Integer.valueOf(params.minimum.get().intValue());
+	} else if (key instanceof Double) {
+      return (N) params.minimum.get();
     }
     throw new IllegalStateException("Key is neither integer nor double!");
   }
