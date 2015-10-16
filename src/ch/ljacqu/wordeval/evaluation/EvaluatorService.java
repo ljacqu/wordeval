@@ -1,10 +1,17 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Service for evaluators, particularly for the handling of
@@ -102,6 +109,23 @@ public final class EvaluatorService {
       }
     }
     return null;
+  }
+  
+  private static List<Object> getFieldsToMatch(Evaluator<?> postEvaluator) {
+    Field[] fields = postEvaluator.getClass().getDeclaredFields();
+    return Arrays.stream(fields)
+      .filter(field -> field.isAnnotationPresent(MatchWithBase.class))
+      .map(field -> getDeclaredFieldValue(field, postEvaluator))
+      .collect(Collectors.toList());
+  }
+  
+  private static Object getDeclaredFieldValue(Field field, Object object) {
+    field.setAccessible(true);
+    try {
+      return field.get(object);
+    } catch (IllegalAccessException e) {
+      throw new IllegalStateException(e);
+    }
   }
 
 }
