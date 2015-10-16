@@ -1,6 +1,8 @@
 .settings/
 bin/
 dict/*.dic
+dict/*.aff
+dict/*.txt
 export/*.json
 target/
 
