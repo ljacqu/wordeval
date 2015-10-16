@@ -1,78 +1,40 @@
+package ch.ljacqu.wordeval.wordgraph;
 
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.apache.xmlbeans.impl.common.Levenshtein;
+import java.util.Map.Entry;
 
 import lombok.Getter;
 
-@Getter
-public class LjTemp {
+public class ConnectionsBuilder {
 
   private static final int MIN_DISTANCE = 1;
-
-  // temp
-  private static final int WORD_LIMIT = 100000;
-
+  
   private List<String> words;
-  private Map<String, List<Connection>> connections = new HashMap<>();
-
-  public static void main(String[] args) {
-    LjTemp lj = new LjTemp();
-    lj.computeConnections();
-    System.out.println(lj.getConnections());
-    lj.findConn("alarm", "abiyi");
-    lj.findConn("car", "bet");
-    lj.findConn("car", "nonexistent");
-    lj.findConn("brute", "acute");
-    lj.findConn("acre", "bear");
+  
+  @Getter
+  private Map<String, List<String>> connections;
+  
+  public ConnectionsBuilder(String dictionary) {    
+    WordCollector collector = new WordCollector();
+    words = collector.getSortedWordsFromDictionary(dictionary);
+    collector = null;
+    initializeConnections();
+    computeConnections();
+  }
+  
+  private void initializeConnections() {
+    connections = new HashMap<>();
+    words.stream()
+         .forEach(word -> connections.put(word, new ArrayList<>()));
   }
 
-  public LjTemp() {
-    //loadTestWords();
-    loadDictionary();
-    initConnections();
-  }
-
-  private void loadDictionary() {
-    Path path = Paths.get("C:\\Users\\ljacques\\Downloads\\dictionary.txt");
-    try {
-      words = Files.lines(path)
-        .map(String::trim)
-        .map(String::toLowerCase)
-        .distinct()
-        .limit(WORD_LIMIT)
-        .collect(Collectors.toList());
-    } catch (IOException e) {
-      throw new IllegalStateException("Could not read dict", e);
-    }
-  }
-
-  private void loadTestWords() {
-    String givenWords = "acre, care, car, bar, bare, bear, bears, boars, boar, beers, bees, bee, be, bet, beet, meet, "
-      + "meat, heat, hat, rat, brat";
-
-    words = Arrays.stream(givenWords.split(","))
-      .map(String::trim)
-      .collect(Collectors.toList());
-
-    Collections.sort(words);
-  }
-
-  public void computeConnections() {
-
+  private void computeConnections() {
+    // deleteCost, insertCost, replaceCost, swapCost    
+    DamerauLevenshteinAlgorithm levenshtein = new DamerauLevenshteinAlgorithm(1, 1, 2, 1);
     for (int i = 0; i < words.size(); ++i) {
       final String leftWord = words.get(i);
       for (int j = i + 1; j < words.size(); ++j) {
@@ -80,16 +42,44 @@ public class LjTemp {
         if (Math.abs(rightWord.length() - leftWord.length()) > 1) {
           continue;
         }
-        final int distance = Levenshtein.distance(rightWord, leftWord);
+        final int distance = levenshtein.execute(rightWord, leftWord);
         if (distance <= MIN_DISTANCE) {
-          addConnection(leftWord, rightWord);
+          saveConnection(leftWord, rightWord);
         }
       }
-      System.out.println("Found " + connections.get(leftWord).size() + " connections for " + leftWord);
+      if ((i & 255) == 255) {
+        System.out.println("Processed " + i + " words");
+      }
     }
-    System.out.println("Processed " + words.size() + " words");
+    System.out.println("Processed total " + words.size() + " words");
   }
+  
+  private void saveConnection(String left, String right) {
+    connections.get(left).add(right);
+  }
+  
+  public void removeIsolatedWords() {
+    Iterator<Map.Entry<String, List<String>>> it = 
+        connections.entrySet().iterator();
+    while (it.hasNext()) {
+      if (it.next().getValue().isEmpty()) {
+        it.remove();
+      }
+    }
+  }
+  
+  /*private void loadTestWords() {
+    // TODO: Move test words to a test class
+    String givenWords = "acre, care, car, bar, bare, bear, bears, boars, boar, beers, bees, bee, be, bet, beet, meet, "
+      + "meat, heat, hat, rat, brat";
+  
+    Arrays.stream(givenWords.split(","))
+      .map(String::trim)
+      .sorted()
+      .forEach(word -> processWord(word, word));
+  }*/
 
+  /* TODO: Move `findConn` stuff to another class
   // BFS
   public void findConn(String left, String right) {
     Set<String> usedWords = new HashSet<>();
@@ -127,18 +117,6 @@ public class LjTemp {
       }
     }
     return pathList;
-  }
-
-  private void addConnection(String left, String right) {
-    final Connection conn = new Connection(left, right);
-    connections.get(left).add(conn);
-    connections.get(right).add(conn);
-  }
-
-  private void initConnections() {
-    connections = new HashMap<>();
-    words.stream()
-      .forEach(word -> connections.put(word, new ArrayList<>()));
   }
 
   private static class Connection {
@@ -179,6 +157,6 @@ public class LjTemp {
       }
       return str.toString();
     }
-  }
+  }*/
 
 }

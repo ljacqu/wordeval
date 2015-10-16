@@ -55,6 +55,7 @@ public final class AppData {
   private static void initDictionaries() {
     addDictionary("af").setDelimiters('/').setSkipSequences(".", "µ", "Ð", "ø");
     addDictionary("en-us").setDelimiters('/');
+    addDictionary("en-test").setDelimiters('/');
     // TODO Basque: Some entries have _ but most parts seem to be present alone
     addDictionary("eu").setDelimiters('/').setSkipSequences(".", "+", "_");
     addDictionary("fr", FrSanitizer.class);
