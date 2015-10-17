@@ -1,17 +1,17 @@
 package ch.ljacqu.wordeval.evaluation;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import java.util.Optional;
+
+import lombok.AllArgsConstructor;
 
 /**
  * Service for evaluators, particularly for the handling of
@@ -29,10 +29,9 @@ public final class EvaluatorService {
    * @return Map of post evaluators (as key) and the matched evaluator to supply
    *         as parameter in the PostEvaluator method
    */
-  @SuppressWarnings("rawtypes")
   public static Map<Evaluator<?>, Evaluator<?>> getPostEvaluators(Iterable<Evaluator<?>> evaluators) {
-    Map<Evaluator, Pair<Class<? extends Evaluator>, Method>> postEvaluators = new HashMap<>();
-    for (Evaluator evaluator : evaluators) {
+    List<PostEvaluatorCondition> conditions = new ArrayList<>();
+    for (Evaluator<?> evaluator : evaluators) {
       Method postEvalMethod = findMethodWithAnnotation(evaluator, PostEvaluator.class);
       Method baseMatcherMethod = findMethodWithAnnotation(evaluator, BaseMatcher.class);
       if (postEvalMethod == null && baseMatcherMethod != null) {
@@ -43,14 +42,18 @@ public final class EvaluatorService {
           if (!postEvalMethod.getParameterTypes()[0]
               .equals(baseMatcherMethod.getParameterTypes()[0])) {
             throw new IllegalStateException("Parameter in @BaseMatcher does not match the one in @PostEvaluator");
+          } else if (!boolean.class.equals(baseMatcherMethod.getReturnType())
+              && !Boolean.class.equals(baseMatcherMethod.getReturnType())) {
+            throw new IllegalStateException("Method @BaseMatcher must return a boolean");
           }
         }
         @SuppressWarnings("unchecked")
-        Class<? extends Evaluator> baseClass = (Class<? extends Evaluator>) postEvalMethod.getParameterTypes()[0];
-        postEvaluators.put(evaluator, Pair.of(baseClass, baseMatcherMethod));
+        Class<? extends Evaluator<?>> baseClass = (Class<? extends Evaluator<?>>) 
+            postEvalMethod.getParameterTypes()[0];
+        conditions.add(new PostEvaluatorCondition(evaluator, baseClass, baseMatcherMethod));
       }
     }
-    return mapBaseClassToEvaluator(postEvaluators, evaluators);
+    return mapBaseClassToEvaluator(conditions, evaluators);
   }
 
   /**
@@ -73,38 +76,40 @@ public final class EvaluatorService {
       }
     }
   }
-
-  @SuppressWarnings("rawtypes")
+  
   private static Map<Evaluator<?>, Evaluator<?>> mapBaseClassToEvaluator(
-      Map<Evaluator, Pair<Class<? extends Evaluator>, Method>> postEvaluators, 
+      List<PostEvaluatorCondition> conditions,
       Iterable<Evaluator<?>> givenEvaluators) {
-    System.out.println(postEvaluators);
     Map<Evaluator<?>, Evaluator<?>> evaluators = new HashMap<>();
-    
-    for (Entry<Evaluator, Pair<Class<? extends Evaluator>, Method>> entry : postEvaluators.entrySet()) {
+    for (PostEvaluatorCondition condition : conditions) {
       boolean foundMatch = false;
-      for (Evaluator evaluator : givenEvaluators) {
-        if (evaluator.getClass().isAssignableFrom(entry.getValue().getLeft())) {
-          Method matcher = entry.getValue().getRight();
-          try {
-            if (matcher == null || Boolean.TRUE.equals(
-                matcher.invoke(entry.getKey(), evaluator))) {
-              evaluators.put(entry.getKey(), evaluator);
-              foundMatch = true;
-              break;
-            }
-          } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            throw new IllegalStateException("Could not invoke BaseMatcher for '"
-                + entry.getKey().getClass() + "'", e);
-          }
+      for (Evaluator<?> potentialBase : givenEvaluators) {
+        if (potentialBase.getClass().isAssignableFrom(condition.baseClass)
+            && isBaseMatch(condition, potentialBase)) {
+          evaluators.put(condition.postEvaluator, potentialBase);
+          foundMatch = true;
+          break;
         }
       }
       if (!foundMatch) {
-        throw new IllegalStateException("Could not match '" + entry.getValue() + "' for post evaluator '" 
-            + entry.getKey().getClass() + "'");
+        throw new IllegalStateException("Could not find match for '"
+            + condition.postEvaluator.getClass() + "'");
       }
     }
     return evaluators;
+  }
+  
+  private static boolean isBaseMatch(PostEvaluatorCondition condition, Evaluator<?> potentialBase) {
+    if (condition.baseMatcher == null) {
+      return true;
+    }
+    try {
+      return Boolean.TRUE.equals(
+          condition.baseMatcher.invoke(condition.postEvaluator, potentialBase));
+    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+      throw new IllegalStateException("Could not invoke BaseMatcher function on '" 
+        + condition.postEvaluator.getClass() + "' with '" + potentialBase.getClass() + "'");
+    }
   }
   
   private static Method findMethodWithAnnotation(Evaluator<?> evaluator, 
@@ -124,13 +129,11 @@ public final class EvaluatorService {
     }
   }
   
-  private static Object getDeclaredFieldValue(Field field, Object object) {
-    field.setAccessible(true);
-    try {
-      return field.get(object);
-    } catch (IllegalAccessException e) {
-      throw new IllegalStateException(e);
-    }
+  @AllArgsConstructor
+  private static final class PostEvaluatorCondition {
+    public final Evaluator<?> postEvaluator;
+    public final Class<? extends Evaluator<?>> baseClass;
+    public final Method baseMatcher;
   }
 
 }
