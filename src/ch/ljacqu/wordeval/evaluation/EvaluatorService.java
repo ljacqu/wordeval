@@ -1,17 +1,17 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.Optional;
 
 /**
  * Service for evaluators, particularly for the handling of
@@ -31,13 +31,23 @@ public final class EvaluatorService {
    */
   @SuppressWarnings("rawtypes")
   public static Map<Evaluator<?>, Evaluator<?>> getPostEvaluators(Iterable<Evaluator<?>> evaluators) {
-    Map<Evaluator, Class<? extends Evaluator>> postEvaluators = new HashMap<>();
+    Map<Evaluator, Pair<Class<? extends Evaluator>, Method>> postEvaluators = new HashMap<>();
     for (Evaluator evaluator : evaluators) {
-      Method postEvalMethod = findPostEvaluatorMethod(evaluator);
-      if (postEvalMethod != null) {
+      Method postEvalMethod = findMethodWithAnnotation(evaluator, PostEvaluator.class);
+      Method baseMatcherMethod = findMethodWithAnnotation(evaluator, BaseMatcher.class);
+      if (postEvalMethod == null && baseMatcherMethod != null) {
+        throw new IllegalStateException("Found @BaseMatcher method without @PostEvaluator method in '"
+            + evaluator.getClass() + "'");
+      } else if (postEvalMethod != null) {
+        if (baseMatcherMethod != null) {
+          if (!postEvalMethod.getParameterTypes()[0]
+              .equals(baseMatcherMethod.getParameterTypes()[0])) {
+            throw new IllegalStateException("Parameter in @BaseMatcher does not match the one in @PostEvaluator");
+          }
+        }
         @SuppressWarnings("unchecked")
         Class<? extends Evaluator> baseClass = (Class<? extends Evaluator>) postEvalMethod.getParameterTypes()[0];
-        postEvaluators.put(evaluator, baseClass);
+        postEvaluators.put(evaluator, Pair.of(baseClass, baseMatcherMethod));
       }
     }
     return mapBaseClassToEvaluator(postEvaluators, evaluators);
@@ -51,7 +61,7 @@ public final class EvaluatorService {
    */
   public static void executePostEvaluators(Map<Evaluator<?>, Evaluator<?>> postEvaluators) {
     for (Entry<Evaluator<?>, Evaluator<?>> evaluator : postEvaluators.entrySet()) {
-      Method postEvalMethod = findPostEvaluatorMethod(evaluator.getKey());
+      Method postEvalMethod = findMethodWithAnnotation(evaluator.getKey(), PostEvaluator.class);
       if (postEvalMethod == null) {
         throw new IllegalStateException("Evaluator '" + evaluator.getKey().getClass() + "' does not have a method"
             + " annotated with @PostEvaluator");
@@ -66,16 +76,27 @@ public final class EvaluatorService {
 
   @SuppressWarnings("rawtypes")
   private static Map<Evaluator<?>, Evaluator<?>> mapBaseClassToEvaluator(
-      Map<Evaluator, Class<? extends Evaluator>> postEvaluators, Iterable<Evaluator<?>> givenEvaluators) {
+      Map<Evaluator, Pair<Class<? extends Evaluator>, Method>> postEvaluators, 
+      Iterable<Evaluator<?>> givenEvaluators) {
+    System.out.println(postEvaluators);
     Map<Evaluator<?>, Evaluator<?>> evaluators = new HashMap<>();
     
-    for (Entry<Evaluator, Class<? extends Evaluator>> entry : postEvaluators.entrySet()) {
+    for (Entry<Evaluator, Pair<Class<? extends Evaluator>, Method>> entry : postEvaluators.entrySet()) {
       boolean foundMatch = false;
       for (Evaluator evaluator : givenEvaluators) {
-        if (evaluator.getClass().isAssignableFrom(entry.getValue())) {
-          evaluators.put(entry.getKey(), evaluator);
-          foundMatch = true;
-          break;
+        if (evaluator.getClass().isAssignableFrom(entry.getValue().getLeft())) {
+          Method matcher = entry.getValue().getRight();
+          try {
+            if (matcher == null || Boolean.TRUE.equals(
+                matcher.invoke(entry.getKey(), evaluator))) {
+              evaluators.put(entry.getKey(), evaluator);
+              foundMatch = true;
+              break;
+            }
+          } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            throw new IllegalStateException("Could not invoke BaseMatcher for '"
+                + entry.getKey().getClass() + "'", e);
+          }
         }
       }
       if (!foundMatch) {
@@ -85,38 +106,22 @@ public final class EvaluatorService {
     }
     return evaluators;
   }
-
-  /**
-   * Returns the first found method of the class annotated with @PostEvaluator. 
-   * Null if none available. Throws an exception if an @PostEvaluator method is found
-   * and does not contain exactly one parameter that is a subtype (or equals) 
-   * {@link Evaluator}.
-   * @param evaluator The evaluator to process
-   * @return The Method object annotated with @PostEvaluator or null if none found.
-   */
-  private static Method findPostEvaluatorMethod(Evaluator<?> evaluator) {
-    for (Method method : evaluator.getClass().getMethods()) {
-      if (Object.class.equals(method.getDeclaringClass())) {
-        continue;
-      }
-      if (method.isAnnotationPresent(PostEvaluator.class)) {
-        Class<?>[] parameters = method.getParameterTypes();
-        if (parameters.length == 1 && Evaluator.class.isAssignableFrom(parameters[0])) {
-          return method;
-        }
-        throw new IllegalStateException("Method '" + method.getName() + "' in '" + evaluator.getClass()
-            + "' does not have exactly one parameter of (sub)type Evaluator");
-      }
-    }
-    return null;
-  }
   
-  private static List<Object> getFieldsToMatch(Evaluator<?> postEvaluator) {
-    Field[] fields = postEvaluator.getClass().getDeclaredFields();
-    return Arrays.stream(fields)
-      .filter(field -> field.isAnnotationPresent(MatchWithBase.class))
-      .map(field -> getDeclaredFieldValue(field, postEvaluator))
-      .collect(Collectors.toList());
+  private static Method findMethodWithAnnotation(Evaluator<?> evaluator, 
+      Class<? extends Annotation> annotation) {
+    Optional<Method> method = Arrays.stream(evaluator.getClass().getMethods())
+      .filter(m -> m.isAnnotationPresent(annotation))
+      .findFirst();
+    if (!method.isPresent()) {
+      return null;
+    }
+    Class<?>[] parameters = method.get().getParameterTypes();
+    if (parameters.length == 1 && Evaluator.class.isAssignableFrom(parameters[0])) {
+      return method.get();
+    } else {
+      throw new IllegalStateException("Method with @" + annotation.getClass().getSimpleName()
+          + " must have one parameter with (sub)type Evaluator");
+    }
   }
   
   private static Object getDeclaredFieldValue(Field field, Object object) {

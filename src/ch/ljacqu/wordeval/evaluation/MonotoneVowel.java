@@ -7,6 +7,7 @@ import ch.ljacqu.wordeval.evaluation.export.WordStatExport;
 import ch.ljacqu.wordeval.language.Language;
 import ch.ljacqu.wordeval.language.LanguageService;
 import ch.ljacqu.wordeval.language.LetterType;
+import lombok.Getter;
 
 /**
  * Filters long words which only use one different vowel or consonant, like
@@ -15,6 +16,7 @@ import ch.ljacqu.wordeval.language.LetterType;
 public class MonotoneVowel extends WordStatEvaluator {
 
   private List<String> letters;
+  @Getter
   private LetterType letterType;
 
   /**
