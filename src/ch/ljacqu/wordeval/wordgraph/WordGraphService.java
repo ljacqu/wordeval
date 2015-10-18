@@ -5,10 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.google.gson.Gson;
 
@@ -16,7 +14,14 @@ import com.google.gson.Gson;
  * Service for word graphs.
  */
 public final class WordGraphService {
+  /** Directory for graph exports. */
+  public static final String GRAPH_EXPORT_DIRECTORY = "export/graph/";
+  
   private WordGraphService() {
+  }
+  
+  public static String getExportFilename(String code) {
+    return GRAPH_EXPORT_DIRECTORY + code + ".txt";
   }
   
   /**
@@ -27,6 +32,11 @@ public final class WordGraphService {
   public static void exportConnections(String filename, Map<String, List<String>> connections) {
     Gson gson = new Gson();
     writeToFile(filename, gson.toJson(connections));
+  }
+  
+  public static Map<String, List<String>> importConnections(String filename) {
+    Gson gson = new Gson();
+    return gson.fromJson(readFromFile(filename), Map.class);
   }
   
   /**
@@ -75,6 +85,15 @@ public final class WordGraphService {
       Files.write(Paths.get(filename), content.getBytes());
     } catch (IOException e) {
       throw new IllegalStateException("Could not write to file '" + filename + "'", e);
+    }
+  }
+  
+  private static String readFromFile(String filename) {
+    try {
+      return String.join("", 
+          Files.readAllLines(Paths.get(filename)));
+    } catch (IOException e) {
+      throw new IllegalStateException("Could not read from file", e);
     }
   }
   
