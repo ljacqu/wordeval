@@ -1,9 +1,11 @@
 .settings/
 bin/
-dict/*.dic
 dict/*.aff
+dict/*.dic
 dict/*.txt
 export/*.json
+export/graph/*.dot
+export/graph/*.json
 target/
 
 .classpath

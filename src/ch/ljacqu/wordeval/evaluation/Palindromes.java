@@ -1,5 +1,7 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import java.util.Optional;
+
 import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParams;
@@ -27,7 +29,9 @@ public class Palindromes extends PartWordEvaluator {
 
   @Override
   public ExportObject toExportObject() {
-    return toExportObject(ExportParams.builder().minimum(4.0).build());
+    return toExportObject(ExportParams.builder()
+        .minimum(Optional.of(4.0))
+        .build());
   }
 
   /**

@@ -101,10 +101,10 @@ public class PartWordExportTest {
   @Test
   public void shouldRespectMaxParams() {
     ExportParams params = ExportParams.builder()
-        .maxTopEntrySize(4)
-        .maxPartWordListSize(2)
+        .maxTopEntrySize(Optional.of(4))
+        .maxPartWordListSize(Optional.of(2))
         .topKeys(4)
-        .minimum(2.0)
+        .minimum(Optional.of(2.0))
         .build();
 
     PartWordExport export = PartWordExport.create("test", results, params, new PartWordReducer.ByLength());
@@ -142,7 +142,7 @@ public class PartWordExportTest {
     ExportParams params = ExportParams.builder()
         .isDescending(true)
         .topKeys(10)
-        .minimum(8.0)
+        .minimum(Optional.of(8.0))
         .build();
 
     PartWordExport export = PartWordExport.create("test", results, params, new PartWordReducer.ByLength());

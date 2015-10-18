@@ -1,5 +1,7 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import java.util.Optional;
+
 import org.apache.commons.lang3.StringUtils;
 import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
@@ -33,7 +35,7 @@ public class SameLetterConsecutive extends PartWordEvaluator {
     return toExportObject(ExportParams.builder()
         .topKeys(5)
         .isDescending(false)
-        .minimum(3.0)
+        .minimum(Optional.of(3.0))
         .build());
   }
 

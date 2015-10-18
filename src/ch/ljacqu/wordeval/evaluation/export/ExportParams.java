@@ -29,7 +29,6 @@ public class ExportParams {
       Optional<Integer> maxTopEntrySize, Optional<Integer> maxPartWordListSize) {
     this.topKeys = useOrDefault(topKeys, 5);
     this.minimum = useOrDefault(minimum, Optional.empty());
-    
     this.isDescending = useOrDefault(isDescending, true);
     this.maxTopEntrySize = useOrDefault(maxTopEntrySize, Optional.of(50));
     this.maxPartWordListSize = useOrDefault(maxPartWordListSize, Optional.empty());
@@ -37,32 +36,6 @@ public class ExportParams {
   
   private static <T> T useOrDefault(T builderValue, T defaultValue) {
     return builderValue != null ? builderValue : defaultValue;
-  }
-  
-  public static class ExportParamsBuilder {
-    public ExportParamsBuilder maxPartWordListSize(int i) {
-      return maxPartWordListSize(Optional.of(i));
-    }
-    public ExportParamsBuilder maxPartWordListSize(Optional<Integer> maxPartWordListSize) {
-      this.maxPartWordListSize = maxPartWordListSize;
-      return this;
-    }
-    
-    public ExportParamsBuilder maxTopEntrySize(int i) {
-      return maxTopEntrySize(Optional.of(i));
-    }
-    public ExportParamsBuilder maxTopEntrySize(Optional<Integer> maxTopEntrySize) {
-      this.maxTopEntrySize = maxTopEntrySize;
-      return this;
-    }
-    
-    public ExportParamsBuilder minimum(double i) {
-      return minimum(Optional.of(i));
-    }
-    public ExportParamsBuilder minimum(Optional<Double> minimum) {
-      this.minimum = minimum;
-      return this;
-    }
   }
 
 }

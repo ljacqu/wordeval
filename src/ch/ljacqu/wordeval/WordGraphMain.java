@@ -7,20 +7,26 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 
-import ch.ljacqu.wordeval.dictionary.Dictionary;
 import ch.ljacqu.wordeval.wordgraph.ConnectionsBuilder;
 import ch.ljacqu.wordeval.wordgraph.ConnectionsFinder;
-import ch.ljacqu.wordeval.wordgraph.ConnectionsFinderTest;
 import ch.ljacqu.wordeval.wordgraph.WordGraphService;
 
+/**
+ * Entry point for the word graph feature of <i>wordeval</i>.
+ */
 public class WordGraphMain {
   
   static {
     AppData.init();
   }
+
+  /** Directory for graph exports. */
+  private static final String GRAPH_EXPORT_DIRECTORY = "export/graph/";
   
-  private static ConnectionsFinder finder;
-  
+  /**
+   * Main function.
+   * @param args .
+   */
   public static void main(String[] args) {
     Scanner sc = new Scanner(System.in);
     String dictionaryCode = initializeDictionaryCode(sc);
@@ -35,7 +41,7 @@ public class WordGraphMain {
       connections = builder.getConnections();
     }
     
-    finder = ConnectionsFinder.createFromAsymmetrical(connections);
+    ConnectionsFinder finder = ConnectionsFinder.createFromAsymmetrical(connections);
     connectionsFinderLoop(finder, sc);
   }
   
@@ -45,7 +51,7 @@ public class WordGraphMain {
   }
   
   private static Optional<String> initializeExportFilename(Scanner scanner, String dictionaryCode) {
-    String exportFilename = WordGraphService.getExportFilename(dictionaryCode);
+    String exportFilename = getExportFilename(dictionaryCode);
     boolean useExport = false;
     if (Files.isRegularFile(Paths.get(exportFilename))) {
       System.out.println("Graph for '" + dictionaryCode + "' is saved. Load from cache? [y/n]");
@@ -63,7 +69,7 @@ public class WordGraphMain {
     boolean doExport = scanner.nextLine().trim().equals("y");
     if (doExport) {
       WordGraphService.exportConnections(
-          WordGraphService.getExportFilename(dictionaryCode), builder.getConnections());
+          getExportFilename(dictionaryCode), builder.getConnections());
     }
   }
   
@@ -71,13 +77,13 @@ public class WordGraphMain {
     System.out.println("Connections finder\n");
     String left, right;
     while (true) {
-      System.out.println("Enter word 1 (! to quit)");
+      System.out.print("Enter word 1 (! to quit): ");
       left = scanner.nextLine().trim();
       if (left.equals("!")) {
         break;
       }
       
-      System.out.println("Enter word 2 (! to quit)");
+      System.out.print("Enter word 2 (! to quit): ");
       right = scanner.nextLine().trim();
       if (right.equals("!")) {
         break;
@@ -88,18 +94,8 @@ public class WordGraphMain {
     scanner.close();
   }
   
-  public static void main2(String[] args) {
-    ConnectionsBuilder builder = new ConnectionsBuilder("en-test");
-    builder.removeIsolatedWords();
-    
-    WordGraphService.exportConnections("asdf", builder.getConnections());
-    System.out.println(builder.getConnections());
-    
-    /*connection.findConn("alarm", "abiyi");
-    connection.findConn("car", "bet");
-    connection.findConn("car", "nonexistent");
-    connection.findConn("brute", "acute");
-    connection.findConn("acre", "bear");*/
+  private static String getExportFilename(String code) {
+    return GRAPH_EXPORT_DIRECTORY + code + ".json";
   }
 
 }

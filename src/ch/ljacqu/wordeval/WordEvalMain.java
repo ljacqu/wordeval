@@ -39,7 +39,7 @@ public final class WordEvalMain {
    */
   public static void main(String[] args) throws IOException {
     //Iterable<String> codes = DictionarySettings.getAllCodes();
-    String[] codes = { "en-us" };
+    String[] codes = { "en-us", "ru" };
     
     for (String code : codes) {
       exportLanguage(code);

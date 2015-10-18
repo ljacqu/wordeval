@@ -45,7 +45,7 @@ public class WordStatExportTest {
   @Test
   public void shouldBuildExportObjectAccordingToParams() {
     ExportParams params = ExportParams.builder()
-        .maxTopEntrySize(3)
+        .maxTopEntrySize(Optional.of(3))
         .topKeys(4)
         .build();
 
@@ -71,7 +71,7 @@ public class WordStatExportTest {
   @Test
   public void shouldRespectMinimumKeyParam() {
     ExportParams params = ExportParams.builder()
-        .minimum(6.0)
+        .minimum(Optional.of(6.0))
         .maxTopEntrySize(Optional.empty())
         .build();
 

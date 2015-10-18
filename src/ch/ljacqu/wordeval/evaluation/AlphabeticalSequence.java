@@ -1,5 +1,7 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import java.util.Optional;
+
 import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParams;
@@ -28,8 +30,8 @@ public class AlphabeticalSequence extends PartWordEvaluator {
   @Override
   public ExportObject toExportObject() {
     return toExportObject(ExportParams.builder()
-        .maxPartWordListSize(50)
-        .maxTopEntrySize(-1)
+        .maxPartWordListSize(Optional.of(50))
+        .maxTopEntrySize(Optional.empty())
         .topKeys(4)
         .build());
   }

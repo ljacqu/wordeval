@@ -1,6 +1,8 @@
 package ch.ljacqu.wordeval.evaluation;
 
 import java.util.Arrays;
+import java.util.Optional;
+
 import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParams;
@@ -28,8 +30,8 @@ public class Anagrams extends PartWordEvaluator {
   public ExportObject toExportObject() {
     ExportParams params = ExportParams.builder()
       .isDescending(true)
-      .maxTopEntrySize(10)
-      .maxPartWordListSize(3)
+      .maxTopEntrySize(Optional.of(10))
+      .maxPartWordListSize(Optional.of(3))
       .build();
     return PartWordExport.create("anagrams", getResults(), params, new PartWordReducer.BySize());
   }

@@ -14,14 +14,8 @@ import com.google.gson.Gson;
  * Service for word graphs.
  */
 public final class WordGraphService {
-  /** Directory for graph exports. */
-  public static final String GRAPH_EXPORT_DIRECTORY = "export/graph/";
   
   private WordGraphService() {
-  }
-  
-  public static String getExportFilename(String code) {
-    return GRAPH_EXPORT_DIRECTORY + code + ".txt";
   }
   
   /**
