@@ -84,7 +84,7 @@ public final class EvaluatorService {
     for (PostEvaluatorCondition condition : conditions) {
       boolean foundMatch = false;
       for (Evaluator<?> potentialBase : givenEvaluators) {
-        if (potentialBase.getClass().isAssignableFrom(condition.baseClass)
+        if (condition.baseClass.isAssignableFrom(potentialBase.getClass())
             && isBaseMatch(condition, potentialBase)) {
           evaluators.put(condition.postEvaluator, potentialBase);
           foundMatch = true;

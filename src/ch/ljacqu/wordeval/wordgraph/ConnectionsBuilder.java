@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import lombok.Getter;
 
@@ -83,7 +82,9 @@ public class ConnectionsBuilder {
   // BFS
   public void findConn(String left, String right) {
     Set<String> usedWords = new HashSet<>();
+    // TODO: Change `pathsToTry` to LinkedList
     List<WordPath> pathsToTry = new ArrayList<>();
+    // TODO: Change `successPath` to Optional type if possible
     List<WordPath> successPath = new ArrayList<>();
     pathsToTry.add(new WordPath(left));
     while (!pathsToTry.isEmpty() && successPath.isEmpty()) {
