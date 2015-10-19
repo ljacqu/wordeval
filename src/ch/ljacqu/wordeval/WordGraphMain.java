@@ -14,7 +14,7 @@ import ch.ljacqu.wordeval.wordgraph.WordGraphService;
 /**
  * Entry point for the word graph feature of <i>wordeval</i>.
  */
-public class WordGraphMain {
+public final class WordGraphMain {
   
   static {
     AppData.init();
@@ -23,26 +23,34 @@ public class WordGraphMain {
   /** Directory for graph exports. */
   private static final String GRAPH_EXPORT_DIRECTORY = "export/graph/";
   
+  private WordGraphMain() {
+  }
+  
   /**
    * Main function.
    * @param args .
    */
   public static void main(String[] args) {
-    Scanner sc = new Scanner(System.in);
-    String dictionaryCode = initializeDictionaryCode(sc);
+    Scanner scanner = new Scanner(System.in);
+    String dictionaryCode = initializeDictionaryCode(scanner);
     Map<String, List<String>> connections;
     
-    Optional<String> exportFilename = initializeExportFilename(sc, dictionaryCode);
+    Optional<String> exportFilename = initializeExportFilename(scanner, dictionaryCode);
     if (exportFilename.isPresent()) {
       connections = WordGraphService.importConnections(exportFilename.get());
     } else {
       ConnectionsBuilder builder = new ConnectionsBuilder(dictionaryCode);
-      processExportChoice(sc, dictionaryCode, builder);
+      processExportChoice(scanner, dictionaryCode, builder);
       connections = builder.getConnections();
     }
     
+    boolean hasDotFile = processDotFileChoice(scanner, dictionaryCode, connections);
+    if (hasDotFile) {
+      processDotTransformation(scanner, dictionaryCode);
+    }
+    
     ConnectionsFinder finder = ConnectionsFinder.createFromAsymmetrical(connections);
-    connectionsFinderLoop(finder, sc);
+    connectionsFinderLoop(finder, scanner);
   }
   
   private static String initializeDictionaryCode(Scanner scanner) {
@@ -51,7 +59,7 @@ public class WordGraphMain {
   }
   
   private static Optional<String> initializeExportFilename(Scanner scanner, String dictionaryCode) {
-    String exportFilename = getExportFilename(dictionaryCode);
+    String exportFilename = getExportFilename(dictionaryCode, "json");
     boolean useExport = false;
     if (Files.isRegularFile(Paths.get(exportFilename))) {
       System.out.println("Graph for '" + dictionaryCode + "' is saved. Load from cache? [y/n]");
@@ -69,8 +77,43 @@ public class WordGraphMain {
     boolean doExport = scanner.nextLine().trim().equals("y");
     if (doExport) {
       WordGraphService.exportConnections(
-          getExportFilename(dictionaryCode), builder.getConnections());
+          getExportFilename(dictionaryCode, "json"), builder.getConnections());
     }
+  }
+  
+  private static boolean processDotFileChoice(Scanner scanner, String dictionaryCode, 
+      Map<String, List<String>> connections) {
+    String dotFile = getExportFilename(dictionaryCode, "dot");
+
+    boolean writeDotFile;
+    boolean hasDotFile;
+    if (Files.isRegularFile(Paths.get(dotFile))) {
+      System.out.println("Dot file " + dotFile + " already exists. Generate again? [y/n]");
+      writeDotFile = getChoice(scanner);
+      hasDotFile = true;
+    } else {
+      System.out.println("Dot file for " + dictionaryCode + " does not exist. Generate? [y/n]");
+      writeDotFile = getChoice(scanner);
+      hasDotFile = false;
+    }
+
+    if (writeDotFile) {
+      WordGraphService.writeDotFile(connections, dotFile);
+      hasDotFile = true;
+    }
+    return hasDotFile;
+  }
+  
+  private static void processDotTransformation(Scanner scanner, String code) {
+    System.out.println("Create graph from .dot file? [y/n]");
+    boolean userChoice = getChoice(scanner);
+    if (!userChoice) {
+      return;
+    }
+    
+    String dotFile = getExportFilename(code, "dot");
+    String pngFile = getExportFilename(code, "png");
+    WordGraphService.executeDotProcess(dotFile, pngFile);
   }
   
   private static void connectionsFinderLoop(ConnectionsFinder finder, Scanner scanner) {
@@ -94,8 +137,20 @@ public class WordGraphMain {
     scanner.close();
   }
   
-  private static String getExportFilename(String code) {
-    return GRAPH_EXPORT_DIRECTORY + code + ".json";
+  private static String getExportFilename(String code, String ending) {
+    return GRAPH_EXPORT_DIRECTORY + code + "." + ending;
+  }
+  
+  private static boolean getChoice(Scanner scanner) {
+    while (true) {
+      String line = scanner.nextLine().trim();
+      if (line.equals("y")) {
+        return true;
+      } else if (line.equals("n")) {
+        return false;
+      }
+      System.out.print("\nPlease enter 'y' or 'n': ");
+    }
   }
 
 }

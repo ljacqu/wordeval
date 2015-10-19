@@ -1,12 +1,20 @@
 package ch.ljacqu.wordeval.wordgraph;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.ProcessBuilder.Redirect;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.Gson;
 
@@ -39,16 +47,43 @@ public final class WordGraphService {
    * @return Graph in DOT format
    */
   public static String convertToDotGraph(Map<String, List<String>> connections) {
-    StringBuilder builder = new StringBuilder("digraph G {");
+    Map<String, String> specialVertices = new HashMap<>();
+    StringBuilder builder = new StringBuilder("graph G {");
     connections.entrySet()
       .forEach(entry -> {
         final String left = entry.getKey();
         entry.getValue()
           .forEach(right -> builder.append("\n\t")
-              .append(left).append(" -- ").append(right));
+              .append(wordToDotNode(left, specialVertices)).append(" -- ")
+              .append(wordToDotNode(right, specialVertices)).append(";"));
+      });
+    specialVertices.entrySet()
+      .forEach(entry -> {
+        builder.append("\n\t" + entry.getValue() + " [label=\""
+            + entry.getKey().replace("\"", "\\\"") + "\"];");
       });
     builder.append("\n}");
     return builder.toString();
+  }
+  
+  private static String wordToDotNode(String word, Map<String, String> vertices) {
+    List<String> dotKeywords = Arrays.asList("digraph");
+    if (!word.matches(".*[^a-z]+.*") && !dotKeywords.contains(word)) {
+      return word;
+    } else if (vertices.containsKey(word)) {
+      return vertices.get(word);
+    }
+    
+    if (dotKeywords.contains(word)) {
+      vertices.put(word, "_" + word);
+      return "_" + word;
+    }
+    
+    String decomposedWord = Normalizer.normalize(word, Form.NFD);
+    // TODO: Deal with accents by replacing them with a digit from the decomposed form
+    String vertexKey = decomposedWord.replaceAll("'", "0");
+    vertices.put(word, vertexKey);
+    return vertexKey;
   }
   
   /**
@@ -67,6 +102,22 @@ public final class WordGraphService {
           .forEach(right -> addEntries(newEntries, right, left));
       });
     return newEntries;
+  }
+  
+  public static void writeDotFile(Map<String, List<String>> connections, String filename) {
+    writeToFile(filename, convertToDotGraph(connections));
+  }
+  
+  public static void executeDotProcess(String dotFile, String outputFile) {
+    String command = "dot -Tpng " + dotFile + " -o " + outputFile;
+    ProcessBuilder processBuilder = new ProcessBuilder(command);
+    processBuilder.redirectErrorStream(true);
+    processBuilder.redirectOutput(Redirect.INHERIT);
+    try {
+      processBuilder.start();
+    } catch (IOException e) {
+      throw new IllegalStateException("Could not execute process", e);
+    }
   }
   
   /**
