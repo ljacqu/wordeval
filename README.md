@@ -14,8 +14,6 @@ Requirements
   accessors and builders it generates
 - Project is set up with Maven. If you don't have Maven, you need to download the dependencies defined in the pom.xml 
   file manually.
-- [GraphViz](http://www.graphviz.org/Download.php) for the generation of word graphs (`dot` must be available
-  on command line) 
 
 
 General setup

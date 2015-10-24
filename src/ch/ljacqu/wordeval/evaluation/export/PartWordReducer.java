@@ -3,7 +3,10 @@ package ch.ljacqu.wordeval.evaluation.export;
 import java.util.Collection;
 import java.util.NavigableMap;
 import java.util.Set;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * Defines how to compute the "relevance" of a PartWordEvaluator's results.
@@ -46,26 +49,11 @@ public abstract class PartWordReducer {
   /**
    * Reducer determining the top entries by weighed key length and entry size.
    */
+  @NoArgsConstructor
+  @AllArgsConstructor
   public static class BySizeAndLength extends PartWordReducer {
     double sizeWeight = 1.0;
     double lengthWeight = 1.0;
-
-    /**
-     * Creates a new BySizeAndLength reducer, weighing key length and entry size
-     * the same.
-     */
-    public BySizeAndLength() {
-    }
-
-    /**
-     * Creates a new BySizeAndLength reducer with the given weights.
-     * @param sizeWeight The weight to attribute to the entry size
-     * @param lengthWeight The weight to attribute to the key length
-     */
-    public BySizeAndLength(double sizeWeight, double lengthWeight) {
-      this.sizeWeight = sizeWeight;
-      this.lengthWeight = lengthWeight;
-    }
 
     @Override
     public Double computeRelevance(String key, Collection<String> words) {

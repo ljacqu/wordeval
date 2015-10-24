@@ -12,6 +12,7 @@ import ch.ljacqu.wordeval.evaluation.Anagrams;
 import ch.ljacqu.wordeval.evaluation.BackwardsPairs;
 import ch.ljacqu.wordeval.evaluation.ConsecutiveLetterPairs;
 import ch.ljacqu.wordeval.evaluation.ConsecutiveVowelCount;
+import ch.ljacqu.wordeval.evaluation.DiacriticHomonyms;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.FullPalindromes;
 import ch.ljacqu.wordeval.evaluation.Isograms;
@@ -41,7 +42,7 @@ public final class WordEvalMain {
    */
   public static void main(String[] args) throws IOException {
     //Iterable<String> codes = DictionarySettings.getAllCodes();
-    String[] codes = { "en-us", "ru" };
+    String[] codes = { "en-us", "fr" };
     
     for (String code : codes) {
       exportLanguage(code);
@@ -70,6 +71,7 @@ public final class WordEvalMain {
     evaluators.add(new ConsecutiveLetterPairs());
     evaluators.add(new ConsecutiveVowelCount(VOWELS, language));
     evaluators.add(new ConsecutiveVowelCount(CONSONANTS, language));
+    evaluators.add(new DiacriticHomonyms(language));
     evaluators.add(new FullPalindromes());
     evaluators.add(new Isograms());
     evaluators.add(new LongWords());

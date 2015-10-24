@@ -15,8 +15,8 @@ import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 
 /**
  * Evaluator base class. An evaluator checks words for a given property and adds
- * it to its collection if it was deemed as relevant.
- * @param <K> The key the evaluator uses to store special words (typically: the
+ * it to its collection if it was deemed relevant.
+ * @param <K> the key the evaluator uses to store special words (typically: the
  *        sequences the evaluator identifies, or the word length)
  */
 public abstract class Evaluator<K> {
