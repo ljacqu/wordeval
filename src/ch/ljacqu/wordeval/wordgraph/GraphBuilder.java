@@ -5,6 +5,7 @@ import java.util.List;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
+import ch.ljacqu.wordeval.evaluation.WordCollector;
 import lombok.Getter;
 
 /**

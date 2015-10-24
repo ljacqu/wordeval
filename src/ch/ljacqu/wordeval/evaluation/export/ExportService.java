@@ -5,11 +5,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.List;
-import ch.ljacqu.wordeval.evaluation.Evaluator;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import ch.ljacqu.wordeval.evaluation.Evaluator;
 
 /**
  * Service for the export of evaluator results.
@@ -29,11 +32,11 @@ public final class ExportService {
    * @return The export data in JSON
    */
   public static String toJson(List<Evaluator<?>> evaluators) {
-    List<ExportObject> exportObjects = new ArrayList<>();
-    for (Evaluator<?> evaluator : evaluators) {
-      exportObjects.add(evaluator.toExportObject());
-    }
-    return getGson().toJson(exportObjects);
+    return getGson().toJson(evaluators
+        .stream()
+        .map(Evaluator::toExportObject)
+        .filter(exportObj -> !Objects.isNull(exportObj))
+        .collect(Collectors.toList()));
   }
 
   /**

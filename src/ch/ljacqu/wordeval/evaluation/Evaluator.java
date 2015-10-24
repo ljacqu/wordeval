@@ -27,14 +27,14 @@ public abstract class Evaluator<K> {
 
   /**
    * Processes a word and add it to results if it is relevant.
-   * @param word The word to check (sanitized: trimmed, all lowercase)
-   * @param rawWord The raw form of the word in the dictionary
+   * @param word the word to check (sanitized: trimmed, all lowercase)
+   * @param rawWord the raw form of the word in the dictionary
    */
   public abstract void processWord(String word, String rawWord);
 
   /**
    * Converts the evaluator's results to an export object.
-   * @return The converted ExportObject instance
+   * @return the converted ExportObject instance
    */
   public ExportObject toExportObject() {
     return toExportObject(this.getClass().getSimpleName(), null);
@@ -42,15 +42,15 @@ public abstract class Evaluator<K> {
 
   /**
    * Converts the evaluator's results to an export object.
-   * @param identifier The identifier of the export object
-   * @param params The export params; can be null
-   * @return The converted ExportObject instance
+   * @param identifier the identifier of the export object
+   * @param params the export params; can be null
+   * @return the converted ExportObject instance, or null if it should not be exported
    */
   protected abstract ExportObject toExportObject(String identifier, ExportParams params);
 
   /**
    * Gets the results of the evaluator as a navigable map.
-   * @return A map with the results (key = property, entry = list of words)
+   * @return a map with the results (key = property, entry = list of words)
    */
   public NavigableMap<K, List<String>> getNavigableResults() {
     NavigableMap<K, List<String>> cleanResult = new TreeMap<>();
@@ -62,7 +62,7 @@ public abstract class Evaluator<K> {
 
   /**
    * Returns the desired form of the word to process.
-   * @return The word form
+   * @return the word form
    */
   public WordForm getWordForm() {
     return WordForm.LOWERCASE;
@@ -70,8 +70,8 @@ public abstract class Evaluator<K> {
 
   /**
    * Adds an entry to the results map.
-   * @param key The key for the new entry
-   * @param word The word to add to the key's list
+   * @param key the key for the new entry
+   * @param word the word to add to the key's list
    */
   protected void addEntry(K key, String word) {
     if (results.get(key) == null) {

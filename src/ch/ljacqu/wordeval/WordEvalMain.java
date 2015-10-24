@@ -9,6 +9,7 @@ import ch.ljacqu.wordeval.dictionary.Dictionary;
 import ch.ljacqu.wordeval.evaluation.AlphabeticalOrder;
 import ch.ljacqu.wordeval.evaluation.AlphabeticalSequence;
 import ch.ljacqu.wordeval.evaluation.Anagrams;
+import ch.ljacqu.wordeval.evaluation.BackwardsPairs;
 import ch.ljacqu.wordeval.evaluation.ConsecutiveLetterPairs;
 import ch.ljacqu.wordeval.evaluation.ConsecutiveVowelCount;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
@@ -18,6 +19,7 @@ import ch.ljacqu.wordeval.evaluation.LongWords;
 import ch.ljacqu.wordeval.evaluation.MonotoneVowel;
 import ch.ljacqu.wordeval.evaluation.Palindromes;
 import ch.ljacqu.wordeval.evaluation.SameLetterConsecutive;
+import ch.ljacqu.wordeval.evaluation.WordCollector;
 import ch.ljacqu.wordeval.evaluation.export.ExportService;
 import ch.ljacqu.wordeval.language.Language;
 
@@ -64,6 +66,7 @@ public final class WordEvalMain {
     evaluators.add(new AlphabeticalOrder());
     evaluators.add(new AlphabeticalSequence());
     evaluators.add(new Anagrams());
+    evaluators.add(new BackwardsPairs());
     evaluators.add(new ConsecutiveLetterPairs());
     evaluators.add(new ConsecutiveVowelCount(VOWELS, language));
     evaluators.add(new ConsecutiveVowelCount(CONSONANTS, language));
@@ -74,6 +77,7 @@ public final class WordEvalMain {
     evaluators.add(new MonotoneVowel(CONSONANTS, language));
     evaluators.add(new Palindromes());
     evaluators.add(new SameLetterConsecutive());
+    evaluators.add(new WordCollector());
     outputDiff(times, "instantiated evaluators");
 
     dictionary.process(evaluators);

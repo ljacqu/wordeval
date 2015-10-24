@@ -43,6 +43,7 @@ List of Evaluators
 - AlphabeticalOrder: Words whose letters are in alphabetical order, e.g. billowy, access
 - AlphabeticalSequence: Words with sequences in direct alphabetical order, e.g. ove**rstu**ffed, lau**ghi**ng
 - Anagrams: Groups words that are anagrams, e.g. abel, able and bale
+- BackwardsPairs: Word pairs that are equal to each other when reversed, e.g. parts and strap
 - ConsecutiveLetterPairs: Words with multiple letter pairs following each other, e.g. b**ookkee**per, ta**ttoo**ist
 - ConsecutiveVowelCount: Words with vowel or consonant clusters, e.g. aq**ueou**s, obseq**uiou**s
 - FullPalindromes: Words that are entirely palindromes, e.g. Malayalam, redder

@@ -1,4 +1,4 @@
-package ch.ljacqu.wordeval.wordgraph;
+package ch.ljacqu.wordeval.evaluation;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,7 +8,6 @@ import java.util.List;
 
 import ch.ljacqu.wordeval.dictionary.Dictionary;
 import ch.ljacqu.wordeval.dictionary.WordForm;
-import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 
@@ -56,7 +55,7 @@ public class WordCollector extends Evaluator<Boolean> {
 
   @Override
   protected ExportObject toExportObject(String identifier, ExportParams params) {
-    throw new UnsupportedOperationException("WordCollector evaluator is not meant to be exported");
+    return null;
   }
 
 }
