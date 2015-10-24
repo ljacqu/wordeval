@@ -2,13 +2,13 @@ package ch.ljacqu.wordeval;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleGraph;
+
 import ch.ljacqu.wordeval.wordgraph.ConnectionsBuilder;
-import ch.ljacqu.wordeval.wordgraph.ConnectionsFinder;
 import ch.ljacqu.wordeval.wordgraph.WordGraphService;
 
 /**
@@ -33,24 +33,19 @@ public final class WordGraphMain {
   public static void main(String[] args) {
     Scanner scanner = new Scanner(System.in);
     String dictionaryCode = initializeDictionaryCode(scanner);
-    Map<String, List<String>> connections;
+    SimpleGraph<String, DefaultEdge> graph;
     
     Optional<String> exportFilename = initializeExportFilename(scanner, dictionaryCode);
     if (exportFilename.isPresent()) {
-      connections = WordGraphService.importConnections(exportFilename.get());
+      graph = WordGraphService.importConnections(exportFilename.get());
     } else {
       ConnectionsBuilder builder = new ConnectionsBuilder(dictionaryCode);
       processExportChoice(scanner, dictionaryCode, builder);
-      connections = builder.getConnections();
+      graph = builder.getGraph();
     }
     
-    boolean hasDotFile = processDotFileChoice(scanner, dictionaryCode, connections);
-    if (hasDotFile) {
-      processDotTransformation(scanner, dictionaryCode);
-    }
-    
-    ConnectionsFinder finder = ConnectionsFinder.createFromAsymmetrical(connections);
-    connectionsFinderLoop(finder, scanner);
+    connectionsFinderLoop(scanner, graph);
+    scanner.close();
   }
   
   private static String initializeDictionaryCode(Scanner scanner) {
@@ -63,60 +58,22 @@ public final class WordGraphMain {
     boolean useExport = false;
     if (Files.isRegularFile(Paths.get(exportFilename))) {
       System.out.println("Graph for '" + dictionaryCode + "' is saved. Load from cache? [y/n]");
-      useExport = !scanner.nextLine().trim().equals("n");;
+      useExport = getChoice(scanner);
     }
-    if (useExport) {
-      return Optional.of(exportFilename);
-    }
-    return Optional.empty();
+    return useExport ? Optional.of(exportFilename) : Optional.empty();
   }
   
   private static void processExportChoice(Scanner scanner, String dictionaryCode, 
       ConnectionsBuilder builder) {
     System.out.println("Export connections to file? [y/n]");
-    boolean doExport = scanner.nextLine().trim().equals("y");
+    boolean doExport = getChoice(scanner);
     if (doExport) {
       WordGraphService.exportConnections(
-          getExportFilename(dictionaryCode, "json"), builder.getConnections());
+          getExportFilename(dictionaryCode, "json"), builder.getGraph());
     }
   }
   
-  private static boolean processDotFileChoice(Scanner scanner, String dictionaryCode, 
-      Map<String, List<String>> connections) {
-    String dotFile = getExportFilename(dictionaryCode, "dot");
-
-    boolean writeDotFile;
-    boolean hasDotFile;
-    if (Files.isRegularFile(Paths.get(dotFile))) {
-      System.out.println("Dot file " + dotFile + " already exists. Generate again? [y/n]");
-      writeDotFile = getChoice(scanner);
-      hasDotFile = true;
-    } else {
-      System.out.println("Dot file for " + dictionaryCode + " does not exist. Generate? [y/n]");
-      writeDotFile = getChoice(scanner);
-      hasDotFile = false;
-    }
-
-    if (writeDotFile) {
-      WordGraphService.writeDotFile(connections, dotFile);
-      hasDotFile = true;
-    }
-    return hasDotFile;
-  }
-  
-  private static void processDotTransformation(Scanner scanner, String code) {
-    System.out.println("Create graph from .dot file? [y/n]");
-    boolean userChoice = getChoice(scanner);
-    if (!userChoice) {
-      return;
-    }
-    
-    String dotFile = getExportFilename(code, "dot");
-    String pngFile = getExportFilename(code, "png");
-    WordGraphService.executeDotProcess(dotFile, pngFile);
-  }
-  
-  private static void connectionsFinderLoop(ConnectionsFinder finder, Scanner scanner) {
+  private static void connectionsFinderLoop(Scanner scanner, SimpleGraph<String, DefaultEdge> graph) {
     System.out.println("Connections finder\n");
     String left, right;
     while (true) {
@@ -132,9 +89,8 @@ public final class WordGraphMain {
         break;
       }
 
-      System.out.println(finder.findConnection(left, right));
+      System.out.println(WordGraphService.getShortestPath(graph, left, right));
     }
-    scanner.close();
   }
   
   private static String getExportFilename(String code, String ending) {

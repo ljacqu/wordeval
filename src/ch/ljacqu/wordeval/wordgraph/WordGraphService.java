@@ -1,22 +1,20 @@
 package ch.ljacqu.wordeval.wordgraph;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.ProcessBuilder.Redirect;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
+import org.jgrapht.UndirectedGraph;
+import org.jgrapht.alg.DijkstraShortestPath;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleGraph;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Service for word graphs.
@@ -27,103 +25,86 @@ public final class WordGraphService {
   }
   
   /**
-   * Exports the connections of a word graph to a file as JSON.
-   * @param filename The filename to write the structure to
-   * @param connections The connections to store
+   * Exports a word graph to a file as JSON.
+   * @param filename the filename to write the graph to
+   * @param graph the graph to store
    */
-  public static void exportConnections(String filename, Map<String, List<String>> connections) {
+  public static void exportConnections(String filename, SimpleGraph<String, DefaultEdge> graph) {
     Gson gson = new Gson();
-    writeToFile(filename, gson.toJson(connections));
-  }
-  
-  public static Map<String, List<String>> importConnections(String filename) {
-    Gson gson = new Gson();
-    return gson.fromJson(readFromFile(filename), Map.class);
+    writeToFile(filename, gson.toJson(graph));
   }
   
   /**
-   * Converts the given connections into a DOT file (GraphViz).
-   * @param connections The collection of word connections
-   * @return Graph in DOT format
+   * Imports a graph from a JSON file.
+   * @param filename the filename to read the data from
+   * @return the stored graph
    */
-  public static String convertToDotGraph(Map<String, List<String>> connections) {
-    Map<String, String> specialVertices = new HashMap<>();
-    StringBuilder builder = new StringBuilder("graph G {");
-    connections.entrySet()
-      .forEach(entry -> {
-        final String left = entry.getKey();
-        entry.getValue()
-          .forEach(right -> builder.append("\n\t")
-              .append(wordToDotNode(left, specialVertices)).append(" -- ")
-              .append(wordToDotNode(right, specialVertices)).append(";"));
-      });
-    specialVertices.entrySet()
-      .forEach(entry -> {
-        builder.append("\n\t" + entry.getValue() + " [label=\""
-            + entry.getKey().replace("\"", "\\\"") + "\"];");
-      });
-    builder.append("\n}");
-    return builder.toString();
-  }
-  
-  private static String wordToDotNode(String word, Map<String, String> vertices) {
-    List<String> dotKeywords = Arrays.asList("digraph");
-    if (!word.matches(".*[^a-z]+.*") && !dotKeywords.contains(word)) {
-      return word;
-    } else if (vertices.containsKey(word)) {
-      return vertices.get(word);
-    }
-    
-    if (dotKeywords.contains(word)) {
-      vertices.put(word, "_" + word);
-      return "_" + word;
-    }
-    
-    String decomposedWord = Normalizer.normalize(word, Form.NFD);
-    // TODO: Deal with accents by replacing them with a digit from the decomposed form
-    String vertexKey = decomposedWord.replaceAll("'", "0");
-    vertices.put(word, vertexKey);
-    return vertexKey;
+  public static SimpleGraph<String, DefaultEdge> importConnections(String filename) {
+    Type type = new TypeToken<SimpleGraph<String, DefaultEdge>>(){}.getType();
+    Gson gson = new Gson();
+    return gson.fromJson(readFromFile(filename), type);
   }
   
   /**
-   * Creates symmetric connections. The ConnectionsBuilder only stores a connection as
-   * a -> b where a comes before b, but for {@link ConnectionsFinder} it is easier to
-   * store both a -> b and b -> a.
-   * @param connections The connections collection to render symmetric
-   * @return The supplied Map
+   * Returns the set of neighbors of the given graph.
+   * @param <V> the vertex type
+   * @param <E> the edge type
+   * @param graph the graph
+   * @param vertex the vertex to process
+   * @return the neighbors of the given vertex in the given graph
    */
-  public static Map<String, List<String>> createSymmetricConnections(Map<String, List<String>> connections) {
-    Map<String, List<String>> newEntries = new HashMap<>();
-    connections.entrySet()
-      .forEach(entry -> {
-        final String left = entry.getKey();
-        entry.getValue().stream()
-          .forEach(right -> addEntries(newEntries, right, left));
-      });
-    return newEntries;
+  public static <V, E> Set<V> getNeighbors(UndirectedGraph<V, E> graph, V vertex) {
+    return graph.edgesOf(vertex).stream()
+      .map(edge -> getNeighbor(graph, edge, vertex))
+      .collect(Collectors.toSet());
   }
   
-  public static void writeDotFile(Map<String, List<String>> connections, String filename) {
-    writeToFile(filename, convertToDotGraph(connections));
+  /**
+   * Gets the neighbor of the given edge.
+   * @param <V> the vertex type
+   * @param <E> the edge type
+   * @param graph the graph
+   * @param edge the edge to process
+   * @param vertex the vertex whose neighbor should be returned
+   * @return the neighbor of the given vertex
+   */
+  public static <V, E> V getNeighbor(UndirectedGraph<V, E> graph, E edge, V vertex) {
+    V source = graph.getEdgeSource(edge);
+    return source.equals(vertex) ? graph.getEdgeTarget(edge) : source;
   }
   
-  public static void executeDotProcess(String dotFile, String outputFile) {
-    String command = "dot -Tpng " + dotFile + " -o " + outputFile;
-    ProcessBuilder processBuilder = new ProcessBuilder(command);
-    processBuilder.redirectErrorStream(true);
-    processBuilder.redirectOutput(Redirect.INHERIT);
-    try {
-      processBuilder.start();
-    } catch (IOException e) {
-      throw new IllegalStateException("Could not execute process", e);
+  /**
+   * Returns the shortest path between two vertices as a list of vertices that have
+   * to be visited.
+   * @param <V> the vertex type
+   * @param <E> the edge type
+   * @param graph the graph
+   * @param source the source vertex (start)
+   * @param target the target vertex (end)
+   * @return the shortest path from source to target
+   */
+  public static <V, E> LinkedHashSet<V> getShortestPath(UndirectedGraph<V, E> graph, V source, V target) {
+    if (!graph.containsVertex(source) || !graph.containsVertex(target)) {
+      return new LinkedHashSet<>();
     }
+    
+    // TODO: Is there a better algorithm for an undirected graph?
+    DijkstraShortestPath<V, E> shortestPath = new DijkstraShortestPath<V, E>(graph, source, target);
+    LinkedHashSet<V> vertices = new LinkedHashSet<>();
+    vertices.add(source);
+    V lastVertex = source;
+    for (E edge : shortestPath.getPathEdgeList()) {
+      V newVertex = getNeighbor(graph, edge, lastVertex);
+      vertices.add(newVertex);
+      lastVertex = newVertex;
+    }
+    return vertices;
   }
-  
+
   /**
    * Wrapper for writing content to a file.
-   * @param filename The file to write to
-   * @param content The content to store in the file
+   * @param filename the file to write to
+   * @param content the content to store in the file
    */
   private static void writeToFile(String filename, String content) {
     try {
@@ -135,23 +116,10 @@ public final class WordGraphService {
   
   private static String readFromFile(String filename) {
     try {
-      return String.join("", 
-          Files.readAllLines(Paths.get(filename)));
+      return String.join("", Files.readAllLines(Paths.get(filename)));
     } catch (IOException e) {
       throw new IllegalStateException("Could not read from file", e);
     }
-  }
-  
-  private static void addEntries(Map<String, List<String>> connections, String left, String right) {
-    if (connections.get(left) == null) {
-      connections.put(left, new ArrayList<>());
-    }
-    connections.get(left).add(right);
-    
-    if (connections.get(right) == null) {
-      connections.put(right, new ArrayList<>());
-    }
-    connections.get(right).add(left);
   }
 
 }

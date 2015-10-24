@@ -1,10 +1,9 @@
 package ch.ljacqu.wordeval.wordgraph;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleGraph;
 
 import lombok.Getter;
 
@@ -23,10 +22,8 @@ public class ConnectionsBuilder {
    */
   private static final int STAT_INTERVAL = 255;
   
-  private List<String> words;
-  
   @Getter
-  private Map<String, List<String>> connections;
+  private SimpleGraph<String, DefaultEdge> graph;
   
   /**
    * Builds a new ConnectionsBuilder object and computes the
@@ -43,23 +40,16 @@ public class ConnectionsBuilder {
    * @param words The list of words to process
    */
   public ConnectionsBuilder(List<String> words) {
-    this.words = words;
-    initializeConnections();
-    computeConnections();
+    constructGraph(words);
   }
   
   private static List<String> getDictionaryWords(String dictionaryCode) {
     WordCollector collector = new WordCollector();
     return collector.getSortedWordsFromDictionary(dictionaryCode);
   }
-  
-  private void initializeConnections() {
-    connections = new HashMap<>();
-    words.stream()
-         .forEach(word -> connections.put(word, new ArrayList<>()));
-  }
 
-  private void computeConnections() {
+  private void constructGraph(List<String> words) {
+    graph = new SimpleGraph<>(DefaultEdge.class);
     // deleteCost, insertCost, replaceCost, swapCost    
     DamerauLevenshteinAlgorithm levenshtein = new DamerauLevenshteinAlgorithm(1, 1, 1, 1);
     for (int i = 0; i < words.size(); ++i) {
@@ -68,7 +58,11 @@ public class ConnectionsBuilder {
         final String rightWord = words.get(j);
         if (Math.abs(rightWord.length() - leftWord.length()) <= MIN_DISTANCE
             && levenshtein.execute(rightWord, leftWord) <= MIN_DISTANCE) {
-          connections.get(leftWord).add(rightWord);
+          // vertices must always be added before edges. addVertex() checks against a Set,
+          // so the check is efficient enough for us to just always call the functions
+          graph.addVertex(rightWord);
+          graph.addVertex(leftWord);
+          graph.addEdge(rightWord, leftWord);
         }
       }
       if ((i & STAT_INTERVAL) == STAT_INTERVAL) {
@@ -76,19 +70,6 @@ public class ConnectionsBuilder {
       }
     }
     System.out.println("Processed total " + words.size() + " words");
-  }
-  
-  /**
-   * Removes entries in the connections map for words which are isolated,
-   * i.e. for words which do not have any connections to others.
-   */
-  public void removeIsolatedWords() {
-    Iterator<Map.Entry<String, List<String>>> it = connections.entrySet().iterator();
-    while (it.hasNext()) {
-      if (it.next().getValue().isEmpty()) {
-        it.remove();
-      }
-    }
   }
   
   /*private void loadTestWords() {
