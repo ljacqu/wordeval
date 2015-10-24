@@ -8,7 +8,7 @@ import java.util.Scanner;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
-import ch.ljacqu.wordeval.wordgraph.ConnectionsBuilder;
+import ch.ljacqu.wordeval.wordgraph.GraphBuilder;
 import ch.ljacqu.wordeval.wordgraph.WordGraphService;
 
 /**
@@ -39,7 +39,7 @@ public final class WordGraphMain {
     if (exportFilename.isPresent()) {
       graph = WordGraphService.importConnections(exportFilename.get());
     } else {
-      ConnectionsBuilder builder = new ConnectionsBuilder(dictionaryCode);
+      GraphBuilder builder = new GraphBuilder(dictionaryCode);
       processExportChoice(scanner, dictionaryCode, builder);
       graph = builder.getGraph();
     }
@@ -64,7 +64,7 @@ public final class WordGraphMain {
   }
   
   private static void processExportChoice(Scanner scanner, String dictionaryCode, 
-      ConnectionsBuilder builder) {
+      GraphBuilder builder) {
     System.out.println("Export connections to file? [y/n]");
     boolean doExport = getChoice(scanner);
     if (doExport) {

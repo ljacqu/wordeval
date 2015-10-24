@@ -20,7 +20,7 @@ public class WordGraphServiceTest {
   
   @BeforeClass
   public static void setUpGraph() {
-    ConnectionsBuilder builder = new ConnectionsBuilder(getTestWords());
+    GraphBuilder builder = new GraphBuilder(getTestWords());
     graph = builder.getGraph();
   }
   

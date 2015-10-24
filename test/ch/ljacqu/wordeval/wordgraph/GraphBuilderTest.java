@@ -18,15 +18,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 
-public class ConnectionsBuilderTest {
+public class GraphBuilderTest {
   
   @Test
-  public void shouldBuildConnectionsAndRemoveIsolatedOnes() {
+  public void shouldBuildConnections() {
     final String emptyVertex = "emptyempty";
     List<String> words = getTestWords();
     words.add(emptyVertex);
-    ConnectionsBuilder builder = new ConnectionsBuilder(words);
-    words.remove(emptyVertex);
+    GraphBuilder builder = new GraphBuilder(words);
     
     // Build & check connections
     SimpleGraph<String, DefaultEdge> graph = builder.getGraph();
@@ -36,11 +35,12 @@ public class ConnectionsBuilderTest {
     assertThat(getNeighbors(graph, "car"), containsInAnyOrder("bar", "care"));
     assertThat(getNeighbors(graph, "brat"), contains("rat"));
     assertThat(getNeighbors(graph, "meat"), contains("heat", "meet"));
+    assertThat(graph.edgesOf(emptyVertex), empty());
   }
   
   @Test
   public void shouldWorkWithEmptyList() {
-    ConnectionsBuilder builder = new ConnectionsBuilder(new ArrayList<>());
+    GraphBuilder builder = new GraphBuilder(new ArrayList<>());
     SimpleGraph<String, DefaultEdge> graph = builder.getGraph();
     assertThat(graph.edgeSet(), empty());
   }

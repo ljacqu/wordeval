@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,8 +34,9 @@ public final class WordGraphService {
    * @param graph the graph to store
    */
   public static void exportConnections(String filename, SimpleGraph<String, DefaultEdge> graph) {
+    Map<String, List<String>> connections = convertEdgesToConnectionsMap(graph);
     Gson gson = new Gson();
-    writeToFile(filename, gson.toJson(graph));
+    writeToFile(filename, gson.toJson(connections));
   }
   
   /**
@@ -40,9 +45,10 @@ public final class WordGraphService {
    * @return the stored graph
    */
   public static SimpleGraph<String, DefaultEdge> importConnections(String filename) {
-    Type type = new TypeToken<SimpleGraph<String, DefaultEdge>>(){}.getType();
+    Type type = new TypeToken<Map<String, List<String>>>(){}.getType();
     Gson gson = new Gson();
-    return gson.fromJson(readFromFile(filename), type);
+    Map<String, List<String>> connections = gson.fromJson(readFromFile(filename), type);
+    return convertConnectionsMapToGraph(connections);
   }
   
   /**
@@ -112,6 +118,30 @@ public final class WordGraphService {
     } catch (IOException e) {
       throw new IllegalStateException("Could not write to file '" + filename + "'", e);
     }
+  }
+  
+  private static <V, E> Map<V, List<V>> convertEdgesToConnectionsMap(UndirectedGraph<V, E> graph) {
+    Map<V, List<V>> connections = new HashMap<>();
+    for (E edge : graph.edgeSet()) {
+      V source = graph.getEdgeSource(edge);
+      V target = graph.getEdgeTarget(edge);
+      if (connections.get(source) == null) {
+        connections.put(source, new ArrayList<>());
+      }
+      connections.get(source).add(target);
+    }
+    return connections;
+  }
+  
+  private static <V> SimpleGraph<V, DefaultEdge> convertConnectionsMapToGraph(Map<V, List<V>> connections) {
+    SimpleGraph<V, DefaultEdge> graph = new SimpleGraph<>(DefaultEdge.class);
+    for (Map.Entry<V, List<V>> entry : connections.entrySet()) {
+      graph.addVertex(entry.getKey());
+      entry.getValue().stream()
+        .peek(graph::addVertex)
+        .forEach(rightWord -> graph.addEdge(entry.getKey(), rightWord));
+    }
+    return graph;
   }
   
   private static String readFromFile(String filename) {

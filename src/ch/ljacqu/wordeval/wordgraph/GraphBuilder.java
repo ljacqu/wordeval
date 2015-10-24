@@ -11,7 +11,7 @@ import lombok.Getter;
  * Finds which words have a Damerau-Levenshtein distance of 1 and saves these
  * connections, forming a graph over the dictionary words.
  */
-public class ConnectionsBuilder {
+public class GraphBuilder {
 
   /** The minimum distance for words to be connected. */
   private static final int MIN_DISTANCE = 1;
@@ -30,7 +30,7 @@ public class ConnectionsBuilder {
    * connections for the given dictionary.
    * @param dictionary The dictionary code
    */
-  public ConnectionsBuilder(String dictionary) {    
+  public GraphBuilder(String dictionary) {    
     this(getDictionaryWords(dictionary));
   }
   
@@ -39,7 +39,7 @@ public class ConnectionsBuilder {
    * connections based on the given list of words.
    * @param words The list of words to process
    */
-  public ConnectionsBuilder(List<String> words) {
+  public GraphBuilder(List<String> words) {
     constructGraph(words);
   }
   
@@ -54,6 +54,7 @@ public class ConnectionsBuilder {
     DamerauLevenshteinAlgorithm levenshtein = new DamerauLevenshteinAlgorithm(1, 1, 1, 1);
     for (int i = 0; i < words.size(); ++i) {
       final String leftWord = words.get(i);
+      graph.addVertex(leftWord);
       for (int j = i + 1; j < words.size(); ++j) {
         final String rightWord = words.get(j);
         if (Math.abs(rightWord.length() - leftWord.length()) <= MIN_DISTANCE
@@ -61,8 +62,7 @@ public class ConnectionsBuilder {
           // vertices must always be added before edges. addVertex() checks against a Set,
           // so the check is efficient enough for us to just always call the functions
           graph.addVertex(rightWord);
-          graph.addVertex(leftWord);
-          graph.addEdge(rightWord, leftWord);
+          graph.addEdge(leftWord, rightWord);
         }
       }
       if ((i & STAT_INTERVAL) == STAT_INTERVAL) {
@@ -71,15 +71,5 @@ public class ConnectionsBuilder {
     }
     System.out.println("Processed total " + words.size() + " words");
   }
-  
-  /*private void loadTestWords() {
-    // TODO: Move test words to a test class
-    String givenWords = "acre, care, car, bar, bare, bear, bears, boars, boar, beers, bees, bee, be, bet, beet, meet, "
-      + "meat, heat, hat, rat, brat";
-  
-    Arrays.stream(givenWords.split(","))
-      .map(String::trim)
-      .sorted()
-      .forEach(word -> processWord(word, word));
-  }*/
+
 }
