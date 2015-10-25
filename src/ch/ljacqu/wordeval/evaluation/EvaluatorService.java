@@ -124,8 +124,8 @@ public final class EvaluatorService {
     if (parameters.length == 1 && Evaluator.class.isAssignableFrom(parameters[0])) {
       return method.get();
     } else {
-      throw new IllegalStateException("Method with @" + annotation.getClass().getSimpleName()
-          + " must have one parameter with (sub)type Evaluator");
+      throw new IllegalStateException("Method with @" + annotation.getSimpleName()
+          + " must have one parameter of (sub)type Evaluator");
     }
   }
   

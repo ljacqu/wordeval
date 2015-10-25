@@ -1,5 +1,7 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
+import static org.apache.commons.lang3.ObjectUtils.firstNonNull;
+
 import java.util.Optional;
 
 import lombok.Builder;
@@ -25,17 +27,14 @@ public class ExportParams {
   public final Optional<Integer> maxPartWordListSize;
 
   @Builder
+  @SuppressWarnings("unchecked")
   ExportParams(Integer topKeys, Optional<Double> minimum, Boolean isDescending, 
       Optional<Integer> maxTopEntrySize, Optional<Integer> maxPartWordListSize) {
-    this.topKeys = useOrDefault(topKeys, 5);
-    this.minimum = useOrDefault(minimum, Optional.empty());
-    this.isDescending = useOrDefault(isDescending, true);
-    this.maxTopEntrySize = useOrDefault(maxTopEntrySize, Optional.of(50));
-    this.maxPartWordListSize = useOrDefault(maxPartWordListSize, Optional.empty());
-  }
-  
-  private static <T> T useOrDefault(T builderValue, T defaultValue) {
-    return builderValue != null ? builderValue : defaultValue;
+    this.topKeys = firstNonNull(topKeys, 5);
+    this.minimum = firstNonNull(minimum, Optional.empty());
+    this.isDescending = firstNonNull(isDescending, true);
+    this.maxTopEntrySize = firstNonNull(maxTopEntrySize, Optional.of(50));
+    this.maxPartWordListSize = firstNonNull(maxPartWordListSize, Optional.empty());
   }
 
 }
