@@ -1,11 +1,11 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertThat;
 
 import java.util.Map;
 import java.util.Set;
-
-import static org.hamcrest.Matchers.*;
 
 import org.junit.Test;
 
