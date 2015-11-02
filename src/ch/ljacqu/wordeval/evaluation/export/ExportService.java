@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import ch.ljacqu.wordeval.evaluation.Evaluator;
+import lombok.Getter;
 
 /**
  * Service for the export of evaluator results.
@@ -20,7 +21,9 @@ import ch.ljacqu.wordeval.evaluation.Evaluator;
 public final class ExportService {
 
   private static final boolean USE_PRETTY_PRINT = true;
-  private static Gson gson;
+
+  @Getter(lazy = true)
+  private static final Gson gson = createGson();
 
   private ExportService() {
   }
@@ -35,7 +38,7 @@ public final class ExportService {
     return getGson().toJson(evaluators
         .stream()
         .map(Evaluator::toExportObject)
-        .filter(exportObj -> !Objects.isNull(exportObj))
+        .filter(Objects::nonNull)
         .collect(Collectors.toList()));
   }
 
@@ -53,15 +56,11 @@ public final class ExportService {
     writer.close();
   }
 
-  private static Gson getGson() {
-    if (gson == null) {
-      if (USE_PRETTY_PRINT) {
-        gson = new GsonBuilder().setPrettyPrinting().create();
-      } else {
-        gson = new Gson();
-      }
+  private static Gson createGson() {    
+    if (USE_PRETTY_PRINT) {
+      return new GsonBuilder().setPrettyPrinting().create();
     }
-    return gson;
+    return new Gson();
   }
 
 }

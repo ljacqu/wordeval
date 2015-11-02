@@ -43,7 +43,7 @@ public class DiacriticHomonyms extends PartWordEvaluator {
   @Override
   public ExportObject toExportObject() {
     ExportParams params = ExportParams.builder()
-      .minimum(Optional.of(2.0))
+      .topEntryMinimum(Optional.of(2.0))
       .build();
 
     return PartWordExport.create(

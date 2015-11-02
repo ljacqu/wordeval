@@ -71,7 +71,7 @@ public class WordStatExportTest {
   @Test
   public void shouldRespectMinimumKeyParam() {
     ExportParams params = ExportParams.builder()
-        .minimum(Optional.of(6.0))
+        .topEntryMinimum(Optional.of(6.0))
         .maxTopEntrySize(Optional.empty())
         .build();
 
@@ -81,7 +81,7 @@ public class WordStatExportTest {
     assertThat(export.getTopEntries().get(7), contains("eeueoue"));
     assertThat(export.getTopEntries().get(6), 
         containsInAnyOrder("weggooiooi", "eeueoud", "spreeueier", "leeueaandeel"));
-    
+
     assertThat(export.getAggregatedEntries().keySet(), contains(5, 4, 3, 2));
   }
 
@@ -100,7 +100,7 @@ public class WordStatExportTest {
     ExportParams params = ExportParams.builder()
         .isDescending(true)
         .topKeys(2)
-        .minimum(Optional.empty())
+        .topEntryMinimum(Optional.empty())
         .maxTopEntrySize(Optional.empty())
         .build();
 

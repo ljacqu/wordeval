@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.Optional;
 import java.util.Random;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -61,8 +62,8 @@ public abstract class ExportObject implements Serializable {
     N key = null;
     for (int i = 0; i < params.topKeys && descendingIterator.hasNext(); ++i) {
       key = descendingIterator.next();
-      if (params.minimum.isPresent() && key.doubleValue() < params.minimum.get()) {
-        key = returnTypedMinimum(key, params);
+      if (params.topEntryMinimum.isPresent() && key.doubleValue() < params.topEntryMinimum.get()) {
+        key = getTypedMinimum(params.topEntryMinimum.get(), key);
         break;
       }
     }
@@ -72,16 +73,15 @@ public abstract class ExportObject implements Serializable {
     }
     return new TreeMap<>();
   }
-
+  
   @SuppressWarnings("unchecked")
-  private static <N extends Number> N returnTypedMinimum(N key, ExportParams params) {
-	if (key instanceof Integer) {
-	  // Compiler doesn't understand that N == Integer, so we need to "cast"
-	  return (N) Integer.valueOf(params.minimum.get().intValue());
-	} else if (key instanceof Double) {
-      return (N) params.minimum.get();
+  private static <N extends Number> N getTypedMinimum(double value, N key) {
+    if (key instanceof Integer) {
+      return (N) Integer.valueOf((int) value);
+    } else if (key instanceof Double) {
+      return (N) Double.valueOf(value);
     }
-    throw new IllegalStateException("Key is neither integer nor double!");
+    throw new IllegalStateException("Number is neither Integer nor Double");
   }
 
   /**
@@ -106,6 +106,13 @@ public abstract class ExportObject implements Serializable {
       }
     }
     return checkDescending(result, params);
+  }
+  
+  protected static <N extends Number, V> NavigableMap<N, V> applyGeneralMinimum(NavigableMap<N, V> resultMap, 
+      Optional<N> minimum) {
+    return minimum.isPresent()
+        ? resultMap.tailMap(minimum.get(), true)
+        : resultMap;
   }
 
   protected static final <T> List<T> reduceList(List<T> words, int toSize) {

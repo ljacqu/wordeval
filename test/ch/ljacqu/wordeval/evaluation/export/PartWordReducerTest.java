@@ -47,8 +47,8 @@ public class PartWordReducerTest {
     
     PartWordExport export = PartWordExport.create("test", results, params, reducer);
     
-    assertThat(export.getTopEntries().keySet(), contains(9, 8));
-    assertThat(export.getAggregatedEntries().keySet(), contains(7, 6, 5));
+    assertThat(export.getTopEntries().keySet(), contains(9.0, 8.0));
+    assertThat(export.getAggregatedEntries().keySet(), contains(7.0, 6.0, 5.0));
   }
   
   @Test
@@ -58,12 +58,12 @@ public class PartWordReducerTest {
     PartWordExport export = PartWordExport.create("by_size", results, params, reducer);
     
     assertEquals(export.identifier, "by_size");
-    assertThat(export.getTopEntries().keySet(), contains(4, 3));
-    assertThat(export.getTopEntries().get(4).keySet(), containsInAnyOrder("alkla", "esifise"));
-    assertThat(export.getTopEntries().get(3).keySet(), contains("neffen"));
-    assertThat(export.getAggregatedEntries().keySet(), contains(2, 1));
-    assertThat(export.getAggregatedEntries().get(2).keySet(), contains("taalplaat"));
-    assertThat(export.getAggregatedEntries().get(1), aMapWithSize(5));
+    assertThat(export.getTopEntries().keySet(), contains(4.0, 3.0));
+    assertThat(export.getTopEntries().get(4.0).keySet(), containsInAnyOrder("alkla", "esifise"));
+    assertThat(export.getTopEntries().get(3.0).keySet(), contains("neffen"));
+    assertThat(export.getAggregatedEntries().keySet(), contains(2.0, 1.0));
+    assertThat(export.getAggregatedEntries().get(2.0).keySet(), contains("taalplaat"));
+    assertThat(export.getAggregatedEntries().get(1.0), aMapWithSize(5));
   }
   
   @Test
@@ -84,7 +84,7 @@ public class PartWordReducerTest {
     assertThat(toSet(export.getTopEntries().get(6.5).get("alkla")), 
         containsInAnyOrder("smalklap", "taalklas", "vokaalklank", "taalklank"));
     
-    NavigableMap<Number, NavigableMap<String, Integer>> aggregatedEntries = export.getAggregatedEntries();
+    NavigableMap<Double, NavigableMap<String, Integer>> aggregatedEntries = export.getAggregatedEntries();
     assertThat(aggregatedEntries.keySet(), containsInAnyOrder(6.0, 5.5, 5.0, 4.0, 3.5));
     assertThat(aggregatedEntries.get(6.0).keySet(), contains("neffen"));
     assertThat(aggregatedEntries.get(6.0).get("neffen"), equalTo(3));

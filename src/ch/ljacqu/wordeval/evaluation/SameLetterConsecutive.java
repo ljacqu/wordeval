@@ -35,7 +35,7 @@ public class SameLetterConsecutive extends PartWordEvaluator {
     return toExportObject(ExportParams.builder()
         .topKeys(5)
         .isDescending(false)
-        .minimum(Optional.of(3.0))
+        .topEntryMinimum(Optional.of(3.0))
         .build());
   }
 

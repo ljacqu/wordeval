@@ -30,7 +30,7 @@ public class Palindromes extends PartWordEvaluator {
   @Override
   public ExportObject toExportObject() {
     return toExportObject(ExportParams.builder()
-        .minimum(Optional.of(4.0))
+        .topEntryMinimum(Optional.of(4.0))
         .build());
   }
 

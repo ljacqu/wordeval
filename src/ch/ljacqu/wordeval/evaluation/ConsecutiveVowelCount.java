@@ -54,7 +54,7 @@ public class ConsecutiveVowelCount extends WordStatEvaluator {
   public ExportObject toExportObject() {
     String identifier = "ConsecutiveVowelCount_" + letterType.getName();
     return toExportObject(identifier, ExportParams.builder()
-        .minimum(Optional.of(3.0))
+        .topEntryMinimum(Optional.of(3.0))
         .topKeys(4)
         .build());
   }

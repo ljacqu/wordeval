@@ -3,6 +3,7 @@ package ch.ljacqu.wordeval.evaluation.export;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.Optional;
 import java.util.SortedMap;
 import lombok.Getter;
 
@@ -45,12 +46,13 @@ public class WordStatExport extends ExportObject {
   /**
    * Creates a new WordStatExport object based on an evaluator's result map.
    * @param identifier The identifier of the export object
-   * @param map The evaluator's result map to process
+   * @param results The evaluator's result map to process
    * @param params The export parameters
    * @return A WordStatExport instance with the transformed data
    */
   public static WordStatExport create(String identifier,
-      NavigableMap<Integer, List<String>> map, ExportParams params) {
+      NavigableMap<Integer, List<String>> results, ExportParams params) {
+    NavigableMap<Integer, List<String>> map = applyGeneralMinimum(results, toIntType(params.generalMinimum));
     SortedMap<Integer, List<String>> topEntries = isolateTopEntries(map, params);
     topEntries = trimLargeTopEntries(topEntries, params);
 
@@ -86,5 +88,12 @@ public class WordStatExport extends ExportObject {
       }
     }
     return topEntries;
+  }
+  
+  private static Optional<Integer> toIntType(Optional<Double> value) {
+    if (value.isPresent()) {
+      return Optional.of(value.get().intValue());
+    }
+    return Optional.empty();
   }
 }

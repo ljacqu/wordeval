@@ -73,29 +73,29 @@ public class PartWordExportTest {
 
     assertEquals(export.identifier, "a test");
 
-    Map<Number, NavigableMap<String, Object>> topEntries = export.getTopEntries();
+    Map<Double, NavigableMap<String, Object>> topEntries = export.getTopEntries();
     assertThat(topEntries, aMapWithSize(3));
-    assertThat(topEntries.get(9), aMapWithSize(3));
-    assertThat(toSet(topEntries.get(9).get("taalplaat")), containsInAnyOrder("metaalplaat", "staalplaat"));
-    assertThat(toSet(topEntries.get(9).get("ittesetti")), contains("hittesetting"));
-    assertThat(toSet(topEntries.get(9).get("sigologis")), contains("psigologisme"));
-    assertThat(topEntries.get(8).keySet(), containsInAnyOrder("aarddraa", "erettere", "kaarraak"));
-    assertThat(toSet(topEntries.get(8).get("kaarraak")), contains("deurmekaarraak"));
-    assertThat(topEntries.get(7), aMapWithSize(1));
-    assertThat(toSet(topEntries.get(7).get("esifise")),
+    assertThat(topEntries.get(9.0), aMapWithSize(3));
+    assertThat(toSet(topEntries.get(9.0).get("taalplaat")), containsInAnyOrder("metaalplaat", "staalplaat"));
+    assertThat(toSet(topEntries.get(9.0).get("ittesetti")), contains("hittesetting"));
+    assertThat(toSet(topEntries.get(9.0).get("sigologis")), contains("psigologisme"));
+    assertThat(topEntries.get(8.0).keySet(), containsInAnyOrder("aarddraa", "erettere", "kaarraak"));
+    assertThat(toSet(topEntries.get(8.0).get("kaarraak")), contains("deurmekaarraak"));
+    assertThat(topEntries.get(7.0), aMapWithSize(1));
+    assertThat(toSet(topEntries.get(7.0).get("esifise")),
         containsInAnyOrder("spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer"));
 
-    Map<Number, NavigableMap<String, Integer>> aggregatedEntries = export.getAggregatedEntries();
+    Map<Double, NavigableMap<String, Integer>> aggregatedEntries = export.getAggregatedEntries();
     assertThat(aggregatedEntries, aMapWithSize(2));
-    assertThat(aggregatedEntries.get(6).keySet(),
+    assertThat(aggregatedEntries.get(6.0).keySet(),
         containsInAnyOrder("millim", "neffen", "marram", "leggel", "gerreg", "eellee", "arkkra"));
-    assertThat(aggregatedEntries.get(6).get("millim"), equalTo(1));
-    assertThat(aggregatedEntries.get(6).get("neffen"), equalTo(3));
-    assertThat(aggregatedEntries.get(6).get("eellee"), equalTo(1));
-    assertThat(aggregatedEntries.get(5).keySet(), containsInAnyOrder("alkla", "anana", "aadaa"));
-    assertThat(aggregatedEntries.get(5).get("alkla"), equalTo(4));
-    assertThat(aggregatedEntries.get(5).get("anana"), equalTo(1));
-    assertThat(aggregatedEntries.get(5).get("aadaa"), equalTo(1));
+    assertThat(aggregatedEntries.get(6.0).get("millim"), equalTo(1));
+    assertThat(aggregatedEntries.get(6.0).get("neffen"), equalTo(3));
+    assertThat(aggregatedEntries.get(6.0).get("eellee"), equalTo(1));
+    assertThat(aggregatedEntries.get(5.0).keySet(), containsInAnyOrder("alkla", "anana", "aadaa"));
+    assertThat(aggregatedEntries.get(5.0).get("alkla"), equalTo(4));
+    assertThat(aggregatedEntries.get(5.0).get("anana"), equalTo(1));
+    assertThat(aggregatedEntries.get(5.0).get("aadaa"), equalTo(1));
   }
 
   @Test
@@ -104,37 +104,37 @@ public class PartWordExportTest {
         .maxTopEntrySize(Optional.of(4))
         .maxPartWordListSize(Optional.of(2))
         .topKeys(4)
-        .minimum(Optional.of(2.0))
+        .topEntryMinimum(Optional.of(2.0))
         .build();
 
     PartWordExport export = PartWordExport.create("test", results, params, new PartWordReducer.ByLength());
 
-    Map<Number, NavigableMap<String, Object>> topEntries = export.getTopEntries();
+    Map<Double, NavigableMap<String, Object>> topEntries = export.getTopEntries();
     assertThat(topEntries, aMapWithSize(4));
-    assertThat(topEntries.get(9), aMapWithSize(3));
-    assertThat(toSet(topEntries.get(9).get("taalplaat")), containsInAnyOrder("metaalplaat", "staalplaat"));
-    assertThat(toSet(topEntries.get(9).get("ittesetti")), contains("hittesetting"));
-    assertThat(toSet(topEntries.get(9).get("sigologis")), contains("psigologisme"));
-    assertThat(topEntries.get(8).keySet(), containsInAnyOrder("aarddraa", "erettere", "kaarraak"));
-    assertThat(toSet(topEntries.get(8).get("erettere")), contains("veretterende"));
+    assertThat(topEntries.get(9.0), aMapWithSize(3));
+    assertThat(toSet(topEntries.get(9.0).get("taalplaat")), containsInAnyOrder("metaalplaat", "staalplaat"));
+    assertThat(toSet(topEntries.get(9.0).get("ittesetti")), contains("hittesetting"));
+    assertThat(toSet(topEntries.get(9.0).get("sigologis")), contains("psigologisme"));
+    assertThat(topEntries.get(8.0).keySet(), containsInAnyOrder("aarddraa", "erettere", "kaarraak"));
+    assertThat(toSet(topEntries.get(8.0).get("erettere")), contains("veretterende"));
     
-    assertThat(topEntries.get(7), aMapWithSize(1));
+    assertThat(topEntries.get(7.0), aMapWithSize(1));
     Object[] allowedItems = { "spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer" };
-    checkReducedList(topEntries.get(7).get("esifise"), params, allowedItems);
+    checkReducedList(topEntries.get(7.0).get("esifise"), params, allowedItems);
 
-    assertThat(topEntries.get(6), aMapWithSize(params.maxTopEntrySize.get() + 1));
-    Set<String> foundKeysSet = topEntries.get(6).keySet();
+    assertThat(topEntries.get(6.0), aMapWithSize(params.maxTopEntrySize.get() + 1));
+    Set<String> foundKeysSet = topEntries.get(6.0).keySet();
     String[] foundKeys = foundKeysSet.toArray(new String[foundKeysSet.size()]);
     assertThat(asSet("millim", "neffen", "marram", "leggel", "gerreg", "eellee", "arkkra", ExportObject.INDEX_REST),
         hasItems(foundKeys));
-    assertThat(topEntries.get(6).get(ExportObject.INDEX_REST), equalTo("3"));
+    assertThat(topEntries.get(6.0).get(ExportObject.INDEX_REST), equalTo("3"));
 
-    Map<Number, NavigableMap<String, Integer>> aggregatedEntries = export.getAggregatedEntries();
+    Map<Double, NavigableMap<String, Integer>> aggregatedEntries = export.getAggregatedEntries();
     assertThat(aggregatedEntries, aMapWithSize(1));
-    assertThat(aggregatedEntries.get(5).keySet(), containsInAnyOrder("alkla", "anana", "aadaa"));
-    assertThat(aggregatedEntries.get(5).get("anana"), equalTo(1));
-    assertThat(aggregatedEntries.get(5).get("alkla"), equalTo(4));
-    assertThat(aggregatedEntries.get(5).get("aadaa"), equalTo(1));
+    assertThat(aggregatedEntries.get(5.0).keySet(), containsInAnyOrder("alkla", "anana", "aadaa"));
+    assertThat(aggregatedEntries.get(5.0).get("anana"), equalTo(1));
+    assertThat(aggregatedEntries.get(5.0).get("alkla"), equalTo(4));
+    assertThat(aggregatedEntries.get(5.0).get("aadaa"), equalTo(1));
   }
 
   @Test
@@ -142,21 +142,36 @@ public class PartWordExportTest {
     ExportParams params = ExportParams.builder()
         .isDescending(true)
         .topKeys(10)
-        .minimum(Optional.of(8.0))
+        .topEntryMinimum(Optional.of(8.0))
         .build();
 
     PartWordExport export = PartWordExport.create("test", results, params, new PartWordReducer.ByLength());
 
-    Map<Number, NavigableMap<String, Object>> topEntries = export.getTopEntries();
+    Map<Double, NavigableMap<String, Object>> topEntries = export.getTopEntries();
     assertThat(topEntries, aMapWithSize(2));
-    assertThat(topEntries.keySet(), contains(9, 8));
-    assertThat(topEntries.get(9), aMapWithSize(3));
-    assertThat(topEntries.get(8), aMapWithSize(3));
+    assertThat(topEntries.keySet(), contains(9.0, 8.0));
+    assertThat(topEntries.get(9.0), aMapWithSize(3));
+    assertThat(topEntries.get(8.0), aMapWithSize(3));
 
-    Map<Number, NavigableMap<String, Integer>> aggregatedEntries = export.getAggregatedEntries();
-    assertThat(aggregatedEntries.keySet(), contains(7, 6, 5));
-    assertThat(aggregatedEntries.get(6).get("neffen"), equalTo(3));
-    assertThat(aggregatedEntries.get(6).get("eellee"), equalTo(1));
+    Map<Double, NavigableMap<String, Integer>> aggregatedEntries = export.getAggregatedEntries();
+    assertThat(aggregatedEntries.keySet(), contains(7.0, 6.0, 5.0));
+    assertThat(aggregatedEntries.get(6.0).get("neffen"), equalTo(3));
+    assertThat(aggregatedEntries.get(6.0).get("eellee"), equalTo(1));
+  }
+  
+  @Test
+  public void shouldRespectGeneralMinimum() {
+    ExportParams params = ExportParams.builder()
+        .generalMinimum(Optional.of(6.0))
+        .topEntryMinimum(Optional.of(8.0))
+        .build();
+    
+    PartWordExport export = PartWordExport.create("min test", results, params, new PartWordReducer.ByLength());
+    
+    Map<Double, NavigableMap<String, Object>> topEntries = export.getTopEntries();
+    assertThat(topEntries.keySet(), contains(9.0, 8.0));
+    Map<Double, NavigableMap<String, Integer>> aggregatedEntries = export.getAggregatedEntries();
+    assertThat(aggregatedEntries.keySet(), contains(7.0, 6.0));
   }
 
   @Test

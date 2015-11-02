@@ -24,14 +24,14 @@ public abstract class PartWordReducer {
    * @return The relevance (int or double); the higher the number the better the
    *         result is
    */
-  public abstract Number computeRelevance(String key, Collection<String> words);
+  public abstract double computeRelevance(String key, Collection<String> words);
 
   /**
    * Reducer keeping the entries with the longest keys.
    */
   public static class ByLength extends PartWordReducer {
     @Override
-    public Integer computeRelevance(String key, Collection<String> words) {
+    public double computeRelevance(String key, Collection<String> words) {
       return key.length();
     }
   }
@@ -41,7 +41,7 @@ public abstract class PartWordReducer {
    */
   public static class BySize extends PartWordReducer {
     @Override
-    public Integer computeRelevance(String key, Collection<String> words) {
+    public double computeRelevance(String key, Collection<String> words) {
       return words.size();
     }
   }
@@ -56,7 +56,7 @@ public abstract class PartWordReducer {
     double lengthWeight = 1.0;
 
     @Override
-    public Double computeRelevance(String key, Collection<String> words) {
+    public double computeRelevance(String key, Collection<String> words) {
       return key.length() * lengthWeight + words.size() * sizeWeight;
     }
   }

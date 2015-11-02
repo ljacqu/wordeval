@@ -17,8 +17,8 @@ public final class PartWordExport extends ExportObject {
 
   private static final long serialVersionUID = 1L;
 
-  private final NavigableMap<Number, NavigableMap<String, Object>> topEntries;
-  private final NavigableMap<Number, NavigableMap<String, Integer>> aggregatedEntries;
+  private final NavigableMap<Double, NavigableMap<String, Object>> topEntries;
+  private final NavigableMap<Double, NavigableMap<String, Integer>> aggregatedEntries;
 
   /**
    * Creates a new PartWordExport object.
@@ -27,8 +27,8 @@ public final class PartWordExport extends ExportObject {
    * @param aggregatedEntries The collection of aggregated entries
    */
   public PartWordExport(String identifier,
-      NavigableMap<Number, NavigableMap<String, Object>> topEntries,
-      NavigableMap<Number, NavigableMap<String, Integer>> aggregatedEntries) {
+      NavigableMap<Double, NavigableMap<String, Object>> topEntries,
+      NavigableMap<Double, NavigableMap<String, Integer>> aggregatedEntries) {
     super(identifier);
     this.topEntries = topEntries;
     this.aggregatedEntries = aggregatedEntries;
@@ -48,21 +48,22 @@ public final class PartWordExport extends ExportObject {
   /**
    * Generates a new PartWordExport object based on an evaluator's results and the given settings.
    * @param identifier The identifier of the export object to create
-   * @param map The evaluator result
+   * @param results The evaluator results
    * @param params The export parameters
    * @param reducer The reducer to use to identify top entries
    * @return The generated PartWordExport object
    */
-  public static PartWordExport create(String identifier, Map<String, Set<String>> map, 
-      ExportParams params, PartWordReducer reducer) {    
-    NavigableMap<Number, NavigableMap<String, Set<String>>> orderedResults = order(map, reducer);
-    NavigableMap<Number, NavigableMap<String, Set<String>>> topEntries = isolateTopEntries(orderedResults, params);
+  public static PartWordExport create(String identifier, Map<String, Set<String>> results, 
+      ExportParams params, PartWordReducer reducer) {
+    NavigableMap<Double, NavigableMap<String, Set<String>>> orderedResults = applyGeneralMinimum(
+        order(results, reducer), params.generalMinimum); 
+    NavigableMap<Double, NavigableMap<String, Set<String>>> topEntries = isolateTopEntries(orderedResults, params);
 
-    NavigableMap<Number, NavigableMap<String, Integer>> aggregatedEntries;
+    NavigableMap<Double, NavigableMap<String, Integer>> aggregatedEntries;
     if (topEntries.isEmpty()) {
       aggregatedEntries = aggregateEntries(orderedResults, params);
     } else {
-      Number key = getBiggestKey(topEntries);
+      Double key = getBiggestKey(topEntries);
       aggregatedEntries = aggregateEntries(orderedResults.headMap(key, false), params);
     }
     
@@ -70,9 +71,9 @@ public final class PartWordExport extends ExportObject {
   }
   
   // Assign the reducer's computed relevance to the entries 
-  private static NavigableMap<Number, NavigableMap<String, Set<String>>> order(
+  private static NavigableMap<Double, NavigableMap<String, Set<String>>> order(
       Map<String, Set<String>> evaluatorResult, PartWordReducer reducer) {
-    NavigableMap<Number, NavigableMap<String, Set<String>>> results = new TreeMap<>();
+    NavigableMap<Double, NavigableMap<String, Set<String>>> results = new TreeMap<>();
     for (Map.Entry<String, Set<String>> entry : evaluatorResult.entrySet()) {
       addEntryByRelevance(results, entry.getKey(), entry.getValue(), reducer);
     }
@@ -80,29 +81,29 @@ public final class PartWordExport extends ExportObject {
   }
 
   // Creates aggregated entries - replaces the entries with the size
-  private static NavigableMap<Number, NavigableMap<String, Integer>> aggregateEntries(
-      NavigableMap<Number, NavigableMap<String, Set<String>>> results, ExportParams params) {
-    NavigableMap<Number, NavigableMap<String, Integer>> aggregatedEntries = new TreeMap<>();
-    for (Map.Entry<Number, NavigableMap<String, Set<String>>> entry : results.entrySet()) {
+  private static NavigableMap<Double, NavigableMap<String, Integer>> aggregateEntries(
+      NavigableMap<Double, NavigableMap<String, Set<String>>> results, ExportParams params) {
+    NavigableMap<Double, NavigableMap<String, Integer>> aggregatedEntries = new TreeMap<>();
+    for (Map.Entry<Double, NavigableMap<String, Set<String>>> entry : results.entrySet()) {
       aggregatedEntries.put(entry.getKey(), aggregateMap(entry.getValue(), params));
     }
     return checkDescending(aggregatedEntries, params);
   }
   
   // Trims the top entries list to conform to the export params' maxTopEntrySize setting
-  private static NavigableMap<Number, NavigableMap<String, Object>> trimTopEntries(
-      NavigableMap<Number, NavigableMap<String, Set<String>>> topEntries, ExportParams params) {    
-    NavigableMap<Number, NavigableMap<String, Object>> result = new TreeMap<>();
-    for (Map.Entry<Number, NavigableMap<String, Set<String>>> entry : topEntries.entrySet()) {
+  private static NavigableMap<Double, NavigableMap<String, Object>> trimTopEntries(
+      NavigableMap<Double, NavigableMap<String, Set<String>>> topEntries, ExportParams params) {    
+    NavigableMap<Double, NavigableMap<String, Object>> result = new TreeMap<>();
+    for (Map.Entry<Double, NavigableMap<String, Set<String>>> entry : topEntries.entrySet()) {
       result.put(entry.getKey(), trimTopEntriesSubMap(entry.getValue(), params));
     }
     return checkDescending(result, params);
   }
   
   // Helper method for order() to conveniently add an entry under its relevance
-  private static void addEntryByRelevance(SortedMap<Number, NavigableMap<String, Set<String>>> results, String key, 
+  private static void addEntryByRelevance(SortedMap<Double, NavigableMap<String, Set<String>>> results, String key, 
       Set<String> words, PartWordReducer reducer) {
-    Number relevance = reducer.computeRelevance(key, words);
+    double relevance = reducer.computeRelevance(key, words);
     NavigableMap<String, Set<String>> entry = results.get(relevance);
     if (entry == null) {
       results.put(relevance, new TreeMap<>());
