@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 import org.jgrapht.UndirectedGraph;
 import org.jgrapht.alg.DijkstraShortestPath;
-import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
 
 import com.google.gson.Gson;
@@ -33,7 +33,7 @@ public final class WordGraphService {
    * @param filename the filename to write the graph to
    * @param graph the graph to store
    */
-  public static void exportConnections(String filename, SimpleGraph<String, DefaultEdge> graph) {
+  public static void exportConnections(String filename, SimpleGraph<String, DefaultWeightedEdge> graph) {
     Map<String, List<String>> connections = convertEdgesToConnectionsMap(graph);
     Gson gson = new Gson();
     writeToFile(filename, gson.toJson(connections));
@@ -44,7 +44,7 @@ public final class WordGraphService {
    * @param filename the filename to read the data from
    * @return the stored graph
    */
-  public static SimpleGraph<String, DefaultEdge> importConnections(String filename) {
+  public static SimpleGraph<String, DefaultWeightedEdge> importConnections(String filename) {
     Type type = new TypeToken<Map<String, List<String>>>(){}.getType();
     Gson gson = new Gson();
     Map<String, List<String>> connections = gson.fromJson(readFromFile(filename), type);
@@ -95,16 +95,52 @@ public final class WordGraphService {
     }
     
     // TODO: Is there a better algorithm for an undirected graph?
-    DijkstraShortestPath<V, E> shortestPath = new DijkstraShortestPath<V, E>(graph, source, target);
     LinkedHashSet<V> vertices = new LinkedHashSet<>();
     vertices.add(source);
     V lastVertex = source;
-    for (E edge : shortestPath.getPathEdgeList()) {
+    final List<E> edges = DijkstraShortestPath.findPathBetween(graph, source, target);
+    for (E edge : edges) {
       V newVertex = getNeighbor(graph, edge, lastVertex);
       vertices.add(newVertex);
       lastVertex = newVertex;
     }
     return vertices;
+  }
+  
+  /**
+   * Sets all edges of the given vertex to a weight of infinite.
+   * They will be avoided in a shortest path query, unless it is
+   * impossible not to traverse any edge with such a weight.
+   * @param <V> the vertex class
+   * @param <E> the edge class
+   * @param graph the graph
+   * @param vertex the vertex to disable
+   * @return {@code true} if the vertex exists, {@code false} otherwise
+   */
+  public static <V, E> boolean disableVertexEdges(SimpleGraph<V, E> graph, V vertex) {
+    return setWeightForAllEdges(graph, vertex, Double.POSITIVE_INFINITY);
+  }
+  
+  /**
+   * Sets the weight of the given vertex' edges to the default of 1.
+   * @param <V> the vertex class
+   * @param <E> the edge class
+   * @param graph the graph
+   * @param vertex the vertex to enable
+   * @return {@code true} if the vertex exists, {@code false} otherwise
+   */
+  public static <V, E> boolean enableVertexEdges(SimpleGraph<V, E> graph, V vertex) {
+    return setWeightForAllEdges(graph, vertex, 1);
+  }
+  
+  private static <V, E> boolean setWeightForAllEdges(SimpleGraph<V, E> graph, V vertex, double weight) {
+    if (!graph.containsVertex(vertex)) {
+      return false;
+    }
+    for (E edge : graph.edgesOf(vertex)) {
+      graph.setEdgeWeight(edge, weight);
+    }
+    return true;
   }
 
   /**
@@ -133,8 +169,8 @@ public final class WordGraphService {
     return connections;
   }
   
-  private static <V> SimpleGraph<V, DefaultEdge> convertConnectionsMapToGraph(Map<V, List<V>> connections) {
-    SimpleGraph<V, DefaultEdge> graph = new SimpleGraph<>(DefaultEdge.class);
+  private static <V> SimpleGraph<V, DefaultWeightedEdge> convertConnectionsMapToGraph(Map<V, List<V>> connections) {
+    SimpleGraph<V, DefaultWeightedEdge> graph = new SimpleGraph<>(DefaultWeightedEdge.class);
     for (Map.Entry<V, List<V>> entry : connections.entrySet()) {
       graph.addVertex(entry.getKey());
       entry.getValue().stream()

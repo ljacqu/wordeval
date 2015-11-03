@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -28,7 +28,7 @@ public class GraphBuilderTest {
     GraphBuilder builder = new GraphBuilder(words);
     
     // Build & check connections
-    SimpleGraph<String, DefaultEdge> graph = builder.getGraph();
+    SimpleGraph<String, DefaultWeightedEdge> graph = builder.getGraph();
     assertThat(graph.vertexSet(), containsInAnyOrder(words.toArray()));
     assertTrue(graph.containsEdge("acre", "care"));
     assertThat(getNeighbors(graph, "bar"), containsInAnyOrder("bare", "bear", "boar", "car"));
@@ -41,7 +41,7 @@ public class GraphBuilderTest {
   @Test
   public void shouldWorkWithEmptyList() {
     GraphBuilder builder = new GraphBuilder(new ArrayList<>());
-    SimpleGraph<String, DefaultEdge> graph = builder.getGraph();
+    SimpleGraph<String, DefaultWeightedEdge> graph = builder.getGraph();
     assertThat(graph.edgeSet(), empty());
   }
   

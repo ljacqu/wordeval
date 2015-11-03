@@ -4,20 +4,21 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.jgrapht.UndirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleGraph;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class WordGraphServiceTest {
   
-  private static UndirectedGraph<String, DefaultEdge> graph;
+  private static SimpleGraph<String, DefaultWeightedEdge> graph;
   
   @BeforeClass
   public static void setUpGraph() {
@@ -47,6 +48,30 @@ public class WordGraphServiceTest {
     assertThat(path, empty());
     path = WordGraphService.getShortestPath(graph, "does-not-exist", "does-not-exist");
     assertThat(path, empty());
+  }
+  
+  @Test
+  public void shouldDisableAndEnableVertex() {
+    // Disable
+    final String vertex = "bar";
+    boolean result = WordGraphService.disableVertexEdges(graph, vertex);
+    assertTrue(result);
+    for (DefaultWeightedEdge e : graph.edgesOf(vertex)) {
+      assertThat(graph.getEdgeWeight(e), equalTo(Double.POSITIVE_INFINITY));
+    }
+    
+    // Enable
+    result = WordGraphService.enableVertexEdges(graph, vertex);
+    assertTrue(result);
+    for (DefaultWeightedEdge e : graph.edgesOf(vertex)) {
+      assertThat(graph.getEdgeWeight(e), equalTo(1.0));
+    }
+  }
+  
+  @Test
+  public void shouldReturnFalseForNonExistentVertex() {
+    assertThat(WordGraphService.disableVertexEdges(graph, "non-existent"), equalTo(Boolean.FALSE));
+    assertThat(WordGraphService.enableVertexEdges(graph, "non-existent"), equalTo(Boolean.FALSE));
   }
   
   /**

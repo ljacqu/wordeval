@@ -2,7 +2,7 @@ package ch.ljacqu.wordeval.wordgraph;
 
 import java.util.List;
 
-import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
 
 import ch.ljacqu.wordeval.evaluation.WordCollector;
@@ -24,7 +24,7 @@ public class GraphBuilder {
   private static final int STAT_INTERVAL = 255;
   
   @Getter
-  private SimpleGraph<String, DefaultEdge> graph;
+  private SimpleGraph<String, DefaultWeightedEdge> graph;
   
   /**
    * Builds a new ConnectionsBuilder object and computes the
@@ -50,7 +50,7 @@ public class GraphBuilder {
   }
 
   private void constructGraph(List<String> words) {
-    graph = new SimpleGraph<>(DefaultEdge.class);
+    graph = new SimpleGraph<>(DefaultWeightedEdge.class);
     // deleteCost, insertCost, replaceCost, swapCost    
     DamerauLevenshteinAlgorithm levenshtein = new DamerauLevenshteinAlgorithm(1, 1, 1, 1);
     for (int i = 0; i < words.size(); ++i) {

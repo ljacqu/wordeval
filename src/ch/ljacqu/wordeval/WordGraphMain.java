@@ -2,10 +2,12 @@ package ch.ljacqu.wordeval;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
-import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
 
 import ch.ljacqu.wordeval.wordgraph.GraphBuilder;
@@ -33,9 +35,9 @@ public final class WordGraphMain {
   public static void main(String[] args) {
     Scanner scanner = new Scanner(System.in);
     String dictionaryCode = initializeDictionaryCode(scanner);
-    SimpleGraph<String, DefaultEdge> graph;
     
     Optional<String> exportFilename = initializeExportFilename(scanner, dictionaryCode);
+    SimpleGraph<String, DefaultWeightedEdge> graph;
     if (exportFilename.isPresent()) {
       graph = WordGraphService.importConnections(exportFilename.get());
     } else {
@@ -73,23 +75,59 @@ public final class WordGraphMain {
     }
   }
   
-  private static void connectionsFinderLoop(Scanner scanner, SimpleGraph<String, DefaultEdge> graph) {
+  private static void connectionsFinderLoop(Scanner scanner, SimpleGraph<String, DefaultWeightedEdge> graph) {
     System.out.println("Connections finder\n");
     String left, right;
+    List<String> disabledVertices = new ArrayList<>();
     while (true) {
-      System.out.print("Enter word 1 (! to quit): ");
+      System.out.print("Enter word 1 (empty string to quit, ! to disable vertices): ");
       left = scanner.nextLine().trim();
-      if (left.equals("!")) {
+      if (left.isEmpty()) {
         break;
+      } else if (left.equals("!")) {
+        toggleVertices(scanner, graph, disabledVertices);
+        continue;
       }
       
-      System.out.print("Enter word 2 (! to quit): ");
+      System.out.print("Enter word 2 (empty string to quit): ");
       right = scanner.nextLine().trim();
-      if (right.equals("!")) {
+      if (right.isEmpty()) {
         break;
       }
 
       System.out.println(WordGraphService.getShortestPath(graph, left, right));
+    }
+  }
+  
+  private static void toggleVertices(Scanner scanner, SimpleGraph<String, DefaultWeightedEdge> graph,
+      List<String> disabledVertices) {
+    while (true) {
+      System.out.println("Disable a vertex? (empty string to quit, ! to see the list of disabled vertices):");
+      String word = scanner.nextLine().trim();
+      if (word.isEmpty()) {
+        return;
+      } else if (word.equals("!")) {
+        System.out.println(disabledVertices);
+        continue;
+      }
+      
+      boolean result;
+      if (disabledVertices.contains(word)) {
+        result = WordGraphService.enableVertexEdges(graph, word);
+        if (result) {
+          disabledVertices.remove(word);
+          System.out.println("Enabled '" + word + "'");
+        }
+      } else {
+        result = WordGraphService.disableVertexEdges(graph, word);
+        if (result) {
+          disabledVertices.add(word); 
+          System.out.println("Disabled '" + word + "'");
+        }
+      }
+      if (!result) {
+        System.out.println("No such vertex in graph");
+      }
     }
   }
   
