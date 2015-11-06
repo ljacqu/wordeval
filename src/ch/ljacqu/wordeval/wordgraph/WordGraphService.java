@@ -5,6 +5,7 @@ import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -93,12 +94,15 @@ public final class WordGraphService {
     if (!graph.containsVertex(source) || !graph.containsVertex(target)) {
       return new LinkedHashSet<>();
     }
-    
+
     // TODO: Is there a better algorithm for an undirected graph?
+    final List<E> edges = DijkstraShortestPath.findPathBetween(graph, source, target);
     LinkedHashSet<V> vertices = new LinkedHashSet<>();
     vertices.add(source);
     V lastVertex = source;
-    final List<E> edges = DijkstraShortestPath.findPathBetween(graph, source, target);
+    if (pathHasDisabledEdge(graph, edges)) {
+      return new LinkedHashSet<>();
+    }
     for (E edge : edges) {
       V newVertex = getNeighbor(graph, edge, lastVertex);
       vertices.add(newVertex);
@@ -141,6 +145,21 @@ public final class WordGraphService {
       graph.setEdgeWeight(edge, weight);
     }
     return true;
+  }
+  
+  /**
+   * Checks if the list of edges traverses an edge with infinite weight.
+   * @param <V> the vertex class
+   * @param <E> the edge class
+   * @param graph the graph
+   * @param edges the list of vertices (the path) to verify
+   * @return {@code true} if an edge has infinite weight, {@code false} otherwise
+   */
+  public static <V, E> boolean pathHasDisabledEdge(UndirectedGraph<V, E> graph, Collection<E> edges) {
+    return edges.stream()
+      .filter(edge -> graph.getEdgeWeight(edge) == Double.POSITIVE_INFINITY)
+      .findAny()
+      .isPresent();
   }
 
   /**

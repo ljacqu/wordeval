@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.Set;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
@@ -95,7 +96,8 @@ public final class WordGraphMain {
         break;
       }
 
-      System.out.println(WordGraphService.getShortestPath(graph, left, right));
+      Set<String> path = WordGraphService.getShortestPath(graph, left, right);
+      System.out.println(path);
     }
   }
   

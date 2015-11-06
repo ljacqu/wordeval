@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
+import org.jgrapht.graph.builder.UndirectedGraphBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -72,6 +73,19 @@ public class WordGraphServiceTest {
   public void shouldReturnFalseForNonExistentVertex() {
     assertThat(WordGraphService.disableVertexEdges(graph, "non-existent"), equalTo(Boolean.FALSE));
     assertThat(WordGraphService.enableVertexEdges(graph, "non-existent"), equalTo(Boolean.FALSE));
+  }
+  
+  @Test
+  public void shouldNotReturnShortestPathForDisabledEdge() {
+    SimpleGraph<String, DefaultWeightedEdge> graph = 
+        new UndirectedGraphBuilder<String, DefaultWeightedEdge, SimpleGraph<String, DefaultWeightedEdge>>(
+            new SimpleGraph<>(DefaultWeightedEdge.class))
+      .addVertices("v1", "v2", "v3", "v4")
+      .addEdgeChain("v1", "v2", "v3", "v4")
+      .build();
+    graph.setEdgeWeight(graph.getEdge("v2", "v3"), Double.POSITIVE_INFINITY);
+    
+    assertThat(WordGraphService.getShortestPath(graph, "v1", "v4"), empty());
   }
   
   /**
