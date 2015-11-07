@@ -85,7 +85,7 @@ public final class WordGraphMain {
       left = scanner.nextLine().trim();
       if (left.isEmpty()) {
         break;
-      } else if (left.equals("!")) {
+      } else if ("!".equals(left)) {
         toggleVertices(scanner, graph, disabledVertices);
         continue;
       }
@@ -108,7 +108,7 @@ public final class WordGraphMain {
       String word = scanner.nextLine().trim();
       if (word.isEmpty()) {
         return;
-      } else if (word.equals("!")) {
+      } else if ("!".equals(word)) {
         System.out.println(disabledVertices);
         continue;
       }
@@ -140,9 +140,9 @@ public final class WordGraphMain {
   private static boolean getChoice(Scanner scanner) {
     while (true) {
       String line = scanner.nextLine().trim();
-      if (line.equals("y")) {
+      if ("y".equals(line)) {
         return true;
-      } else if (line.equals("n")) {
+      } else if ("n".equals(line)) {
         return false;
       }
       System.out.print("\nPlease enter 'y' or 'n': ");

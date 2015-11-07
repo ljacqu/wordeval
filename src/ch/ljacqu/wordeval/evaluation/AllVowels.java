@@ -16,6 +16,7 @@ public class AllVowels extends PartWordEvaluator {
   
   @Override
   public void processWord(String word, String rawWord) {
+    // --
   }
 
   /**

@@ -20,6 +20,9 @@ public class DictionaryRenamer {
   private static final String[] USE_EXTENSIONS = { ".aff", ".dic", ".txt" };
   
   private static final Map<String, String> REPLACEMENTS = initReplacements();
+  
+  private DictionaryRenamer() {
+  }
 
   /**
    * Scans the /dict folder and renames files to the codes.
@@ -60,14 +63,14 @@ public class DictionaryRenamer {
         + getExtension(f);
     File newFile = new File(DICT_DIRECTORY + File.separator + newName);
     if (newFile.exists() && !newFile.isDirectory()) {
-      System.err.println("Not renaming '" + fileName + "' to '" + newName + "': "
-          + " file with such name already exists");
+      System.err.println(String.format("Not renaming '%s' to '%s': file with such name already exists", 
+          fileName, newName));
     } else {
       boolean couldRename = f.renameTo(newFile);
       if (couldRename) {
-        System.out.println("Renamed '" + fileName + "' to '" + newName + "'");
+        System.out.println(String.format("Renamed '%s' to '%s'", fileName, newName));
       } else {
-        System.err.println("Could not rename '" + fileName + "' to '" + newName + "'");
+        System.err.println(String.format("Could not rename '%s' to '%s'", fileName, newName));
       }
     }    
   }

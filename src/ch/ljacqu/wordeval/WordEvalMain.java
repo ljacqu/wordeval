@@ -2,9 +2,11 @@ package ch.ljacqu.wordeval;
 
 import static ch.ljacqu.wordeval.language.LetterType.CONSONANTS;
 import static ch.ljacqu.wordeval.language.LetterType.VOWELS;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import ch.ljacqu.wordeval.dictionary.Dictionary;
 import ch.ljacqu.wordeval.evaluation.AllVowels;
 import ch.ljacqu.wordeval.evaluation.AlphabeticalOrder;
@@ -18,10 +20,10 @@ import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.FullPalindromes;
 import ch.ljacqu.wordeval.evaluation.Isograms;
 import ch.ljacqu.wordeval.evaluation.LongWords;
-import ch.ljacqu.wordeval.evaluation.VowelCount;
 import ch.ljacqu.wordeval.evaluation.Palindromes;
 import ch.ljacqu.wordeval.evaluation.SameLetterConsecutive;
 import ch.ljacqu.wordeval.evaluation.SingleVowel;
+import ch.ljacqu.wordeval.evaluation.VowelCount;
 import ch.ljacqu.wordeval.evaluation.WordCollector;
 import ch.ljacqu.wordeval.evaluation.export.ExportService;
 import ch.ljacqu.wordeval.language.Language;

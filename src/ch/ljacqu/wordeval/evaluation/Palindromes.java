@@ -40,7 +40,7 @@ public class Palindromes extends PartWordEvaluator {
    * @param index The index to test at
    * @return The palindrome part, or null if none found
    */
-  private String findPalindrome(String word, int index) {
+  private static String findPalindrome(String word, int index) {
     // Asymmetrical palindromes like "awkwa"
     String palindrome = findPalindrome(word, index, 1);
     if (palindrome != null) {
@@ -63,7 +63,7 @@ public class Palindromes extends PartWordEvaluator {
    * @param offset 0 or 1: for "abba"-like or "awkwa"-like palindromes
    * @return The palindrome part, or null if none found
    */
-  private String findPalindrome(String word, int index, int offset) {
+  private static String findPalindrome(String word, int index, int offset) {
     int i = index - 1, j = index + offset;
     for (; i >= 0 && j < word.length(); --i, ++j) {
       if (word.charAt(i) != word.charAt(j)) {

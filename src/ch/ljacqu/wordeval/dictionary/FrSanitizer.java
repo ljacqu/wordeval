@@ -20,7 +20,7 @@ public class FrSanitizer extends Sanitizer {
   protected String customSanitize(String word) {
     if (skipRest) {
       return "";
-    } else if (word.equals("Δt")) {
+    } else if ("Δt".equals(word)) {
       skipRest = true;
       return "";
     }

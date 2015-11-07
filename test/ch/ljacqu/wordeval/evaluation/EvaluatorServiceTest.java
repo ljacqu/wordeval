@@ -44,6 +44,7 @@ public class EvaluatorServiceTest {
     Evaluator<?> e2 = new SimpleEvaluator() {
       @PostEvaluator
       public void postEval(Evaluator3 e) {
+        // --
       }
     };
     
@@ -55,6 +56,7 @@ public class EvaluatorServiceTest {
     Evaluator<?> e1 = new SimpleEvaluator() {
       @PostEvaluator
       public void postEval(Evaluator<?> e, String a) {
+        throw new UnsupportedOperationException("Method should not have been invoked");
       }
     };
     
@@ -66,6 +68,7 @@ public class EvaluatorServiceTest {
     Evaluator<?> e1 = new SimpleEvaluator() {
       @PostEvaluator
       public void emptyPostEval() {
+        throw new UnsupportedOperationException("Method should not have been invoked");
       }
     };
     
@@ -77,6 +80,7 @@ public class EvaluatorServiceTest {
     Evaluator<?> e1 = new SimpleEvaluator() {
       @PostEvaluator
       public void emptyPostEval(String word) {
+        throw new UnsupportedOperationException("Method should not have been invoked");
       }
     };
     
@@ -107,20 +111,6 @@ public class EvaluatorServiceTest {
     EvaluatorService.executePostEvaluators(postEvaluators);
   }
   
-  @Test(expected = IllegalStateException.class)
-  public void shouldThrowExceptionForInvalidPostEvaluator2() {
-    Evaluator1 e1 = new Evaluator1();
-    SimpleEvaluator e2 = new SimpleEvaluator() {
-      @PostEvaluator
-      public void process(String w) {
-      }
-    };
-    Map<Evaluator<?>, Evaluator<?>> postEvaluators = new HashMap<>();
-    postEvaluators.put(e2, e1);
-    
-    EvaluatorService.executePostEvaluators(postEvaluators);
-  }
-  
   @Test
   public void shouldAllowSubTypes() {
     Evaluator1 e1 = new Evaluator1();
@@ -144,6 +134,7 @@ public class EvaluatorServiceTest {
     SimpleEvaluator postEvaluator = new SimpleEvaluator() {
       @PostEvaluator
       public void postEvaluate(EvaluatorWithParam ev) {
+        // --
       }
       @BaseMatcher
       public boolean isMatch(EvaluatorWithParam ev) {
@@ -249,6 +240,7 @@ public class EvaluatorServiceTest {
     
     @Override
     public void processWord(String a, String b) {
+      // --
     }
   }
   
@@ -269,7 +261,7 @@ public class EvaluatorServiceTest {
     }
   }
   
-  private static abstract class SimpleEvaluator extends PartWordEvaluator {
+  private abstract static class SimpleEvaluator extends PartWordEvaluator {
     @Override
     public void processWord(String a, String b) {
       addEntry(a, b);

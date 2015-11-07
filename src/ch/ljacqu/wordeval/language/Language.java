@@ -19,6 +19,16 @@ public final class Language {
   private String[] additionalVowels = {};
   private String[] additionalConsonants = {};
   private String[] lettersToRemove = {};
+  
+  /**
+   * Creates a new Language instance.
+   * @param code The ISO-639-1 code of the language
+   * @param alphabet The alphabet the language uses
+   */
+  public Language(String code, Alphabet alphabet) {
+    this.code = code;
+    this.alphabet = alphabet;
+  }
 
   /**
    * Gets the settings of a language by its ISO-639-1 abbreviation.
@@ -42,16 +52,6 @@ public final class Language {
    */
   public static void add(Language language) {
     languages.put(language.code, language);
-  }
-
-  /**
-   * Creates a new Language instance.
-   * @param code The ISO-639-1 code of the language
-   * @param alphabet The alphabet the language uses
-   */
-  public Language(String code, Alphabet alphabet) {
-    this.code = code;
-    this.alphabet = alphabet;
   }
 
   /**

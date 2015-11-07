@@ -108,7 +108,7 @@ public final class EvaluatorService {
           condition.baseMatcher.invoke(condition.postEvaluator, potentialBase));
     } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
       throw new IllegalStateException("Could not invoke BaseMatcher function on '" 
-        + condition.postEvaluator.getClass() + "' with '" + potentialBase.getClass() + "'");
+        + condition.postEvaluator.getClass() + "' with '" + potentialBase.getClass() + "'", e);
     }
   }
   

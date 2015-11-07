@@ -28,6 +28,7 @@ public class FullPalindromes extends WordStatEvaluator {
 
   @Override
   public void processWord(String word, String rawWord) {
+    // --
   }
 
 }

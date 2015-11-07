@@ -1,5 +1,9 @@
 package ch.ljacqu.wordeval.dictionary;
 
+import static org.apache.commons.lang3.StringUtils.containsAny;
+
+import org.apache.commons.lang3.StringUtils;
+
 import ch.ljacqu.wordeval.language.Language;
 
 /**
@@ -18,7 +22,7 @@ public class HuSanitizer extends Sanitizer {
 
   @Override
   protected String customSanitize(String word) {
-    if (word.isEmpty()) {
+    if (StringUtils.isEmpty(word)) {
       return "";
     }
 
@@ -26,10 +30,10 @@ public class HuSanitizer extends Sanitizer {
     // "xxxviii." to "v.", "lxxxviii." to "l."
     // "ix." to "i.", "cxxxviii." to "cv."
     // "clxxxviii." to "c."
-    if (skipWords && wordEqualsOne(word, "v.", "l.", "i.", "cv.", "c.")) {
+    if (skipWords && equalsAny(word, "v.", "l.", "i.", "cv.", "c.")) {
       skipWords = false;
       return "";
-    } else if (wordEqualsOne(word, "xxxviii.", "lxxxviii.", "ix.", "cxxxviii.",
+    } else if (equalsAny(word, "xxxviii.", "lxxxviii.", "ix.", "cxxxviii.",
         "clxxxviii.")) {
       skipWords = true;
       return "";
@@ -38,15 +42,15 @@ public class HuSanitizer extends Sanitizer {
     // From ATP-vé to the end of the file, only abbreviation-like words are
     // present and number/Greek stuff we don't mind skipping (e.g. 20.-kal,
     // ‰-nyi, Φ-vé).
-    if (word.equals("ATP-vé")) {
+    if ("ATP-vé".equals(word)) {
       skipWords = true;
     }
     if (skipWords) {
       return "";
     }
 
-    // The dictionary contains a lot of odd entries like "góóóóól";
-    // they're the only ones where "óóó" appears so we skip those
+    // The dictionary contains a lot of odd entries like "góóóóól",
+    // which are the only ones where "óóó" appears, so we skip those
     if (word.indexOf("óóól") > -1) {
       return "";
     }
@@ -57,21 +61,21 @@ public class HuSanitizer extends Sanitizer {
     }
 
     // Skip some chemical words because they have parentheses, which is annoying
-    if (containsPart(word, "(vinil", "(izobutilén)", "(akril", "(metil")) {
+    if (containsAny(word, "(vinil", "(izobutilén)", "(akril", "(metil")) {
       return "";
     }
 
-    if (wordEqualsOne(word, "[", "]", "{", "}", "#")) {
+    if (equalsAny(word, "[", "]", "{", "}", "#")) {
       return "";
     }
 
     // alakú, közben, közbeni, szer exist as own entry, so we can just return
     // the first word. vége and módra are not present alone in the dictionary,
     // so we take two other entries and re-appropriate them to send them.
-    String foundPart = getFirstFound(word, " alak", " kor", " közben",
+    String foundPart = getFirstContains(word, " alak", " kor", " közben",
         " módra", " szer", " vég", " vége", " végén", " végi", " vevő");
     if (foundPart != null) {
-      if (wordEqualsOne(word, "hó vége", "papagáj módra", "tél végi")) {
+      if (equalsAny(word, "hó vége", "papagáj módra", "tél végi")) {
         // Return the second word in these exceptional cases
         return word.substring(word.indexOf(" ") + 1);
       }
@@ -80,17 +84,17 @@ public class HuSanitizer extends Sanitizer {
 
     // A few entries are "fő" with another word; fő exists alone while some
     // second words do not, so just return the second word in those cases
-    if (containsPart(word, "fő ")) {
+    if (word.startsWith("fő ")) {
       return word.substring(3);
-    } else if (word.equals("úti cél")) {
+    } else if ("úti cél".equals(word)) {
       // úti doesn't exist alone and cél is covered by "fő cél"
       return "úti";
     }
 
     // Remove yahoo! and dog breeds causing trouble
     // Csak azért is are all in the dictionary individually so let's skip it
-    if (containsPart(word, "yahoo!", "Yahoo!")
-        || wordEqualsOne(word, "lhasa apso", "yorkshire terrier",
+    if (containsAny(word, "yahoo!", "Yahoo!")
+        || equalsAny(word, "lhasa apso", "yorkshire terrier",
             "csak azért is", "papír zsebkendő", "nota bene")) {
       return "";
     }
@@ -99,28 +103,24 @@ public class HuSanitizer extends Sanitizer {
     // individual words. As a not so nice hack we'll use üzembe and we'll
     // replace the entry "ë" (which has /nothing/ to do in a Hungarian
     // dictionary) with "helyeszés"
-    if (word.equals("üzembe helyezés")) {
+    if ("üzembe helyezés".equals(word)) {
       return "üzembe";
-    } else if (word.equals("ë")) {
+    } else if ("ë".equals(word)) {
       return "helyezés";
-    } else if (word.equals("működő tőke")) {
+    } else if ("működő tőke".equals(word)) {
       return "tőke";
     }
 
-    if (word.equals("adieu[ph:agyő]")) {
+    if ("adieu[ph:agyő]".equals(word)) {
       return "adieu";
-    } else if (word.equals("ancien}")) {
+    } else if ("ancien}".equals(word)) {
       return "ancien";
     }
 
     return word;
   }
 
-  private boolean containsPart(String word, String... parts) {
-    return getFirstFound(word, parts) != null;
-  }
-
-  private String getFirstFound(String word, String... parts) {
+  private static String getFirstContains(String word, String... parts) {
     for (String part : parts) {
       if (word.indexOf(part) != -1) {
         return part;
@@ -134,7 +134,7 @@ public class HuSanitizer extends Sanitizer {
         .setSkipSequences(".", "+", "±", "ø", "ʻ", "’", "­");
   }
 
-  private boolean wordEqualsOne(String word, String... parts) {
+  private static boolean equalsAny(String word, String... parts) {
     for (String part : parts) {
       if (word.equals(part)) {
         return true;

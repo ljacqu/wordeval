@@ -118,14 +118,14 @@ public final class PartWordExport extends ExportObject {
     int addedEntries = 0;
     for (Map.Entry<String, Set<String>> entry : subMap.entrySet()) {
       if (params.maxTopEntrySize.isPresent() && addedEntries >= params.maxTopEntrySize.get()) {
-        result.put(INDEX_REST, "" + (subMap.size() - addedEntries));
+        result.put(INDEX_REST, "" + Integer.toString(subMap.size() - addedEntries));
         break;
       }
 
       if (params.maxPartWordListSize.isPresent() && entry.getValue().size() > params.maxPartWordListSize.get()) {
         int initialSize = entry.getValue().size();
         List<String> words = reduceList(new ArrayList<String>(entry.getValue()), params.maxPartWordListSize.get());
-        words.add(INDEX_REST + (initialSize - params.maxPartWordListSize.get()));
+        words.add(INDEX_REST + Integer.toString(initialSize - params.maxPartWordListSize.get()));
         result.put(entry.getKey(), words);
       } else {
         result.put(entry.getKey(), entry.getValue());

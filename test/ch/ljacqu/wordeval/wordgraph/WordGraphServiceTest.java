@@ -77,15 +77,15 @@ public class WordGraphServiceTest {
   
   @Test
   public void shouldNotReturnShortestPathForDisabledEdge() {
-    SimpleGraph<String, DefaultWeightedEdge> graph = 
+    SimpleGraph<String, DefaultWeightedEdge> simpleGraph = 
         new UndirectedGraphBuilder<String, DefaultWeightedEdge, SimpleGraph<String, DefaultWeightedEdge>>(
             new SimpleGraph<>(DefaultWeightedEdge.class))
       .addVertices("v1", "v2", "v3", "v4")
       .addEdgeChain("v1", "v2", "v3", "v4")
       .build();
-    graph.setEdgeWeight(graph.getEdge("v2", "v3"), Double.POSITIVE_INFINITY);
+    simpleGraph.setEdgeWeight(simpleGraph.getEdge("v2", "v3"), Double.POSITIVE_INFINITY);
     
-    assertThat(WordGraphService.getShortestPath(graph, "v1", "v4"), empty());
+    assertThat(WordGraphService.getShortestPath(simpleGraph, "v1", "v4"), empty());
   }
   
   /**

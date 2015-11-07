@@ -30,7 +30,7 @@ public class AlphabeticalOrder extends WordStatEvaluator {
     return WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
   }
 
-  private int checkIsOrdered(String word, int searchDirection) {
+  private static int checkIsOrdered(String word, int searchDirection) {
     String previousChar = String.valueOf(word.charAt(0));
     for (int i = 1; i < word.length(); ++i) {
       String currentChar = String.valueOf(word.charAt(i));
@@ -45,7 +45,7 @@ public class AlphabeticalOrder extends WordStatEvaluator {
     return word.length();
   }
 
-  private int strcmp(String a, String b) {
+  private static int strcmp(String a, String b) {
     int comparison = a.compareToIgnoreCase(b);
     return comparison > 0 ? 1 : (comparison < 0 ? -1 : 0);
   }

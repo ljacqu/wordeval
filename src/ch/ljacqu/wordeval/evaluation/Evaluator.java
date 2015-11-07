@@ -8,6 +8,9 @@ import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+
+import org.apache.commons.lang3.StringUtils;
+
 import lombok.Getter;
 import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
@@ -79,7 +82,7 @@ public abstract class Evaluator<K> {
       // using a HashSet and then converting it to TreeSet
       results.put(key, new TreeSet<String>(String.CASE_INSENSITIVE_ORDER));
     }
-    if (word.toLowerCase().equals(word) && results.get(key).contains(word)) {
+    if (StringUtils.isAllLowerCase(word) && results.get(key).contains(word)) {
       results.get(key).remove(word);
     }
     results.get(key).add(word);

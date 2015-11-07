@@ -157,7 +157,7 @@ public final class WordGraphService {
    */
   public static <V, E> boolean pathHasDisabledEdge(UndirectedGraph<V, E> graph, Collection<E> edges) {
     return edges.stream()
-      .filter(edge -> graph.getEdgeWeight(edge) == Double.POSITIVE_INFINITY)
+      .filter(edge -> Double.isInfinite(graph.getEdgeWeight(edge)))
       .findAny()
       .isPresent();
   }
