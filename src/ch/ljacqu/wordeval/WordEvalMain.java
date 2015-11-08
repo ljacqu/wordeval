@@ -3,8 +3,8 @@ package ch.ljacqu.wordeval;
 import static ch.ljacqu.wordeval.language.LetterType.CONSONANTS;
 import static ch.ljacqu.wordeval.language.LetterType.VOWELS;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import ch.ljacqu.wordeval.dictionary.Dictionary;
@@ -27,27 +27,29 @@ import ch.ljacqu.wordeval.evaluation.VowelCount;
 import ch.ljacqu.wordeval.evaluation.WordCollector;
 import ch.ljacqu.wordeval.evaluation.export.ExportService;
 import ch.ljacqu.wordeval.language.Language;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Entry point of the <i>wordeval</i> application.
  */
+@Log4j2
 public final class WordEvalMain {
-  private WordEvalMain() {
-  }
-  
+
   static {
     AppData.init();
+  }
+  
+  private WordEvalMain() {
   }
 
   /**
    * Entry point method.
    * @param args .
-   * @throws IOException If a dictionary could not be read
    */
-  public static void main(String[] args) throws IOException {
-    //Iterable<String> codes = DictionarySettings.getAllCodes();
-    String[] codes = { "en-us", "fr" };
-    
+  public static void main(String[] args) {
+    // All codes: DictionarySettings.getAllCodes()
+    Iterable<String> codes = Arrays.asList("en-us", "fr");
+
     for (String code : codes) {
       exportLanguage(code);
     }
@@ -56,10 +58,9 @@ public final class WordEvalMain {
   /**
    * Exports the evaluator results for a dictionary into the /export folder.
    * @param code The code of the dictionary to evaluate
-   * @throws IOException If the dictionary cannot be read
    */
-  public static void exportLanguage(String code) throws IOException {
-    System.out.println("Exporting language '" + code + "'");
+  public static void exportLanguage(String code) {
+    log.info("Exporting language '{}'", code);
     Language language = Language.get(code);
     List<Long> times = new ArrayList<Long>();
     times.add(System.nanoTime());
@@ -98,13 +99,13 @@ public final class WordEvalMain {
 
     times.add(times.get(0)); // ;)
     outputDiff(times, "= total time");
-    System.out.println("-------------");
+    log.info("Language finished");
   }
 
   private static void outputDiff(List<Long> times, String description) {
     double difference = (System.nanoTime() - times.get(times.size() - 1)) / 1000000000.0;
     times.add(System.nanoTime());
-    System.out.println(difference + "\t\t" + description);
+    log.info("{}\t\t{}", difference, description);
   }
 
 }

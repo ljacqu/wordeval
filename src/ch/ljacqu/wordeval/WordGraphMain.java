@@ -19,12 +19,12 @@ import ch.ljacqu.wordeval.wordgraph.WordGraphService;
  */
 public final class WordGraphMain {
   
+  /** Directory for graph exports. */
+  private static final String GRAPH_EXPORT_DIRECTORY = "export/graph/";
+  
   static {
     AppData.init();
   }
-
-  /** Directory for graph exports. */
-  private static final String GRAPH_EXPORT_DIRECTORY = "export/graph/";
   
   private WordGraphMain() {
   }

@@ -16,14 +16,19 @@ public final class TestUtil {
   private TestUtil() {
   }
 
-  public static Set<String> asSet(String... item) {
-    return new HashSet<>(Arrays.asList(item));
+  /**
+   * Helper methods to easily create a Set with the given items.
+   * @param items the items to add into a set
+   * @return a Set with the given items
+   */
+  public static Set<String> asSet(String... items) {
+    return new HashSet<>(Arrays.asList(items));
   }
 
   /**
    * Creates a mutable list based on the input items.
-   * @param item The items to create a list with
-   * @return Mutable list (as opposed to Arrays.asList()).
+   * @param item the items to create a list with
+   * @return mutable list (as opposed to Arrays.asList()).
    */
   public static List<String> asList(String... item) {
     return new ArrayList<>(Arrays.asList(item));

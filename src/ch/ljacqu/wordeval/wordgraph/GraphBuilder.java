@@ -7,11 +7,13 @@ import org.jgrapht.graph.SimpleGraph;
 
 import ch.ljacqu.wordeval.evaluation.WordCollector;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Finds which words have a Damerau-Levenshtein distance of 1 and saves these
  * connections, forming a graph over the dictionary words.
  */
+@Log4j2
 public class GraphBuilder {
 
   /** The minimum distance for words to be connected. */
@@ -67,10 +69,10 @@ public class GraphBuilder {
         }
       }
       if ((i & STAT_INTERVAL) == STAT_INTERVAL) {
-        System.out.println("Processed " + i + " words");
+        log.info("Processed {} words", i);
       }
     }
-    System.out.println("Processed total " + words.size() + " words");
+    log.info("Processed total {} words", words.size());
   }
 
 }

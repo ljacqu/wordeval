@@ -21,7 +21,7 @@ public class VowelCount extends PartWordEvaluator {
   private final LetterType letterType;
 
   /**
-   * Creates a new MonotoneVowel evaluator.
+   * Creates a new VowelCount evaluator.
    * @param letterType the letter type (consonant, vowel) to consider
    * @param language the language of the words to process
    */
@@ -32,6 +32,7 @@ public class VowelCount extends PartWordEvaluator {
 
   @Override
   public void processWord(String word, String rawWord) {
+    // TODO: Iterate over the letters of the word instead
     String letterProfile = letters.stream()
       .filter(letter -> word.indexOf(letter) > -1)
       .collect(Collectors.joining());

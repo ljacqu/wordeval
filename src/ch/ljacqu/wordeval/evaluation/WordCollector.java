@@ -1,6 +1,5 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,11 +34,7 @@ public class WordCollector extends Evaluator<Boolean> {
    */
   public List<String> getSortedWordsFromDictionary(String dictionaryCode) {
     Dictionary dict = Dictionary.getDictionary(dictionaryCode);
-    try {
-      dict.process(Arrays.asList(this));
-    } catch (IOException e) {
-      throw new IllegalStateException("IOException occurred reading dictionary", e);
-    }
+    dict.process(Arrays.asList(this));
     return returnSortedWords();
   }
   

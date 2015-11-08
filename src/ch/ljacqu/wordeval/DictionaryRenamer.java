@@ -8,17 +8,18 @@ import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
 
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Utility class to rename the dictionaries from the Hunspell
  * repository at https://github.com/titoBouzout/Dictionaries
- * to the language code of the dictionary, as used in wordeval.
+ * to the language code of the dictionary, as used in <i>wordeval</i>.
  */
+@Log4j2
 public class DictionaryRenamer {
   
   private static final File DICT_DIRECTORY = new File("./dict");
   private static final String[] USE_EXTENSIONS = { ".aff", ".dic", ".txt" };
-  
   private static final Map<String, String> REPLACEMENTS = initReplacements();
   
   private DictionaryRenamer() {
@@ -37,7 +38,7 @@ public class DictionaryRenamer {
       .filter(file -> ArrayUtils.contains(USE_EXTENSIONS, getExtension(file)))
       .forEach(file -> applyReplacement(file));
     
-    System.out.println("End renaming files");
+    log.info("End renaming files");
   }
   
   private static String getExtension(File f) {
@@ -55,7 +56,7 @@ public class DictionaryRenamer {
   private static void applyReplacement(File f) {
     String fileName = getFileName(f);
     if (!REPLACEMENTS.containsKey(fileName)) {
-      System.out.println("No replacement for '" + fileName + "'");
+      log.info("No replacement for '{}'", fileName);
       return;
     }
     
@@ -63,14 +64,13 @@ public class DictionaryRenamer {
         + getExtension(f);
     File newFile = new File(DICT_DIRECTORY + File.separator + newName);
     if (newFile.exists() && !newFile.isDirectory()) {
-      System.err.println(String.format("Not renaming '%s' to '%s': file with such name already exists", 
-          fileName, newName));
+      log.warn("Not renaming '{}' to '{}': file with such name already exists", fileName, newName);
     } else {
       boolean couldRename = f.renameTo(newFile);
       if (couldRename) {
-        System.out.println(String.format("Renamed '%s' to '%s'", fileName, newName));
+        log.info("Renamed '{}' to '{}'", fileName, newName);
       } else {
-        System.err.println(String.format("Could not rename '%s' to '%s'", fileName, newName));
+        log.warn("Could not rename '{}' to '{}'", fileName, newName);
       }
     }    
   }

@@ -21,15 +21,15 @@ public class ConsecutiveLetterPairsTest {
 
   @Test
   public void shouldRecognizeLetterPairs() {
-    // 2, 0, 0, 3, 2, 2, 2, 4
+    // 2, 0, 0, 3, 2, 2, 2, 4, 2
     String[] words = { "aallorr", "potato", "klokken", "maaiill", "oppaan",
-        "reennag", "baaggage", "voorraaddra" };
+        "reennag", "baaggage", "voorraaddra", "reell" };
 
     processWords(evaluator, words);
     Map<Integer, Set<String>> results = evaluator.getResults();
 
     assertThat(results, aMapWithSize(3));
-    assertThat(results.get(2), containsInAnyOrder("aallorr", "oppaan", "reennag", "baaggage"));
+    assertThat(results.get(2), containsInAnyOrder("aallorr", "oppaan", "reennag", "baaggage", "reell"));
     assertThat(results.get(3), contains("maaiill"));
     assertThat(results.get(4), contains("voorraaddra"));
   }

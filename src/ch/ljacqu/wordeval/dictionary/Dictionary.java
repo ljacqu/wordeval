@@ -1,15 +1,16 @@
 package ch.ljacqu.wordeval.dictionary;
 
 import static ch.ljacqu.wordeval.dictionary.WordForm.RAW;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
-import lombok.Getter;
+
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.EvaluatorService;
 import ch.ljacqu.wordeval.language.Language;
+import lombok.Getter;
 
 /**
  * A dictionary to process.
@@ -63,19 +64,18 @@ public class Dictionary {
   /**
    * Processes a dictionary; each word is passed to the evaluators.
    * @param evaluators The list of evaluators to pass the words to
-   * @throws IOException If the dictionary file cannot be read
    */
-  public void process(Iterable<Evaluator<?>> evaluators) throws IOException {
+  public void process(Iterable<Evaluator<?>> evaluators) {
     Map<Evaluator<?>, Evaluator<?>> postEvaluators = EvaluatorService.getPostEvaluators(evaluators);
     
-    try (BufferedReader br = new BufferedReader(new InputStreamReader(
-        new FileInputStream(fileName), "utf-8"))) {
-      for (String line; (line = br.readLine()) != null;) {
-        String[] wordForms = sanitizer.computeForms(line);
-        if (wordForms.length != 0) {
-          processWord(wordForms, evaluators);
-        }
-      }
+    try {
+      Files.readAllLines(Paths.get(fileName))
+        .stream()
+        .map(sanitizer::computeForms)
+        .filter(wordForms -> wordForms.length > 0)
+        .forEach(wordForms -> processWord(wordForms, evaluators));
+    } catch (IOException e) {
+      throw new IllegalStateException("Cannot read from dictionary", e);
     }
 
     EvaluatorService.executePostEvaluators(postEvaluators);
@@ -85,7 +85,7 @@ public class Dictionary {
    * Passes the the current word to the evaluators in their desired form.
    * @param wordForms The array of word forms of the current word.
    */
-  private void processWord(String[] wordForms, Iterable<Evaluator<?>> evaluators) {
+  private static void processWord(String[] wordForms, Iterable<Evaluator<?>> evaluators) {
     for (Evaluator<?> evaluator : evaluators) {
       evaluator.processWord(getWordForm(wordForms, evaluator.getWordForm()), getWordForm(wordForms, RAW));
     }

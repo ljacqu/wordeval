@@ -18,19 +18,19 @@ public class ConsecutiveLetterPairs extends WordStatEvaluator {
     for (int i = 0; i <= word.length(); ++i) {
       if (i < word.length() && word.charAt(i) == lastChar) {
         ++letterCounter;
-      } else {
-        if (letterCounter > 1) {
-          ++pairCounter;
-        }
-        if (letterCounter <= 1 || i == word.length()) {
-          if (pairCounter > 1) {
-            addEntry(pairCounter, rawWord);
-          }
-          pairCounter = 0;
-        }
-        lastChar = (i < word.length()) ? word.charAt(i) : '\0';
-        letterCounter = 1;
+        continue;
       }
+      if (letterCounter > 1) {
+        ++pairCounter;
+      }
+      if (letterCounter <= 1 || i == word.length()) {
+        if (pairCounter > 1) {
+          addEntry(pairCounter, rawWord);
+        }
+        pairCounter = 0;
+      }
+      lastChar = (i < word.length()) ? word.charAt(i) : '\0';
+      letterCounter = 1;      
     }
   }
 

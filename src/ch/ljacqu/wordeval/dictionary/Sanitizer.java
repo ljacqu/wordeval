@@ -14,13 +14,13 @@ public class Sanitizer {
   private final char[] delimiters;
   /** Words containing any entry of skipSequences are discarded. */
   private final String[] skipSequences;
-
+  // TODO: Keep letter lists in Language and make WordFormsBuilder stateless
   private final WordFormsBuilder formsBuilder;
 
   /**
    * Creates a new sanitizer.
-   * @param language The language of the dictionary
-   * @param settings The dictionary settings
+   * @param language the language of the dictionary
+   * @param settings the dictionary settings
    */
   public Sanitizer(Language language, DictionarySettings settings) {
     delimiters = settings.getDelimiters();
@@ -31,8 +31,8 @@ public class Sanitizer {
   /**
    * Custom method a word goes through after basic default sanitation. This
    * allows subclasses to append their own behavior to the sanitation process.
-   * @param word The word to process
-   * @return The sanitized word (empty string to signal skip)
+   * @param word the word to process
+   * @return the sanitized word (empty string to signal skip)
    */
   protected String customSanitize(String word) {
     return word;
@@ -41,8 +41,8 @@ public class Sanitizer {
   /**
    * Sanitation entry method: takes a line read from the dictionary and converts
    * it into its sanitized form.
-   * @param line The line (the word) to process
-   * @return The sanitized word (empty string to signal skip)
+   * @param line the line (the word) to process
+   * @return the sanitized word (empty string to signal skip)
    */
   public final String[] computeForms(String line) {
     String rawWord = removeDelimiters(line);
@@ -56,8 +56,8 @@ public class Sanitizer {
    * Takes a line and extracts the word (in its raw form) from it. The first
    * occurrence of a <code>delimiter</code> (e.g. a space or '/') signals that
    * the word has ended.
-   * @param crudeWord The word (line) to process
-   * @return The sanitized word (empty string to signal skip)
+   * @param crudeWord the word (line) to process
+   * @return the sanitized word (empty string to signal skip)
    */
   private String removeDelimiters(String crudeWord) {
     int wordEndIndex = StringUtils.indexOfAny(crudeWord, delimiters);
@@ -70,8 +70,8 @@ public class Sanitizer {
   /**
    * Checks whether the word contains any of the skip sequences or if it has
    * digits, in which case the word should be skipped.
-   * @param word The word to process
-   * @return True if the word should be skipped, false otherwise
+   * @param word the word to process
+   * @return true if the word should be skipped, false otherwise
    */
   private boolean shouldBeSkipped(String word) {
     if (StringUtils.containsAny(word, skipSequences)) {

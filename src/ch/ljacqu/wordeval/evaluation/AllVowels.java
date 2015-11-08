@@ -35,7 +35,7 @@ public class AllVowels extends PartWordEvaluator {
     }
     
     results.entrySet().stream()
-      .filter(entry -> entry.getKey().length() >= max)
+      .filter(entry -> entry.getKey().length() >= max - 1)
       .forEach(entry -> getResults().put(entry.getKey(), entry.getValue()));
   }
   

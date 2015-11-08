@@ -93,7 +93,7 @@ public class DamerauLevenshteinAlgorithm {
    * @param target the target string
    * @return the Damerau-Levenshtein distance between source and target
    */
-  public int execute(String source, String target) {
+  public int execute(String source, String target) { // NOSONAR
     if (source.length() == 0) {
       return target.length() * insertCost;
     }

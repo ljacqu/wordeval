@@ -2,18 +2,20 @@ package ch.ljacqu.wordeval.extra;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+
 import ch.ljacqu.wordeval.AppData;
 import ch.ljacqu.wordeval.dictionary.Dictionary;
 import ch.ljacqu.wordeval.dictionary.DictionarySettings;
@@ -65,12 +67,7 @@ public class DictionarySanitationTest {
     List<Evaluator<?>> evaluators = Collections.singletonList(testEvaluator);
     Dictionary dictionary = Dictionary.getDictionary(languageCode);
 
-    try {
-      dictionary.process(evaluators);
-    } catch (IOException e) {
-      fail("Cannot read dictionary for '" + languageCode + "'");
-      throw new IllegalStateException("Cannot read dictionary for '" + languageCode + "'", e);
-    }
+    dictionary.process(evaluators);
     
     return testEvaluator.getResults();
   }

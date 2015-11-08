@@ -25,8 +25,8 @@ public final class EvaluatorService {
   /**
    * Returns a list of evaluators with a PostEvaluator method to be executed at
    * the end with the matched evaluator as value to execute the method with.
-   * @param evaluators The list of given evaluators
-   * @return Map of post evaluators (as key) and the matched evaluator to supply
+   * @param evaluators the list of given evaluators
+   * @return map of post evaluators (as key) and the matched evaluator to supply
    *         as parameter in the PostEvaluator method
    */
   public static Map<Evaluator<?>, Evaluator<?>> getPostEvaluators(Iterable<Evaluator<?>> evaluators) {
@@ -38,18 +38,10 @@ public final class EvaluatorService {
         throw new IllegalStateException("Found @BaseMatcher method without @PostEvaluator method in '"
             + evaluator.getClass() + "'");
       } else if (postEvalMethod != null) {
-        if (baseMatcherMethod != null) {
-          if (!postEvalMethod.getParameterTypes()[0]
-              .equals(baseMatcherMethod.getParameterTypes()[0])) {
-            throw new IllegalStateException("Parameter in @BaseMatcher does not match the one in @PostEvaluator");
-          } else if (!boolean.class.equals(baseMatcherMethod.getReturnType())
-              && !Boolean.class.equals(baseMatcherMethod.getReturnType())) {
-            throw new IllegalStateException("Method @BaseMatcher must return a boolean");
-          }
-        }
+        validateBaseMatcher(baseMatcherMethod, postEvalMethod);
         @SuppressWarnings("unchecked")
-        Class<? extends Evaluator<?>> baseClass = (Class<? extends Evaluator<?>>) 
-            postEvalMethod.getParameterTypes()[0];
+        Class<? extends Evaluator<?>> baseClass = 
+            (Class<? extends Evaluator<?>>) postEvalMethod.getParameterTypes()[0];
         conditions.add(new PostEvaluatorCondition(evaluator, baseClass, baseMatcherMethod));
       }
     }
@@ -58,7 +50,7 @@ public final class EvaluatorService {
 
   /**
    * Executes the map of post evaluators.
-   * @param postEvaluators The map of post evaluators where the key is the post
+   * @param postEvaluators the map of post evaluators where the key is the post
    *        evaluator (i.e. the evaluator with a @PostEvaluator method) and its
    *        Evaluator argument.
    */
@@ -97,6 +89,18 @@ public final class EvaluatorService {
       }
     }
     return evaluators;
+  }
+  
+  private static void validateBaseMatcher(Method baseMatcherMethod, Method postEvalMethod) {
+    if (baseMatcherMethod != null) {
+      if (!postEvalMethod.getParameterTypes()[0]
+          .equals(baseMatcherMethod.getParameterTypes()[0])) {
+        throw new IllegalStateException("Parameter in @BaseMatcher does not match the one in @PostEvaluator");
+      } else if (!boolean.class.equals(baseMatcherMethod.getReturnType())
+          && !Boolean.class.equals(baseMatcherMethod.getReturnType())) {
+        throw new IllegalStateException("Method @BaseMatcher must return a boolean");
+      }
+    }
   }
   
   private static boolean isBaseMatch(PostEvaluatorCondition condition, Evaluator<?> potentialBase) {
