@@ -1,10 +1,12 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import static org.hamcrest.Matchers.anEmptyMap;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
+
 import java.util.Arrays;
 import java.util.List;
-
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
