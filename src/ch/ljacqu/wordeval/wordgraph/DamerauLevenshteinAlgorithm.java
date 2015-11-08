@@ -141,7 +141,7 @@ public class DamerauLevenshteinAlgorithm {
         if (candidateSwapIndex != null && jSwap != -1) {
           int iSwap = candidateSwapIndex;
           int preSwapCost;
-          if (iSwap == 0 && jSwap == 0) {
+          if (iSwap == 0 && jSwap == 0) { // NOSONAR
             preSwapCost = 0;
           } else {
             preSwapCost = table[Math.max(0, iSwap - 1)][Math.max(0, jSwap - 1)];

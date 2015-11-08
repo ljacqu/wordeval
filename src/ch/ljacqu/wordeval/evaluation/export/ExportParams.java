@@ -46,7 +46,7 @@ public class ExportParams {
   @SuppressWarnings("unchecked")
   ExportParams(Integer topKeys, Optional<Double> topEntryMinimum, Optional<Double> generalMinimum, 
       Boolean isDescending, Boolean hasDescendingEntries, Optional<Integer> maxTopEntrySize, 
-      Optional<Integer> maxPartWordListSize, Optional<Integer> numberOfDetailedAggregation) {
+      Optional<Integer> maxPartWordListSize, Optional<Integer> numberOfDetailedAggregation) { // NOSONAR
     this.topKeys = firstNonNull(topKeys, 5);
     this.topEntryMinimum = firstNonNull(topEntryMinimum, empty());
     this.generalMinimum = firstNonNull(generalMinimum, empty());

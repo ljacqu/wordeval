@@ -4,11 +4,14 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import ch.ljacqu.wordeval.evaluation.Evaluator;
+import lombok.Getter;
 
 /**
  * Utility methods for the tests.
@@ -102,5 +105,45 @@ public final class TestUtil {
       throw new UnsupportedOperationException("Could not set field", e);
     }
   }
+  
+  public static class MapInit<K, V> {
+    @Getter
+    private Map<K, List<V>> map;
+    
+    public MapInit() {
+      map = new HashMap<>();
+    }
+    
+    public static <K, V> MapInit init(K key, V value) {
+      MapInit<K, V> init = new MapInit<>();
+      init.add(key, value);
+      return init;
+    }
+    
+    public MapInit add(K key, V value) {
+      if (map.get(key) == null) {
+        map.put(key, new ArrayList<>());
+        map.get(key).add(value);
+      } else {
+        map.get(key).add(value);
+      }
+      return this;
+    }
+  }
 
+  public static class ListInit<T> {
+    @Getter
+    private List<T> list = new ArrayList<>();
+
+    public static <T> ListInit init(T value) {
+      ListInit<T> listInit = new ListInit<>();
+      listInit.add(value);
+      return listInit;
+    }
+
+    public ListInit add(T value) {
+      list.add(value);
+      return this;
+    }
+  }
 }
