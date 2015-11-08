@@ -1,6 +1,8 @@
 package ch.ljacqu.wordeval;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.util.Arrays;
@@ -9,8 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import com.google.gson.Gson;
-
-import static org.hamcrest.Matchers.*;
 
 public class DataUtilsTest {
   
