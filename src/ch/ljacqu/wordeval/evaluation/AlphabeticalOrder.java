@@ -26,7 +26,7 @@ public class AlphabeticalOrder extends WordStatEvaluator {
 
   @Override
   public WordForm getWordForm() {
-    // TODO #15 Make locale-aware instead
+    // TODO #15: Make locale-aware instead
     return WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
   }
 

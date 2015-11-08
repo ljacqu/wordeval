@@ -14,7 +14,7 @@ public class Sanitizer {
   private final char[] delimiters;
   /** Words containing any entry of skipSequences are discarded. */
   private final String[] skipSequences;
-  // TODO: Keep letter lists in Language and make WordFormsBuilder stateless
+  // TODO #65: Keep letter lists in Language and make WordFormsBuilder stateless
   private final WordFormsBuilder formsBuilder;
 
   /**

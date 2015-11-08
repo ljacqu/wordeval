@@ -91,7 +91,7 @@ public class DictionaryRenamer {
     .add("Estonian", "et")
     .add("French", "fr")
     .add("Galego", "gl")
-    // TODO: Add other German variants
+    // TODO #48: Add other German variants
     .add("German", "de")
     .add("Greek", "el")
     .add("Hungarian", "hu")

@@ -57,7 +57,7 @@ public class ExportParams {
     this.numberOfDetailedAggregation = firstNonNull(numberOfDetailedAggregation, Optional.of(3));
   }
   
-  // TODO: mvn verify throws errors if Optional.empty() is used directly
+  // TODO #63: mvn verify throws errors if Optional.empty() is used directly
   private static Optional<Double> empty() {
     return Optional.empty();
   }

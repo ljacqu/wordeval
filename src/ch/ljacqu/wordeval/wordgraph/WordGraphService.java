@@ -97,7 +97,7 @@ public final class WordGraphService {
       return new LinkedHashSet<>();
     }
 
-    // TODO: Is there a better algorithm for an undirected graph?
+    // TODO #67: Is there a better algorithm for an undirected graph?
     final List<E> edges = DijkstraShortestPath.findPathBetween(graph, source, target);
     LinkedHashSet<V> vertices = new LinkedHashSet<>();
     vertices.add(source);

@@ -1,21 +1,14 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
 import java.util.Collection;
-import java.util.NavigableMap;
-import java.util.Set;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
  * Defines how to compute the "relevance" of a PartWordEvaluator's results.
  */
-@Getter
 public abstract class PartWordReducer {
-
-  private NavigableMap<Number, NavigableMap<String, Set<String>>> topEntries;
-  private NavigableMap<Number, NavigableMap<String, Integer>> aggregatedEntries;
 
   /**
    * Computes the relevance (how "good" a result is).

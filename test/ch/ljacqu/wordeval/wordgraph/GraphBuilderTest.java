@@ -44,12 +44,6 @@ public class GraphBuilderTest {
     SimpleGraph<String, DefaultWeightedEdge> graph = builder.getGraph();
     assertThat(graph.edgeSet(), empty());
   }
-  
-  @Test
-  @Ignore
-  public void shouldLoadWordsFromDictionary() {
-    // TODO: Write test with mock implementation of WordCollector
-  }
 
   /**
    * Returns a collection of words which form a graph, i.e. there is a path for

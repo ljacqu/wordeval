@@ -13,9 +13,10 @@ import ch.ljacqu.wordeval.language.Language;
  * Application data holder.
  */
 public final class AppData {
+
   private AppData() {
   }
-  
+
   /**
    * Initializes the settings for dictionaries and their language.
    */
@@ -23,18 +24,18 @@ public final class AppData {
     initLanguages();
     initDictionaries();
   }
-  
+
   /**
    * Initializes languages.
    */
   private static void initLanguages() {
     addLanguage("af", LATIN);
     addLanguage("cs", LATIN)
-      // TODO: is stuff like "ň" really a distinct letter to preserve?
+      // TODO #66: is stuff like "ň" really a distinct letter to preserve?
       .setAdditionalConsonants("č", "ď", "ch", "ň", "ř", "š", "ť", "ž")
       .setAdditionalVowels("á", "é", "ě", "í", "ó", "ú", "ů", "ý");
     addLanguage("en", LATIN)
-      // TODO: how to deal with Y being consonant and vowel in English?
+      // TODO #66: how to deal with Y being consonant and vowel in English?
       .setAdditionalConsonants("y");
     addLanguage("eu", LATIN)
       .setAdditionalConsonants("ñ");
@@ -56,15 +57,13 @@ public final class AppData {
     addDictionary("af").setDelimiters('/').setSkipSequences(".", "µ", "Ð", "ø");
     addDictionary("en-us").setDelimiters('/');
     addDictionary("en-test").setDelimiters('/');
-    // TODO Basque: Some entries have _ but most parts seem to be present alone
+    // TODO #62: Some Basque entries have _ but most parts seem to be present alone
     addDictionary("eu").setDelimiters('/').setSkipSequences(".", "+", "_");
     addDictionary("fr", FrSanitizer.class);
     addDictionary("hu", HuSanitizer.class);
     addDictionary("ru").setDelimiters('/').setSkipSequences(".");
     addDictionary("tr").setDelimiters(' ');
   }
-  
-  
   
   private static Language addLanguage(String code, Alphabet alphabet) {
     Language language = new Language(code, alphabet);

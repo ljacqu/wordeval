@@ -31,7 +31,7 @@ public class GraphBuilder {
   /**
    * Builds a new ConnectionsBuilder object and computes the
    * connections for the given dictionary.
-   * @param dictionary The dictionary code
+   * @param dictionary the dictionary code
    */
   public GraphBuilder(String dictionary) {    
     this(getDictionaryWords(dictionary));
@@ -40,7 +40,7 @@ public class GraphBuilder {
   /**
    * Builds a new ConnectionsBuilder object and computes the
    * connections based on the given list of words.
-   * @param words The list of words to process
+   * @param words the list of words to process
    */
   public GraphBuilder(List<String> words) {
     constructGraph(words);

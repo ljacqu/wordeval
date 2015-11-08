@@ -24,8 +24,7 @@ public class DiacriticHomonyms extends PartWordEvaluator {
    * @param language the language of the words to process
    */
   public DiacriticHomonyms(Language language) {
-    // TODO: Maybe pass Locale instead so it isn't built
-    // if multiple evaluators require a Locale object
+    // TODO #55: Pass Locale instead so it isn't built every time it is required
     locale = language.buildLocale();
   }
 
