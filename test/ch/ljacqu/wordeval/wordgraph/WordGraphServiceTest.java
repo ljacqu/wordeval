@@ -1,13 +1,25 @@
 package ch.ljacqu.wordeval.wordgraph;
 
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -16,17 +28,30 @@ import org.jgrapht.graph.SimpleGraph;
 import org.jgrapht.graph.builder.UndirectedGraphBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
+
+import ch.ljacqu.wordeval.DataUtils;
+import ch.ljacqu.wordeval.TestUtil;
 
 public class WordGraphServiceTest {
   
   private static SimpleGraph<String, DefaultWeightedEdge> graph;
+  private static DataUtils mockDataUtils;
   
   @BeforeClass
   public static void setUpGraph() {
     GraphBuilder builder = new GraphBuilder(getTestWords());
     graph = builder.getGraph();
+    
+    // Set mock for DataUtils
+    mockDataUtils = Mockito.mock(DataUtils.class);
+    TestUtil.setField(WordGraphService.class, null, "dataUtils", mockDataUtils);
   }
   
+  // ---
+  // Shortest path
+  // ---
   @Test
   public void shouldGetShortestPath() {    
     Set<String> path = WordGraphService.getShortestPath(graph, "bare", "brat");
@@ -51,6 +76,9 @@ public class WordGraphServiceTest {
     assertThat(path, empty());
   }
   
+  // ---
+  // Disable/enable vertices
+  // ---
   @Test
   public void shouldDisableAndEnableVertex() {
     // Disable
@@ -83,9 +111,72 @@ public class WordGraphServiceTest {
       .addVertices("v1", "v2", "v3", "v4")
       .addEdgeChain("v1", "v2", "v3", "v4")
       .build();
-    simpleGraph.setEdgeWeight(simpleGraph.getEdge("v2", "v3"), Double.POSITIVE_INFINITY);
+    WordGraphService.disableVertexEdges(simpleGraph, "v3");
     
     assertThat(WordGraphService.getShortestPath(simpleGraph, "v1", "v4"), empty());
+  }
+  
+  // ---
+  // Get neighbors
+  // ---
+  @Test
+  public void shouldGetNeighborsOfVertex() {
+    Set<String> neighbors = WordGraphService.getNeighbors(graph, "bear");
+    assertThat(neighbors, containsInAnyOrder("bar", "bears", "boar"));
+    
+    neighbors = WordGraphService.getNeighbors(graph, "bar");
+    assertThat(neighbors, containsInAnyOrder("bear", "car", "bare", "boar"));
+  }
+  
+  @Test
+  public void shouldReturnEmptyListForNonExistentVertex() {
+    Set<String> neighbors = WordGraphService.getNeighbors(graph, "unknown-vertex");
+    assertThat(neighbors, empty());
+  }
+  
+  // ---
+  // Export/import
+  // ---
+  @Test
+  public void shouldExportGraph() {
+    final String filename = "test-export.json";
+    final String sampleJson = "{isMock: true}";
+    ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
+    when(mockDataUtils.toJson(captor.capture())).thenReturn(sampleJson);
+    doNothing().when(mockDataUtils).writeToFile(filename, sampleJson);
+    
+    WordGraphService.exportConnections(filename, graph);
+    
+    verify(mockDataUtils).toJson(any(Map.class));
+    verify(mockDataUtils).writeToFile(filename, sampleJson);
+    Map<String, List<String>> connectionsMap = captor.getValue();
+    assertTrue(hasConnection(connectionsMap, "bear", "boar"));
+    assertTrue(hasConnection(connectionsMap, "bear", "bar"));
+    assertTrue(hasConnection(connectionsMap, "hat", "heat"));
+    assertTrue(hasConnection(connectionsMap, "meat", "meet"));
+    assertTrue(!hasConnection(connectionsMap, "bear", "meet"));
+  }
+  
+  @Test
+  public void shouldImportGraph() {
+    final String sampleJson = "{context: \"test\"}";
+    final String filename = "import-test.json";
+    Map<String, List<String>> connections = new HashMap<>();
+    connections.put("v1", Arrays.asList("v2"));
+    connections.put("v3", Arrays.asList("v2", "v4"));
+    connections.put("v4", Arrays.asList("v1"));
+    when(mockDataUtils.readFile(filename)).thenReturn(sampleJson);
+    when(mockDataUtils.fromJson(eq(sampleJson), any(Type.class))).thenReturn(connections);
+    
+    SimpleGraph<String, DefaultWeightedEdge> graphResult = WordGraphService.importConnections(filename);
+    
+    verify(mockDataUtils).fromJson(eq(sampleJson), any(Type.class));
+    verify(mockDataUtils).readFile(filename);
+    assertThat(graphResult.vertexSet(), containsInAnyOrder("v1", "v2", "v3", "v4"));
+    assertThat(graphResult.getEdge("v1", "v2"), not(nullValue()));
+    assertThat(graphResult.getEdge("v2", "v3"), not(nullValue()));
+    assertThat(graphResult.getEdge("v1", "v3"), nullValue());
+    assertThat(graphResult.edgeSet(), hasSize(4));
   }
   
   /**
@@ -101,6 +192,18 @@ public class WordGraphServiceTest {
       .map(String::trim)
       .sorted()
       .collect(Collectors.toList());
+  }
+  
+  /**
+   * Checks that either map.get(a).contains(b) || map.get(b).contains(a).
+   * @param map the map to check
+   * @param a the first word
+   * @param b the second word
+   * @return true if the words are connected
+   */
+  private static boolean hasConnection(Map<String, List<String>> map, String a, String b) {
+    return (map.containsKey(a) && map.get(a).contains(b))
+        || (map.containsKey(b) && map.get(b).contains(a));
   }
 
 }

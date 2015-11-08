@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import ch.ljacqu.wordeval.AppData;
+import ch.ljacqu.wordeval.TestUtil;
 import ch.ljacqu.wordeval.dictionary.Dictionary;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.PartWordEvaluator;
@@ -32,7 +33,7 @@ public class UtilDoesWordExist {
 
   @Ignore
   @Test
-  public void shouldNotReturnNonWordChars() throws IOException {
+  public void shouldFindWords() {
     TestEvaluator testEvaluator = new TestEvaluator();
     List<Evaluator<?>> evaluators = Collections.singletonList(testEvaluator);
     Dictionary dictionary = Dictionary.getDictionary(LANGUAGE);
@@ -49,8 +50,7 @@ public class UtilDoesWordExist {
 
   private static class TestEvaluator extends PartWordEvaluator {
 
-    private List<String> missingWords = new ArrayList<String>(
-        Arrays.asList(WORDS_TO_FIND));
+    private List<String> missingWords = TestUtil.asList(WORDS_TO_FIND);
 
     @Override
     public void processWord(String word, String rawWord) {

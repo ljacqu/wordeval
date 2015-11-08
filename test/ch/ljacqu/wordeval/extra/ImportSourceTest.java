@@ -16,11 +16,13 @@ import java.util.regex.Pattern;
 import org.junit.Test;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Checks that no files contain an import statement with a general asterisk.
  */
 @LightWeight
+@Log4j2
 public class ImportSourceTest {
   
   private static final String[] FOLDERS = {"src/", "test/"};
@@ -39,10 +41,8 @@ public class ImportSourceTest {
     ImportCheckerVisitor visitor = new ImportCheckerVisitor(errors);
     Files.walkFileTree(Paths.get(folder), visitor);
     if (!errors.isEmpty()) {
-      System.err.println(String.join("\n", errors));
-      fail("Found errors (see console)");
-    } else {
-      System.out.println("No general imports found for folder '" + folder + "'");
+      log.error("Found general imports:\n" + String.join("\n", errors));
+      fail("Found general imports (see console)");
     }
   }  
   

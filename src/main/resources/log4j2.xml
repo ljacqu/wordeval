@@ -6,7 +6,7 @@
       <!-- Right now we have so few classes generating output that we don't show the logger name
            in the template. If we wanted to, we could also use something like %.30logger just to
            get the last 30 chars of the class name -->
-      <PatternLayout pattern="%d{HH:mm:ss} %-5level - %msg%n"/>
+      <PatternLayout pattern="%d{HH:mm:ss} %-5level %msg%n"/>
     </Console>
   </Appenders>
   <Loggers>

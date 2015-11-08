@@ -10,11 +10,14 @@ import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import lombok.extern.log4j.Log4j2;
+
 /**
  * Scans the <code>.extra</code> test package and ensures that the tests which
  * are not @LightWeight are not being executed by default.
  */
 @LightWeight
+@Log4j2
 public class IgnoredTestsChecker {
 
   private static final File FOLDER = new File("test/ch/ljacqu/wordeval/extra");
@@ -28,14 +31,14 @@ public class IgnoredTestsChecker {
     List<Method> badMethods = new ArrayList<>();
     for (final Class clazz : classes) {
       if (isValidElement(clazz)) {
-        System.out.println("Class '" + clazz.getSimpleName() + "' skipped");
+        log.info("Class '{}' skipped", clazz.getSimpleName());
         continue;
       }
       
       for (final Method method : clazz.getMethods()) {
         if (method.isAnnotationPresent(Test.class)) {
           if (isValidElement(method)) {
-            System.out.println("Method '" + method.getName() + "' in '" + clazz.getSimpleName() + "' skipped");
+            log.info("Method {}#{} skipped", clazz.getSimpleName(), method.getName());
           } else {
             badMethods.add(method);
           }
@@ -66,7 +69,7 @@ public class IgnoredTestsChecker {
       fail("Error loading classes; class list is empty");
     }
     for (Method method : methods) {
-      System.err.println(method.getDeclaringClass() + "#" + method.getName());
+      log.error("Missing @Lightweight in {}#{}", method.getDeclaringClass(), method.getName());
     }
     assertTrue(methods.isEmpty());
   }

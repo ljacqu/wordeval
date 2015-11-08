@@ -1,12 +1,10 @@
 package ch.ljacqu.wordeval.wordgraph;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -18,13 +16,16 @@ import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import ch.ljacqu.wordeval.DataUtils;
 
 /**
  * Service for word graphs.
  */
 public final class WordGraphService {
+  
+  private static DataUtils dataUtils = new DataUtils();
   
   private WordGraphService() {
   }
@@ -36,8 +37,7 @@ public final class WordGraphService {
    */
   public static void exportConnections(String filename, SimpleGraph<String, DefaultWeightedEdge> graph) {
     Map<String, List<String>> connections = convertEdgesToConnectionsMap(graph);
-    Gson gson = new Gson();
-    writeToFile(filename, gson.toJson(connections));
+    dataUtils.writeToFile(filename, dataUtils.toJson(connections));
   }
   
   /**
@@ -47,20 +47,22 @@ public final class WordGraphService {
    */
   public static SimpleGraph<String, DefaultWeightedEdge> importConnections(String filename) {
     Type type = new TypeToken<Map<String, List<String>>>(){}.getType();
-    Gson gson = new Gson();
-    Map<String, List<String>> connections = gson.fromJson(readFromFile(filename), type);
+    Map<String, List<String>> connections = dataUtils.fromJson(dataUtils.readFile(filename), type);
     return convertConnectionsMapToGraph(connections);
   }
   
   /**
-   * Returns the set of neighbors of the given graph.
+   * Returns the set of neighbors of the given vertex.
    * @param <V> the vertex type
    * @param <E> the edge type
    * @param graph the graph
-   * @param vertex the vertex to process
-   * @return the neighbors of the given vertex in the given graph
+   * @param vertex the vertex to analyze
+   * @return the neighbors of the vertex in the given graph
    */
   public static <V, E> Set<V> getNeighbors(UndirectedGraph<V, E> graph, V vertex) {
+    if (!graph.containsVertex(vertex)) {
+      return new HashSet<>();
+    }
     return graph.edgesOf(vertex).stream()
       .map(edge -> getNeighbor(graph, edge, vertex))
       .collect(Collectors.toSet());
@@ -75,7 +77,7 @@ public final class WordGraphService {
    * @param vertex the vertex whose neighbor should be returned
    * @return the neighbor of the given vertex
    */
-  public static <V, E> V getNeighbor(UndirectedGraph<V, E> graph, E edge, V vertex) {
+  private static <V, E> V getNeighbor(UndirectedGraph<V, E> graph, E edge, V vertex) {
     V source = graph.getEdgeSource(edge);
     return source.equals(vertex) ? graph.getEdgeTarget(edge) : source;
   }
@@ -161,19 +163,6 @@ public final class WordGraphService {
       .findAny()
       .isPresent();
   }
-
-  /**
-   * Wrapper for writing content to a file.
-   * @param filename the file to write to
-   * @param content the content to store in the file
-   */
-  private static void writeToFile(String filename, String content) {
-    try {
-      Files.write(Paths.get(filename), content.getBytes());
-    } catch (IOException e) {
-      throw new IllegalStateException("Could not write to file '" + filename + "'", e);
-    }
-  }
   
   private static <V, E> Map<V, List<V>> convertEdgesToConnectionsMap(UndirectedGraph<V, E> graph) {
     Map<V, List<V>> connections = new HashMap<>();
@@ -197,14 +186,6 @@ public final class WordGraphService {
         .forEach(rightWord -> graph.addEdge(entry.getKey(), rightWord));
     }
     return graph;
-  }
-  
-  private static String readFromFile(String filename) {
-    try {
-      return String.join("", Files.readAllLines(Paths.get(filename)));
-    } catch (IOException e) {
-      throw new IllegalStateException("Could not read from file", e);
-    }
   }
 
 }

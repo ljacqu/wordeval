@@ -88,5 +88,17 @@ public class LanguageServiceTest {
     assertThat(consonants, not(hasItem("w")));
     assertThat(consonants, hasItems("c", "g", "v", "z"));
   }
+  
+  @Test(expected = IllegalArgumentException.class)
+  public void shouldThrowForUnknownAlphabet() {
+    Language lang = new Language("zxx", null);
+    LanguageService.getLetters(VOWELS, lang);
+  }
+  
+  @Test(expected = IllegalArgumentException.class)
+  public void shouldThrowForUnknownAlphabet2() {
+    Language lang = new Language("zxx", null);
+    LanguageService.getLetters(CONSONANTS, lang);
+  }
 
 }

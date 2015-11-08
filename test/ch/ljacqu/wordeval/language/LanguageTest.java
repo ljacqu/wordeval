@@ -31,5 +31,15 @@ public class LanguageTest {
   public void shouldThrowExceptionForUnknownLanguageCode() {
     Language.get("bogusCode");
   }
+  
+  @Test
+  public void shouldGetLanguageWithoutHyphen() {
+    Language zxxLang = new Language("zxx", LATIN);
+    Language.add(zxxLang);
+    
+    Language result = Language.get("zxx-ww");
+    
+    assertThat(result, equalTo(zxxLang));
+  }
 
 }
