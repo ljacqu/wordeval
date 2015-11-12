@@ -1,6 +1,7 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
 import java.util.List;
+import java.util.NavigableMap;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,19 @@ public final class ExportService {
   public static void exportToFile(List<Evaluator<?>> evaluators, String filename) {
     String jsonOutput = toJson(evaluators);
     dataUtils.writeToFile(filename, jsonOutput);
+  }
+  
+  /**
+   * Method to make a map descending if necessary.
+   * @param <K> the key class of the map
+   * @param <V> the value class of the map
+   * @param map the map to potentially change
+   * @param isDescending whether or not to convert to a descending map
+   * @return the map, descending if necessary
+   */
+  public static <K, V> NavigableMap<K, V> checkDescending(
+      NavigableMap<K, V> map, boolean isDescending) {
+    return isDescending ? map.descendingMap() : map;
   }
 
 }

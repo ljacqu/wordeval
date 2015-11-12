@@ -1,6 +1,5 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,9 +18,8 @@ import java.util.TreeMap;
  * are the most extreme/interesting elements the evaluator looks for. The other
  * entries are summed up and displayed as <i>aggregated entries</i>.
  */
-public abstract class ExportObject implements Serializable {
+public abstract class ExportObject {
 
-  private static final long serialVersionUID = 1L;
   /**
    * String used as special key to include the total of a group.
    */
@@ -50,14 +48,14 @@ public abstract class ExportObject implements Serializable {
   /**
    * Returns the input map trimmed to the biggest keys. The number of kept keys
    * depends on ExportParam's <code>topKeys</code> and <code>minimum</code>.
-   * @param map The map to process
-   * @param params The export parameters
-   * @param <N> The specific Number subclass for the relevance (Integer or Double)
-   * @param <V> The value class of the given Map
-   * @return The trimmed map with the top entries
+   * @param map the map to process
+   * @param params the export parameters
+   * @param <N> the specific Number subclass for the relevance (Integer or Double)
+   * @param <V> the value class of the given Map
+   * @return the trimmed map with the top entries
    */
-  protected static final <N extends Number, V> NavigableMap<N, V> isolateTopEntries(NavigableMap<N, V> map, 
-      ExportParams params) {
+  protected static final <N extends Number, V> NavigableMap<N, V> isolateTopEntries(
+      NavigableMap<N, V> map, ExportParams params) {
     Iterator<N> descendingIterator = map.descendingKeySet().iterator();
     N key = null;
     for (int i = 0; i < params.topKeys && descendingIterator.hasNext(); ++i) {
@@ -68,8 +66,7 @@ public abstract class ExportObject implements Serializable {
       }
     }
     if (key != null) {
-      NavigableMap<N, V> resultsMap = map.tailMap(key, true);
-      return checkDescending(resultsMap, params);
+      return map.tailMap(key, true);
     }
     return new TreeMap<>();
   }
@@ -87,11 +84,11 @@ public abstract class ExportObject implements Serializable {
   /**
    * For maps with a collection or a map as values, it replaces the lists with
    * their length instead.
-   * @param map The map to transform
-   * @param params The export parameters
-   * @param <K> The key class of the input map
-   * @param <V> The value class of the map (Collection or Map)
-   * @return The map with the original list's length
+   * @param map the map to transform
+   * @param params the export parameters
+   * @param <K> the key class of the input map
+   * @param <V> the value class of the map (Collection or Map)
+   * @return the map with the original list's length
    */
   protected static final <K, V> NavigableMap<K, Integer> aggregateMap(
       NavigableMap<K, V> map, ExportParams params) {
@@ -105,9 +102,18 @@ public abstract class ExportObject implements Serializable {
         throw new IllegalStateException("Entry is neither Collection nor Map");
       }
     }
-    return checkDescending(result, params);
+    return result;
   }
   
+  /**
+   * Removes the entries that are below {@link ExportParams#generalMinimum}
+   * if a value is present.
+   * @param <N> the key class of the map
+   * @param <V> the value class of the map
+   * @param resultMap the map to reduce
+   * @param minimum the minimum value
+   * @return the map conforming to the general minimum
+   */
   protected static <N extends Number, V> NavigableMap<N, V> applyGeneralMinimum(NavigableMap<N, V> resultMap, 
       Optional<N> minimum) {
     return minimum.isPresent()
@@ -130,13 +136,6 @@ public abstract class ExportObject implements Serializable {
       key += delta;
     }
     return result;
-  }
-
-  protected static final <K, V> NavigableMap<K, V> checkDescending(NavigableMap<K, V> map, ExportParams params) {
-    if (params.isDescending) {
-      return map.descendingMap();
-    }
-    return map;
   }
 
   protected static final <K, V> K getBiggestKey(SortedMap<K, V> map) {

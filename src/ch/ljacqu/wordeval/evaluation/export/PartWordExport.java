@@ -15,31 +15,30 @@ import lombok.Getter;
 @Getter
 public final class PartWordExport extends ExportObject {
 
-  private static final long serialVersionUID = 1L;
-
   private final NavigableMap<Double, NavigableMap<String, Object>> topEntries;
   private final NavigableMap<Double, NavigableMap<String, Integer>> aggregatedEntries;
 
   /**
    * Creates a new PartWordExport object.
-   * @param identifier The identifier of the export object
-   * @param topEntries The collection of top entries
-   * @param aggregatedEntries The collection of aggregated entries
+   * @param identifier the identifier of the export object
+   * @param topEntries the collection of top entries
+   * @param aggregatedEntries the collection of aggregated entries
    */
-  public PartWordExport(String identifier,
+  private PartWordExport(String identifier,
       NavigableMap<Double, NavigableMap<String, Object>> topEntries,
-      NavigableMap<Double, NavigableMap<String, Integer>> aggregatedEntries) {
+      NavigableMap<Double, NavigableMap<String, Integer>> aggregatedEntries,
+      ExportParams params) {
     super(identifier);
-    this.topEntries = topEntries;
-    this.aggregatedEntries = aggregatedEntries;
+    this.topEntries = ExportService.checkDescending(topEntries, params.isDescending);
+    this.aggregatedEntries = ExportService.checkDescending(aggregatedEntries, params.isDescending);
   }
 
   /**
    * Generates a new PartWordExport object based on an evaluator's results and
    * default export settings.
-   * @param identifier The identifier of the export object to create
-   * @param map The evaluator result
-   * @return The generated PartWordExport object
+   * @param identifier the identifier of the export object to create
+   * @param map the evaluator result
+   * @return the generated PartWordExport object
    */
   public static PartWordExport create(String identifier, Map<String, Set<String>> map) {
     return create(identifier, map, ExportParams.builder().build(), new PartWordReducer.ByLength());
@@ -47,11 +46,11 @@ public final class PartWordExport extends ExportObject {
 
   /**
    * Generates a new PartWordExport object based on an evaluator's results and the given settings.
-   * @param identifier The identifier of the export object to create
-   * @param results The evaluator results
-   * @param params The export parameters
-   * @param reducer The reducer to use to identify top entries
-   * @return The generated PartWordExport object
+   * @param identifier the identifier of the export object to create
+   * @param results the evaluator results
+   * @param params the export parameters
+   * @param reducer the reducer to use to identify top entries
+   * @return the generated PartWordExport object
    */
   public static PartWordExport create(String identifier, Map<String, Set<String>> results, 
       ExportParams params, PartWordReducer reducer) {
@@ -67,7 +66,7 @@ public final class PartWordExport extends ExportObject {
       aggregatedEntries = aggregateEntries(orderedResults.headMap(key, false), params);
     }
     
-    return new PartWordExport(identifier, trimTopEntries(topEntries, params), aggregatedEntries);
+    return new PartWordExport(identifier, trimTopEntries(topEntries, params), aggregatedEntries, params);
   }
   
   // Assign the reducer's computed relevance to the entries 
@@ -87,7 +86,7 @@ public final class PartWordExport extends ExportObject {
     for (Map.Entry<Double, NavigableMap<String, Set<String>>> entry : results.entrySet()) {
       aggregatedEntries.put(entry.getKey(), aggregateMap(entry.getValue(), params));
     }
-    return checkDescending(aggregatedEntries, params);
+    return aggregatedEntries;
   }
   
   // Trims the top entries list to conform to the export params' maxTopEntrySize setting
@@ -97,7 +96,7 @@ public final class PartWordExport extends ExportObject {
     for (Map.Entry<Double, NavigableMap<String, Set<String>>> entry : topEntries.entrySet()) {
       result.put(entry.getKey(), trimTopEntriesSubMap(entry.getValue(), params));
     }
-    return checkDescending(result, params);
+    return result;
   }
   
   // Helper method for order() to conveniently add an entry under its relevance

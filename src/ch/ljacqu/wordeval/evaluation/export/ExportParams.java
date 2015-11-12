@@ -13,16 +13,16 @@ import lombok.Builder;
 public class ExportParams {
 
   /** The number of biggest keys to keep in full form. */
-  public final int topKeys;
+  public final int topKeys; // done
   
   /** Top entry minimum - any key below this minimum will not be added as top entry. */
-  public final Optional<Double> topEntryMinimum;
+  public final Optional<Double> topEntryMinimum; // done
   
   /** General minimum - any keys below this minimum will be discarded entirely. */
-  public final Optional<Double> generalMinimum;
+  public final Optional<Double> generalMinimum; // done
   
-  /** Whether or not to show the results in descending order. */
-  public final boolean isDescending;
+  /** If true, the first-level keys are in descending order. */
+  public final boolean isDescending; // done
   
   /** For PartWordExport, whether the second dimension keys should be descending. */
   public final boolean hasDescendingEntries;

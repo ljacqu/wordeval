@@ -4,32 +4,32 @@ import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Optional;
-import java.util.SortedMap;
+
+import ch.ljacqu.wordeval.evaluation.WordStatEvaluator;
 import lombok.Getter;
 
 /**
- * ExportObject class for evaluators of type WordStatEvaluator.
+ * ExportObject class for evaluators of type {@link WordStatEvaluator}.
  */
 @Getter
 public class WordStatExport extends ExportObject {
 
-  private static final long serialVersionUID = 1L;
-
-  private final SortedMap<Integer, List<String>> topEntries;
-  private final SortedMap<Integer, Integer> aggregatedEntries;
+  private final NavigableMap<Integer, List<String>> topEntries;
+  private final NavigableMap<Integer, Integer> aggregatedEntries;
 
   /**
    * Creates a new WordStatExport object.
-   * @param identifier The identifier of the export object
-   * @param topEntries The collection of top entries
-   * @param aggregatedEntries The collection of aggregated entries
+   * @param identifier the identifier of the export object
+   * @param topEntries the collection of top entries
+   * @param aggregatedEntries the collection of aggregated entries
+   * @param params the export parameters
    */
-  public WordStatExport(String identifier,
-      SortedMap<Integer, List<String>> topEntries,
-      SortedMap<Integer, Integer> aggregatedEntries) {
+  private WordStatExport(String identifier,
+      NavigableMap<Integer, List<String>> topEntries,
+      NavigableMap<Integer, Integer> aggregatedEntries, ExportParams params) {
     super(identifier);
-    this.topEntries = topEntries;
-    this.aggregatedEntries = aggregatedEntries;
+    this.topEntries = ExportService.checkDescending(topEntries, params.isDescending);
+    this.aggregatedEntries = ExportService.checkDescending(aggregatedEntries, params.isDescending);
   }
 
   /**
@@ -53,7 +53,7 @@ public class WordStatExport extends ExportObject {
   public static WordStatExport create(String identifier,
       NavigableMap<Integer, List<String>> results, ExportParams params) {
     NavigableMap<Integer, List<String>> map = applyGeneralMinimum(results, toIntType(params.generalMinimum));
-    SortedMap<Integer, List<String>> topEntries = isolateTopEntries(map, params);
+    NavigableMap<Integer, List<String>> topEntries = isolateTopEntries(map, params);
     topEntries = trimLargeTopEntries(topEntries, params);
 
     NavigableMap<Integer, Integer> aggregatedEntries;
@@ -63,7 +63,7 @@ public class WordStatExport extends ExportObject {
       Integer toKey = getBiggestKey(topEntries);
       aggregatedEntries = aggregateMap(map.headMap(toKey, false), params);
     }
-    return new WordStatExport(identifier, topEntries, aggregatedEntries);
+    return new WordStatExport(identifier, topEntries, aggregatedEntries, params);
   }
 
   /**
@@ -73,8 +73,8 @@ public class WordStatExport extends ExportObject {
    * @param params The export parameters
    * @return Trimmed version of the map
    */
-  private static <K> SortedMap<K, List<String>> trimLargeTopEntries(
-      SortedMap<K, List<String>> topEntries, ExportParams params) {
+  private static <K> NavigableMap<K, List<String>> trimLargeTopEntries(
+      NavigableMap<K, List<String>> topEntries, ExportParams params) {
     if (!params.maxTopEntrySize.isPresent()) {
       return topEntries;
     }
