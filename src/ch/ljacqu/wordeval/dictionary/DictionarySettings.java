@@ -85,7 +85,7 @@ public class DictionarySettings {
    * @return The created sanitizer
    */
   Sanitizer buildSanitizer(Language language) {
-    return new Sanitizer(language, this);
+    return new Sanitizer(this);
   }
 
   /**

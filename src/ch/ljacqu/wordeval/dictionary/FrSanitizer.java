@@ -1,7 +1,5 @@
 package ch.ljacqu.wordeval.dictionary;
 
-import ch.ljacqu.wordeval.language.Language;
-
 /**
  * Custom sanitizer for the French dictionary.
  */
@@ -13,7 +11,7 @@ public class FrSanitizer extends Sanitizer {
    * Creates a new sanitizer for the French dictionary.
    */
   public FrSanitizer() {
-    super(Language.get("fr"), initSettings());
+    super(initSettings());
   }
   
   @Override

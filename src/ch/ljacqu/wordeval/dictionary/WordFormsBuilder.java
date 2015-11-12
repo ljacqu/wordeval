@@ -32,12 +32,11 @@ class WordFormsBuilder {
    * Computes the different word forms (all lowercase, accents removed, etc.)
    * for the given word.
    * @param word The word to process
-   * @return Collection of all word forms; empty array if the word should be
-   *         skipped
+   * @return Collection of all word forms
    */
   String[] computeForms(String word) {
     if (word.isEmpty()) {
-      return new String[0];
+      throw new IllegalStateException("The word may not be empty");
     }
 
     String[] wordForms = new String[WordForm.values().length];

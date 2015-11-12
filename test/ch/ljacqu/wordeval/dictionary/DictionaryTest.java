@@ -71,7 +71,7 @@ public class DictionaryTest {
 
   private static class TestSanitizer extends Sanitizer {
     public TestSanitizer() {
-      super(zxxLanguage, zxxSettings);
+      super(zxxSettings);
     }
   }
   

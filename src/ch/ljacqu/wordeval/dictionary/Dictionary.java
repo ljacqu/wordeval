@@ -4,17 +4,17 @@ import static ch.ljacqu.wordeval.dictionary.WordForm.RAW;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import ch.ljacqu.wordeval.DataUtils;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.EvaluatorService;
 import ch.ljacqu.wordeval.language.Language;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 /**
  * A dictionary to process.
  */
-@RequiredArgsConstructor
 public class Dictionary {
 
   private static final String DICT_PATH = "dict/";
@@ -25,7 +25,21 @@ public class Dictionary {
   @Getter
   private final Language language;
   private final Sanitizer sanitizer;
+  private final WordFormsBuilder wordFormsBuilder;
   private final DataUtils dataUtils = new DataUtils();
+  
+  /**
+   * Creates a Dictionary instance.
+   * @param fileName the file name of the dictionary
+   * @param language the language
+   * @param sanitizer the sanitizer
+   */
+  public Dictionary(String fileName, Language language, Sanitizer sanitizer) {
+    this.fileName = fileName;
+    this.language = language;
+    this.sanitizer = sanitizer;
+    this.wordFormsBuilder = new WordFormsBuilder(language);
+  }
 
   /**
    * Gets a known dictionary.
@@ -59,9 +73,9 @@ public class Dictionary {
     
     dataUtils.readFileLines(fileName)
       .stream()
-      .map(sanitizer::computeForms)
-      .filter(wordForms -> wordForms.length > 0)
-      .forEach(wordForms -> processWord(wordForms, evaluators));
+      .map(sanitizer::isolateWord)
+      .filter(StringUtils::isNotEmpty)
+      .forEach(word -> sendToEvaluators(word, evaluators));
 
     EvaluatorService.executePostEvaluators(postEvaluators);
   }
@@ -70,9 +84,11 @@ public class Dictionary {
    * Passes the the current word to the evaluators in their desired form.
    * @param wordForms the array of word forms of the current word.
    */
-  private static void processWord(String[] wordForms, Iterable<Evaluator<?>> evaluators) {
+  private void sendToEvaluators(String word, Iterable<Evaluator<?>> evaluators) {
+    String[] wordForms = wordFormsBuilder.computeForms(word);
     for (Evaluator<?> evaluator : evaluators) {
-      evaluator.processWord(getWordForm(wordForms, evaluator.getWordForm()), getWordForm(wordForms, RAW));
+      evaluator.processWord(getWordForm(wordForms, evaluator.getWordForm()), 
+                            getWordForm(wordForms, RAW));
     }
   }
 

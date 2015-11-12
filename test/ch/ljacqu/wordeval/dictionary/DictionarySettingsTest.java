@@ -7,9 +7,6 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import ch.ljacqu.wordeval.language.Alphabet;
-import ch.ljacqu.wordeval.language.Language;
-
 public class DictionarySettingsTest {
 
   @Test(expected = IllegalArgumentException.class)
@@ -43,13 +40,10 @@ public class DictionarySettingsTest {
 
   private static class TestSanitizer extends Sanitizer {
     public TestSanitizer() {
-      super(lang(), settings());
+      super(settings());
     }
     private static DictionarySettings settings() {
       return new DictionarySettings("zxx");
-    }
-    private static Language lang() {
-      return new Language("zxx", Alphabet.CYRILLIC);
     }
   }
 

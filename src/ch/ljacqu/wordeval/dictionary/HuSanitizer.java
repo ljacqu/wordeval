@@ -4,8 +4,6 @@ import static org.apache.commons.lang3.StringUtils.containsAny;
 
 import org.apache.commons.lang3.StringUtils;
 
-import ch.ljacqu.wordeval.language.Language;
-
 /**
  * Custom sanitizer implementing specific rules for the Hungarian dictionary.
  */
@@ -17,7 +15,7 @@ public class HuSanitizer extends Sanitizer {
    * Creates a new instance of a sanitizer for the Hungarian dictionary.
    */
   public HuSanitizer() {
-    super(Language.get("hu"), initSettings());
+    super(initSettings());
   }
 
   @Override
@@ -129,7 +127,8 @@ public class HuSanitizer extends Sanitizer {
   }
 
   private static DictionarySettings initSettings() {
-    return new DictionarySettings("hu").setDelimiters('/', '\t')
+    return new DictionarySettings("hu")
+        .setDelimiters('/', '\t')
         .setSkipSequences(".", "+", "±", "ø", "ʻ", "’", "­");
   }
 

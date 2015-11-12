@@ -1,12 +1,11 @@
 package ch.ljacqu.wordeval.dictionary;
 
 import org.apache.commons.lang3.StringUtils;
-import ch.ljacqu.wordeval.language.Language;
 
 /**
  * Class responsible for sanitizing a dictionary's entries such that only the
  * word is returned, without any additional data stored on the same line.
- * Sanitizers may return an empty string if the current line is to be skipped.
+ * Sanitizers may return an empty string if the current line should be skipped.
  */
 public class Sanitizer {
 
@@ -14,18 +13,14 @@ public class Sanitizer {
   private final char[] delimiters;
   /** Words containing any entry of skipSequences are discarded. */
   private final String[] skipSequences;
-  // TODO #65: Keep letter lists in Language and make WordFormsBuilder stateless
-  private final WordFormsBuilder formsBuilder;
 
   /**
    * Creates a new sanitizer.
-   * @param language the language of the dictionary
    * @param settings the dictionary settings
    */
-  public Sanitizer(Language language, DictionarySettings settings) {
+  public Sanitizer(DictionarySettings settings) {
     delimiters = settings.getDelimiters();
     skipSequences = settings.getSkipSequences();
-    formsBuilder = new WordFormsBuilder(language);
   }
 
   /**
@@ -39,17 +34,18 @@ public class Sanitizer {
   }
 
   /**
-   * Sanitation entry method: takes a line read from the dictionary and converts
-   * it into its sanitized forms.
-   * @param line the line (the word) to process
-   * @return the sanitized word forms (empty array to signal skip)
+   * Takes a line read from the dictionary file and returns the word
+   * it contains without any additional information. Note that an
+   * empty String may be returned to signal that the word should be
+   * skipped.
+   * @param line the line to process
+   * @return the sanitized word or empty string if line should be skipped
    */
-  public final String[] computeForms(String line) {
-    String rawWord = removeDelimiters(line);
-    if (shouldBeSkipped(rawWord)) {
-      return new String[0];
-    }
-    return formsBuilder.computeForms(customSanitize(rawWord));
+  public final String isolateWord(String line) {
+    String word = removeDelimiters(line);
+    return shouldBeSkipped(word)
+      ? ""
+      : customSanitize(word);
   }
 
   /**
@@ -74,12 +70,8 @@ public class Sanitizer {
    * @return true if the word should be skipped, false otherwise
    */
   private boolean shouldBeSkipped(String word) {
-    if (StringUtils.containsAny(word, skipSequences)) {
-      return true;
-    } else if (word.matches(".*\\d+.*")) {
-      return true;
-    }
-    return false;
+    return StringUtils.containsAny(word, skipSequences) 
+        || word.matches(".*\\d+.*");
   }
 
 }

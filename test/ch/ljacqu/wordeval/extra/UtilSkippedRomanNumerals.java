@@ -19,6 +19,7 @@ import lombok.extern.log4j.Log4j2;
  * Prints the words of a dictionary which were skipped because they were
  * recognized as a Roman numeral.
  */
+@Ignore
 @Log4j2
 public class UtilSkippedRomanNumerals {
   
@@ -29,7 +30,6 @@ public class UtilSkippedRomanNumerals {
   }
   
   @Test
-  @Ignore
   public void findRomanNumeralSkips() {
     Dictionary dict = Dictionary.getDictionary(DICTIONARY);
     String fileName = (String) TestUtil.R.getField(Dictionary.class, dict, "fileName");
@@ -43,8 +43,8 @@ public class UtilSkippedRomanNumerals {
     DataUtils dataUtils = new DataUtils();
     List<String> skippedNumerals = new ArrayList<>();
     for (String line : dataUtils.readFileLines(fileName)) {
-      String[] wordForms = sanitizer.computeForms(line);
-      if (wordForms.length == 0) {
+      String sanitizerResult = sanitizer.isolateWord(line);
+      if (sanitizerResult.isEmpty()) {
         String word = (String) TestUtil.R.invokeMethod(lineToWord, sanitizer, line);
         if (DictionaryService.isRomanNumeral(word)) {
           skippedNumerals.add(word);
@@ -54,4 +54,5 @@ public class UtilSkippedRomanNumerals {
     
     log.info("Skipped words for '{}':\n- {}", DICTIONARY, String.join("\n- ", skippedNumerals));
   }
+
 }
