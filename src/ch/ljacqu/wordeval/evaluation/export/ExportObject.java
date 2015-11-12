@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
-import java.util.Optional;
 import java.util.Random;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -103,22 +102,6 @@ public abstract class ExportObject {
       }
     }
     return result;
-  }
-  
-  /**
-   * Removes the entries that are below {@link ExportParams#generalMinimum}
-   * if a value is present.
-   * @param <N> the key class of the map
-   * @param <V> the value class of the map
-   * @param resultMap the map to reduce
-   * @param minimum the minimum value
-   * @return the map conforming to the general minimum
-   */
-  protected static <N extends Number, V> NavigableMap<N, V> applyGeneralMinimum(NavigableMap<N, V> resultMap, 
-      Optional<N> minimum) {
-    return minimum.isPresent()
-        ? resultMap.tailMap(minimum.get(), true)
-        : resultMap;
   }
 
   protected static final <T> List<T> reduceList(List<T> words, int toSize) {

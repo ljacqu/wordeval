@@ -52,7 +52,8 @@ public class WordStatExport extends ExportObject {
    */
   public static WordStatExport create(String identifier,
       NavigableMap<Integer, List<String>> results, ExportParams params) {
-    NavigableMap<Integer, List<String>> map = applyGeneralMinimum(results, toIntType(params.generalMinimum));
+    NavigableMap<Integer, List<String>> map = 
+        ExportService.applyGeneralMinimum(results, toIntType(params.generalMinimum));
     NavigableMap<Integer, List<String>> topEntries = isolateTopEntries(map, params);
     topEntries = trimLargeTopEntries(topEntries, params);
 

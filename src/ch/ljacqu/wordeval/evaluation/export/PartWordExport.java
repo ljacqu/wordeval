@@ -7,6 +7,7 @@ import java.util.NavigableMap;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
 import lombok.Getter;
 
 /**
@@ -29,6 +30,10 @@ public final class PartWordExport extends ExportObject {
       NavigableMap<Double, NavigableMap<String, Integer>> aggregatedEntries,
       ExportParams params) {
     super(identifier);
+    if (params.hasDescendingEntries) {
+      convertListEntriesToDescending(topEntries);
+      convertListEntriesToDescending(aggregatedEntries);
+    }
     this.topEntries = ExportService.checkDescending(topEntries, params.isDescending);
     this.aggregatedEntries = ExportService.checkDescending(aggregatedEntries, params.isDescending);
   }
@@ -54,9 +59,10 @@ public final class PartWordExport extends ExportObject {
    */
   public static PartWordExport create(String identifier, Map<String, Set<String>> results, 
       ExportParams params, PartWordReducer reducer) {
-    NavigableMap<Double, NavigableMap<String, Set<String>>> orderedResults = applyGeneralMinimum(
-        order(results, reducer), params.generalMinimum); 
-    NavigableMap<Double, NavigableMap<String, Set<String>>> topEntries = isolateTopEntries(orderedResults, params);
+    NavigableMap<Double, NavigableMap<String, Set<String>>> orderedResults = 
+        ExportService.applyGeneralMinimum(order(results, reducer), params.generalMinimum); 
+    NavigableMap<Double, NavigableMap<String, Set<String>>> topEntries = 
+        isolateTopEntries(orderedResults, params);
 
     NavigableMap<Double, NavigableMap<String, Integer>> aggregatedEntries;
     if (topEntries.isEmpty()) {
@@ -109,6 +115,13 @@ public final class PartWordExport extends ExportObject {
       entry = results.get(relevance);
     }
     entry.put(key, words);
+  }
+  
+  private static <K, V> void convertListEntriesToDescending(
+      NavigableMap<Double, NavigableMap<K, V>> map) {
+    for (Map.Entry<Double, NavigableMap<K, V>> entry : map.entrySet()) {
+      map.put(entry.getKey(), entry.getValue().descendingMap());
+    }
   }
   
   private static NavigableMap<String, Object> trimTopEntriesSubMap(

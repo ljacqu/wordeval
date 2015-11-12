@@ -1,8 +1,8 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
 import static ch.ljacqu.wordeval.TestUtil.asSet;
-import static ch.ljacqu.wordeval.TestUtil.toSet;
 import static ch.ljacqu.wordeval.TestUtil.toColl;
+import static ch.ljacqu.wordeval.TestUtil.toSet;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.anEmptyMap;
 import static org.hamcrest.Matchers.contains;
@@ -13,6 +13,7 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -22,6 +23,7 @@ import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -172,6 +174,27 @@ public class PartWordExportTest {
     assertThat(topEntries.keySet(), contains(9.0, 8.0));
     Map<Double, NavigableMap<String, Integer>> aggregatedEntries = export.getAggregatedEntries();
     assertThat(aggregatedEntries.keySet(), contains(7.0, 6.0));
+  }
+  
+  @Test
+  public void shouldRespectDescendingEntryParam() {
+    ExportParams params = ExportParams.builder()
+        .hasDescendingEntries(true)
+        .isDescending(false)
+        .topKeys(3)
+        .build();
+    
+    PartWordExport export = PartWordExport.create("desc test", results, params, new PartWordReducer.ByLength());
+    
+    Map<Double, NavigableMap<String, Object>> topEntries = export.getTopEntries();
+    assertThat(topEntries.keySet(), contains(7.0, 8.0, 9.0));
+    assertThat(topEntries.get(9.0).keySet(), contains("taalplaat", "sigologis", "ittesetti"));
+    assertThat(topEntries.get(8.0).keySet(), contains("kaarraak", "erettere", "aarddraa"));
+    assertThat(topEntries.get(7.0).keySet(), contains("esifise"));
+    
+    Map<Double, NavigableMap<String, Integer>> aggregatedEntries = export.getAggregatedEntries();
+    assertThat(aggregatedEntries.keySet(), contains(5.0, 6.0));
+    assertThat(aggregatedEntries.get(5.0).keySet(), contains("anana", "alkla", "aadaa"));
   }
 
   @Test
