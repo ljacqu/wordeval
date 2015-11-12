@@ -13,9 +13,6 @@ import org.apache.commons.lang3.StringUtils;
  * Service for Language objects.
  */
 public final class LanguageService {
-  
-  /** Upper char index belonging in the standard ASCII range. */
-  private static final int ASCII_MAX_INDEX = 127;
 
   private LanguageService() {
   }
@@ -75,27 +72,6 @@ public final class LanguageService {
           "р", "с", "т", "ћ", "ў", "ф", "х", "ц", "ч", "џ", "ш", "щ");
     }
     throw new IllegalArgumentException("No consonant list known for alphabet " + language.getAlphabet());
-  }
-
-  /**
-   * Returns the letters to preserve, i.e. the letters that should be recognized
-   * as separate letters, e.g. "ä" in Swedish.
-   * @param language the language to process
-   * @return the list of characters that are distinct letters
-   */
-  public static List<Character> computeCharsToPreserve(Language language) {
-    List<Character> charsToPreserve = new ArrayList<Character>();
-    for (String letter : language.getAdditionalConsonants()) {
-      if (letter.length() == 1 && letter.charAt(0) > ASCII_MAX_INDEX) {
-        charsToPreserve.add(letter.charAt(0));
-      }
-    }
-    for (String letter : language.getAdditionalVowels()) {
-      if (letter.length() == 1 && letter.charAt(0) > ASCII_MAX_INDEX) {
-        charsToPreserve.add(letter.charAt(0));
-      }
-    }
-    return charsToPreserve;
   }
 
   private static List<String> asList(String... items) {

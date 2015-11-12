@@ -20,7 +20,7 @@ public class DiacriticHomonymsTest {
   @Test
   public void shouldFindDiacriticHomonyms() {
     String[] words = { "schön", "schon", "sûr", "sur", "ça", "çà", "des", "dés", "dès", "le", "la", "là" };
-    DiacriticHomonyms evaluator = new DiacriticHomonyms(language);
+    DiacriticHomonyms evaluator = new DiacriticHomonyms(language.getLocale());
     
     for (String word : words) {
       evaluator.processWord(LanguageService.removeAccentsFromWord(word, Alphabet.LATIN), word);

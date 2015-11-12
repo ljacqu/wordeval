@@ -11,7 +11,8 @@ import ch.ljacqu.wordeval.language.Language;
 import ch.ljacqu.wordeval.language.LanguageService;
 
 /**
- * Utility class to generate the various word forms of a word.
+ * Utility class used in {@link Sanitizer} to 
+ * generate the various word forms of a word.
  */
 class WordFormsBuilder {
 
@@ -21,9 +22,9 @@ class WordFormsBuilder {
   private final Alphabet alphabet;
 
   WordFormsBuilder(Language language) {
-    lettersToKeep = charsToString(LanguageService.computeCharsToPreserve(language));
+    lettersToKeep = language.getCharsToPreserve();
     tempReplacements = initializeTempReplacements(lettersToKeep);
-    locale = language.buildLocale();
+    locale = language.getLocale();
     alphabet = language.getAlphabet();
   }
 
@@ -58,14 +59,6 @@ class WordFormsBuilder {
     String escapedWord = LanguageService.removeAccentsFromWord(
         StringUtils.replaceChars(word, lettersToKeep, tempReplacements), alphabet);
     return StringUtils.replaceChars(escapedWord, tempReplacements, lettersToKeep);
-  }
-
-  private static String charsToString(Iterable<Character> letters) {
-    StringBuilder sb = new StringBuilder();
-    for (char letter : letters) {
-      sb.append(letter);
-    }
-    return sb.toString();
   }
 
   private static String initializeTempReplacements(String lettersToKeep) {

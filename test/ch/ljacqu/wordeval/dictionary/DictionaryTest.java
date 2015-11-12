@@ -41,8 +41,8 @@ public class DictionaryTest {
     Dictionary dict = Dictionary.getDictionary("zxx");
     Dictionary dict2 = Dictionary.getDictionary("zxx", "zxx", "test-file.dic");
     
-    assertThat(dict.getLanguageCode(), equalTo("zxx"));
-    assertThat(dict2.getLanguageCode(), equalTo("zxx"));
+    assertThat(dict.getLanguage(), equalTo(zxxLanguage));
+    assertThat(dict2.getLanguage(), equalTo(zxxLanguage));
   }
   
   @Test
@@ -71,7 +71,7 @@ public class DictionaryTest {
 
   private static class TestSanitizer extends Sanitizer {
     public TestSanitizer() {
-      super(zxxLanguage, new DictionarySettings("zxx").setDelimiters('/'));
+      super(zxxLanguage, zxxSettings);
     }
   }
   

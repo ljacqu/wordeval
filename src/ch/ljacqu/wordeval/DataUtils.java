@@ -11,56 +11,41 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * Wrapper for interaction with the file system and JSON operations.
  */
+@NoArgsConstructor
 public class DataUtils {
   
   @Getter
-  private final String root;
+  private String root = "";
   
   @Getter
-  private final boolean usePrettyPrint;
+  private boolean usePrettyPrint = false;
   
   @Getter(lazy = true)
   private final Gson gson = createGson();
-  
-  /**
-   * Initializes an instance with the given root.
-   * @param root the root to append to file paths
-   */
-  public DataUtils(String root) {
-    this(root, false);
-  }
   
   /**
    * Initializes an instance and sets whether to use JSON Pretty Print or not.
    * @param usePrettyPrint JSON pretty print setting
    */
   public DataUtils(boolean usePrettyPrint) {
-    this("", usePrettyPrint);
+    this.usePrettyPrint = usePrettyPrint;
   }
   
   /**
-   * Constructor with the root path to use for files and whether to use JSON Pretty Print.
+   * Sets the root path (the path to append to file references).
    * @param root the root to append to file paths
-   * @param usePrettyPrint JSON pretty print setting
    */
-  public DataUtils(String root, boolean usePrettyPrint) {
-    this.usePrettyPrint = usePrettyPrint;
+  public void setRoot(String root) {
     if (!root.isEmpty() && !root.endsWith("/") && !root.endsWith(File.separator)) {
       this.root = root + File.separator;
     } else {
       this.root = root; 
     }
-  }
-
-  /**
-   * Initializes an instance with an empty root.
-   */
-  public DataUtils() {
-    this("", false);
   }
   
   /**

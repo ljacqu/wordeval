@@ -23,7 +23,7 @@ public final class DictionaryService {
    * @return true if the word is a valid Roman numeral, false otherwise
    */
   public static boolean isRomanNumeral(String word) {
-    return ROMAN_NUMERAL_PATTERN.matcher(word).matches();
+    return !word.isEmpty() && ROMAN_NUMERAL_PATTERN.matcher(word).matches();
   }
 
 }

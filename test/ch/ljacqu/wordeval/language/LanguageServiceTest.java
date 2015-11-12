@@ -4,15 +4,15 @@ import static ch.ljacqu.wordeval.language.Alphabet.CYRILLIC;
 import static ch.ljacqu.wordeval.language.Alphabet.LATIN;
 import static ch.ljacqu.wordeval.language.LetterType.CONSONANTS;
 import static ch.ljacqu.wordeval.language.LetterType.VOWELS;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junit.Test;
 
 public class LanguageServiceTest {
@@ -42,25 +42,6 @@ public class LanguageServiceTest {
       result.add(LanguageService.removeAccentsFromWord(word, CYRILLIC));
     }
     assertThat(result.toArray(), equalTo(expected));
-  }
-
-  @Test
-  public void shouldReturnCharsToPreserve() {
-    Language lang = new Language("zxx", LATIN).setAdditionalConsonants("cs",
-        "þ", "y").setAdditionalVowels("w", "eu", "ø", "öy");
-
-    assertThat(LanguageService.computeCharsToPreserve(lang),
-        containsInAnyOrder('þ', 'ø'));
-  }
-
-  @Test
-  public void shouldReturnEmptyCharsToPreserve() {
-    Language lang1 = new Language("zxx", LATIN);
-    Language lang2 = new Language("zxx", LATIN).setAdditionalConsonants("tt",
-        "ff", "gg").setAdditionalVowels("ii", "w", "øu");
-
-    assertThat(LanguageService.computeCharsToPreserve(lang1), empty());
-    assertThat(LanguageService.computeCharsToPreserve(lang2), empty());
   }
 
   @Test

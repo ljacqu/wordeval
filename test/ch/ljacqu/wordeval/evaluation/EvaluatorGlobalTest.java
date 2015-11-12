@@ -40,7 +40,7 @@ public class EvaluatorGlobalTest {
         .add(new BackwardsPairs())
         .add(new ConsecutiveLetterPairs())
         .add(new ConsecutiveVowelCount(LetterType.VOWELS, lang))
-        .add(new DiacriticHomonyms(lang))
+        .add(new DiacriticHomonyms(lang.getLocale()))
         .add(new FullPalindromes())
         .add(new Isograms())
         .add(new LongWords())

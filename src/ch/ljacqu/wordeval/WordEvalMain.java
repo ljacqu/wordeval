@@ -61,11 +61,11 @@ public final class WordEvalMain {
    */
   public static void exportLanguage(String code) {
     log.info("Exporting language '{}'", code);
-    Language language = Language.get(code);
     List<Long> times = new ArrayList<Long>();
     times.add(System.nanoTime());
     
     Dictionary dictionary = Dictionary.getDictionary(code);
+    Language language = dictionary.getLanguage();
     outputDiff(times, "got dictionary object");
 
     List<Evaluator<?>> evaluators = new ArrayList<>();
@@ -78,7 +78,7 @@ public final class WordEvalMain {
     evaluators.add(new ConsecutiveLetterPairs());
     evaluators.add(new ConsecutiveVowelCount(VOWELS, language));
     evaluators.add(new ConsecutiveVowelCount(CONSONANTS, language));
-    evaluators.add(new DiacriticHomonyms(language));
+    evaluators.add(new DiacriticHomonyms(language.getLocale()));
     evaluators.add(new FullPalindromes());
     evaluators.add(new Isograms());
     evaluators.add(new LongWords());

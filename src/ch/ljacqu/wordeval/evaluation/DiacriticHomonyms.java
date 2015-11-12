@@ -8,25 +8,17 @@ import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 import ch.ljacqu.wordeval.evaluation.export.PartWordExport;
 import ch.ljacqu.wordeval.evaluation.export.PartWordReducer;
-import ch.ljacqu.wordeval.language.Language;
+import lombok.AllArgsConstructor;
 
 /**
  * Groups words which only differ in diacritics which are not considered
  * distinct letters in the language, such as {des, dés, dès} in French or
  * {schon, schön} in German.
  */
+@AllArgsConstructor
 public class DiacriticHomonyms extends PartWordEvaluator {
 
   private Locale locale;
-
-  /**
-   * Creates a new instance of the evaluator for the given language.
-   * @param language the language of the words to process
-   */
-  public DiacriticHomonyms(Language language) {
-    // TODO #55: Pass Locale instead so it isn't built every time it is required
-    locale = language.buildLocale();
-  }
 
   @Override
   public void processWord(String word, String rawWord) {

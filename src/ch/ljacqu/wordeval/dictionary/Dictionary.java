@@ -9,33 +9,23 @@ import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.EvaluatorService;
 import ch.ljacqu.wordeval.language.Language;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * A dictionary to process.
  */
+@RequiredArgsConstructor
 public class Dictionary {
 
   private static final String DICT_PATH = "dict/";
 
-  @Getter
-  private final String languageCode;
   /** The dictionary file to read from. */
   private final String fileName;
   /** Sanitizer to sanitize the dictionary's words. */
+  @Getter
+  private final Language language;
   private final Sanitizer sanitizer;
   private final DataUtils dataUtils = new DataUtils();
-
-  /**
-   * Creates a new Dictionary instance.
-   * @param fileName the file name where the dictionary is located
-   * @param language the language of the dictionary
-   * @param sanitizer the sanitizer to use while reading the dictionary
-   */
-  public Dictionary(String fileName, Language language, Sanitizer sanitizer) {
-    this.fileName = fileName;
-    this.sanitizer = sanitizer;
-    this.languageCode = language.getCode();
-  }
 
   /**
    * Gets a known dictionary.

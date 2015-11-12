@@ -46,7 +46,7 @@ public class UtilSkippedRomanNumerals {
       String[] wordForms = sanitizer.computeForms(line);
       if (wordForms.length == 0) {
         String word = (String) TestUtil.R.invokeMethod(lineToWord, sanitizer, line);
-        if (!word.isEmpty() && DictionaryService.isRomanNumeral(word)) {
+        if (DictionaryService.isRomanNumeral(word)) {
           skippedNumerals.add(word);
         }
       }

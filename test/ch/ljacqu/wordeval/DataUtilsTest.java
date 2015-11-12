@@ -24,13 +24,14 @@ public class DataUtilsTest {
   
   @Test
   public void shouldAddSlashToRootWhenMissing() {
-    DataUtils dataUtils = new DataUtils("", true);
+    DataUtils dataUtils = new DataUtils();
+    dataUtils.setRoot("");
     assertThat(dataUtils.getRoot(), equalTo(""));
     
-    dataUtils = new DataUtils("root");
+    dataUtils.setRoot("root");
     assertThat(dataUtils.getRoot(), equalTo("root" + File.separator));
     
-    dataUtils = new DataUtils("root/", true);
+    dataUtils.setRoot("root/");
     assertThat(dataUtils.getRoot(), equalTo("root/"));
   }
   
