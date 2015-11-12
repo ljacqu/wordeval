@@ -54,7 +54,7 @@ public class DictionaryTest {
     Dictionary dict = Dictionary.getDictionary("zxx");
     DataUtils dataUtils = Mockito.mock(DataUtils.class);
     when(dataUtils.readFileLines(anyString())).thenReturn(Arrays.asList("Some", "/a", "tëst", "Wôrds", "here/23"));
-    TestUtil.setField(Dictionary.class, dict, "dataUtils", dataUtils);
+    TestUtil.R.setField(Dictionary.class, dict, "dataUtils", dataUtils);
     
     dict.process(evaluators);
     

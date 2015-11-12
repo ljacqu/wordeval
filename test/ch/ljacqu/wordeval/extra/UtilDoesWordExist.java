@@ -1,13 +1,12 @@
 package ch.ljacqu.wordeval.extra;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+
 import ch.ljacqu.wordeval.AppData;
 import ch.ljacqu.wordeval.TestUtil;
 import ch.ljacqu.wordeval.dictionary.Dictionary;

@@ -12,7 +12,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -31,8 +30,7 @@ import ch.ljacqu.wordeval.language.LetterType;
  */
 public class DictionarySanitationTest {
   
-  @BeforeClass
-  public static void initData() {
+  static {
     AppData.init();
   }
   

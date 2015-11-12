@@ -35,14 +35,14 @@ public class Sanitizer {
    * @return the sanitized word (empty string to signal skip)
    */
   protected String customSanitize(String word) {
-    return word;
+    return DictionaryService.isRomanNumeral(word) ? "" : word;
   }
 
   /**
    * Sanitation entry method: takes a line read from the dictionary and converts
-   * it into its sanitized form.
+   * it into its sanitized forms.
    * @param line the line (the word) to process
-   * @return the sanitized word (empty string to signal skip)
+   * @return the sanitized word forms (empty array to signal skip)
    */
   public final String[] computeForms(String line) {
     String rawWord = removeDelimiters(line);
