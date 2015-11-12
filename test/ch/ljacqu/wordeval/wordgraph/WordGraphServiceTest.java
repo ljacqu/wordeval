@@ -46,7 +46,7 @@ public class WordGraphServiceTest {
     
     // Set mock for DataUtils
     mockDataUtils = Mockito.mock(DataUtils.class);
-    TestUtil.setField(WordGraphService.class, null, "dataUtils", mockDataUtils);
+    TestUtil.R.setField(WordGraphService.class, null, "dataUtils", mockDataUtils);
   }
   
   // ---

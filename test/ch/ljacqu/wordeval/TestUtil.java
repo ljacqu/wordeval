@@ -1,6 +1,8 @@
 package ch.ljacqu.wordeval;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -87,22 +89,60 @@ public final class TestUtil {
     }
     throw new IllegalArgumentException("Object '" + o + "' of type '" + o.getClass() + "' is not a Collection");
   }
-  
+
   /**
-   * Sets the field value of an object or class via reflection.
-   * @param <T> the type of the class
-   * @param clz the class
-   * @param instance the instance to set the value for, or null for static fields
-   * @param fieldName the name of the field to set
-   * @param value the value to set to the field
+   * Class for Reflection utils in tests.
    */
-  public static <T> void setField(Class<T> clz, T instance, String fieldName, Object value) {
-    try {
-      Field field = clz.getDeclaredField(fieldName);
-      field.setAccessible(true);
-      field.set(instance, value);
-    } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException e) {
-      throw new UnsupportedOperationException("Could not set field", e);
+  public static final class R {
+    private R() {
+    }
+
+    public static <T> Object getField(Class<T> clz, T instance, String fieldName) {
+      Field field;
+      try {
+        field = clz.getDeclaredField(fieldName);
+        field.setAccessible(true);
+        return field.get(instance);
+      } catch (NoSuchFieldException | SecurityException | IllegalAccessException e) {
+        throw new IllegalStateException("Could not get field '" + fieldName + "' from '" + clz + "'", e);
+      }
+    }
+    
+    /**
+     * Sets the field value of an object or class via reflection.
+     * @param <T> the type of the class
+     * @param clz the class
+     * @param instance the instance to set the value for, or null for static fields
+     * @param fieldName the name of the field to set
+     * @param value the value to set to the field
+     */
+    public static <T> void setField(Class<T> clz, T instance, String fieldName, Object value) {
+      try {
+        Field field = clz.getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(instance, value);
+      } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException e) {
+        throw new UnsupportedOperationException("Could not set field", e);
+      }
+    }
+    
+    public static <T> Method getMethod(Class<T> clz, String methodName, Class<?>... params) {
+      try {
+        Method m = clz.getDeclaredMethod(methodName, params);
+        m.setAccessible(true);
+        return m;
+      } catch (NoSuchMethodException | SecurityException e) {
+        throw new IllegalStateException(
+            "Could not get method '" + methodName + "' from class '" + clz + "'", e);
+      }
+    }
+    
+    public static Object invokeMethod(Method method, Object instance, Object... params) {
+      try {
+        return method.invoke(instance, params);
+      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        throw new IllegalStateException("Could not invoke '" + method + "'", e);
+      }
     }
   }
   

@@ -13,7 +13,7 @@ import com.google.gson.GsonBuilder;
 import lombok.Getter;
 
 /**
- * Wrapper for interaction with the file system and GSON.
+ * Wrapper for interaction with the file system and JSON operations.
  */
 public class DataUtils {
   

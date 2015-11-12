@@ -69,7 +69,7 @@ public class IgnoredTestsChecker {
       fail("Error loading classes; class list is empty");
     }
     for (Method method : methods) {
-      log.error("Missing @Lightweight in {}#{}", method.getDeclaringClass(), method.getName());
+      log.error("Missing @Lightweight or @Ignore in {}#{}", method.getDeclaringClass().getName(), method.getName());
     }
     assertTrue(methods.isEmpty());
   }

@@ -33,8 +33,7 @@ public class HuSanitizer extends Sanitizer {
     if (skipWords && equalsAny(word, "v.", "l.", "i.", "cv.", "c.")) {
       skipWords = false;
       return "";
-    } else if (equalsAny(word, "xxxviii.", "lxxxviii.", "ix.", "cxxxviii.",
-        "clxxxviii.")) {
+    } else if (equalsAny(word, "xxxviii.", "lxxxviii.", "ix.", "cxxxviii.", "clxxxviii.")) {
       skipWords = true;
       return "";
     }

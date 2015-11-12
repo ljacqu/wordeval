@@ -39,6 +39,7 @@ public class EvaluatorGlobalTest {
         .add(new Anagrams())
         .add(new BackwardsPairs())
         .add(new ConsecutiveLetterPairs())
+        .add(new ConsecutiveVowelCount(LetterType.VOWELS, lang))
         .add(new DiacriticHomonyms(lang))
         .add(new FullPalindromes())
         .add(new Isograms())
