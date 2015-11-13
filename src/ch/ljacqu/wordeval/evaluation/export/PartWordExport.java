@@ -1,6 +1,7 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -89,11 +90,26 @@ public final class PartWordExport extends ExportObject {
   private static NavigableMap<Double, TreeElement> aggregateEntries(
       NavigableMap<Double, NavigableMap<String, Set<String>>> results, ExportParams params) {
     NavigableMap<Double, TreeElement> aggregatedEntries = new TreeMap<>();
-    for (Map.Entry<Double, NavigableMap<String, Set<String>>> entry : results.entrySet()) {
-      TreeElement indexTotal = new TreeElement.IndexTotalColl(aggregateMap(entry.getValue(), params));
-      aggregatedEntries.put(entry.getKey(), indexTotal);
+    int fullAggregated = 0;
+    for (Map.Entry<Double, NavigableMap<String, Set<String>>> entry : results.descendingMap().entrySet()) {
+      if (params.numberOfDetailedAggregation.isPresent() 
+          && fullAggregated >= params.numberOfDetailedAggregation.get()) {
+        aggregatedEntries.put(entry.getKey(), totalOfMap(entry.getValue()));
+      } else {
+        TreeElement indexTotal = new TreeElement.IndexTotalColl(aggregateMap(entry.getValue(), params));
+        aggregatedEntries.put(entry.getKey(), indexTotal);
+        ++fullAggregated;
+      }
     }
     return aggregatedEntries;
+  }
+  
+  private static TreeElement.Total totalOfMap(NavigableMap<String, Set<String>> map) {
+    int sum = 0;
+    for (Collection<String> entry : map.values()) {
+      sum += entry.size();
+    }
+    return new TreeElement.Total(sum);
   }
   
   // Trims the top entries list to conform to the export params' maxTopEntrySize setting

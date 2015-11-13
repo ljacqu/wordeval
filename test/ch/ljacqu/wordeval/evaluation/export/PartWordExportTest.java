@@ -92,15 +92,16 @@ public class PartWordExportTest {
 
     Map<Double, TreeElement> aggregatedEntries = export.getAggregatedEntries();
     assertThat(aggregatedEntries, aMapWithSize(2));
-    assertThat(ExportTestHelper.getIndexTotalCollValue(aggregatedEntries.get(6.0)).keySet(),
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(6.0)).keySet(),
         containsInAnyOrder("millim", "neffen", "marram", "leggel", "gerreg", "eellee", "arkkra"));
-    assertThat(ExportTestHelper.getIndexTotalCollValue(aggregatedEntries.get(6.0)).get("millim"), equalTo(1));
-    assertThat(ExportTestHelper.getIndexTotalCollValue(aggregatedEntries.get(6.0)).get("neffen"), equalTo(3));
-    assertThat(ExportTestHelper.getIndexTotalCollValue(aggregatedEntries.get(6.0)).get("eellee"), equalTo(1));
-    assertThat(ExportTestHelper.getIndexTotalCollValue(aggregatedEntries.get(5.0)).keySet(), containsInAnyOrder("alkla", "anana", "aadaa"));
-    assertThat(ExportTestHelper.getIndexTotalCollValue(aggregatedEntries.get(5.0)).get("alkla"), equalTo(4));
-    assertThat(ExportTestHelper.getIndexTotalCollValue(aggregatedEntries.get(5.0)).get("anana"), equalTo(1));
-    assertThat(ExportTestHelper.getIndexTotalCollValue(aggregatedEntries.get(5.0)).get("aadaa"), equalTo(1));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(6.0)).get("millim"), equalTo(1));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(6.0)).get("neffen"), equalTo(3));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(6.0)).get("eellee"), equalTo(1));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(5.0)).keySet(), 
+        containsInAnyOrder("alkla", "anana", "aadaa"));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(5.0)).get("alkla"), equalTo(4));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(5.0)).get("anana"), equalTo(1));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(5.0)).get("aadaa"), equalTo(1));
   }
 
   @Test
@@ -117,7 +118,8 @@ public class PartWordExportTest {
     Map<Double, NavigableMap<String, TreeElement>> topEntries = export.getTopEntries();
     assertThat(topEntries, aMapWithSize(4));
     assertThat(topEntries.get(9.0), aMapWithSize(3));
-    assertThat(ExportTestHelper.getWordCollValue(topEntries.get(9.0).get("taalplaat")), containsInAnyOrder("metaalplaat", "staalplaat"));
+    assertThat(ExportTestHelper.getWordCollValue(topEntries.get(9.0).get("taalplaat")), 
+        containsInAnyOrder("metaalplaat", "staalplaat"));
     assertThat(ExportTestHelper.getWordCollValue(topEntries.get(9.0).get("ittesetti")), contains("hittesetting"));
     assertThat(ExportTestHelper.getWordCollValue(topEntries.get(9.0).get("sigologis")), contains("psigologisme"));
     assertThat(topEntries.get(8.0).keySet(), containsInAnyOrder("aarddraa", "erettere", "kaarraak"));
@@ -137,11 +139,11 @@ public class PartWordExportTest {
 
     Map<Double, TreeElement> aggregatedEntries = export.getAggregatedEntries();
     assertThat(aggregatedEntries, aMapWithSize(1));
-    assertThat(ExportTestHelper.getIndexTotalCollValue(aggregatedEntries.get(5.0)).keySet(), 
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(5.0)).keySet(), 
         containsInAnyOrder("alkla", "anana", "aadaa"));
-    assertThat(ExportTestHelper.getIndexTotalCollValue(aggregatedEntries.get(5.0)).get("anana"), equalTo(1));
-    assertThat(ExportTestHelper.getIndexTotalCollValue(aggregatedEntries.get(5.0)).get("alkla"), equalTo(4));
-    assertThat(ExportTestHelper.getIndexTotalCollValue(aggregatedEntries.get(5.0)).get("aadaa"), equalTo(1));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(5.0)).get("anana"), equalTo(1));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(5.0)).get("alkla"), equalTo(4));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(5.0)).get("aadaa"), equalTo(1));
   }
 
   @Test
@@ -162,8 +164,8 @@ public class PartWordExportTest {
 
     Map<Double, TreeElement> aggregatedEntries = export.getAggregatedEntries();
     assertThat(aggregatedEntries.keySet(), contains(7.0, 6.0, 5.0));
-    assertThat(ExportTestHelper.getIndexTotalCollValue(aggregatedEntries.get(6.0)).get("neffen"), equalTo(3));
-    assertThat(ExportTestHelper.getIndexTotalCollValue(aggregatedEntries.get(6.0)).get("eellee"), equalTo(1));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(6.0)).get("neffen"), equalTo(3));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(6.0)).get("eellee"), equalTo(1));
   }
   
   @Test
@@ -238,8 +240,13 @@ public class PartWordExportTest {
     assertThat(topEntries.keySet(), contains(9.0));
     NavigableMap<Double, TreeElement> aggregatedEntries = export.getAggregatedEntries();
     assertThat(aggregatedEntries.keySet(), contains(8.0, 7.0, 6.0, 5.0));
-    // TODO Finish test for number of detailed aggregation
-    //assertThat(aggregatedEntries.get(8.0), containsInAnyOrder("aarddraa", "erettere", "kaarraak"));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(8.0)).keySet(), 
+        containsInAnyOrder("aarddraa", "erettere", "kaarraak"));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(7.0)).keySet(), contains("esifise"));
+    assertThat(aggregatedEntries.get(6.0), instanceOf(TreeElement.Total.class));
+    assertThat(aggregatedEntries.get(6.0).getValue(), equalTo(9));
+    assertThat(aggregatedEntries.get(5.0), instanceOf(TreeElement.Total.class));
+    assertThat(aggregatedEntries.get(5.0).getValue(), equalTo(6));
   }
 
   @Test
@@ -272,7 +279,5 @@ public class PartWordExportTest {
     assertThat(foundItems, hasItem(restIndex));
     assertThat(foundItems, hasSize(maxAllowedSize + 1));
   }
-  
-
 
 }
