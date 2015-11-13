@@ -1,19 +1,22 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
 import static ch.ljacqu.wordeval.TestUtil.asSet;
-import static ch.ljacqu.wordeval.TestUtil.toSet;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+
+import java.util.Collection;
 import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
+
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("javadoc")
 public class PartWordReducerTest {
   
   private NavigableMap<String, Set<String>> results;
@@ -75,14 +78,14 @@ public class PartWordReducerTest {
     assertEquals(export.identifier, "sizeAndLength");
     assertThat(export.getTopEntries().keySet(), contains(7.5, 6.5));
     assertThat(export.getTopEntries().get(7.5).keySet(), contains("esifise"));
-    assertThat(toSet(export.getTopEntries().get(7.5).get("esifise")), 
-        containsInAnyOrder("spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer"));
+    assertWordCollContains(export.getTopEntries().get(7.5).get("esifise"), 
+        "spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer");
     
     assertThat(export.getTopEntries().get(6.5).keySet(), containsInAnyOrder("taalplaat", "alkla"));
-    assertThat(toSet(export.getTopEntries().get(6.5).get("taalplaat")), 
-        containsInAnyOrder("metaalplaat", "staalplaat"));
-    assertThat(toSet(export.getTopEntries().get(6.5).get("alkla")), 
-        containsInAnyOrder("smalklap", "taalklas", "vokaalklank", "taalklank"));
+    assertWordCollContains(export.getTopEntries().get(6.5).get("taalplaat"), 
+        "metaalplaat", "staalplaat");
+    assertWordCollContains(export.getTopEntries().get(6.5).get("alkla"), 
+        "smalklap", "taalklas", "vokaalklank", "taalklank");
     
     NavigableMap<Double, NavigableMap<String, Integer>> aggregatedEntries = export.getAggregatedEntries();
     assertThat(aggregatedEntries.keySet(), containsInAnyOrder(6.0, 5.5, 5.0, 4.0, 3.5));
@@ -94,6 +97,15 @@ public class PartWordReducerTest {
     assertThat(aggregatedEntries.get(4.0).keySet(), contains("marram"));
     assertThat(aggregatedEntries.get(4.0).get("marram"), equalTo(1));
     assertThat(aggregatedEntries.get(3.5).keySet(), contains("anana"));
+  }
+  
+  private static void assertWordCollContains(TreeElement el, String... words) {
+    if (!(el instanceof TreeElement.WordColl)) {
+      throw new IllegalStateException("Tree element '" + el + "' is not a word collection");
+    }
+    Collection<String> value = ((TreeElement.WordColl) el).getTypedValue();
+
+    assertThat(value, containsInAnyOrder(words));
   }
 
 }

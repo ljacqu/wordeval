@@ -16,7 +16,7 @@ import lombok.Getter;
 @Getter
 public final class PartWordExport extends ExportObject {
 
-  private final NavigableMap<Double, NavigableMap<String, Object>> topEntries;
+  private final NavigableMap<Double, NavigableMap<String, TreeElement>> topEntries;
   private final NavigableMap<Double, NavigableMap<String, Integer>> aggregatedEntries;
 
   /**
@@ -26,7 +26,7 @@ public final class PartWordExport extends ExportObject {
    * @param aggregatedEntries the collection of aggregated entries
    */
   private PartWordExport(String identifier,
-      NavigableMap<Double, NavigableMap<String, Object>> topEntries,
+      NavigableMap<Double, NavigableMap<String, TreeElement>> topEntries,
       NavigableMap<Double, NavigableMap<String, Integer>> aggregatedEntries,
       ExportParams params) {
     super(identifier);
@@ -96,9 +96,9 @@ public final class PartWordExport extends ExportObject {
   }
   
   // Trims the top entries list to conform to the export params' maxTopEntrySize setting
-  private static NavigableMap<Double, NavigableMap<String, Object>> trimTopEntries(
+  private static NavigableMap<Double, NavigableMap<String, TreeElement>> trimTopEntries(
       NavigableMap<Double, NavigableMap<String, Set<String>>> topEntries, ExportParams params) {    
-    NavigableMap<Double, NavigableMap<String, Object>> result = new TreeMap<>();
+    NavigableMap<Double, NavigableMap<String, TreeElement>> result = new TreeMap<>();
     for (Map.Entry<Double, NavigableMap<String, Set<String>>> entry : topEntries.entrySet()) {
       result.put(entry.getKey(), trimTopEntriesSubMap(entry.getValue(), params));
     }
@@ -124,13 +124,13 @@ public final class PartWordExport extends ExportObject {
     }
   }
   
-  private static NavigableMap<String, Object> trimTopEntriesSubMap(
+  private static NavigableMap<String, TreeElement> trimTopEntriesSubMap(
       NavigableMap<String, Set<String>> subMap, ExportParams params) {
-    NavigableMap<String, Object> result = new TreeMap<>();
+    NavigableMap<String, TreeElement> result = new TreeMap<>();
     int addedEntries = 0;
     for (Map.Entry<String, Set<String>> entry : subMap.entrySet()) {
       if (params.maxTopEntrySize.isPresent() && addedEntries >= params.maxTopEntrySize.get()) {
-        result.put(INDEX_REST, "" + Integer.toString(subMap.size() - addedEntries));
+        result.put(INDEX_REST, new TreeElement.Rest(subMap.size() - addedEntries));
         break;
       }
 
@@ -138,9 +138,9 @@ public final class PartWordExport extends ExportObject {
         int initialSize = entry.getValue().size();
         List<String> words = reduceList(new ArrayList<String>(entry.getValue()), params.maxPartWordListSize.get());
         words.add(INDEX_REST + Integer.toString(initialSize - params.maxPartWordListSize.get()));
-        result.put(entry.getKey(), words);
+        result.put(entry.getKey(), new TreeElement.WordColl(words));
       } else {
-        result.put(entry.getKey(), entry.getValue());
+        result.put(entry.getKey(), new TreeElement.WordColl(entry.getValue()));
       }
       ++addedEntries;
     }
