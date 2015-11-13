@@ -23,6 +23,7 @@ import java.util.TreeMap;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("javadoc")
 public class WordStatExportTest {
 
   private NavigableMap<Integer, List<String>> results;

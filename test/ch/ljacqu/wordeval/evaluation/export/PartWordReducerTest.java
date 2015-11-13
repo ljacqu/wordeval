@@ -1,6 +1,8 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
 import static ch.ljacqu.wordeval.TestUtil.asSet;
+import static ch.ljacqu.wordeval.evaluation.export.ExportTestHelper.getIndexTotalCollValue;
+import static ch.ljacqu.wordeval.evaluation.export.ExportTestHelper.getWordCollValue;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -8,7 +10,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-import java.util.Collection;
 import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
@@ -65,8 +66,9 @@ public class PartWordReducerTest {
     assertThat(export.getTopEntries().get(4.0).keySet(), containsInAnyOrder("alkla", "esifise"));
     assertThat(export.getTopEntries().get(3.0).keySet(), contains("neffen"));
     assertThat(export.getAggregatedEntries().keySet(), contains(2.0, 1.0));
-    assertThat(export.getAggregatedEntries().get(2.0).keySet(), contains("taalplaat"));
-    assertThat(export.getAggregatedEntries().get(1.0), aMapWithSize(5));
+    assertThat(getIndexTotalCollValue(export.getAggregatedEntries().get(2.0)).keySet(), 
+        contains("taalplaat"));
+    assertThat(getIndexTotalCollValue(export.getAggregatedEntries().get(1.0)), aMapWithSize(5));
   }
   
   @Test
@@ -78,34 +80,26 @@ public class PartWordReducerTest {
     assertEquals(export.identifier, "sizeAndLength");
     assertThat(export.getTopEntries().keySet(), contains(7.5, 6.5));
     assertThat(export.getTopEntries().get(7.5).keySet(), contains("esifise"));
-    assertWordCollContains(export.getTopEntries().get(7.5).get("esifise"), 
-        "spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer");
+    assertThat(getWordCollValue(export.getTopEntries().get(7.5).get("esifise")), 
+        containsInAnyOrder("spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer"));
     
     assertThat(export.getTopEntries().get(6.5).keySet(), containsInAnyOrder("taalplaat", "alkla"));
-    assertWordCollContains(export.getTopEntries().get(6.5).get("taalplaat"), 
-        "metaalplaat", "staalplaat");
-    assertWordCollContains(export.getTopEntries().get(6.5).get("alkla"), 
-        "smalklap", "taalklas", "vokaalklank", "taalklank");
+    assertThat(getWordCollValue(export.getTopEntries().get(6.5).get("taalplaat")),
+        containsInAnyOrder("metaalplaat", "staalplaat"));
+    assertThat(getWordCollValue(export.getTopEntries().get(6.5).get("alkla")),
+        containsInAnyOrder("smalklap", "taalklas", "vokaalklank", "taalklank"));
     
-    NavigableMap<Double, NavigableMap<String, Integer>> aggregatedEntries = export.getAggregatedEntries();
+    NavigableMap<Double, TreeElement> aggregatedEntries = export.getAggregatedEntries();
     assertThat(aggregatedEntries.keySet(), containsInAnyOrder(6.0, 5.5, 5.0, 4.0, 3.5));
-    assertThat(aggregatedEntries.get(6.0).keySet(), contains("neffen"));
-    assertThat(aggregatedEntries.get(6.0).get("neffen"), equalTo(3));
-    assertThat(aggregatedEntries.get(5.5).keySet(), containsInAnyOrder("ittesetti", "sigologis"));
-    assertThat(aggregatedEntries.get(5.0).keySet(), contains("aarddraa"));
-    assertThat(aggregatedEntries.get(5.0).get("aarddraa"), equalTo(1));
-    assertThat(aggregatedEntries.get(4.0).keySet(), contains("marram"));
-    assertThat(aggregatedEntries.get(4.0).get("marram"), equalTo(1));
-    assertThat(aggregatedEntries.get(3.5).keySet(), contains("anana"));
-  }
-  
-  private static void assertWordCollContains(TreeElement el, String... words) {
-    if (!(el instanceof TreeElement.WordColl)) {
-      throw new IllegalStateException("Tree element '" + el + "' is not a word collection");
-    }
-    Collection<String> value = ((TreeElement.WordColl) el).getTypedValue();
-
-    assertThat(value, containsInAnyOrder(words));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(6.0)).keySet(), contains("neffen"));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(6.0)).get("neffen"), equalTo(3));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(5.5)).keySet(), 
+        containsInAnyOrder("ittesetti", "sigologis"));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(5.0)).keySet(), contains("aarddraa"));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(5.0)).get("aarddraa"), equalTo(1));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(4.0)).keySet(), contains("marram"));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(4.0)).get("marram"), equalTo(1));
+    assertThat(getIndexTotalCollValue(aggregatedEntries.get(3.5)).keySet(), contains("anana"));
   }
 
 }

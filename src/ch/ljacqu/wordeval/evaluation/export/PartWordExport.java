@@ -17,7 +17,7 @@ import lombok.Getter;
 public final class PartWordExport extends ExportObject {
 
   private final NavigableMap<Double, NavigableMap<String, TreeElement>> topEntries;
-  private final NavigableMap<Double, NavigableMap<String, Integer>> aggregatedEntries;
+  private final NavigableMap<Double, TreeElement> aggregatedEntries;
 
   /**
    * Creates a new PartWordExport object.
@@ -27,12 +27,12 @@ public final class PartWordExport extends ExportObject {
    */
   private PartWordExport(String identifier,
       NavigableMap<Double, NavigableMap<String, TreeElement>> topEntries,
-      NavigableMap<Double, NavigableMap<String, Integer>> aggregatedEntries,
+      NavigableMap<Double, TreeElement> aggregatedEntries,
       ExportParams params) {
     super(identifier);
     if (params.hasDescendingEntries) {
       convertListEntriesToDescending(topEntries);
-      convertListEntriesToDescending(aggregatedEntries);
+      convertAggrEntriesToDescending(aggregatedEntries);
     }
     this.topEntries = ExportService.checkDescending(topEntries, params.isDescending);
     this.aggregatedEntries = ExportService.checkDescending(aggregatedEntries, params.isDescending);
@@ -64,7 +64,7 @@ public final class PartWordExport extends ExportObject {
     NavigableMap<Double, NavigableMap<String, Set<String>>> topEntries = 
         isolateTopEntries(orderedResults, params);
 
-    NavigableMap<Double, NavigableMap<String, Integer>> aggregatedEntries;
+    NavigableMap<Double, TreeElement> aggregatedEntries;
     if (topEntries.isEmpty()) {
       aggregatedEntries = aggregateEntries(orderedResults, params);
     } else {
@@ -86,11 +86,12 @@ public final class PartWordExport extends ExportObject {
   }
 
   // Creates aggregated entries - replaces the entries with the size
-  private static NavigableMap<Double, NavigableMap<String, Integer>> aggregateEntries(
+  private static NavigableMap<Double, TreeElement> aggregateEntries(
       NavigableMap<Double, NavigableMap<String, Set<String>>> results, ExportParams params) {
-    NavigableMap<Double, NavigableMap<String, Integer>> aggregatedEntries = new TreeMap<>();
+    NavigableMap<Double, TreeElement> aggregatedEntries = new TreeMap<>();
     for (Map.Entry<Double, NavigableMap<String, Set<String>>> entry : results.entrySet()) {
-      aggregatedEntries.put(entry.getKey(), aggregateMap(entry.getValue(), params));
+      TreeElement indexTotal = new TreeElement.IndexTotalColl(aggregateMap(entry.getValue(), params));
+      aggregatedEntries.put(entry.getKey(), indexTotal);
     }
     return aggregatedEntries;
   }
@@ -121,6 +122,16 @@ public final class PartWordExport extends ExportObject {
       NavigableMap<Double, NavigableMap<K, V>> map) {
     for (Map.Entry<Double, NavigableMap<K, V>> entry : map.entrySet()) {
       map.put(entry.getKey(), entry.getValue().descendingMap());
+    }
+  }
+  
+  private static void convertAggrEntriesToDescending(NavigableMap<Double, TreeElement> map) {
+    for (Map.Entry<Double, TreeElement> entry : map.entrySet()) {
+      if (entry.getValue() instanceof TreeElement.IndexTotalColl) {
+        NavigableMap<String, Integer> reversedMap = ((TreeElement.IndexTotalColl) entry.getValue())
+            .getTypedValue().descendingMap();
+        map.put(entry.getKey(), new TreeElement.IndexTotalColl(reversedMap));
+      }
     }
   }
   

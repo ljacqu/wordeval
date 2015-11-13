@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
+import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 import java.util.NavigableMap;
@@ -7,8 +8,15 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+
 import ch.ljacqu.wordeval.DataUtils;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
+import lombok.Getter;
 
 /**
  * Service for the export of evaluator results.
@@ -17,6 +25,8 @@ public final class ExportService {
 
   private static final boolean USE_PRETTY_PRINT = true;
   private static DataUtils dataUtils = new DataUtils(USE_PRETTY_PRINT);
+  @Getter(lazy = true)
+  private static final Gson gson = initGson();
 
   private ExportService() {
   }
@@ -28,7 +38,7 @@ public final class ExportService {
    * @return the export data in JSON
    */
   private static String toJson(List<Evaluator<?>> evaluators) {
-    return dataUtils.toJson(evaluators
+    return getGson().toJson(evaluators
         .stream()
         .map(Evaluator::toExportObject)
         .filter(Objects::nonNull)
@@ -85,6 +95,25 @@ public final class ExportService {
     return Collections.reverseOrder().equals(map.comparator()) 
         ? map.lastKey() 
         : map.firstKey();
+  }
+
+  private static Gson initGson() {
+    GsonBuilder builder = new GsonBuilder();
+    final TreeElementSerializer serializer = new TreeElementSerializer();
+
+    for (Class<?> clazz : TreeElement.class.getDeclaredClasses()) {
+      if (TreeElement.class.isAssignableFrom(clazz)) {
+        builder.registerTypeAdapter(clazz, serializer);
+      }
+    }
+    return builder.create();
+  }
+
+  private static class TreeElementSerializer implements JsonSerializer<TreeElement> {
+    @Override
+    public JsonElement serialize(TreeElement src, Type typeOfSrc, JsonSerializationContext context) {
+      return getGson().toJsonTree(src.getValue());
+    }
   }
 
 }
