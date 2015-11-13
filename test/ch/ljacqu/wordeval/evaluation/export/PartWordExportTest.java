@@ -27,6 +27,7 @@ import java.util.TreeMap;
 import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("javadoc")
 public class PartWordExportTest {
 
   private Map<String, Set<String>> results;
@@ -122,7 +123,7 @@ public class PartWordExportTest {
     
     assertThat(topEntries.get(7.0), aMapWithSize(1));
     Object[] allowedItems = { "spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer" };
-    checkReducedList(topEntries.get(7.0).get("esifise"), params, allowedItems);
+    checkReducedList(topEntries.get(7.0).get("esifise"), params.maxPartWordListSize.get(), allowedItems);
 
     assertThat(topEntries.get(6.0), aMapWithSize(params.maxTopEntrySize.get() + 1));
     Set<String> foundKeysSet = topEntries.get(6.0).keySet();
@@ -196,6 +197,45 @@ public class PartWordExportTest {
     assertThat(aggregatedEntries.keySet(), contains(5.0, 6.0));
     assertThat(aggregatedEntries.get(5.0).keySet(), contains("anana", "alkla", "aadaa"));
   }
+  
+  @Test
+  public void shouldHandleMaxTopEntryAndMaxPartWordListSizeParams() {
+    ExportParams params = ExportParams.builder()
+        .maxTopEntrySize(Optional.of(2))
+        .maxPartWordListSize(Optional.of(1))
+        .topKeys(3)
+        .build();
+    
+    PartWordExport export = PartWordExport.create("size test", results, params, new PartWordReducer.ByLength());
+    
+    NavigableMap<Double, NavigableMap<String, Object>> topEntries = export.getTopEntries();
+    assertThat(topEntries.keySet(), contains(9.0, 8.0, 7.0));
+    checkReducedKeySet(topEntries.get(9.0).keySet(), params.maxTopEntrySize.get(), 
+        "taalplaat", "ittesetti", "sigologis");
+    checkReducedKeySet(topEntries.get(8.0).keySet(), params.maxTopEntrySize.get(), 
+        "aarddraa", "erettere", "kaarraak");
+    assertThat(topEntries.get(7.0).keySet(), contains("esifise"));
+    checkReducedList(topEntries.get(7.0).get("esifise"), params.maxPartWordListSize.get(), 
+        "spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer");
+    assertThat(export.getAggregatedEntries().keySet(), contains(6.0, 5.0));
+  }
+  
+  @Test
+  public void shouldHandleNumberOfDetailedAggregationSetting() {
+    ExportParams params = ExportParams.builder()
+        .topKeys(1)
+        .numberOfDetailedAggregation(Optional.of(2))
+        .build();
+    
+    PartWordExport export = PartWordExport.create("detailed agg. test", results, params,
+        new PartWordReducer.ByLength());
+    
+    NavigableMap<Double, NavigableMap<String, Object>> topEntries = export.getTopEntries();
+    assertThat(topEntries.keySet(), contains(9.0));
+    NavigableMap<Double, NavigableMap<String, Integer>> aggregatedEntries = export.getAggregatedEntries();
+    assertThat(aggregatedEntries.keySet(), contains(8.0, 7.0, 6.0, 5.0));
+    //assertThat(aggregatedEntries.get(8.0), containsInAnyOrder("aarddraa", "erettere", "kaarraak"));
+  }
 
   @Test
   public void shouldHandleEmptyResult() {
@@ -206,10 +246,19 @@ public class PartWordExportTest {
     assertThat(export.getAggregatedEntries(), anEmptyMap());
   }
   
-  private static void checkReducedList(Object result, ExportParams params, Object... allowedItems) {
+  private static void checkReducedList(Object result, int maxAllowedSize, Object... allowedItems) {
+    String restIndex = ExportObject.INDEX_REST + (allowedItems.length - maxAllowedSize);
+    checkReducedCollection(result, maxAllowedSize, allowedItems, restIndex);
+  }
+  
+  private static void checkReducedKeySet(Object result, int maxAllowedSize, Object... allowedItems) {
+    checkReducedCollection(result, maxAllowedSize, allowedItems, ExportObject.INDEX_REST);
+  }
+  
+  private static void checkReducedCollection(Object result, int maxAllowedSize, 
+                                             Object[] allowedItems, String restIndex) {
     Collection<Object> foundItems = toColl(result);
     List<Object> allowedItemsList = new ArrayList<>(Arrays.asList(allowedItems));
-    String restIndex = ExportObject.INDEX_REST + (allowedItems.length - foundItems.size() + 1);
     allowedItemsList.add(restIndex);
     
     // foundItems may only have elements given in allowedItemsList, but not necessarily all
@@ -217,7 +266,7 @@ public class PartWordExportTest {
     assertThat(allowedItemsList, hasItems(foundItems.toArray()));
     // Make specifically sure that the rest index is also present and that the size is correct
     assertThat(foundItems, hasItem(restIndex));
-    assertThat(foundItems, hasSize(params.maxPartWordListSize.get() + 1));
+    assertThat(foundItems, hasSize(maxAllowedSize + 1));
   }
 
 }

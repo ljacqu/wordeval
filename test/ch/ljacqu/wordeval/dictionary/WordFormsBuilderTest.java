@@ -4,18 +4,20 @@ import static ch.ljacqu.wordeval.dictionary.WordForm.LOWERCASE;
 import static ch.ljacqu.wordeval.dictionary.WordForm.NO_ACCENTS;
 import static ch.ljacqu.wordeval.dictionary.WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
 import static ch.ljacqu.wordeval.language.Alphabet.LATIN;
-import static org.hamcrest.Matchers.emptyArray;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
+
 import ch.ljacqu.wordeval.language.Language;
 
+@SuppressWarnings("javadoc")
 public class WordFormsBuilderTest {
 
   @Test
   public void shouldKeepAdditionalLetters() {
-    Language language = new Language("da", LATIN).setAdditionalVowels("æ", "ø",
-        "å");
+    Language language = new Language("da", LATIN)
+        .setAdditionalVowels("æ", "ø", "å");
     WordFormsBuilder builder = new WordFormsBuilder(language);
     String[] words = { "forsøgte erklære trådte", "Å ǿ én býr" };
 
@@ -59,13 +61,11 @@ public class WordFormsBuilderTest {
     assertThat(result, equalTo("človekuř"));
   }
 
-  @Test
-  public void shouldReturnEmptyArrayForEmptyWord() {
+  @Test(expected = IllegalStateException.class)
+  public void shouldThrowForEmptyWord() {
     Language language = new Language("nl", LATIN);
     WordFormsBuilder builder = new WordFormsBuilder(language);
-    String[] result = builder.computeForms("");
-
-    assertThat(result, emptyArray());
+    builder.computeForms("");
   }
 
   private String getForm(String[] forms, WordForm wordForm) {

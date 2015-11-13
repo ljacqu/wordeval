@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.NavigableMap;
 import java.util.Objects;
@@ -62,15 +63,28 @@ public final class ExportService {
    * if a value is present.
    * @param <N> the key class of the map
    * @param <V> the value class of the map
-   * @param resultMap the map to reduce
+   * @param map the map to reduce
    * @param minimum the minimum value
    * @return the map conforming to the general minimum
    */
-  protected static <N extends Number, V> NavigableMap<N, V> applyGeneralMinimum(
-      NavigableMap<N, V> resultMap, Optional<N> minimum) {
+  public static <N extends Number, V> NavigableMap<N, V> applyGeneralMinimum(
+      NavigableMap<N, V> map, Optional<N> minimum) {
     return minimum.isPresent()
-        ? resultMap.tailMap(minimum.get(), true)
-        : resultMap;
+        ? map.tailMap(minimum.get(), true)
+        : map;
+  }
+  
+  /**
+   * Gets the smallest key present in a map.
+   * @param <N> the key class of the map
+   * @param <V> the value class of the map
+   * @param map the map to process
+   * @return the smallest key of the map
+   */
+  public static <N extends Number, V> N getSmallestKey(NavigableMap<N, V> map) {
+    return Collections.reverseOrder().equals(map.comparator()) 
+        ? map.lastKey() 
+        : map.firstKey();
   }
 
 }

@@ -11,6 +11,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
 import org.junit.Before;
 import org.junit.Test;
 

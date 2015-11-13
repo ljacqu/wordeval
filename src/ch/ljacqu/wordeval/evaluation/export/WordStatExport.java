@@ -61,7 +61,7 @@ public class WordStatExport extends ExportObject {
     if (topEntries.isEmpty()) {
       aggregatedEntries = aggregateMap(map, params);
     } else {
-      Integer toKey = getBiggestKey(topEntries);
+      Integer toKey = ExportService.getSmallestKey(topEntries);
       aggregatedEntries = aggregateMap(map.headMap(toKey, false), params);
     }
     return new WordStatExport(identifier, topEntries, aggregatedEntries, params);

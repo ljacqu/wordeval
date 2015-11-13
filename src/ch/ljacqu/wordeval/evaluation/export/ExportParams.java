@@ -25,16 +25,16 @@ public class ExportParams {
   public final boolean isDescending; // done
   
   /** For PartWordExport, whether the second dimension keys should be descending. */
-  public final boolean hasDescendingEntries;
+  public final boolean hasDescendingEntries; // done
   
   /** 
    * The maximum number of entries per key to keep. For PartWordExport, the number of
    * subkeys to retain per first-level key. 
    */
-  public final Optional<Integer> maxTopEntrySize;
+  public final Optional<Integer> maxTopEntrySize; // done
   
   /** For PartWordExport, the maximum size a word list may have. */
-  public final Optional<Integer> maxPartWordListSize;
+  public final Optional<Integer> maxPartWordListSize; // done
   
   /** 
    * For PartWordExport, number of keys to aggregate in a detailed form before just

@@ -2,13 +2,11 @@ package ch.ljacqu.wordeval.evaluation.export;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Random;
-import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
@@ -119,10 +117,6 @@ public abstract class ExportObject {
       key += delta;
     }
     return result;
-  }
-
-  protected static final <K, V> K getBiggestKey(SortedMap<K, V> map) {
-    return Collections.reverseOrder().equals(map.comparator()) ? map.lastKey() : map.firstKey();
   }
 
 }

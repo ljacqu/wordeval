@@ -68,7 +68,7 @@ public final class PartWordExport extends ExportObject {
     if (topEntries.isEmpty()) {
       aggregatedEntries = aggregateEntries(orderedResults, params);
     } else {
-      Double key = getBiggestKey(topEntries);
+      Double key = ExportService.getSmallestKey(topEntries);
       aggregatedEntries = aggregateEntries(orderedResults.headMap(key, false), params);
     }
     
