@@ -82,13 +82,12 @@ public abstract class ExportObject {
    * For maps with a collection or a map as values, it replaces the lists with
    * their length instead.
    * @param map the map to transform
-   * @param params the export parameters
    * @param <K> the key class of the input map
    * @param <V> the value class of the map (Collection or Map)
    * @return the map with the original list's length
    */
   protected static final <K, V> NavigableMap<K, Integer> aggregateMap(
-      NavigableMap<K, V> map, ExportParams params) {
+      NavigableMap<K, V> map) {
     NavigableMap<K, Integer> result = new TreeMap<>();
     for (Map.Entry<K, V> entry : map.entrySet()) {
       if (entry.getValue() instanceof Collection) {

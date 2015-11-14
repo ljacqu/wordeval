@@ -11,6 +11,7 @@ import org.junit.Test;
  * locale.
  */
 @LightWeight
+@SuppressWarnings("javadoc")
 public class LocaleAlphabeticalTest {
 
   /**

@@ -96,7 +96,7 @@ public final class PartWordExport extends ExportObject {
           && fullAggregated >= params.numberOfDetailedAggregation.get()) {
         aggregatedEntries.put(entry.getKey(), totalOfMap(entry.getValue()));
       } else {
-        TreeElement indexTotal = new TreeElement.IndexTotalColl(aggregateMap(entry.getValue(), params));
+        TreeElement indexTotal = new TreeElement.IndexTotalColl(aggregateMap(entry.getValue()));
         aggregatedEntries.put(entry.getKey(), indexTotal);
         ++fullAggregated;
       }

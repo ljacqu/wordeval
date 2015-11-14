@@ -59,10 +59,10 @@ public class WordStatExport extends ExportObject {
 
     NavigableMap<Integer, Integer> aggregatedEntries;
     if (topEntries.isEmpty()) {
-      aggregatedEntries = aggregateMap(map, params);
+      aggregatedEntries = aggregateMap(map);
     } else {
       Integer toKey = ExportService.getSmallestKey(topEntries);
-      aggregatedEntries = aggregateMap(map.headMap(toKey, false), params);
+      aggregatedEntries = aggregateMap(map.headMap(toKey, false));
     }
     return new WordStatExport(identifier, topEntries, aggregatedEntries, params);
   }

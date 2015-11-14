@@ -3,8 +3,8 @@ package ch.ljacqu.wordeval.dictionary;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
 import lombok.Getter;
-import ch.ljacqu.wordeval.language.Language;
 
 /**
  * Class containing dictionary-specific parameters, based on which a sanitizer
@@ -84,7 +84,7 @@ public class DictionarySettings {
    * @param language The language of the dictionary
    * @return The created sanitizer
    */
-  Sanitizer buildSanitizer(Language language) {
+  Sanitizer buildSanitizer() {
     return new Sanitizer(this);
   }
 
@@ -121,7 +121,7 @@ public class DictionarySettings {
     }
 
     @Override
-    Sanitizer buildSanitizer(Language language) {
+    Sanitizer buildSanitizer() {
       try {
         return sanitizerClass.newInstance();
       } catch (IllegalAccessException | InstantiationException e) {

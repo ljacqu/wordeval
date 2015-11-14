@@ -61,7 +61,7 @@ public class Dictionary {
   public static Dictionary getDictionary(String languageCode, String sanitizerName, String fileName) {
     Language language = Language.get(languageCode);
     DictionarySettings settings = DictionarySettings.get(sanitizerName);
-    return new Dictionary(fileName, language, settings.buildSanitizer(language));
+    return new Dictionary(fileName, language, settings.buildSanitizer());
   }
 
   /**

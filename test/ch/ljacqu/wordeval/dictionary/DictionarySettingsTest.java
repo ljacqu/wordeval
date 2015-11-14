@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
+@SuppressWarnings("javadoc")
 public class DictionarySettingsTest {
 
   @Test(expected = IllegalArgumentException.class)
@@ -35,7 +36,7 @@ public class DictionarySettingsTest {
     assertThat(gotSettings.getIdentifier(), equalTo("zxx"));
     assertThat(gotSettings.getSkipSequences(), nullValue());
     assertThat(gotSettings.getDelimiters(), nullValue());
-    assertThat(gotSettings.buildSanitizer(null), instanceOf(TestSanitizer.class));
+    assertThat(gotSettings.buildSanitizer(), instanceOf(TestSanitizer.class));
   }
 
   private static class TestSanitizer extends Sanitizer {
