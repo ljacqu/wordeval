@@ -34,5 +34,16 @@ public final class ExportTestHelper {
     }
     throw new IllegalStateException("Element '" + el + "' is not an index total collection");
   }
-
+  
+  /**
+   * Returns the typed value of a {@link TreeElement.Total} instance.
+   * @param el the tree element
+   * @return the underlying total value
+   */
+  public static int getTotalValue(TreeElement el) {
+    if (el instanceof TreeElement.Total) {
+      return ((TreeElement.Total) el).getTypedValue();
+    }
+    throw new IllegalStateException("Element '" + el + "' is not a Total element");
+  }
 }

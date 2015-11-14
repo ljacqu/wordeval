@@ -10,7 +10,7 @@ abstract class TreeElement {
   public abstract Object getValue();
   
   @AllArgsConstructor
-  private abstract static class W<T> extends TreeElement {
+  abstract static class W<T> extends TreeElement {
     final T value;
     
     public T getTypedValue() {

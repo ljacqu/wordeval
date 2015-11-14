@@ -2,6 +2,7 @@ package ch.ljacqu.wordeval.evaluation.export;
 
 import static ch.ljacqu.wordeval.TestUtil.asSet;
 import static ch.ljacqu.wordeval.evaluation.export.ExportTestHelper.getIndexTotalCollValue;
+import static ch.ljacqu.wordeval.evaluation.export.ExportTestHelper.getTotalValue;
 import static ch.ljacqu.wordeval.evaluation.export.ExportTestHelper.getWordCollValue;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
@@ -97,9 +98,8 @@ public class PartWordReducerTest {
         containsInAnyOrder("ittesetti", "sigologis"));
     assertThat(getIndexTotalCollValue(aggregatedEntries.get(5.0)).keySet(), contains("aarddraa"));
     assertThat(getIndexTotalCollValue(aggregatedEntries.get(5.0)).get("aarddraa"), equalTo(1));
-    assertThat(getIndexTotalCollValue(aggregatedEntries.get(4.0)).keySet(), contains("marram"));
-    assertThat(getIndexTotalCollValue(aggregatedEntries.get(4.0)).get("marram"), equalTo(1));
-    assertThat(getIndexTotalCollValue(aggregatedEntries.get(3.5)).keySet(), contains("anana"));
+    assertThat(getTotalValue(aggregatedEntries.get(4.0)), equalTo(1));
+    assertThat(getTotalValue(aggregatedEntries.get(3.5)), equalTo(1));
   }
 
 }

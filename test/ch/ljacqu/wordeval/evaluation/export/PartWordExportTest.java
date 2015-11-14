@@ -2,6 +2,7 @@ package ch.ljacqu.wordeval.evaluation.export;
 
 import static ch.ljacqu.wordeval.TestUtil.asSet;
 import static ch.ljacqu.wordeval.evaluation.export.ExportTestHelper.getIndexTotalCollValue;
+import static ch.ljacqu.wordeval.evaluation.export.ExportTestHelper.getTotalValue;
 import static ch.ljacqu.wordeval.evaluation.export.ExportTestHelper.getWordCollValue;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.anEmptyMap;
@@ -243,10 +244,8 @@ public class PartWordExportTest {
     assertThat(getIndexTotalCollValue(aggregatedEntries.get(8.0)).keySet(), 
         containsInAnyOrder("aarddraa", "erettere", "kaarraak"));
     assertThat(getIndexTotalCollValue(aggregatedEntries.get(7.0)).keySet(), contains("esifise"));
-    assertThat(aggregatedEntries.get(6.0), instanceOf(TreeElement.Total.class));
-    assertThat(aggregatedEntries.get(6.0).getValue(), equalTo(9));
-    assertThat(aggregatedEntries.get(5.0), instanceOf(TreeElement.Total.class));
-    assertThat(aggregatedEntries.get(5.0).getValue(), equalTo(6));
+    assertThat(getTotalValue(aggregatedEntries.get(6.0)), equalTo(9));
+    assertThat(getTotalValue(aggregatedEntries.get(5.0)), equalTo(6));
   }
 
   @Test
