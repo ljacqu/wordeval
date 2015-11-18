@@ -20,6 +20,7 @@ public class Dictionary {
   private static final String DICT_PATH = "dict/";
 
   /** The dictionary file to read from. */
+  @Getter
   private final String fileName;
   /** Sanitizer to sanitize the dictionary's words. */
   @Getter

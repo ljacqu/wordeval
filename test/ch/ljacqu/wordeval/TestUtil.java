@@ -3,6 +3,8 @@ package ch.ljacqu.wordeval;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,7 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import ch.ljacqu.wordeval.dictionary.Dictionary;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 import lombok.Getter;
 
@@ -88,6 +90,15 @@ public final class TestUtil {
       return (Collection<Object>) o;
     }
     throw new IllegalArgumentException("Object '" + o + "' of type '" + o.getClass() + "' is not a Collection");
+  }
+  
+  /**
+   * Returns whether a dictionary's file exists or not.
+   * @param dictionary the dictionary to verify
+   * @return true if the file exists, false otherwise
+   */
+  public static boolean doesDictionaryFileExist(Dictionary dictionary) {
+    return Files.exists(Paths.get(dictionary.getFileName()));
   }
 
   /**

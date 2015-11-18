@@ -5,16 +5,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import ch.ljacqu.wordeval.AppData;
+import ch.ljacqu.wordeval.TestUtil;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
 import ch.ljacqu.wordeval.evaluation.PartWordEvaluator;
 
 /**
  * Test for the Hungarian dictionary (which has custom sanitation).
  */
+@Log4j2
+@SuppressWarnings("javadoc")
 public class HuSanitizerTest {
+  
   
   @BeforeClass
   public static void initData() {
@@ -23,6 +28,12 @@ public class HuSanitizerTest {
 
   @Test
   public void shouldFindTheGivenWords() throws IOException {
+    Dictionary dictionary = Dictionary.getDictionary("hu");
+    if (!TestUtil.doesDictionaryFileExist(dictionary)) {
+      log.warn("Skipping Hu sanitizer test because dictionary doesn't exist");
+      return;
+    }
+    
     String[] words1 = { "csomóan", "csomó", "háromnegyed", "harmad",
         "kilenced", "milliomod", "trilliomod" };
     MissingWordsEvaluator evaluator1 = new MissingWordsEvaluator(
@@ -39,7 +50,6 @@ public class HuSanitizerTest {
 
     List<Evaluator<?>> evaluatorList = Arrays.asList(evaluator1, evaluator2, evaluator3);
 
-    Dictionary dictionary = Dictionary.getDictionary("hu");
     dictionary.process(evaluatorList);
 
     for (Evaluator<?> evaluator : evaluatorList) {
