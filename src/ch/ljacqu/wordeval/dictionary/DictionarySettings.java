@@ -81,7 +81,6 @@ public class DictionarySettings {
 
   /**
    * Builds a sanitizer with the required information.
-   * @param language The language of the dictionary
    * @return The created sanitizer
    */
   Sanitizer buildSanitizer() {
