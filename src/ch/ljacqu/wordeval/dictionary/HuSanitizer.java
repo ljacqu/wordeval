@@ -48,7 +48,7 @@ public class HuSanitizer extends Sanitizer {
 
     // The dictionary contains a lot of odd entries like "góóóóól",
     // which are the only ones where "óóó" appears, so we skip those
-    if (word.indexOf("óóól") > -1) {
+    if (word.contains("óóól")) {
       return "";
     }
 
@@ -119,7 +119,7 @@ public class HuSanitizer extends Sanitizer {
 
   private static String getFirstContains(String word, String... parts) {
     for (String part : parts) {
-      if (word.indexOf(part) != -1) {
+      if (word.contains(part)) {
         return part;
       }
     }

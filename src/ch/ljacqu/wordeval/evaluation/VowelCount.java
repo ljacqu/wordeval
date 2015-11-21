@@ -34,7 +34,7 @@ public class VowelCount extends PartWordEvaluator {
   public void processWord(String word, String rawWord) {
     // TODO #64: Iterate over the letters of the word instead
     String letterProfile = letters.stream()
-      .filter(letter -> word.indexOf(letter) > -1)
+      .filter(word::contains)
       .collect(Collectors.joining());
     addEntry(letterProfile, rawWord);
   }

@@ -26,7 +26,7 @@ public abstract class Evaluator<K> {
 
   /** Collection of relevant words. */
   @Getter
-  private Map<K, Set<String>> results = new HashMap<K, Set<String>>();
+  private Map<K, Set<String>> results = new HashMap<>();
 
   /**
    * Processes a word and add it to results if it is relevant.
@@ -80,7 +80,7 @@ public abstract class Evaluator<K> {
     if (results.get(key) == null) {
       // It is massively faster to instantiate a TreeSet here rather than
       // using a HashSet and then converting it to TreeSet
-      results.put(key, new TreeSet<String>(String.CASE_INSENSITIVE_ORDER));
+      results.put(key, new TreeSet<>(String.CASE_INSENSITIVE_ORDER));
     }
     if (StringUtils.isAllLowerCase(word) && results.get(key).contains(word)) {
       results.get(key).remove(word);

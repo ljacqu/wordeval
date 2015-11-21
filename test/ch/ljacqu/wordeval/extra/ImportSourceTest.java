@@ -60,7 +60,7 @@ public class ImportSourceTest {
   
   private static void checkFileForImports(Path file, List<String> errors) throws IOException {
     for (String line : Files.readAllLines(file)) {
-      if (line.indexOf("class") > -1 && line.indexOf("{") > -1) {
+      if (line.contains("class") && line.contains("{")) {
         break;
       }
       if (IMPORT_PATTERN.matcher(line).matches()) {

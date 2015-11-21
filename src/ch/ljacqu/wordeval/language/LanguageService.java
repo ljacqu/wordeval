@@ -75,7 +75,7 @@ public final class LanguageService {
   }
 
   private static List<String> asList(String... items) {
-    return new ArrayList<String>(Arrays.asList(items));
+    return new ArrayList<>(Arrays.asList(items));
   }
 
   /**

@@ -51,7 +51,7 @@ public abstract class ExportObject {
    * @param <V> the value class of the given Map
    * @return the trimmed map with the top entries
    */
-  protected static final <N extends Number, V> NavigableMap<N, V> isolateTopEntries(
+  protected static <N extends Number, V> NavigableMap<N, V> isolateTopEntries(
       NavigableMap<N, V> map, ExportParams params) {
     Iterator<N> descendingIterator = map.descendingKeySet().iterator();
     N key = null;
@@ -86,7 +86,7 @@ public abstract class ExportObject {
    * @param <V> the value class of the map (Collection or Map)
    * @return the map with the original list's length
    */
-  protected static final <K, V> NavigableMap<K, Integer> aggregateMap(
+  protected static <K, V> NavigableMap<K, Integer> aggregateMap(
       NavigableMap<K, V> map) {
     NavigableMap<K, Integer> result = new TreeMap<>();
     for (Map.Entry<K, V> entry : map.entrySet()) {
@@ -101,7 +101,7 @@ public abstract class ExportObject {
     return result;
   }
 
-  protected static final <T> List<T> reduceList(List<T> words, int toSize) {
+  protected static <T> List<T> reduceList(List<T> words, int toSize) {
     int size = words.size();
     if (size <= toSize) {
       return words;

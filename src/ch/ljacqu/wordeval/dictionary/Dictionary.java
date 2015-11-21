@@ -82,8 +82,9 @@ public class Dictionary {
   }
 
   /**
-   * Passes the the current word to the evaluators in their desired form.
-   * @param wordForms the array of word forms of the current word.
+   * Passes the current word to the evaluators in their desired form.
+   * @param word the word to process
+   * @param evaluators the list of evaluators
    */
   private void sendToEvaluators(String word, Iterable<Evaluator<?>> evaluators) {
     String[] wordForms = wordFormsBuilder.computeForms(word);

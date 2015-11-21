@@ -163,7 +163,7 @@ public final class PartWordExport extends ExportObject {
 
       if (params.maxPartWordListSize.isPresent() && entry.getValue().size() > params.maxPartWordListSize.get()) {
         int initialSize = entry.getValue().size();
-        List<String> words = reduceList(new ArrayList<String>(entry.getValue()), params.maxPartWordListSize.get());
+        List<String> words = reduceList(new ArrayList<>(entry.getValue()), params.maxPartWordListSize.get());
         words.add(INDEX_REST + Integer.toString(initialSize - params.maxPartWordListSize.get()));
         result.put(entry.getKey(), new TreeElement.WordColl(words));
       } else {

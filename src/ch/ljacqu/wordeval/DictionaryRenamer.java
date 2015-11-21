@@ -33,8 +33,12 @@ public class DictionaryRenamer {
     if (!DICT_DIRECTORY.exists()) {
       throw new IllegalStateException("Directory '" + DICT_DIRECTORY + "' does not exist");
     }
-    
-    Arrays.stream(DICT_DIRECTORY.listFiles())
+
+    File[] files = DICT_DIRECTORY.listFiles();
+    if (files == null) {
+      throw new IllegalStateException("Could not read files from dictionary " + DICT_DIRECTORY);
+    }
+    Arrays.stream(files)
       .filter(file -> ArrayUtils.contains(USE_EXTENSIONS, getExtension(file)))
       .forEach(file -> applyReplacement(file));
     

@@ -22,7 +22,7 @@ public class WordCollector extends Evaluator<Boolean> {
    * @return The list of sorted words
    */
   public List<String> returnSortedWords() {
-    List<String> wordList = new ArrayList<String>(getResults().get(Boolean.TRUE));
+    List<String> wordList = new ArrayList<>(getResults().get(Boolean.TRUE));
     Collections.sort(wordList);
     return wordList;
   }
@@ -34,7 +34,7 @@ public class WordCollector extends Evaluator<Boolean> {
    */
   public List<String> getSortedWordsFromDictionary(String dictionaryCode) {
     Dictionary dict = Dictionary.getDictionary(dictionaryCode);
-    dict.process(Arrays.asList(this));
+    dict.process(Collections.singleton(this));
     return returnSortedWords();
   }
   

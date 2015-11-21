@@ -57,7 +57,7 @@ public final class WordGraphMain {
   }
   
   private static Optional<String> initializeExportFilename(Scanner scanner, String dictionaryCode) {
-    String exportFilename = getExportFilename(dictionaryCode, "json");
+    String exportFilename = getExportFilename(dictionaryCode);
     boolean useExport = false;
     if (Files.isRegularFile(Paths.get(exportFilename))) {
       System.out.println("Graph for '" + dictionaryCode + "' is saved. Load from cache? [y/n]");
@@ -72,7 +72,7 @@ public final class WordGraphMain {
     boolean doExport = getChoice(scanner);
     if (doExport) {
       WordGraphService.exportConnections(
-          getExportFilename(dictionaryCode, "json"), builder.getGraph());
+          getExportFilename(dictionaryCode), builder.getGraph());
     }
   }
   
@@ -133,8 +133,8 @@ public final class WordGraphMain {
     }
   }
   
-  private static String getExportFilename(String code, String ending) {
-    return GRAPH_EXPORT_DIRECTORY + code + "." + ending;
+  private static String getExportFilename(String code) {
+    return GRAPH_EXPORT_DIRECTORY + code + ".json";
   }
   
   private static boolean getChoice(Scanner scanner) {

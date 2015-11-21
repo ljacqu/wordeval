@@ -24,9 +24,9 @@ import lombok.Getter;
 public final class ExportService {
 
   private static final boolean USE_PRETTY_PRINT = true;
-  private static DataUtils dataUtils = new DataUtils(USE_PRETTY_PRINT);
+  private static DataUtils dataUtils = new DataUtils();
   @Getter(lazy = true)
-  private static final Gson gson = initGson();
+  private static final Gson gson = initGson(USE_PRETTY_PRINT);
 
   private ExportService() {
   }
@@ -97,8 +97,16 @@ public final class ExportService {
         : map.firstKey();
   }
 
-  private static Gson initGson() {
+  /**
+   * Initializes a GSON instance and registers the custom serializer
+   * for implementations of {@link TreeElement}.
+   * @return the built GSON instance
+   */
+  private static Gson initGson(boolean USE_PRETTY_PRINT) {
     GsonBuilder builder = new GsonBuilder();
+    if (USE_PRETTY_PRINT) {
+      builder.setPrettyPrinting();
+    }
     final TreeElementSerializer serializer = new TreeElementSerializer();
 
     for (Class<?> clazz : TreeElement.class.getDeclaredClasses()) {
@@ -109,6 +117,11 @@ public final class ExportService {
     return builder.create();
   }
 
+  /**
+   * Custom serializer for {@link TreeElement} instances to only serialize the actual
+   * value they contain, rather than the entire <code>"value": {...}</code> field in
+   * the JSON output.
+   */
   private static class TreeElementSerializer implements JsonSerializer<TreeElement> {
     @Override
     public JsonElement serialize(TreeElement src, Type typeOfSrc, JsonSerializationContext context) {

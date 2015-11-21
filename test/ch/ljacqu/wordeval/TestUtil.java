@@ -8,10 +8,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import ch.ljacqu.wordeval.dictionary.Dictionary;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
@@ -62,20 +60,6 @@ public final class TestUtil {
     for (int i = 0; i < cleanWords.length; ++i) {
       evaluator.processWord(cleanWords[i], words[i]);
     }
-  }
-
-  /**
-   * Verifies that an object is an instance of {@link Set} and returns the casted value
-   * or throws an exception otherwise.
-   * @param o the object to verify
-   * @return the casted Set
-   */
-  @SuppressWarnings("unchecked")
-  public static Set<Object> toSet(Object o) {
-    if (o instanceof Set<?>) {
-      return (Set<Object>) o;
-    }
-    throw new IllegalArgumentException("Object '" + o + "' of type '" + o.getClass() + "' is not a Set");
   }
 
   /**
@@ -156,43 +140,18 @@ public final class TestUtil {
       }
     }
   }
-  
-  public static class MapInit<K, V> {
-    @Getter
-    private Map<K, List<V>> map;
-    
-    public MapInit() {
-      map = new HashMap<>();
-    }
-    
-    public static <K, V> MapInit init(K key, V value) {
-      MapInit<K, V> init = new MapInit<>();
-      init.add(key, value);
-      return init;
-    }
-    
-    public MapInit add(K key, V value) {
-      if (map.get(key) == null) {
-        map.put(key, new ArrayList<>());
-        map.get(key).add(value);
-      } else {
-        map.get(key).add(value);
-      }
-      return this;
-    }
-  }
 
   public static class ListInit<T> {
     @Getter
     private List<T> list = new ArrayList<>();
 
-    public static <T> ListInit init(T value) {
+    public static <T> ListInit with(T value) {
       ListInit<T> listInit = new ListInit<>();
-      listInit.add(value);
+      listInit.and(value);
       return listInit;
     }
 
-    public ListInit add(T value) {
+    public ListInit and(T value) {
       list.add(value);
       return this;
     }

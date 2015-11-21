@@ -33,22 +33,22 @@ public class EvaluatorGlobalTest {
   public static void initializeEvaluators() {
     Language lang = new Language("zxx", Alphabet.LATIN);
     evaluators = ListInit
-        .init(new AllVowels(LetterType.VOWELS))
-        .add(new AlphabeticalOrder())
-        .add(new AlphabeticalSequence())
-        .add(new Anagrams())
-        .add(new BackwardsPairs())
-        .add(new ConsecutiveLetterPairs())
-        .add(new ConsecutiveVowelCount(LetterType.VOWELS, lang))
-        .add(new DiacriticHomonyms(lang.getLocale()))
-        .add(new FullPalindromes())
-        .add(new Isograms())
-        .add(new LongWords())
-        .add(new Palindromes())
-        .add(new SameLetterConsecutive())
-        .add(new SingleVowel(LetterType.VOWELS))
-        .add(new VowelCount(LetterType.VOWELS, lang))
-        .add(new WordCollector())
+        .with(new AllVowels(LetterType.VOWELS))
+        .and(new AlphabeticalOrder())
+        .and(new AlphabeticalSequence())
+        .and(new Anagrams())
+        .and(new BackwardsPairs())
+        .and(new ConsecutiveLetterPairs())
+        .and(new ConsecutiveVowelCount(LetterType.VOWELS, lang))
+        .and(new DiacriticHomonyms(lang.getLocale()))
+        .and(new FullPalindromes())
+        .and(new Isograms())
+        .and(new LongWords())
+        .and(new Palindromes())
+        .and(new SameLetterConsecutive())
+        .and(new SingleVowel(LetterType.VOWELS))
+        .and(new VowelCount(LetterType.VOWELS, lang))
+        .and(new WordCollector())
         .getList();
   }
   

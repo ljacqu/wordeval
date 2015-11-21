@@ -110,7 +110,6 @@ public final class Language {
   /**
    * Returns the letters to preserve, i.e. the letters that should be recognized
    * as separate letters, e.g. "ä" in Swedish.
-   * @param language the language to process
    * @return the list of characters that are distinct letters
    */
   private String computeCharsToPreserve() {

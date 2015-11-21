@@ -11,7 +11,7 @@ public class Isograms extends WordStatEvaluator {
 
   @Override
   public void processWord(String word, String rawWord) {
-    List<Character> charList = new ArrayList<Character>();
+    List<Character> charList = new ArrayList<>();
     for (int i = 0; i < word.length(); ++i) {
       char currentChar = word.charAt(i);
       if (charList.contains(currentChar)) {
