@@ -62,7 +62,7 @@ public class PartWordReducerTest {
     
     PartWordExport export = PartWordExport.create("by_size", results, params, reducer);
     
-    assertEquals(export.identifier, "by_size");
+    assertEquals(export.getIdentifier(), "by_size");
     assertThat(export.getTopEntries().keySet(), contains(4.0, 3.0));
     assertThat(export.getTopEntries().get(4.0).keySet(), containsInAnyOrder("alkla", "esifise"));
     assertThat(export.getTopEntries().get(3.0).keySet(), contains("neffen"));
@@ -78,7 +78,7 @@ public class PartWordReducerTest {
     
     PartWordExport export = PartWordExport.create("sizeAndLength", results, params, reducer);
     
-    assertEquals(export.identifier, "sizeAndLength");
+    assertEquals(export.getIdentifier(), "sizeAndLength");
     assertThat(export.getTopEntries().keySet(), contains(7.5, 6.5));
     assertThat(export.getTopEntries().get(7.5).keySet(), contains("esifise"));
     assertThat(getWordCollValue(export.getTopEntries().get(7.5).get("esifise")), 

@@ -17,26 +17,30 @@ import lombok.Getter;
 @Getter
 public final class PartWordExport extends ExportObject {
 
-  private final NavigableMap<Double, NavigableMap<String, TreeElement>> topEntries;
-  private final NavigableMap<Double, TreeElement> aggregatedEntries;
-
   /**
    * Creates a new PartWordExport object.
    * @param identifier the identifier of the export object
    * @param topEntries the collection of top entries
    * @param aggregatedEntries the collection of aggregated entries
+   * @param params the export parameters
    */
   private PartWordExport(String identifier,
       NavigableMap<Double, NavigableMap<String, TreeElement>> topEntries,
       NavigableMap<Double, TreeElement> aggregatedEntries,
       ExportParams params) {
-    super(identifier);
-    if (params.hasDescendingEntries) {
-      convertListEntriesToDescending(topEntries);
-      convertAggrEntriesToDescending(aggregatedEntries);
-    }
-    this.topEntries = ExportService.checkDescending(topEntries, params.isDescending);
-    this.aggregatedEntries = ExportService.checkDescending(aggregatedEntries, params.isDescending);
+    super(identifier,
+      applyDescendingParamsToTopEntries(topEntries, params),
+      applyDescendingParamsToAggrEntries(aggregatedEntries, params));
+  }
+
+  @Override
+  public NavigableMap<Double, NavigableMap<String, TreeElement>> getTopEntries() {
+    return (NavigableMap<Double, NavigableMap<String, TreeElement>>) super.getTopEntries();
+  }
+
+  @Override
+  public NavigableMap<Double, TreeElement> getAggregatedEntries() {
+    return (NavigableMap<Double, TreeElement>) super.getAggregatedEntries();
   }
 
   /**
@@ -60,10 +64,10 @@ public final class PartWordExport extends ExportObject {
    */
   public static PartWordExport create(String identifier, Map<String, Set<String>> results, 
       ExportParams params, PartWordReducer reducer) {
-    NavigableMap<Double, NavigableMap<String, Set<String>>> orderedResults = 
-        ExportService.applyGeneralMinimum(order(results, reducer), params.generalMinimum); 
-    NavigableMap<Double, NavigableMap<String, Set<String>>> topEntries = 
-        isolateTopEntries(orderedResults, params);
+    NavigableMap<Double, NavigableMap<String, Set<String>>> orderedResults =
+        ExportObjectService.applyGeneralMinimum(order(results, reducer), params.generalMinimum);
+    NavigableMap<Double, NavigableMap<String, Set<String>>> topEntries =
+        ExportObjectService.isolateTopEntries(orderedResults, params);
 
     NavigableMap<Double, TreeElement> aggregatedEntries;
     if (topEntries.isEmpty()) {
@@ -96,7 +100,7 @@ public final class PartWordExport extends ExportObject {
           && fullAggregated >= params.numberOfDetailedAggregation.get()) {
         aggregatedEntries.put(entry.getKey(), totalOfMap(entry.getValue()));
       } else {
-        TreeElement indexTotal = new TreeElement.IndexTotalColl(aggregateMap(entry.getValue()));
+        TreeElement indexTotal = new TreeElement.IndexTotalColl(ExportObjectService.aggregateMap(entry.getValue()));
         aggregatedEntries.put(entry.getKey(), indexTotal);
         ++fullAggregated;
       }
@@ -134,21 +138,28 @@ public final class PartWordExport extends ExportObject {
     entry.put(key, words);
   }
   
-  private static <K, V> void convertListEntriesToDescending(
-      NavigableMap<Double, NavigableMap<K, V>> map) {
-    for (Map.Entry<Double, NavigableMap<K, V>> entry : map.entrySet()) {
-      map.put(entry.getKey(), entry.getValue().descendingMap());
-    }
-  }
-  
-  private static void convertAggrEntriesToDescending(NavigableMap<Double, TreeElement> map) {
-    for (Map.Entry<Double, TreeElement> entry : map.entrySet()) {
-      if (entry.getValue() instanceof TreeElement.IndexTotalColl) {
-        NavigableMap<String, Integer> reversedMap = ((TreeElement.IndexTotalColl) entry.getValue())
-            .getTypedValue().descendingMap();
-        map.put(entry.getKey(), new TreeElement.IndexTotalColl(reversedMap));
+  private static <K, V> NavigableMap<Double, NavigableMap<K, V>> applyDescendingParamsToTopEntries(
+      NavigableMap<Double, NavigableMap<K, V>> map, ExportParams params) {
+    if (params.hasDescendingEntries) {
+      for (Map.Entry<Double, NavigableMap<K, V>> entry : map.entrySet()) {
+        map.put(entry.getKey(), entry.getValue().descendingMap());
       }
     }
+    return ExportObjectService.checkDescending(map, params.isDescending);
+  }
+  
+  private static NavigableMap<Double, TreeElement> applyDescendingParamsToAggrEntries(
+      NavigableMap<Double, TreeElement> map, ExportParams params) {
+    if (params.hasDescendingEntries) {
+      for (Map.Entry<Double, TreeElement> entry : map.entrySet()) {
+        if (entry.getValue() instanceof TreeElement.IndexTotalColl) {
+          NavigableMap<String, Integer> reversedMap = ((TreeElement.IndexTotalColl) entry.getValue())
+              .getTypedValue().descendingMap();
+          map.put(entry.getKey(), new TreeElement.IndexTotalColl(reversedMap));
+        }
+      }
+    }
+    return ExportObjectService.checkDescending(map, params.isDescending);
   }
   
   private static NavigableMap<String, TreeElement> trimTopEntriesSubMap(
@@ -163,7 +174,8 @@ public final class PartWordExport extends ExportObject {
 
       if (params.maxPartWordListSize.isPresent() && entry.getValue().size() > params.maxPartWordListSize.get()) {
         int initialSize = entry.getValue().size();
-        List<String> words = reduceList(new ArrayList<>(entry.getValue()), params.maxPartWordListSize.get());
+        List<String> words = ExportObjectService.
+            reduceList(new ArrayList<>(entry.getValue()), params.maxPartWordListSize.get());
         words.add(INDEX_REST + Integer.toString(initialSize - params.maxPartWordListSize.get()));
         result.put(entry.getKey(), new TreeElement.WordColl(words));
       } else {

@@ -33,7 +33,9 @@ public class ExportServiceTest {
 
     String expected = "{\"23.0\":10,\"12.0\":{\"eee\":2,\"www\":1},"
         + "\"6.5\":[\"tree\",\"element\",\"test\"]}";
-    assertThat(result, equalTo(expected));
+    // Replace all whitespace so the test is independent of JSON pretty print or not
+    String briefResult = result.replaceAll("\\s", "");
+    assertThat(briefResult, equalTo(expected));
   }
 
 }

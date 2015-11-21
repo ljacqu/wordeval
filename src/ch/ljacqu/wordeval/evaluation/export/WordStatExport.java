@@ -14,22 +14,29 @@ import lombok.Getter;
 @Getter
 public class WordStatExport extends ExportObject {
 
-  private final NavigableMap<Integer, List<String>> topEntries;
-  private final NavigableMap<Integer, Integer> aggregatedEntries;
-
   /**
    * Creates a new WordStatExport object.
    * @param identifier the identifier of the export object
    * @param topEntries the collection of top entries
    * @param aggregatedEntries the collection of aggregated entries
-   * @param params the export parameters
+   * @param isDescending whether or not the maps should be transformed to descending
    */
   private WordStatExport(String identifier,
       NavigableMap<Integer, List<String>> topEntries,
-      NavigableMap<Integer, Integer> aggregatedEntries, ExportParams params) {
-    super(identifier);
-    this.topEntries = ExportService.checkDescending(topEntries, params.isDescending);
-    this.aggregatedEntries = ExportService.checkDescending(aggregatedEntries, params.isDescending);
+      NavigableMap<Integer, Integer> aggregatedEntries, boolean isDescending) {
+    super(identifier,
+        ExportObjectService.checkDescending(topEntries, isDescending),
+        ExportObjectService.checkDescending(aggregatedEntries, isDescending));
+  }
+
+  @Override
+  public NavigableMap<Integer, List<String>> getTopEntries() {
+    return (NavigableMap<Integer, List<String>>) super.getTopEntries();
+  }
+
+  @Override
+  public NavigableMap<Integer, Integer> getAggregatedEntries() {
+    return (NavigableMap<Integer, Integer>) super.getAggregatedEntries();
   }
 
   /**
@@ -52,19 +59,19 @@ public class WordStatExport extends ExportObject {
    */
   public static WordStatExport create(String identifier,
       NavigableMap<Integer, List<String>> results, ExportParams params) {
-    NavigableMap<Integer, List<String>> map = 
-        ExportService.applyGeneralMinimum(results, toIntType(params.generalMinimum));
-    NavigableMap<Integer, List<String>> topEntries = isolateTopEntries(map, params);
+    NavigableMap<Integer, List<String>> map =
+        ExportObjectService.applyGeneralMinimum(results, toIntType(params.generalMinimum));
+    NavigableMap<Integer, List<String>> topEntries = ExportObjectService.isolateTopEntries(map, params);
     topEntries = trimLargeTopEntries(topEntries, params);
 
     NavigableMap<Integer, Integer> aggregatedEntries;
     if (topEntries.isEmpty()) {
-      aggregatedEntries = aggregateMap(map);
+      aggregatedEntries = ExportObjectService.aggregateMap(map);
     } else {
       Integer toKey = ExportService.getSmallestKey(topEntries);
-      aggregatedEntries = aggregateMap(map.headMap(toKey, false));
+      aggregatedEntries = ExportObjectService.aggregateMap(map.headMap(toKey, false));
     }
-    return new WordStatExport(identifier, topEntries, aggregatedEntries, params);
+    return new WordStatExport(identifier, topEntries, aggregatedEntries, params.isDescending);
   }
 
   /**
@@ -84,7 +91,7 @@ public class WordStatExport extends ExportObject {
         int restSize = entry.getValue().size() - params.maxTopEntrySize.get();
         // TODO #50: Find better way to shorten list if it makes sense to only
         // keep one word with the same start, for instance
-        topEntries.put(entry.getKey(), reduceList(entry.getValue(), params.maxTopEntrySize.get()));
+        topEntries.put(entry.getKey(), ExportObjectService.reduceList(entry.getValue(), params.maxTopEntrySize.get()));
         topEntries.get(entry.getKey()).add(ExportObject.INDEX_REST + restSize);
       }
     }

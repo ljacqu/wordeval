@@ -19,7 +19,7 @@ import ch.ljacqu.wordeval.evaluation.Evaluator;
 import lombok.Getter;
 
 /**
- * Service for the export of evaluator results.
+ * Service for the export of export objects.
  */
 public final class ExportService {
 
@@ -53,35 +53,6 @@ public final class ExportService {
   public static void exportToFile(List<Evaluator<?>> evaluators, String filename) {
     String jsonOutput = toJson(evaluators);
     dataUtils.writeToFile(filename, jsonOutput);
-  }
-  
-  /**
-   * Method to make a map descending if necessary.
-   * @param <K> the key class of the map
-   * @param <V> the value class of the map
-   * @param map the map to potentially change
-   * @param isDescending whether or not to convert to a descending map
-   * @return the map, descending if necessary
-   */
-  public static <K, V> NavigableMap<K, V> checkDescending(
-      NavigableMap<K, V> map, boolean isDescending) {
-    return isDescending ? map.descendingMap() : map;
-  }
-  
-  /**
-   * Removes the entries that are below {@link ExportParams#generalMinimum}
-   * if a value is present.
-   * @param <N> the key class of the map
-   * @param <V> the value class of the map
-   * @param map the map to reduce
-   * @param minimum the minimum value
-   * @return the map conforming to the general minimum
-   */
-  public static <N extends Number, V> NavigableMap<N, V> applyGeneralMinimum(
-      NavigableMap<N, V> map, Optional<N> minimum) {
-    return minimum.isPresent()
-        ? map.tailMap(minimum.get(), true)
-        : map;
   }
   
   /**

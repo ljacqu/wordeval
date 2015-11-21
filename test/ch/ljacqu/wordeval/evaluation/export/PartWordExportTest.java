@@ -76,7 +76,7 @@ public class PartWordExportTest {
 
     PartWordExport export = PartWordExport.create("a test", results, params, new PartWordReducer.ByLength());
 
-    assertEquals(export.identifier, "a test");
+    assertEquals(export.getIdentifier(), "a test");
 
     Map<Double, NavigableMap<String, TreeElement>> topEntries = export.getTopEntries();
     assertThat(topEntries, aMapWithSize(3));
@@ -252,7 +252,7 @@ public class PartWordExportTest {
   public void shouldHandleEmptyResult() {
     PartWordExport export = PartWordExport.create("empty test", new TreeMap<>());
 
-    assertEquals(export.identifier, "empty test");
+    assertEquals(export.getIdentifier(), "empty test");
     assertThat(export.getTopEntries(), anEmptyMap());
     assertThat(export.getAggregatedEntries(), anEmptyMap());
   }

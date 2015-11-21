@@ -54,7 +54,7 @@ public class WordStatExportTest {
 
     WordStatExport export = WordStatExport.create("test", results, params);
 
-    assertEquals(export.identifier, "test");
+    assertEquals(export.getIdentifier(), "test");
 
     Map<Integer, List<String>> topEntries = export.getTopEntries();
     assertThat(topEntries.size(), equalTo(params.topKeys));
@@ -126,7 +126,7 @@ public class WordStatExportTest {
   public void shouldExportWithDefaultParams() {
     WordStatExport export = WordStatExport.create("default test", results);
 
-    assertEquals(export.identifier, "default test");
+    assertEquals(export.getIdentifier(), "default test");
     assertThat(export.getAggregatedEntries(), notNullValue());
     assertThat(export.getTopEntries(), notNullValue());
   }
@@ -135,7 +135,7 @@ public class WordStatExportTest {
   public void shouldHandleEmptyResult() {
     WordStatExport export = WordStatExport.create("empty", new TreeMap<>());
 
-    assertEquals(export.identifier, "empty");
+    assertEquals(export.getIdentifier(), "empty");
     assertThat(export.getAggregatedEntries(), anEmptyMap());
     assertThat(export.getTopEntries(), anEmptyMap());
   }
