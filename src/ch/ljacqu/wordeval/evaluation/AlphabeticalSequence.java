@@ -30,8 +30,8 @@ public class AlphabeticalSequence extends PartWordEvaluator {
   @Override
   public ExportObject toExportObject() {
     return toExportObject(ExportParams.builder()
-        .maxPartWordListSize(Optional.of(50))
-        .maxTopEntrySize(Optional.empty())
+        .maxPartWordListSize(Optional.of(10))
+        .maxTopEntrySize(Optional.of(20))
         .topKeys(4)
         .build());
   }

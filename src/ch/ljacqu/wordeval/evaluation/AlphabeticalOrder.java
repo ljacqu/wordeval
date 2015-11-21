@@ -1,6 +1,10 @@
 package ch.ljacqu.wordeval.evaluation;
 
 import ch.ljacqu.wordeval.dictionary.WordForm;
+import ch.ljacqu.wordeval.evaluation.export.ExportObject;
+import ch.ljacqu.wordeval.evaluation.export.ExportParams;
+
+import java.util.Optional;
 
 /**
  * Filter that saves words whose letters are alphabetical from beginning to end,
@@ -28,6 +32,14 @@ public class AlphabeticalOrder extends WordStatEvaluator {
   public WordForm getWordForm() {
     // TODO #15: Make locale-aware instead
     return WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
+  }
+
+  @Override
+  public ExportObject toExportObject() {
+    return toExportObject(ExportParams.builder()
+        .topEntryMinimum(Optional.of(4.0))
+        .maxTopEntrySize(Optional.of(10))
+        .build());
   }
 
   private static int checkIsOrdered(String word, int searchDirection) {

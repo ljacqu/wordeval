@@ -1,9 +1,11 @@
 package ch.ljacqu.wordeval.evaluation;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
+import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 import ch.ljacqu.wordeval.language.LetterType;
 import lombok.AllArgsConstructor;
 
@@ -37,7 +39,8 @@ public class SingleVowel extends PartWordEvaluator {
     } else if (min == 0) {
       min = 1;
     }
-    
+
+    // TODO: This just needs a proper reducer / params and we can just take the results of VowelCount
     for (Map.Entry<String, Set<String>> entry : results.entrySet()) {
       if (entry.getKey().length() <= min) {
         getResults().put(entry.getKey(), entry.getValue());
@@ -58,7 +61,11 @@ public class SingleVowel extends PartWordEvaluator {
   @Override
   public ExportObject toExportObject() {
     // TODO #50: Prioritize words with higher length
-    return toExportObject(this.getClass().getSimpleName() + "_" + letterType.getName(), null);
+    return toExportObject(this.getClass().getSimpleName() + "_" + letterType.getName(),
+        ExportParams.builder()
+            .maxTopEntrySize(Optional.of(10))
+            .maxPartWordListSize(Optional.of(10))
+            .build());
   }
 
 }

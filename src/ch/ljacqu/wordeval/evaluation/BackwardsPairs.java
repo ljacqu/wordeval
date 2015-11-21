@@ -1,8 +1,11 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
+import ch.ljacqu.wordeval.evaluation.export.ExportObject;
+import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -33,6 +36,13 @@ public class BackwardsPairs extends PartWordEvaluator {
         addEntry(wordToLower, reversed);
       }
     }
+  }
+
+  @Override
+  public ExportObject toExportObject() {
+    return toExportObject(ExportParams.builder()
+        .topEntryMinimum(Optional.of(3.0))
+        .build());
   }
 
 }

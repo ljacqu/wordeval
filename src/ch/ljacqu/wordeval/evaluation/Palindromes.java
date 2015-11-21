@@ -31,6 +31,8 @@ public class Palindromes extends PartWordEvaluator {
   public ExportObject toExportObject() {
     return toExportObject(ExportParams.builder()
         .topEntryMinimum(Optional.of(4.0))
+        .maxPartWordListSize(Optional.of(15))
+        .numberOfDetailedAggregation(Optional.of(1))
         .build());
   }
 

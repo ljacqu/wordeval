@@ -1,8 +1,11 @@
 package ch.ljacqu.wordeval.evaluation;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
+import ch.ljacqu.wordeval.evaluation.export.ExportObject;
+import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 import ch.ljacqu.wordeval.language.LetterType;
 import lombok.AllArgsConstructor;
 
@@ -26,17 +29,19 @@ public class AllVowels extends PartWordEvaluator {
   @PostEvaluator
   public void postEvaluate(VowelCount counter) {
     Map<String, Set<String>> results = counter.getResults();
-    Integer max = results.keySet().stream()
-        .map(String::length)
-        .max(Integer::compare)
-        .orElse(null);
-    if (max == null || max == 0) {
-      throw new IllegalStateException("No words with letter type?");
-    }
-    
+    // TODO: This and SingleVowel actually just need the results from VowelCount and different reducers / export params
     results.entrySet().stream()
-      .filter(entry -> entry.getKey().length() >= max - 1)
       .forEach(entry -> getResults().put(entry.getKey(), entry.getValue()));
+  }
+
+  public ExportObject toExportObject() {
+    return toExportObject("AllVowels_" + letterType.getName(),
+      ExportParams.builder()
+        .topKeys(4)
+        .maxTopEntrySize(Optional.of(10))
+        .maxPartWordListSize(Optional.of(10))
+        .numberOfDetailedAggregation(Optional.of(0))
+        .build());
   }
   
   /**

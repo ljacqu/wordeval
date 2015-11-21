@@ -1,5 +1,10 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import ch.ljacqu.wordeval.evaluation.export.ExportObject;
+import ch.ljacqu.wordeval.evaluation.export.ExportParams;
+
+import java.util.Optional;
+
 /**
  * Filters the words by length, with the intention to get the longest words of
  * the dictionary.
@@ -14,6 +19,13 @@ public class LongWords extends WordStatEvaluator {
     if (word.length() >= MIN_LENGTH) {
       addEntry(word.length(), rawWord);
     }
+  }
+
+  @Override
+  public ExportObject toExportObject() {
+    return toExportObject(ExportParams.builder()
+        .maxTopEntrySize(Optional.of(15))
+        .build());
   }
 
 }

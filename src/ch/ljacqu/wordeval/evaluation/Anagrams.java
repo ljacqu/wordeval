@@ -29,10 +29,13 @@ public class Anagrams extends PartWordEvaluator {
   @Override
   public ExportObject toExportObject() {
     ExportParams params = ExportParams.builder()
-      .isDescending(true)
-      .maxTopEntrySize(Optional.of(10))
-      .maxPartWordListSize(Optional.of(3))
-      .build();
+        .isDescending(true)
+        .maxTopEntrySize(Optional.of(3))
+        .maxTopEntrySize(Optional.of(10))
+        .maxPartWordListSize(Optional.of(10))
+        .generalMinimum(Optional.of(2.0))
+        .numberOfDetailedAggregation(Optional.of(0))
+        .build();
     return PartWordExport.create("anagrams", getResults(), params, new PartWordReducer.BySize());
   }
 

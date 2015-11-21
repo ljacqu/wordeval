@@ -34,12 +34,13 @@ public class DiacriticHomonyms extends PartWordEvaluator {
   @Override
   public ExportObject toExportObject() {
     ExportParams params = ExportParams.builder()
-      .topEntryMinimum(Optional.of(2.0))
-      .build();
+        .generalMinimum(Optional.of(2.0))
+        .numberOfDetailedAggregation(Optional.of(0))
+        .build();
 
     return PartWordExport.create(
         getClass().getSimpleName(), 
-        getResults(), 
+        getResults(),
         params, 
         new PartWordReducer.BySizeAndLength(1.0, 0.01));
   }
