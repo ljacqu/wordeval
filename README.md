@@ -20,7 +20,6 @@ General setup
 -------------
 - Indentation with two spaces
 - 120 characters as max line width
-- EclEmma plugin for code coverage
 - JavaDoc on all _public_ members
 
 

@@ -61,7 +61,7 @@ public final class WordEvalMain {
    */
   public static void exportLanguage(String code) {
     log.info("Exporting language '{}'", code);
-    List<Long> times = new ArrayList<Long>();
+    List<Long> times = new ArrayList<>();
     times.add(System.nanoTime());
     
     Dictionary dictionary = Dictionary.getDictionary(code);
