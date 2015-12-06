@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -95,8 +94,10 @@ public class DictionaryRenamer {
     .add("Estonian", "et")
     .add("French", "fr")
     .add("Galego", "gl")
-    // TODO #48: Add other German variants
     .add("German", "de")
+    .add("German_de_AT", "de-at")
+    .add("German_de_CH", "de-ch")
+    .add("German_de_DE", "de-de")
     .add("Greek", "el")
     .add("Hungarian", "hu")
     .add("Italian", "it")
@@ -120,11 +121,10 @@ public class DictionaryRenamer {
     .add("Turkish", "tr")
     .add("Ukrainian_uk_UA", "uk")
     .add("Vietnamese_vi_VN", "vi")
-    .getMap();
+    .build();
   }
   
   private static final class ReplacementBuilder {
-    @Getter
     private Map<String, String> map;
     
     private ReplacementBuilder() {
@@ -138,6 +138,10 @@ public class DictionaryRenamer {
     public ReplacementBuilder add(String name, String code) {
       map.put(name, code);
       return this;
+    }
+
+    public Map<String, String> build() {
+      return map;
     }
   }
   
