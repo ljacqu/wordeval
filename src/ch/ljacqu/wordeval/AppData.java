@@ -9,8 +9,6 @@ import ch.ljacqu.wordeval.dictionary.Sanitizer;
 import ch.ljacqu.wordeval.language.Alphabet;
 import ch.ljacqu.wordeval.language.Language;
 
-import java.util.zip.CRC32;
-
 /**
  * Application data holder.
  */
