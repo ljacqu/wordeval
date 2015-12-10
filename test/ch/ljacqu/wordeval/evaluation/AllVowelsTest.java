@@ -26,18 +26,9 @@ public class AllVowelsTest {
     evaluator.postEvaluate(counter);
     
     Map<String, Set<String>> results = evaluator.getResults();
-    assertThat(results.keySet(), containsInAnyOrder("aeiou", "eiou", "aeiu"));
+    assertThat(results.keySet(), containsInAnyOrder("aeiou", "eiou", "aeiu", "ae"));
     assertThat(results.get("aeiou"), containsInAnyOrder("sequoia", "miscellaneous", "simultaneous"));
     assertThat(results.get("eiou"), containsInAnyOrder("question", "questions", "questioning"));
-  }
-  
-  @Test(expected = IllegalStateException.class)
-  public void shouldThrowForEmptyCounterResult() {
-    VowelCount counter = Mockito.mock(VowelCount.class);
-    when(counter.getResults()).thenReturn(new HashMap<>());
-    AllVowels evaluator = new AllVowels(LetterType.CONSONANTS);
-    
-    evaluator.postEvaluate(counter);
   }
   
   @Test
