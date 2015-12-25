@@ -1,5 +1,9 @@
 package ch.ljacqu.wordeval;
 
+import ch.ljacqu.wordeval.dictionary.Dictionary;
+import ch.ljacqu.wordeval.evaluation.Evaluator;
+import lombok.Getter;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -7,13 +11,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import ch.ljacqu.wordeval.dictionary.Dictionary;
-import ch.ljacqu.wordeval.evaluation.Evaluator;
-import lombok.Getter;
 
 /**
  * Utility methods for the tests.
@@ -24,7 +24,7 @@ public final class TestUtil {
   }
 
   /**
-   * Helper methods to easily create a Set with the given items.
+   * Helper method to easily create a mutable Set with the given items.
    * @param items the items to add into a set
    * @return a Set with the given items
    */
@@ -61,20 +61,6 @@ public final class TestUtil {
       evaluator.processWord(cleanWords[i], words[i]);
     }
   }
-
-  /**
-   * Verifies that an object is an instance of {@link Collection} and returns the casted value
-   * or throws an exception otherwise.
-   * @param o the object to verify
-   * @return the casted Collection
-   */
-  @SuppressWarnings("unchecked")
-  public static Collection<Object> toColl(Object o) {
-    if (o instanceof Collection<?>) {
-      return (Collection<Object>) o;
-    }
-    throw new IllegalArgumentException("Object '" + o + "' of type '" + o.getClass() + "' is not a Collection");
-  }
   
   /**
    * Returns whether a dictionary's file exists or not.
@@ -92,6 +78,14 @@ public final class TestUtil {
     private R() {
     }
 
+    /**
+     * Retrieves the fields of the given instance by reflection.
+     * @param clz the class of the instance
+     * @param instance the instance to retrieve the field from, or null for static fields
+     * @param fieldName the name of the field
+     * @param <T> the type of the instance
+     * @return the value of the given field
+     */
     public static <T> Object getField(Class<T> clz, T instance, String fieldName) {
       Field field;
       try {
@@ -120,7 +114,15 @@ public final class TestUtil {
         throw new UnsupportedOperationException("Could not set field", e);
       }
     }
-    
+
+    /**
+     * Retrieves the method from a class with the given name and parameters.
+     * @param clz the class to retrieve the method from
+     * @param methodName the name of the method
+     * @param params the parameter types the method takes
+     * @param <T> the type of the class
+     * @return the retrieved Method object
+     */
     public static <T> Method getMethod(Class<T> clz, String methodName, Class<?>... params) {
       try {
         Method m = clz.getDeclaredMethod(methodName, params);
@@ -131,7 +133,14 @@ public final class TestUtil {
             "Could not get method '" + methodName + "' from class '" + clz + "'", e);
       }
     }
-    
+
+    /**
+     * Invokes a method on the given instance with the provided parameters.
+     * @param method the method to invoke
+     * @param instance the instance to invoke the method on
+     * @param params the parameters to invoke the method with
+     * @return the return value of the method
+     */
     public static Object invokeMethod(Method method, Object instance, Object... params) {
       try {
         return method.invoke(instance, params);
@@ -141,17 +150,35 @@ public final class TestUtil {
     }
   }
 
-  public static class ListInit<T> {
+  /**
+   * Helper class to initialize a list with when a more verbose structure than {@link Arrays#asList} is desired.
+   * @param <T> the generic type of the list
+   */
+  public static class ANewList<T> {
     @Getter
-    private List<T> list = new ArrayList<>();
+    private List<T> list;
 
-    public static <T> ListInit with(T value) {
-      ListInit<T> listInit = new ListInit<>();
+    private ANewList() {
+      list = new ArrayList<>();
+    }
+
+    /**
+     * Generates a list builder with the first entry to add.
+     * @param value the value to add to the list
+     * @return the list builder
+     */
+    public static <T> ANewList with(T value) {
+      ANewList<T> listInit = new ANewList<>();
       listInit.and(value);
       return listInit;
     }
 
-    public ListInit and(T value) {
+    /**
+     * Adds a value to the list that is being built.
+     * @param value the value to add
+     * @return the list builder
+     */
+    public ANewList and(T value) {
       list.add(value);
       return this;
     }

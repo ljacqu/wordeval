@@ -1,6 +1,6 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import ch.ljacqu.wordeval.TestUtil.ListInit;
+import ch.ljacqu.wordeval.TestUtil.ANewList;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.PartWordExport;
 import ch.ljacqu.wordeval.evaluation.export.WordStatExport;
@@ -31,7 +31,7 @@ public class EvaluatorGlobalTest {
   @SuppressWarnings("unchecked")
   public static void initializeEvaluators() {
     Language lang = new Language("zxx", Alphabet.LATIN);
-    evaluators = ListInit
+    evaluators = ANewList
         .with(new AllVowels(LetterType.VOWELS))
         .and(new AlphabeticalOrder())
         .and(new AlphabeticalSequence())
