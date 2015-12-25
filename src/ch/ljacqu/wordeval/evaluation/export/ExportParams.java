@@ -45,25 +45,16 @@ public class ExportParams {
   @Builder
   @SuppressWarnings("unchecked")
   ExportParams(Integer topKeys, Optional<Double> topEntryMinimum, Optional<Double> generalMinimum, // NOSONAR
-      Boolean isDescending, Boolean hasDescendingEntries, Optional<Integer> maxTopEntrySize, 
-      Optional<Integer> maxPartWordListSize, Optional<Integer> numberOfDetailedAggregation) {
+               Boolean isDescending, Boolean hasDescendingEntries, Optional<Integer> maxTopEntrySize,
+               Optional<Integer> maxPartWordListSize, Optional<Integer> numberOfDetailedAggregation) {
     this.topKeys = firstNonNull(topKeys, 5);
-    this.topEntryMinimum = firstNonNull(topEntryMinimum, empty());
-    this.generalMinimum = firstNonNull(generalMinimum, empty());
+    this.topEntryMinimum = firstNonNull(topEntryMinimum, Optional.empty());
+    this.generalMinimum = firstNonNull(generalMinimum, Optional.empty());
     this.isDescending = firstNonNull(isDescending, true);
     this.hasDescendingEntries = firstNonNull(hasDescendingEntries, false);
     this.maxTopEntrySize = firstNonNull(maxTopEntrySize, Optional.of(50));
-    this.maxPartWordListSize = firstNonNull(maxPartWordListSize, emptyInt());
+    this.maxPartWordListSize = firstNonNull(maxPartWordListSize, Optional.empty());
     this.numberOfDetailedAggregation = firstNonNull(numberOfDetailedAggregation, Optional.of(3));
-  }
-  
-  // TODO #63: mvn verify throws errors if Optional.empty() is used directly
-  private static Optional<Double> empty() {
-    return Optional.empty();
-  }
-  
-  private static Optional<Integer> emptyInt() {
-    return Optional.empty();
   }
 
 }

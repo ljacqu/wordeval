@@ -34,6 +34,7 @@ public class AllVowels extends PartWordEvaluator implements PostEvaluator<VowelC
       .forEach(entry -> getResults().put(entry.getKey(), entry.getValue()));
   }
 
+  @Override
   public ExportObject toExportObject() {
     return toExportObject("AllVowels_" + letterType.getName(),
       ExportParams.builder()
