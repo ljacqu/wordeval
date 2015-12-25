@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
  * Evaluator that collects words with the most different vowels or consonants.
  */
 @AllArgsConstructor
-public class AllVowels extends PartWordEvaluator {
+public class AllVowels extends PartWordEvaluator implements PostEvaluator<VowelCount> {
 
   private final LetterType letterType;
   
@@ -26,8 +26,8 @@ public class AllVowels extends PartWordEvaluator {
    * Post evaluator method to collect words with the most vowels or consonants.
    * @param counter the vowel counter to base results on
    */
-  @PostEvaluator
-  public void postEvaluate(VowelCount counter) {
+  @Override
+  public void evaluateWith(VowelCount counter) {
     Map<String, Set<String>> results = counter.getResults();
     // TODO: This and SingleVowel actually just need the results from VowelCount and different reducers / export params
     results.entrySet().stream()
@@ -49,10 +49,12 @@ public class AllVowels extends PartWordEvaluator {
    * @param counter the instance to investigate
    * @return base match result
    */
-  @BaseMatcher
-  public boolean isBaseMatch(VowelCount counter) {
+  @Override
+  public boolean isMatch(VowelCount counter) {
     return letterType.equals(counter.getLetterType());
   }
+
+  @Override public Class<VowelCount> getType() { return VowelCount.class; }
   
   // TODO #50: Set export params to prefer short words with all vowels
 

@@ -25,7 +25,7 @@ public class FullPalindromesTest {
     when(palindromes.getResults()).thenReturn(result);
 
     FullPalindromes fullPalindromes = new FullPalindromes();
-    fullPalindromes.generateResults(palindromes);
+    fullPalindromes.evaluateWith(palindromes);
 
     Map<Integer, Set<String>> fullResults = fullPalindromes.getResults();
     assertThat(fullResults, aMapWithSize(2));

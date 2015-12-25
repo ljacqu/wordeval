@@ -4,6 +4,7 @@ import static ch.ljacqu.wordeval.dictionary.WordForm.RAW;
 
 import java.util.Map;
 
+import ch.ljacqu.wordeval.evaluation.PostEvaluator;
 import org.apache.commons.lang3.StringUtils;
 
 import ch.ljacqu.wordeval.DataUtils;
@@ -70,7 +71,7 @@ public class Dictionary {
    * @param evaluators the list of evaluators to pass the words to
    */
   public void process(Iterable<Evaluator<?>> evaluators) {
-    Map<Evaluator<?>, Evaluator<?>> postEvaluators = EvaluatorService.getPostEvaluators(evaluators);
+    Map<PostEvaluator<?>, Evaluator<?>> postEvaluators = EvaluatorService.getPostEvaluators(evaluators);
     
     dataUtils.readFileLines(fileName)
       .stream()

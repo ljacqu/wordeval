@@ -20,7 +20,7 @@ public class BackwardsPairsTest {
     WordCollector collector = setUpCollector(words);
     
     BackwardsPairs evaluator = new BackwardsPairs();
-    evaluator.postEvaluate(collector);
+    evaluator.evaluateWith(collector);
     Map<String, Set<String>> results = evaluator.getResults();
     
     assertThat(results.keySet(), containsInAnyOrder("but", "parts"));
@@ -33,7 +33,7 @@ public class BackwardsPairsTest {
     WordCollector collector = setUpCollector("net", "otto", "Redder", "redder", "ten");
     
     BackwardsPairs evaluator = new BackwardsPairs();
-    evaluator.postEvaluate(collector);
+    evaluator.evaluateWith(collector);
     Map<String, Set<String>> results = evaluator.getResults();
     
     assertThat(results.keySet(), contains("net"));
@@ -44,7 +44,7 @@ public class BackwardsPairsTest {
     WordCollector collector = setUpCollector("BUT", "Net", "parts", "Strap", "TEN", "tub");
     
     BackwardsPairs evaluator = new BackwardsPairs();
-    evaluator.postEvaluate(collector);
+    evaluator.evaluateWith(collector);
     Map<String, Set<String>> results = evaluator.getResults();
     
     assertThat(results.keySet(), containsInAnyOrder("but", "net", "parts"));

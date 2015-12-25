@@ -8,15 +8,15 @@ import java.util.Set;
  * {@link Palindromes} evaluator, which also matches parts of a word (e.g.
  * "ette" in "better").
  */
-public class FullPalindromes extends WordStatEvaluator {
+public class FullPalindromes extends WordStatEvaluator implements PostEvaluator<Palindromes> {
 
   /**
    * Filters all words which are proper palindromes (i.e. the entire word is
    * symmetrical).
    * @param palindromes The evaluator whose results should be processed
    */
-  @PostEvaluator
-  public void generateResults(Palindromes palindromes) {
+  @Override
+  public void evaluateWith(Palindromes palindromes) {
     for (Map.Entry<String, Set<String>> entry : palindromes.getResults().entrySet()) {
       for (String word : entry.getValue()) {
         if (word.length() == entry.getKey().length()) {
@@ -30,5 +30,7 @@ public class FullPalindromes extends WordStatEvaluator {
   public void processWord(String word, String rawWord) {
     // --
   }
+
+  @Override public Class<Palindromes> getType() { return Palindromes.class; }
 
 }

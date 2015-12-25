@@ -23,7 +23,7 @@ public class AllVowelsTest {
     when(counter.getResults()).thenReturn(initializeSampleResults(LetterType.VOWELS));
     AllVowels evaluator = new AllVowels(LetterType.VOWELS);
     
-    evaluator.postEvaluate(counter);
+    evaluator.evaluateWith(counter);
     
     Map<String, Set<String>> results = evaluator.getResults();
     assertThat(results.keySet(), containsInAnyOrder("aeiou", "eiou", "aeiu", "ae"));

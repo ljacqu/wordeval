@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
  * Finds pairs of words that are equal to each other when reversed, e.g. German
  * "Lager" and "Regal".
  */
-public class BackwardsPairs extends PartWordEvaluator {
+public class BackwardsPairs extends PartWordEvaluator implements PostEvaluator<WordCollector> {
 
   @Override
   public void processWord(String word, String rawWord) {
@@ -23,8 +23,8 @@ public class BackwardsPairs extends PartWordEvaluator {
    * Evaluate "backwards pairs" based on the collected words of a dictionary.
    * @param collector the word collector
    */
-  @PostEvaluator
-  public void postEvaluate(WordCollector collector) { 
+  @Override
+  public void evaluateWith(WordCollector collector) {
     Set<String> words = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
     words.addAll(collector.returnSortedWords());
 
@@ -44,5 +44,7 @@ public class BackwardsPairs extends PartWordEvaluator {
         .topEntryMinimum(Optional.of(3.0))
         .build());
   }
+
+  @Override public Class<WordCollector> getType() { return WordCollector.class; }
 
 }

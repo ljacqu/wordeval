@@ -1,16 +1,5 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import static org.hamcrest.Matchers.anEmptyMap;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
-
-import java.util.Arrays;
-import java.util.List;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import ch.ljacqu.wordeval.TestUtil.ListInit;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.PartWordExport;
@@ -19,11 +8,21 @@ import ch.ljacqu.wordeval.language.Alphabet;
 import ch.ljacqu.wordeval.language.Language;
 import ch.ljacqu.wordeval.language.LetterType;
 import lombok.extern.log4j.Log4j2;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.List;
+
+import static org.hamcrest.Matchers.anEmptyMap;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 /**
  * Tests common functionality of the evaluators.
  */
 @Log4j2
+@SuppressWarnings("JavaDoc")
 public class EvaluatorGlobalTest {
 
   private static List<Evaluator<?>> evaluators;
@@ -69,18 +68,6 @@ public class EvaluatorGlobalTest {
         validateEmpty(exportObj);
       }      
     }
-  }
-  
-  @Test
-  public void shouldHaveProcessWordForPostEvaluators() {
-    evaluators.stream()
-      .filter(evaluator -> {
-        return Arrays.stream(evaluator.getClass().getMethods())
-          .filter(method -> method.isAnnotationPresent(PostEvaluator.class))
-          .findAny()
-          .isPresent();
-      })
-      .forEach(evaluator -> evaluator.processWord("", ""));
   }
 
   private static void validateEmpty(ExportObject eo) {

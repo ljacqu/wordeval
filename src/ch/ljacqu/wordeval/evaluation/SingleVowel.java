@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
  * such as "abracadabra," which only uses the vowel 'a.' 
  */
 @AllArgsConstructor
-public class SingleVowel extends PartWordEvaluator {
+public class SingleVowel extends PartWordEvaluator implements PostEvaluator<VowelCount> {
   
   private final LetterType letterType;
   
@@ -27,8 +27,8 @@ public class SingleVowel extends PartWordEvaluator {
    * Isolates the words with one letter type from a {@link VowelCount} instance.
    * @param counter the vowel or consonant counter
    */
-  @PostEvaluator
-  public void postEvaluate(VowelCount counter) {
+  @Override
+  public void evaluateWith(VowelCount counter) {
     Map<String, Set<String>> results = counter.getResults();
     Integer min = results.keySet().stream()
       .map(String::length)
@@ -53,8 +53,8 @@ public class SingleVowel extends PartWordEvaluator {
    * @param counter the instance to match
    * @return base match
    */
-  @BaseMatcher
-  public boolean matchesBase(VowelCount counter) {
+  @Override
+  public boolean isMatch(VowelCount counter) {
     return letterType.equals(counter.getLetterType());
   }
   
@@ -67,5 +67,7 @@ public class SingleVowel extends PartWordEvaluator {
             .maxPartWordListSize(Optional.of(10))
             .build());
   }
+
+  @Override public Class<VowelCount> getType() { return VowelCount.class; }
 
 }

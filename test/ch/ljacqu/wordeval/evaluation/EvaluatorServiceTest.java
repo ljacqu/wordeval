@@ -22,6 +22,7 @@ import org.mockito.Mockito;
 
 import lombok.Getter;
 
+@SuppressWarnings("JavaDoc")
 public class EvaluatorServiceTest {
   
   @Test
@@ -31,7 +32,7 @@ public class EvaluatorServiceTest {
     Evaluator<?> e3 = new Evaluator3();
     List<Evaluator<?>> evaluators = Arrays.asList(e1, e2, e3);
     
-    Map<Evaluator<?>, Evaluator<?>> postEvaluators = EvaluatorService.getPostEvaluators(evaluators);
+    Map<PostEvaluator<?>, Evaluator<?>> postEvaluators = EvaluatorService.getPostEvaluators(evaluators);
     
     assertThat(postEvaluators, aMapWithSize(2));
     assertThat(postEvaluators.get(e2), equalTo(e1));
@@ -41,50 +42,15 @@ public class EvaluatorServiceTest {
   @Test(expected = IllegalStateException.class)
   public void shouldThrowExceptionIfNoParameterMatchPossible() {
     Evaluator<?> e1 = new Evaluator1();
-    Evaluator<?> e2 = new SimpleEvaluator() {
-      @PostEvaluator
-      public void postEval(Evaluator3 e) {
+    Evaluator<?> e2 = new SimplePostEvaluator<Evaluator3>() {
+      @Override
+      public void evaluateWith(Evaluator3 e) {
         // --
       }
+      @Override public Class<Evaluator3> getType() { return Evaluator3.class; }
     };
     
     EvaluatorService.getPostEvaluators(Arrays.asList(e1, e2));
-  }
-  
-  @Test(expected = IllegalStateException.class)
-  public void shouldThrowExceptionForInvalidPostEvaluatorMethods() {
-    Evaluator<?> e1 = new SimpleEvaluator() {
-      @PostEvaluator
-      public void postEval(Evaluator<?> e, String a) {
-        throw new UnsupportedOperationException("Method should not have been invoked");
-      }
-    };
-    
-    EvaluatorService.getPostEvaluators(Arrays.asList(e1));
-  }
-  
-  @Test(expected = IllegalStateException.class)
-  public void shouldThrowExceptionForPostEvaluatorMethodWithNoParams() {
-    Evaluator<?> e1 = new SimpleEvaluator() {
-      @PostEvaluator
-      public void emptyPostEval() {
-        throw new UnsupportedOperationException("Method should not have been invoked");
-      }
-    };
-    
-    EvaluatorService.getPostEvaluators(Arrays.asList(e1));
-  }
-  
-  @Test(expected = IllegalStateException.class)
-  public void shouldThrowExceptionForPostEvaluatorMethodWithWrongParam() {
-    Evaluator<?> e1 = new SimpleEvaluator() {
-      @PostEvaluator
-      public void emptyPostEval(String word) {
-        throw new UnsupportedOperationException("Method should not have been invoked");
-      }
-    };
-    
-    EvaluatorService.getPostEvaluators(Arrays.asList(e1));
   }
   
   @Test
@@ -96,32 +62,24 @@ public class EvaluatorServiceTest {
     
     Evaluator2 e2 = new Evaluator2();
     
-    Map<Evaluator<?>, Evaluator<?>> postEvaluators = new HashMap<>();
+    Map<PostEvaluator<?>, Evaluator<?>> postEvaluators = new HashMap<>();
     postEvaluators.put(e2, e1);
     EvaluatorService.executePostEvaluators(postEvaluators);
     assertTrue(e2.postEvaluatorCalled);
   }
   
-  @Test(expected = IllegalStateException.class)
-  public void shouldThrowExceptionForInvalidPostEvaluator() {
-    Evaluator1 e1 = new Evaluator1();
-    Map<Evaluator<?>, Evaluator<?>> postEvaluators = new HashMap<>();
-    postEvaluators.put(e1, e1);
-    
-    EvaluatorService.executePostEvaluators(postEvaluators);
-  }
-  
   @Test
   public void shouldAllowSubTypes() {
     Evaluator1 e1 = new Evaluator1();
-    SimpleEvaluator e2 = new SimpleEvaluator() {
-      @PostEvaluator
-      public void process(SimpleEvaluator simpleEv) {
+    SimpleEvaluator e2 = new SimplePostEvaluator<SimpleEvaluator>() {
+      @Override
+      public void evaluateWith(SimpleEvaluator simpleEv) {
         // --
       }
+      @Override public Class<SimpleEvaluator> getType() { return SimpleEvaluator.class; }
     };
     
-    Map<Evaluator<?>, Evaluator<?>> postEvaluators = 
+    Map<PostEvaluator<?>, Evaluator<?>> postEvaluators =
         EvaluatorService.getPostEvaluators(Arrays.asList(e1, e2));
     
     assertThat(postEvaluators, aMapWithSize(1));
@@ -131,20 +89,21 @@ public class EvaluatorServiceTest {
   
   @Test
   public void shouldGetBaseWithBaseMatcherMethod() {
-    SimpleEvaluator postEvaluator = new SimpleEvaluator() {
-      @PostEvaluator
-      public void postEvaluate(EvaluatorWithParam ev) {
+    SimpleEvaluator postEvaluator = new SimplePostEvaluator<EvaluatorWithParam>() {
+      @Override
+      public void evaluateWith(EvaluatorWithParam ev) {
         // --
       }
-      @BaseMatcher
+      @Override
       public boolean isMatch(EvaluatorWithParam ev) {
         return ev.getIndexParam() == 3;
       }
+      @Override public Class<EvaluatorWithParam> getType() { return EvaluatorWithParam.class; }
     };
     List<Evaluator<?>> evaluators = Arrays.asList(
         postEvaluator, new EvaluatorWithParam(1), new EvaluatorWithParam(3));
     
-    Map<Evaluator<?>, Evaluator<?>> postEvaluators = EvaluatorService.getPostEvaluators(evaluators);
+    Map<PostEvaluator<?>, Evaluator<?>> postEvaluators = EvaluatorService.getPostEvaluators(evaluators);
     
     assertThat(postEvaluators, aMapWithSize(1));
     assertTrue(postEvaluators.containsKey(postEvaluator));
@@ -152,88 +111,18 @@ public class EvaluatorServiceTest {
     assertThat(baseEvaluator, instanceOf(EvaluatorWithParam.class));
     assertThat(((EvaluatorWithParam) baseEvaluator).getIndexParam(), equalTo(3));
   }
-  
-  @Test(expected = IllegalStateException.class)
-  public void shouldThrowIfThereIsBaseMatcherButNotPostEvaluator() {
-    Evaluator1 base = new Evaluator1();
-    Evaluator1 postEvaluator = new Evaluator1() {
-      @BaseMatcher
-      public boolean isMatch(Evaluator1 ev) {
-        return true;
-      }
-    };
 
-    EvaluatorService.getPostEvaluators(Arrays.asList(base, postEvaluator));
-  }
-  
-  @Test(expected = IllegalStateException.class)
-  public void shouldThrowIfBaseMatcherDoesNotReturnBoolean() {
-    Evaluator1 base1 = new Evaluator1();
-    SimpleEvaluator postEvaluator = new SimpleEvaluator() {
-      @PostEvaluator
-      public void process(Evaluator1 base) {
-        // --
-      }
-      @BaseMatcher
-      public int isMatch(Evaluator1 base) {
-        return 5;
-      }
-    };
-    
-    EvaluatorService.getPostEvaluators(Arrays.asList(base1, postEvaluator));
-  }
-  
-  @Test(expected = IllegalStateException.class)
-  public void shouldThrowIfBaseMatcherAndPostEvaluatorDoNotMatch() {
-    Evaluator1 base1 = new Evaluator1();
-    EvaluatorWithParam base2 = new EvaluatorWithParam(14);
-    SimpleEvaluator postEvaluator = new SimpleEvaluator() {
-      @PostEvaluator
-      public void process(Evaluator1 base) {
-        // --
-      }
-      @BaseMatcher
-      public boolean isMatch(EvaluatorWithParam ewp) {
-        return true;
-      }
-    };
-    
-    EvaluatorService.getPostEvaluators(Arrays.asList(base1, base2, postEvaluator));
-  }
-  
-  @Test
-  public void shouldAllowBaseMatcherWithBooleanClassReturnType() {
-    EvaluatorWithParam base1 = new EvaluatorWithParam(44);
-    EvaluatorWithParam base2 = new EvaluatorWithParam(31);
-    SimpleEvaluator postEvaluator = new SimpleEvaluator() {
-      @PostEvaluator
-      public void postProcess(EvaluatorWithParam ev) {
-        // --
-      }
-      @BaseMatcher
-      public Boolean isMatch(EvaluatorWithParam ev) {
-        return ev.getIndexParam() % 2 == 1;
-      }
-    };
-    
-    Map<Evaluator<?>, Evaluator<?>> postEvaluators = 
-        EvaluatorService.getPostEvaluators(Arrays.asList(base1, base2, postEvaluator));
-    
-    assertThat(postEvaluators, aMapWithSize(1));
-    assertThat(postEvaluators, hasKey(postEvaluator));
-    assertThat(postEvaluators.get(postEvaluator), equalTo(base2));
-  }
   
   // ----------
   
   private static class Evaluator1 extends SimpleEvaluator {
   }
   
-  private static class Evaluator2 extends PartWordEvaluator {
+  private static class Evaluator2 extends PartWordEvaluator implements PostEvaluator<Evaluator1> {
     boolean postEvaluatorCalled = false;
     
-    @PostEvaluator
-    public void postEvalMethod(Evaluator1 e) {
+    @Override
+    public void evaluateWith(Evaluator1 e) {
       assertThat(e.getResults(), not(anEmptyMap()));
       postEvaluatorCalled = true;
     }
@@ -242,15 +131,17 @@ public class EvaluatorServiceTest {
     public void processWord(String a, String b) {
       // --
     }
+    @Override public Class<Evaluator1> getType() { return Evaluator1.class; }
   }
   
-  private static class Evaluator3 extends SimpleEvaluator {
+  private static class Evaluator3 extends SimpleEvaluator implements PostEvaluator<Evaluator1> {
     boolean postEvaluatorCalled = false;
     
-    @PostEvaluator
-    public void m(Evaluator1 e) {
+    @Override
+    public void evaluateWith(Evaluator1 e) {
       postEvaluatorCalled = true;
     }
+    @Override public Class<Evaluator1> getType() { return Evaluator1.class; }
   }
   
   private static class EvaluatorWithParam extends SimpleEvaluator {
@@ -266,6 +157,10 @@ public class EvaluatorServiceTest {
     public void processWord(String a, String b) {
       addEntry(a, b);
     }
+  }
+
+  private static abstract class SimplePostEvaluator<T extends Evaluator> extends SimpleEvaluator
+      implements PostEvaluator<T> {
   }
 
 }

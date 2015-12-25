@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 
+import ch.ljacqu.wordeval.evaluation.PostEvaluator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -18,7 +19,6 @@ import org.mockito.Mockito;
 import ch.ljacqu.wordeval.DataUtils;
 import ch.ljacqu.wordeval.TestUtil;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
-import ch.ljacqu.wordeval.evaluation.PostEvaluator;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 import ch.ljacqu.wordeval.language.Alphabet;
@@ -109,7 +109,7 @@ public class DictionaryTest {
     }
   }
   
-  public static class TestPostEvaluator extends Evaluator<Boolean> {    
+  public static class TestPostEvaluator extends Evaluator<Boolean> implements PostEvaluator<LowercaseEvaluator> {
     @Override
     public void processWord(String word, String rawWord) {
       // --
@@ -120,10 +120,11 @@ public class DictionaryTest {
       return null;
     }
     
-    @PostEvaluator
-    public void postProcess(LowercaseEvaluator base) {
+    @Override
+    public void evaluateWith(LowercaseEvaluator base) {
       addEntry(Boolean.TRUE, Integer.toString(base.getResults().size()));
     }
+    @Override public Class<LowercaseEvaluator> getType() { return LowercaseEvaluator.class; }
   }
   
   
