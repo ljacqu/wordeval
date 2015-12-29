@@ -66,8 +66,7 @@ public final class WordGraphMain {
     return useExport ? Optional.of(exportFilename) : Optional.empty();
   }
   
-  private static void processExportChoice(Scanner scanner, String dictionaryCode, 
-      GraphBuilder builder) {
+  private static void processExportChoice(Scanner scanner, String dictionaryCode, GraphBuilder builder) {
     System.out.println("Export connections to file? [y/n]");
     boolean doExport = getChoice(scanner);
     if (doExport) {
@@ -89,12 +88,9 @@ public final class WordGraphMain {
         toggleVertices(scanner, graph, disabledVertices);
         continue;
       }
-      
-      System.out.print("Enter word 2 (empty string to quit): ");
+
+      System.out.print("Enter word 2: ");
       right = scanner.nextLine().trim();
-      if (right.isEmpty()) {
-        break;
-      }
 
       Set<String> path = WordGraphService.getShortestPath(graph, left, right);
       System.out.println(path);
@@ -102,7 +98,7 @@ public final class WordGraphMain {
   }
   
   private static void toggleVertices(Scanner scanner, SimpleGraph<String, DefaultWeightedEdge> graph,
-      List<String> disabledVertices) {
+                                     List<String> disabledVertices) {
     while (true) {
       System.out.println("Disable a vertex? (empty string to quit, ! to see the list of disabled vertices):");
       String word = scanner.nextLine().trim();

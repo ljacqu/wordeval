@@ -23,9 +23,9 @@ public class Dictionary {
   /** The dictionary file to read from. */
   @Getter
   private final String fileName;
-  /** Sanitizer to sanitize the dictionary's words. */
   @Getter
   private final Language language;
+  /** Sanitizer to sanitize the dictionary's words. */
   private final Sanitizer sanitizer;
   private final WordFormsBuilder wordFormsBuilder;
   private final DataUtils dataUtils = new DataUtils();
@@ -80,6 +80,7 @@ public class Dictionary {
       .forEach(word -> sendToEvaluators(word, evaluators));
 
     EvaluatorService.executePostEvaluators(postEvaluators);
+    evaluators.forEach(e -> e.filterDuplicateWords(language.getLocale()));
   }
 
   /**

@@ -1,25 +1,23 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
-import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.List;
-import java.util.NavigableMap;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import ch.ljacqu.wordeval.DataUtils;
+import ch.ljacqu.wordeval.evaluation.Evaluator;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-
-import ch.ljacqu.wordeval.DataUtils;
-import ch.ljacqu.wordeval.evaluation.Evaluator;
 import lombok.Getter;
 
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.List;
+import java.util.NavigableMap;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 /**
- * Service for the export of export objects.
+ * Service for the export and generation of export objects.
  */
 public final class ExportService {
 
