@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval.language;
 
+import static ch.ljacqu.wordeval.TestUtil.newLanguage;
 import static ch.ljacqu.wordeval.language.Alphabet.LATIN;
 import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -12,13 +13,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.junit.Before;
 import org.junit.Test;
 
+@SuppressWarnings("javadoc")
 public class LanguageTest {
 
   @Test
   public void shouldHandleUnsetProperties() {
-    Language lang = new Language("zxx", LATIN);
+    Language lang = newLanguage("zxx");
 
     assertThat(lang.getCode(), equalTo("zxx"));
     assertThat(lang.getAdditionalConsonants(), emptyArray());
@@ -27,7 +30,7 @@ public class LanguageTest {
 
   @Test
   public void shouldNotHaveLettersToPreserveIfNonApplicable() {
-    Language lang = new Language("zxx", LATIN).setAdditionalVowels("ij")
+    Language lang = newLanguage("zxx").setAdditionalVowels("ij")
         .setAdditionalConsonants("cs", "ny");
 
     assertThat(lang.getAdditionalVowels(), arrayWithSize(1));
@@ -41,7 +44,7 @@ public class LanguageTest {
   
   @Test
   public void shouldGetLanguageWithoutHyphen() {
-    Language zxxLang = new Language("zxx", LATIN);
+    Language zxxLang = newLanguage("zxx");
     Language.add(zxxLang);
     
     Language result = Language.get("zxx-ww");
@@ -51,7 +54,7 @@ public class LanguageTest {
   
   @Test
   public void shouldReturnCharsToPreserve() {
-    Language lang = new Language("zxx", LATIN)
+    Language lang = newLanguage("zxx")
       .setAdditionalConsonants("cs", "þ", "y")
       .setAdditionalVowels("w", "eu", "ø", "öy");
 
@@ -60,8 +63,8 @@ public class LanguageTest {
 
   @Test
   public void shouldReturnEmptyCharsToPreserve() {
-    Language lang1 = new Language("zxx", LATIN);
-    Language lang2 = new Language("zxx", LATIN)
+    Language lang1 = newLanguage("zxx");
+    Language lang2 = newLanguage("zxx")
       .setAdditionalConsonants("tt", "ff", "gg")
       .setAdditionalVowels("ii", "w", "øu");
 

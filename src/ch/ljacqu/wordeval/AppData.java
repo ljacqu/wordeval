@@ -29,45 +29,45 @@ public final class AppData {
    * Initializes languages.
    */
   private static void initLanguages() {
-    addLanguage("af", LATIN);
-    addLanguage("bg", CYRILLIC);
-    addLanguage("cs", LATIN)
+    addLanguage("af", "Afrikaans", LATIN);
+    addLanguage("bg", "Bulgarian", CYRILLIC);
+    addLanguage("cs", "Czech", LATIN)
       // TODO #66: is stuff like "ň" really a distinct letter to preserve?
       .setAdditionalConsonants("č", "ď", "ch", "ň", "ř", "š", "ť", "ž")
       .setAdditionalVowels("á", "é", "ě", "í", "ó", "ú", "ů", "ý");
-    addLanguage("da", LATIN)
+    addLanguage("da", "Danish", LATIN)
       .setAdditionalVowels("æ", "ø", "å");
     // TODO #51: How to handle 'ß'?
-    addLanguage("de", LATIN);
-    addLanguage("en", LATIN)
+    addLanguage("de", "German", LATIN);
+    addLanguage("en", "English", LATIN)
       // TODO #66: how to deal with Y being consonant and vowel in English?
       .setAdditionalConsonants("y");
-    addLanguage("es", LATIN)
+    addLanguage("es", "Spanish", LATIN)
       .setAdditionalConsonants("ñ");
-    addLanguage("eu", LATIN)
+    addLanguage("eu", "Basque", LATIN)
       .setAdditionalConsonants("ñ");
-    addLanguage("fi", LATIN)
+    addLanguage("fi", "Finnish", LATIN)
       .setAdditionalVowels("ä", "ö");
-    addLanguage("fr", LATIN);
-    addLanguage("hu", LATIN)
+    addLanguage("fr", "French", LATIN);
+    addLanguage("hu", "Hungarian", LATIN)
       .setAdditionalConsonants("cs", "dz", "dzs", "gy", "ly", "ny", "sz", "ty", "zs")
       .setAdditionalVowels("á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű");
-    addLanguage("it", LATIN);
-    addLanguage("nb", LATIN)
+    addLanguage("it", "Italian", LATIN);
+    addLanguage("nb", "Norwegian (Bokmål)", LATIN)
       .setAdditionalVowels("æ", "ø", "å");
-    addLanguage("nl", LATIN)
+    addLanguage("nl", "Dutch", LATIN)
         .setAdditionalVowels("ij");
-    addLanguage("nn", LATIN)
+    addLanguage("nn", "Norwegian (Nynorsk)", LATIN)
       .setAdditionalVowels(Language.get("nb").getAdditionalVowels());
-    addLanguage("pl", LATIN)
+    addLanguage("pl", "Polish", LATIN)
       .setAdditionalConsonants("ć", "ł", "ń", "ś", "ź", "ż")
       .setAdditionalVowels("ą", "ę", "ó");
-    addLanguage("pt", LATIN);
-    addLanguage("ru", CYRILLIC);
-    addLanguage("sr-cyrl", CYRILLIC);
-    addLanguage("sr-latn", LATIN)
+    addLanguage("pt", "Portuguese", LATIN);
+    addLanguage("ru", "Russian", CYRILLIC);
+    addLanguage("sr-cyrl", "Serbian (Cyrillic)", CYRILLIC);
+    addLanguage("sr-latn", "Serbian (Latin)", LATIN)
       .setAdditionalConsonants("č", "ć", "dž", "đ", "lj", "nj", "š", "ž");
-    addLanguage("tr", LATIN)
+    addLanguage("tr", "Turkish", LATIN)
       .setAdditionalConsonants("ç", "ğ", "ş", "y")
       .setAdditionalVowels("ı", "ö", "ü")
       .setLettersToRemove("y");
@@ -105,8 +105,8 @@ public final class AppData {
     addDictionary("tr").setDelimiters(' ');
   }
   
-  private static Language addLanguage(String code, Alphabet alphabet) {
-    Language language = new Language(code, alphabet);
+  private static Language addLanguage(String code, String name, Alphabet alphabet) {
+    Language language = new Language(code, name, alphabet);
     Language.add(language);
     return language;
   }  

@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import static ch.ljacqu.wordeval.TestUtil.newLanguage;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -16,6 +17,7 @@ import ch.ljacqu.wordeval.language.Alphabet;
 import ch.ljacqu.wordeval.language.Language;
 import ch.ljacqu.wordeval.language.LetterType;
 
+@SuppressWarnings("javadoc")
 public class VowelCountTest {
 
   private VowelCount vowelEvaluator;
@@ -23,7 +25,7 @@ public class VowelCountTest {
 
   @Before
   public void initializeEvaluator() {
-    Language lang = new Language("zxx", Alphabet.LATIN);
+    Language lang = newLanguage("zxx");
     vowelEvaluator = new VowelCount(LetterType.VOWELS, lang);
     consonantEvaluator = new VowelCount(LetterType.CONSONANTS, lang);
   }

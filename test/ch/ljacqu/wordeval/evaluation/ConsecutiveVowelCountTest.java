@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import static ch.ljacqu.wordeval.TestUtil.newLanguage;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.anEmptyMap;
 import static org.hamcrest.Matchers.contains;
@@ -13,6 +14,7 @@ import ch.ljacqu.wordeval.language.Alphabet;
 import ch.ljacqu.wordeval.language.Language;
 import ch.ljacqu.wordeval.language.LetterType;
 
+@SuppressWarnings("javadoc")
 public class ConsecutiveVowelCountTest {
 
   private ConsecutiveVowelCount vowelCount;
@@ -21,7 +23,7 @@ public class ConsecutiveVowelCountTest {
   @Test
   public void shouldProcessVowelClusters() {
     // 4, 3, 0, 3, {2, 3}, 2
-    initializeEvaluators(new Language("en", Alphabet.LATIN));
+    initializeEvaluators(newLanguage("en", Alphabet.LATIN));
     String[] words = { "sequoia", "eaux", "abodef", "geëet", "oicąeèl", "ůý" };
     String[] clean = { "sequoia", "eaux", "abodef", "geeet", "oicaeel", "uy" };
 
@@ -41,7 +43,7 @@ public class ConsecutiveVowelCountTest {
   @Test
   public void shouldProcessConsonantClusters() {
     // {3, 2}, 0, 3, {4, 3}, 0
-    initializeEvaluators(new Language("en", Alphabet.LATIN));
+    initializeEvaluators(newLanguage("en", Alphabet.LATIN));
     String[] words = { "pfrund", "potato", "przy", "wśrżystkęm", "arigato" };
     String[] clean = { "pfrund", "potato", "przy", "wsrzystkem", "arigato" };
 
@@ -60,7 +62,7 @@ public class ConsecutiveVowelCountTest {
 
   @Test
   public void shouldProcessCyrillicWords() {
-    initializeEvaluators(new Language("ru", Alphabet.CYRILLIC));
+    initializeEvaluators(newLanguage("ru", Alphabet.CYRILLIC));
     // Vowels: 2, 2, 0, 0 | Consonants: 0, 2, {3, 4, 2}, {2, 2}
     // ь is neither consonant nor vowel
     String[] words = { "википедия", "вооружённый", "здравствуйте", "апрельская" };
@@ -82,7 +84,7 @@ public class ConsecutiveVowelCountTest {
 
   @Test
   public void shouldProcessBulgarianCorrectly() {
-    Language lang = new Language("bg", Alphabet.CYRILLIC)
+    Language lang = newLanguage("bg", Alphabet.CYRILLIC)
         .setAdditionalVowels("ъ");
     initializeEvaluators(lang);
     // Vowels: 2, 2, 0; Consonants: 3, 2, 0

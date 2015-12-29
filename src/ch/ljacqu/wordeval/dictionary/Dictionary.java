@@ -68,19 +68,23 @@ public class Dictionary {
 
   /**
    * Processes a dictionary; each word is passed to the evaluators.
+   *
    * @param evaluators the list of evaluators to pass the words to
+   * @return The total number of words read
    */
-  public void process(Iterable<Evaluator<?>> evaluators) {
+  public long process(Iterable<Evaluator<?>> evaluators) {
     Map<PostEvaluator<?>, Evaluator<?>> postEvaluators = EvaluatorService.getPostEvaluators(evaluators);
     
-    dataUtils.readFileLines(fileName)
+    long totalWords = dataUtils.readFileLines(fileName)
       .stream()
       .map(sanitizer::isolateWord)
       .filter(StringUtils::isNotEmpty)
-      .forEach(word -> sendToEvaluators(word, evaluators));
+      .peek(word -> sendToEvaluators(word, evaluators))
+      .count();
 
     EvaluatorService.executePostEvaluators(postEvaluators);
     evaluators.forEach(e -> e.filterDuplicateWords(language.getLocale()));
+    return totalWords;
   }
 
   /**

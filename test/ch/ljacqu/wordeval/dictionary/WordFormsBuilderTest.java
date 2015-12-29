@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval.dictionary;
 
+import static ch.ljacqu.wordeval.TestUtil.newLanguage;
 import static ch.ljacqu.wordeval.dictionary.WordForm.LOWERCASE;
 import static ch.ljacqu.wordeval.dictionary.WordForm.NO_ACCENTS;
 import static ch.ljacqu.wordeval.dictionary.WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
@@ -16,7 +17,7 @@ public class WordFormsBuilderTest {
 
   @Test
   public void shouldKeepAdditionalLetters() {
-    Language language = new Language("da", LATIN)
+    Language language = newLanguage("da")
         .setAdditionalVowels("æ", "ø", "å");
     WordFormsBuilder builder = new WordFormsBuilder(language);
     String[] words = { "forsøgte erklære trådte", "Å ǿ én býr" };
@@ -31,7 +32,7 @@ public class WordFormsBuilderTest {
 
   @Test
   public void shouldRemoveAllAccentsByDefault() {
-    Language language = new Language("fr", LATIN);
+    Language language = newLanguage("fr");
     WordFormsBuilder builder = new WordFormsBuilder(language);
 
     String result = getForm(builder.computeForms("ÉÑÀÇÏÔ"), NO_ACCENTS);
@@ -41,7 +42,7 @@ public class WordFormsBuilderTest {
 
   @Test
   public void shouldUseLocaleForLowerCase() {
-    Language language = new Language("tr", LATIN);
+    Language language = newLanguage("tr");
     WordFormsBuilder builder = new WordFormsBuilder(language);
 
     String result = getForm(builder.computeForms("PRINÇE"), LOWERCASE);
@@ -51,8 +52,8 @@ public class WordFormsBuilderTest {
 
   @Test
   public void shouldComputeWordOnlyForm() {
-    Language language = new Language("cs", LATIN).setAdditionalConsonants("č",
-        "ř");
+    Language language = newLanguage("cs")
+        .setAdditionalConsonants("č", "ř");
     WordFormsBuilder builder = new WordFormsBuilder(language);
 
     String result = getForm(builder.computeForms("ČL-OV'ěk-ůŘ"),
@@ -63,7 +64,7 @@ public class WordFormsBuilderTest {
 
   @Test(expected = IllegalStateException.class)
   public void shouldThrowForEmptyWord() {
-    Language language = new Language("nl", LATIN);
+    Language language = newLanguage("nl");
     WordFormsBuilder builder = new WordFormsBuilder(language);
     builder.computeForms("");
   }

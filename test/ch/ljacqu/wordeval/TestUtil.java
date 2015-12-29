@@ -2,6 +2,8 @@ package ch.ljacqu.wordeval;
 
 import ch.ljacqu.wordeval.dictionary.Dictionary;
 import ch.ljacqu.wordeval.evaluation.Evaluator;
+import ch.ljacqu.wordeval.language.Alphabet;
+import ch.ljacqu.wordeval.language.Language;
 import lombok.Getter;
 
 import java.lang.reflect.Field;
@@ -69,6 +71,27 @@ public final class TestUtil {
    */
   public static boolean doesDictionaryFileExist(Dictionary dictionary) {
     return Files.exists(Paths.get(dictionary.getFileName()));
+  }
+
+  /**
+   * Initializes a new Language object with the given code and the Latin alphabet.
+   *
+   * @param code the language code
+   * @return the generated Language instance
+   */
+  public static Language newLanguage(String code) {
+    return newLanguage(code, Alphabet.LATIN);
+  }
+
+  /**
+   * Initializes a new Language object with the given code and alphabet.
+   *
+   * @param code the language code
+   * @param alphabet the alphabet
+   * @return the generated Language instance
+   */
+  public static Language newLanguage(String code, Alphabet alphabet) {
+    return new Language(code, "", alphabet);
   }
 
   /**

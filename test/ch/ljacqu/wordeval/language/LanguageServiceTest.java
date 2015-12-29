@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval.language;
 
+import static ch.ljacqu.wordeval.TestUtil.newLanguage;
 import static ch.ljacqu.wordeval.language.Alphabet.CYRILLIC;
 import static ch.ljacqu.wordeval.language.Alphabet.LATIN;
 import static ch.ljacqu.wordeval.language.LetterType.CONSONANTS;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+@SuppressWarnings("javadoc")
 public class LanguageServiceTest {
 
   @Test
@@ -46,8 +48,9 @@ public class LanguageServiceTest {
 
   @Test
   public void shouldGetLettersWithAdditional() {
-    Language language = new Language("zxx", CYRILLIC).setAdditionalConsonants(
-        "rz", "s").setAdditionalVowels("u", "èö");
+    Language language = new Language("zxx", "", CYRILLIC)
+        .setAdditionalConsonants("rz", "s")
+        .setAdditionalVowels("u", "èö");
 
     List<String> vowels = LanguageService.getLetters(VOWELS, language);
     List<String> consonants = LanguageService.getLetters(CONSONANTS, language);
@@ -59,7 +62,8 @@ public class LanguageServiceTest {
 
   @Test
   public void shouldRemoveLettersFromDefaultList() {
-    Language lang = new Language("zxx", LATIN).setAdditionalVowels("w")
+    Language lang = newLanguage("zxx")
+        .setAdditionalVowels("w")
         .setLettersToRemove("w");
 
     List<String> vowels = LanguageService.getLetters(VOWELS, lang);
@@ -72,13 +76,13 @@ public class LanguageServiceTest {
   
   @Test(expected = IllegalArgumentException.class)
   public void shouldThrowForUnknownAlphabet() {
-    Language lang = new Language("zxx", null);
+    Language lang = new Language("zxx", "", null);
     LanguageService.getLetters(VOWELS, lang);
   }
   
   @Test(expected = IllegalArgumentException.class)
   public void shouldThrowForUnknownAlphabet2() {
-    Language lang = new Language("zxx", null);
+    Language lang = new Language("zxx", "", null);
     LanguageService.getLetters(CONSONANTS, lang);
   }
 

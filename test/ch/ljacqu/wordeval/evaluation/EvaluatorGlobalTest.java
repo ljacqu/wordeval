@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static ch.ljacqu.wordeval.TestUtil.newLanguage;
 import static org.hamcrest.Matchers.anEmptyMap;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
@@ -30,7 +31,7 @@ public class EvaluatorGlobalTest {
   @BeforeClass
   @SuppressWarnings("unchecked")
   public static void initializeEvaluators() {
-    Language lang = new Language("zxx", Alphabet.LATIN);
+    Language lang = newLanguage("zxx");
     evaluators = ANewList
         .with(new AllVowels(LetterType.VOWELS))
         .and(new AlphabeticalOrder())

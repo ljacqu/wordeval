@@ -16,6 +16,7 @@ public final class Language {
   private static final int ASCII_MAX_INDEX = 127;
 
   private final String code;
+  private final String name;
   private final Alphabet alphabet;
   @Getter(lazy = true)
   private final Locale locale = buildLocale();
@@ -28,10 +29,12 @@ public final class Language {
   /**
    * Creates a new Language instance.
    * @param code the ISO-639-1 code of the language
+   * @param name the name of the language
    * @param alphabet the alphabet of the language
    */
-  public Language(String code, Alphabet alphabet) {
+  public Language(String code, String name, Alphabet alphabet) {
     this.code = code;
+    this.name = name;
     this.alphabet = alphabet;
   }
 

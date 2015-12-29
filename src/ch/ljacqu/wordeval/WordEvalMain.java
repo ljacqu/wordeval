@@ -1,12 +1,5 @@
 package ch.ljacqu.wordeval;
 
-import static ch.ljacqu.wordeval.language.LetterType.CONSONANTS;
-import static ch.ljacqu.wordeval.language.LetterType.VOWELS;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import ch.ljacqu.wordeval.dictionary.Dictionary;
 import ch.ljacqu.wordeval.evaluation.AllVowels;
 import ch.ljacqu.wordeval.evaluation.AlphabeticalOrder;
@@ -27,7 +20,16 @@ import ch.ljacqu.wordeval.evaluation.VowelCount;
 import ch.ljacqu.wordeval.evaluation.WordCollector;
 import ch.ljacqu.wordeval.evaluation.export.ExportService;
 import ch.ljacqu.wordeval.language.Language;
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.log4j.Log4j2;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import static ch.ljacqu.wordeval.language.LetterType.CONSONANTS;
+import static ch.ljacqu.wordeval.language.LetterType.VOWELS;
 
 /**
  * Entry point of the <i>wordeval</i> application.
@@ -91,10 +93,15 @@ public final class WordEvalMain {
     evaluators.add(new WordCollector());
     outputDiff(times, "instantiated evaluators");
 
-    dictionary.process(evaluators);
+    long totalWords = dictionary.process(evaluators);
+    Map<String, String> metaInfo = ImmutableMap.of(
+        "dictionary", code,
+        "language", language.getName(),
+        "gen_date", String.valueOf(System.currentTimeMillis() / 1000L),
+        "words", String.valueOf(totalWords));
     outputDiff(times, "processed dictionary");
 
-    ExportService.exportToFile(evaluators, "export/" + code + ".json");
+    ExportService.exportToFile(evaluators, "export/" + code + ".json", metaInfo);
     outputDiff(times, "finished export");
 
     times.add(times.get(0)); // ;)

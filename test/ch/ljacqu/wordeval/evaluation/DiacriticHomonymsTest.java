@@ -1,5 +1,6 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import static ch.ljacqu.wordeval.TestUtil.newLanguage;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
@@ -13,9 +14,10 @@ import ch.ljacqu.wordeval.language.Alphabet;
 import ch.ljacqu.wordeval.language.Language;
 import ch.ljacqu.wordeval.language.LanguageService;
 
+@SuppressWarnings("javadoc")
 public class DiacriticHomonymsTest {
   
-  private static Language language = new Language("zxx", Alphabet.LATIN);
+  private static Language language = newLanguage("zxx");
   
   @Test
   public void shouldFindDiacriticHomonyms() {

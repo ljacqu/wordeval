@@ -1,5 +1,20 @@
 package ch.ljacqu.wordeval.dictionary;
 
+import ch.ljacqu.wordeval.DataUtils;
+import ch.ljacqu.wordeval.TestUtil;
+import ch.ljacqu.wordeval.evaluation.Evaluator;
+import ch.ljacqu.wordeval.evaluation.PostEvaluator;
+import ch.ljacqu.wordeval.evaluation.export.ExportObject;
+import ch.ljacqu.wordeval.evaluation.export.ExportParams;
+import ch.ljacqu.wordeval.language.Language;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static ch.ljacqu.wordeval.TestUtil.newLanguage;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
@@ -8,22 +23,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
-import java.util.List;
-
-import ch.ljacqu.wordeval.evaluation.PostEvaluator;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.mockito.Mockito;
-
-import ch.ljacqu.wordeval.DataUtils;
-import ch.ljacqu.wordeval.TestUtil;
-import ch.ljacqu.wordeval.evaluation.Evaluator;
-import ch.ljacqu.wordeval.evaluation.export.ExportObject;
-import ch.ljacqu.wordeval.evaluation.export.ExportParams;
-import ch.ljacqu.wordeval.language.Alphabet;
-import ch.ljacqu.wordeval.language.Language;
-
+@SuppressWarnings("javadoc")
 public class DictionaryTest {
 
   private static Language zxxLanguage;
@@ -31,7 +31,7 @@ public class DictionaryTest {
   
   @BeforeClass
   public static void setUpTestLanguage() {
-    zxxLanguage = new Language("zxx", Alphabet.LATIN);
+    zxxLanguage = newLanguage("zxx");
     Language.add(zxxLanguage);
     zxxSettings = DictionarySettings.add("zxx").setDelimiters('/');
   }
@@ -40,7 +40,7 @@ public class DictionaryTest {
   public void shouldInitializeDictionaryWithCode() {
     Dictionary dict = Dictionary.getDictionary("zxx");
     Dictionary dict2 = Dictionary.getDictionary("zxx", "zxx", "test-file.dic");
-    
+
     assertThat(dict.getLanguage(), equalTo(zxxLanguage));
     assertThat(dict2.getLanguage(), equalTo(zxxLanguage));
   }
