@@ -48,12 +48,12 @@ public class ExportParams {
                Boolean isDescending, Boolean hasDescendingEntries, Optional<Integer> maxTopEntrySize,
                Optional<Integer> maxPartWordListSize, Optional<Integer> numberOfDetailedAggregation) {
     this.topKeys = firstNonNull(topKeys, 5);
-    this.topEntryMinimum = firstNonNull(topEntryMinimum, Optional.empty());
-    this.generalMinimum = firstNonNull(generalMinimum, Optional.empty());
+    this.topEntryMinimum = firstNonNull(topEntryMinimum, Optional.<Double>empty());
+    this.generalMinimum = firstNonNull(generalMinimum, Optional.<Double>empty());
     this.isDescending = firstNonNull(isDescending, true);
     this.hasDescendingEntries = firstNonNull(hasDescendingEntries, false);
     this.maxTopEntrySize = firstNonNull(maxTopEntrySize, Optional.of(50));
-    this.maxPartWordListSize = firstNonNull(maxPartWordListSize, Optional.empty());
+    this.maxPartWordListSize = firstNonNull(maxPartWordListSize, Optional.<Integer>empty());
     this.numberOfDetailedAggregation = firstNonNull(numberOfDetailedAggregation, Optional.of(3));
   }
 
