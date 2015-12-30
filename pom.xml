@@ -42,10 +42,10 @@
         <version>0.7.5.201505241946</version>
         <executions>
           <execution>
-            <id>prepare-unit-test-agent</id>
-              <goals>
-                <goal>prepare-agent</goal>
-              </goals>
+            <id>prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
