@@ -1,6 +1,10 @@
 _wordeval_
 ==========
-Java application that processes dictionaries of various languages to find "interesting" words based on 
+<a href="https://travis-ci.org/ljacqu/wordeval">![Build Status]
+(https://travis-ci.org/ljacqu/wordeval.svg?branch=master)</a> <a href="https://coveralls.io/github/ljacqu/wordeval?branch=master">![Coverage Status]
+(https://coveralls.io/repos/ljacqu/wordeval/badge.svg?branch=master&service=github)</a>
+<br />
+Java application that processes dictionaries of various languages to find "interesting" words based on
 various criteria. The results are exported as JSON so they can be displayed by another module (planned).
 
 Status
