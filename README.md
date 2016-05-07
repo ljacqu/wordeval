@@ -2,14 +2,12 @@ _wordeval_
 ==========
 <a href="https://travis-ci.org/ljacqu/wordeval">![Build Status]
 (https://travis-ci.org/ljacqu/wordeval.svg?branch=master)</a> <a href="https://coveralls.io/github/ljacqu/wordeval?branch=master">![Coverage Status]
-(https://coveralls.io/repos/ljacqu/wordeval/badge.svg?branch=master&service=github)</a>
+(https://coveralls.io/repos/ljacqu/wordeval/badge.svg?branch=master&service=github)</a> [![Dependency Status]
+(https://www.versioneye.com/user/projects/572e346fa0ca350034be705b/badge.svg?style=flat)](https://www.versioneye.com/user/projects/572e346fa0ca350034be705b)
 <br />
 Java application that processes dictionaries of various languages to find "interesting" words based on
 various criteria. The results are exported as JSON so they can be displayed by another module (planned).
 
-Status
-------
-In development – a lot of refactoring and major changes are still taking place.
 
 Requirements
 ------------
