@@ -165,7 +165,7 @@ public final class PartWordExport extends ExportObject {
     int addedEntries = 0;
     for (Map.Entry<String, Collection<String>> entry : subMap.asMap().entrySet()) {
       if (params.maxTopEntrySize.isPresent() && addedEntries >= params.maxTopEntrySize.get()) {
-        result.put(INDEX_REST, new TreeElement.Rest(subMap.size() - addedEntries));
+        result.put(INDEX_REST, new TreeElement.Rest(subMap.keySet().size() - addedEntries));
         break;
       }
 

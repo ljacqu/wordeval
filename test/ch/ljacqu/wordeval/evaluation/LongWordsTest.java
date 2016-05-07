@@ -6,10 +6,11 @@ import org.junit.Test;
 
 import static ch.ljacqu.wordeval.TestUtil.processWords;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+@SuppressWarnings("javadoc")
 public class LongWordsTest {
 
   private LongWords longWords;
@@ -29,7 +30,7 @@ public class LongWordsTest {
     Multimap<Integer, String> results = longWords.getResults();
 
     assertThat(results.keySet(), hasSize(3));
-    assertThat(results.get(4), nullValue());
+    assertThat(results.get(4), empty());
     assertThat(results.get(6), containsInAnyOrder("žodžių"));
     assertThat(results.get(8), containsInAnyOrder("köszönöm"));
     assertThat(results.get(9), containsInAnyOrder("piszących", "something"));
