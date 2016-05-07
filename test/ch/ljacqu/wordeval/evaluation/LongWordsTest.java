@@ -1,14 +1,14 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import static ch.ljacqu.wordeval.TestUtil.processWords;
-import static org.hamcrest.Matchers.aMapWithSize;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
-import java.util.Map;
-import java.util.Set;
+import com.google.common.collect.Multimap;
 import org.junit.Before;
 import org.junit.Test;
+
+import static ch.ljacqu.wordeval.TestUtil.processWords;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 public class LongWordsTest {
 
@@ -26,9 +26,9 @@ public class LongWordsTest {
         "šalį" };
 
     processWords(longWords, words);
-    Map<Integer, Set<String>> results = longWords.getResults();
+    Multimap<Integer, String> results = longWords.getResults();
 
-    assertThat(results, aMapWithSize(3));
+    assertThat(results.keySet(), hasSize(3));
     assertThat(results.get(4), nullValue());
     assertThat(results.get(6), containsInAnyOrder("žodžių"));
     assertThat(results.get(8), containsInAnyOrder("köszönöm"));
@@ -41,8 +41,8 @@ public class LongWordsTest {
     String[] words = { "Морфологические", "градина", "ушёл", "наречие" };
 
     processWords(longWords, words);
-    Map<Integer, Set<String>> results = longWords.getResults();
-    assertThat(results, aMapWithSize(2));
+    Multimap<Integer, String> results = longWords.getResults();
+    assertThat(results.keySet(), hasSize(2));
     assertThat(results.get(7), containsInAnyOrder("градина", "наречие"));
     assertThat(results.get(15), containsInAnyOrder("Морфологические"));
   }

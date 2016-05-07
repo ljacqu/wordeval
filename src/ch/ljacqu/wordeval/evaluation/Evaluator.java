@@ -3,17 +3,17 @@ package ch.ljacqu.wordeval.evaluation;
 import ch.ljacqu.wordeval.dictionary.WordForm;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParams;
+import com.google.common.collect.TreeMultimap;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NavigableMap;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 /**
  * Evaluator base class. An evaluator checks words for a given property and adds
@@ -21,11 +21,11 @@ import java.util.TreeSet;
  * @param <K> the key the evaluator uses to store special words (typically: the
  *        sequences the evaluator identifies, or the word length)
  */
-public abstract class Evaluator<K> {
+public abstract class Evaluator<K extends Comparable> {
 
   /** Collection of relevant words. */
   @Getter
-  private Map<K, Set<String>> results = new HashMap<>();
+  private TreeMultimap<K, String> results = TreeMultimap.create();
 
   /**
    * Processes a word and adds it to results if it is relevant.
@@ -56,7 +56,7 @@ public abstract class Evaluator<K> {
    */
   public NavigableMap<K, List<String>> getNavigableResults() {
     NavigableMap<K, List<String>> cleanResult = new TreeMap<>();
-    for (Map.Entry<K, Set<String>> entry : results.entrySet()) {
+    for (Map.Entry<K, Collection<String>> entry : results.asMap().entrySet()) {
       cleanResult.put(entry.getKey(), new ArrayList<>(entry.getValue()));
     }
     return cleanResult;
@@ -76,12 +76,9 @@ public abstract class Evaluator<K> {
    * @param word the word to add to the key's list
    */
   protected void addEntry(K key, String word) {
-    if (results.get(key) == null) {
-      // It is massively faster to instantiate a TreeSet here rather than
-      // using a HashSet and then converting it to TreeSet
-      results.put(key, new TreeSet<>());
-    }
-    results.get(key).add(word);
+    // It is massively faster to use a TreeSet from the beginning
+    // rather than using a HashSet and then converting it to TreeSet
+    results.put(key, word);
   }
 
   /**
@@ -91,8 +88,8 @@ public abstract class Evaluator<K> {
    * @param locale The locale to use to make words lower-case
    */
   public void filterDuplicateWords(Locale locale) {
-    for (Map.Entry<K, Set<String>> entry : results.entrySet()) {
-      Set<String> resultList = entry.getValue();
+    for (Map.Entry<K, Collection<String>> entry : results.asMap().entrySet()) {
+      Collection<String> resultList = entry.getValue();
 
       List<String> wordsToRemove = new ArrayList<>();
       Map<String, String> lowerCaseWords = new HashMap<>(resultList.size());

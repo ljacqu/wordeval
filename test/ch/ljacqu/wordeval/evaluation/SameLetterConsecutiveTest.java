@@ -1,14 +1,14 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import static ch.ljacqu.wordeval.TestUtil.processWords;
-import static org.hamcrest.Matchers.aMapWithSize;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
-import java.util.Map;
-import java.util.Set;
+import com.google.common.collect.Multimap;
 import org.junit.Before;
 import org.junit.Test;
+
+import static ch.ljacqu.wordeval.TestUtil.processWords;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
 
 public class SameLetterConsecutiveTest {
 
@@ -28,9 +28,9 @@ public class SameLetterConsecutiveTest {
         "töfffahrer", "schnell", "llama" };
 
     processWords(evaluator, cleanWords, words);
-    Map<String, Set<String>> results = evaluator.getResults();
+    Multimap<String, String> results = evaluator.getResults();
 
-    assertThat(results, aMapWithSize(3));
+    assertThat(results.keySet(), hasSize(3));
     assertThat(results.get("ll"),
         containsInAnyOrder("hello", "schnell", "Llama"));
     assertThat(results.get("fff"),
@@ -44,9 +44,9 @@ public class SameLetterConsecutiveTest {
     String[] words = { "Massstabbrecher", "Reisstopp", "aabesso", "oooeemoo" };
 
     processWords(evaluator, words);
-    Map<String, Set<String>> results = evaluator.getResults();
+    Multimap<String, String> results = evaluator.getResults();
 
-    assertThat(results, aMapWithSize(8));
+    assertThat(results.keySet(), hasSize(8));
     assertThat(results.get("aa"), containsInAnyOrder("aabesso"));
     assertThat(results.get("bb"), containsInAnyOrder("Massstabbrecher"));
     assertThat(results.get("ee"), containsInAnyOrder("oooeemoo"));
@@ -66,9 +66,9 @@ public class SameLetterConsecutiveTest {
         "старинного", "независимая" };
 
     processWords(evaluator, cleanWords, words);
-    Map<String, Set<String>> results = evaluator.getResults();
+    Multimap<String, String> results = evaluator.getResults();
 
-    assertThat(results, aMapWithSize(2));
+    assertThat(results.keySet(), hasSize(2));
     assertThat(results.get("дд"), contains("поддержки"));
     assertThat(results.get("нн"), containsInAnyOrder("Избранные", "старинного"));
   }

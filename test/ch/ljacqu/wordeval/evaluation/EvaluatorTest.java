@@ -3,15 +3,14 @@ package ch.ljacqu.wordeval.evaluation;
 import ch.ljacqu.wordeval.TestUtil;
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParams;
+import com.google.common.collect.Multimap;
 import org.junit.Test;
 
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
-import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.oneOf;
 import static org.junit.Assert.assertThat;
 
@@ -31,9 +30,9 @@ public class EvaluatorTest {
     
     TestUtil.processWords(evaluator, words);
     evaluator.filterDuplicateWords(new Locale("en"));
-    
-    Map<Integer, Set<String>> results = evaluator.getResults();
-    assertThat(results, aMapWithSize(3));
+
+    Multimap<Integer, String> results = evaluator.getResults();
+    assertThat(results.keySet(), hasSize(3));
     // no guaranteed order in Set<> and we just take whichever word came first if it's not all lower-case
     assertThat(results.get(3), contains(oneOf("CUP", "Cup")));
     assertThat(results.get(4), containsInAnyOrder("test", "word"));

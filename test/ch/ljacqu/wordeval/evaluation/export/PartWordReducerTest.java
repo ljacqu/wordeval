@@ -1,9 +1,17 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
-import static ch.ljacqu.wordeval.TestUtil.asSet;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.NavigableMap;
+
 import static ch.ljacqu.wordeval.evaluation.export.ExportTestHelper.getIndexTotalCollValue;
 import static ch.ljacqu.wordeval.evaluation.export.ExportTestHelper.getTotalValue;
 import static ch.ljacqu.wordeval.evaluation.export.ExportTestHelper.getWordCollValue;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -11,17 +19,10 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-import java.util.NavigableMap;
-import java.util.Set;
-import java.util.TreeMap;
-
-import org.junit.Before;
-import org.junit.Test;
-
 @SuppressWarnings("javadoc")
 public class PartWordReducerTest {
   
-  private NavigableMap<String, Set<String>> results;
+  private Multimap<String, String> results;
   private ExportParams params = ExportParams.builder()
       .topKeys(2)
       .isDescending(true)
@@ -29,21 +30,21 @@ public class PartWordReducerTest {
   
   @Before
   public void initialize() {
-    results = new TreeMap<>();
+    results = HashMultimap.create();
     // Length 9
-    results.put("taalplaat", asSet("metaalplaat", "staalplaat"));
-    results.put("ittesetti", asSet("hittesetting"));
-    results.put("sigologis", asSet("psigologisme"));
+    results.putAll("taalplaat", asList("metaalplaat", "staalplaat"));
+    results.putAll("ittesetti", singleton("hittesetting"));
+    results.putAll("sigologis", singleton("psigologisme"));
     // Length 8
-    results.put("aarddraa", asSet("aarddraad"));
+    results.putAll("aarddraa", singleton("aarddraad"));
     // Length 7
-    results.put("esifise", asSet("spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer"));
+    results.putAll("esifise", asList("spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer"));
     // Length 6
-    results.put("neffen", asSet("neffens", "hierneffens", "oneffenheid"));
-    results.put("marram", asSet("marram"));
+    results.putAll("neffen", asList("neffens", "hierneffens", "oneffenheid"));
+    results.putAll("marram", singleton("marram"));
     // Length 5
-    results.put("alkla", asSet("smalklap", "taalklas", "vokaalklank", "taalklank"));
-    results.put("anana", asSet("ananas"));
+    results.putAll("alkla", asList("smalklap", "taalklas", "vokaalklank", "taalklank"));
+    results.putAll("anana", singleton("ananas"));
   }
   
   @Test

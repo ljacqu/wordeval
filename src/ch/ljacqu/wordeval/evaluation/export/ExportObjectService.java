@@ -1,5 +1,7 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
+import com.google.common.collect.Multimap;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -37,7 +39,6 @@ public final class ExportObjectService {
    * Removes the entries that are below {@link ExportParams#generalMinimum}
    * if a value is present.
    * @param <N> the key class of the map
-   * @param <V> the value class of the map
    * @param map the map to reduce
    * @param minimum the minimum value
    * @return the map conforming to the general minimum
@@ -93,8 +94,7 @@ public final class ExportObjectService {
    * @param <V> the value class of the map (Collection or Map)
    * @return the map with the original list's length
    */
-  public static <K, V> NavigableMap<K, Integer> aggregateMap(
-      NavigableMap<K, V> map) {
+  public static <K, V> NavigableMap<K, Integer> aggregateMap(Map<K, V> map) {
     NavigableMap<K, Integer> result = new TreeMap<>();
     for (Map.Entry<K, V> entry : map.entrySet()) {
       if (entry.getValue() instanceof Collection) {
@@ -106,6 +106,10 @@ public final class ExportObjectService {
       }
     }
     return result;
+  }
+
+  public static <K, V> NavigableMap<K, Integer> aggregateMap(Multimap<K, V> multimap) {
+    return aggregateMap(multimap.asMap());
   }
 
   public static <T> List<T> reduceList(List<T> words, int toSize) {

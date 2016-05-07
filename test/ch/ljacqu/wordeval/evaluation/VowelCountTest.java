@@ -1,21 +1,17 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import static ch.ljacqu.wordeval.TestUtil.newLanguage;
-import static org.hamcrest.Matchers.aMapWithSize;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
-
-import java.util.Map;
-import java.util.Set;
-
+import ch.ljacqu.wordeval.TestUtil;
+import ch.ljacqu.wordeval.language.Language;
+import ch.ljacqu.wordeval.language.LetterType;
+import com.google.common.collect.Multimap;
 import org.junit.Before;
 import org.junit.Test;
 
-import ch.ljacqu.wordeval.TestUtil;
-import ch.ljacqu.wordeval.language.Alphabet;
-import ch.ljacqu.wordeval.language.Language;
-import ch.ljacqu.wordeval.language.LetterType;
+import static ch.ljacqu.wordeval.TestUtil.newLanguage;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
 
 @SuppressWarnings("javadoc")
 public class VowelCountTest {
@@ -43,16 +39,16 @@ public class VowelCountTest {
         "madagascar", "tatotute", "cocacoci", "eau", "fleet" };
     process(words);
 
-    Map<String, Set<String>> vowelResults = vowelEvaluator.getResults();
-    Map<String, Set<String>> consonantResults = consonantEvaluator.getResults();
+    Multimap<String, String> vowelResults = vowelEvaluator.getResults();
+    Multimap<String, String> consonantResults = consonantEvaluator.getResults();
 
-    assertThat(vowelResults, aMapWithSize(8));
+    assertThat(vowelResults.keySet(), hasSize(8));
     assertThat(vowelResults.get("a"), contains("madagascar"));
     assertThat(vowelResults.get("e"), containsInAnyOrder("geeet", "fleet"));
     assertThat(vowelResults.get("eio"), contains("something"));
     assertThat(vowelResults.get("aeio"), contains("assosiasie"));
 
-    assertThat(consonantResults, aMapWithSize(8));
+    assertThat(consonantResults.keySet(), hasSize(8));
     assertThat(consonantResults.get("flt"), containsInAnyOrder("flute", "fleet"));
     assertThat(consonantResults.get("cdgmrs"), containsInAnyOrder("madagascar"));
     assertThat(consonantResults.get("s"), contains("assosiasie"));

@@ -1,14 +1,14 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import static ch.ljacqu.wordeval.TestUtil.processWords;
-import static org.hamcrest.Matchers.aMapWithSize;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
-import java.util.Map;
-import java.util.Set;
+import com.google.common.collect.Multimap;
 import org.junit.Before;
 import org.junit.Test;
+
+import static ch.ljacqu.wordeval.TestUtil.processWords;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
 
 public class ConsecutiveLetterPairsTest {
 
@@ -26,9 +26,9 @@ public class ConsecutiveLetterPairsTest {
         "reennag", "baaggage", "voorraaddra", "reell" };
 
     processWords(evaluator, words);
-    Map<Integer, Set<String>> results = evaluator.getResults();
+    Multimap<Integer, String> results = evaluator.getResults();
 
-    assertThat(results, aMapWithSize(3));
+    assertThat(results.keySet(), hasSize(3));
     assertThat(results.get(2), containsInAnyOrder("aallorr", "oppaan", "reennag", "baaggage", "reell"));
     assertThat(results.get(3), contains("maaiill"));
     assertThat(results.get(4), contains("voorraaddra"));
@@ -40,9 +40,9 @@ public class ConsecutiveLetterPairsTest {
     String[] words = { "massaage", "aabbcdefgghhiij", "something" };
 
     processWords(evaluator, words);
-    Map<Integer, Set<String>> results = evaluator.getResults();
+    Multimap<Integer, String> results = evaluator.getResults();
 
-    assertThat(results, aMapWithSize(2));
+    assertThat(results.keySet(), hasSize(2));
     assertThat(results.get(2), containsInAnyOrder("massaage", "aabbcdefgghhiij"));
     assertThat(results.get(3), containsInAnyOrder("aabbcdefgghhiij"));
   }
@@ -58,9 +58,9 @@ public class ConsecutiveLetterPairsTest {
         "walking" };
 
     processWords(evaluator, words);
-    Map<Integer, Set<String>> results = evaluator.getResults();
+    Multimap<Integer, String> results = evaluator.getResults();
 
-    assertThat(results, aMapWithSize(3));
+    assertThat(results.keySet(), hasSize(3));
     assertThat(results.get(2), contains("laaaii"));
     assertThat(results.get(3), contains("poolooeeerr"));
     assertThat(results.get(4), contains("aabbbccdddef"));

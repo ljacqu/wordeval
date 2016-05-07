@@ -1,16 +1,15 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import com.google.common.collect.Multimap;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import java.util.Arrays;
+
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
-
-import org.junit.Test;
-import org.mockito.Mockito;
 
 public class BackwardsPairsTest {
   
@@ -21,7 +20,7 @@ public class BackwardsPairsTest {
     
     BackwardsPairs evaluator = new BackwardsPairs();
     evaluator.evaluateWith(collector);
-    Map<String, Set<String>> results = evaluator.getResults();
+    Multimap<String, String> results = evaluator.getResults();
     
     assertThat(results.keySet(), containsInAnyOrder("but", "parts"));
     assertThat(results.get("but"), contains("tub"));
@@ -34,7 +33,7 @@ public class BackwardsPairsTest {
     
     BackwardsPairs evaluator = new BackwardsPairs();
     evaluator.evaluateWith(collector);
-    Map<String, Set<String>> results = evaluator.getResults();
+    Multimap<String, String> results = evaluator.getResults();
     
     assertThat(results.keySet(), contains("net"));
   }
@@ -45,7 +44,7 @@ public class BackwardsPairsTest {
     
     BackwardsPairs evaluator = new BackwardsPairs();
     evaluator.evaluateWith(collector);
-    Map<String, Set<String>> results = evaluator.getResults();
+    Multimap<String, String> results = evaluator.getResults();
     
     assertThat(results.keySet(), containsInAnyOrder("but", "net", "parts"));
   }

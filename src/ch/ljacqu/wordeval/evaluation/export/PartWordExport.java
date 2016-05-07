@@ -1,15 +1,16 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
-import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import lombok.Getter;
 
 /**
  * ExportObject class for evaluators of type PartWordEvaluator.
@@ -50,7 +51,7 @@ public final class PartWordExport extends ExportObject {
    * @param map the evaluator result
    * @return the generated PartWordExport object
    */
-  public static PartWordExport create(String identifier, Map<String, Set<String>> map) {
+  public static PartWordExport create(String identifier, Multimap<String, String> map) {
     return create(identifier, map, ExportParams.builder().build(), new PartWordReducer.ByLength());
   }
 
@@ -62,11 +63,11 @@ public final class PartWordExport extends ExportObject {
    * @param reducer the reducer to use to identify top entries
    * @return the generated PartWordExport object
    */
-  public static PartWordExport create(String identifier, Map<String, Set<String>> results, 
-      ExportParams params, PartWordReducer reducer) {
-    NavigableMap<Double, NavigableMap<String, Set<String>>> orderedResults =
+  public static PartWordExport create(String identifier, Multimap<String, String> results,
+                                      ExportParams params, PartWordReducer reducer) {
+    NavigableMap<Double, Multimap<String, String>> orderedResults =
         ExportObjectService.applyGeneralMinimum(order(results, reducer), params.generalMinimum);
-    NavigableMap<Double, NavigableMap<String, Set<String>>> topEntries =
+    NavigableMap<Double, Multimap<String, String>> topEntries =
         ExportObjectService.isolateTopEntries(orderedResults, params);
 
     NavigableMap<Double, TreeElement> aggregatedEntries;
@@ -81,10 +82,10 @@ public final class PartWordExport extends ExportObject {
   }
   
   // Assign the reducer's computed relevance to the entries 
-  private static NavigableMap<Double, NavigableMap<String, Set<String>>> order(
-      Map<String, Set<String>> evaluatorResult, PartWordReducer reducer) {
-    NavigableMap<Double, NavigableMap<String, Set<String>>> results = new TreeMap<>();
-    for (Map.Entry<String, Set<String>> entry : evaluatorResult.entrySet()) {
+  private static NavigableMap<Double, Multimap<String, String>> order(
+      Multimap<String, String> evaluatorResult, PartWordReducer reducer) {
+    NavigableMap<Double, Multimap<String, String>> results = new TreeMap<>();
+    for (Map.Entry<String, Collection<String>> entry : evaluatorResult.asMap().entrySet()) {
       addEntryByRelevance(results, entry.getKey(), entry.getValue(), reducer);
     }
     return results;
@@ -92,10 +93,10 @@ public final class PartWordExport extends ExportObject {
 
   // Creates aggregated entries - replaces the entries with the size
   private static NavigableMap<Double, TreeElement> aggregateEntries(
-      NavigableMap<Double, NavigableMap<String, Set<String>>> results, ExportParams params) {
+      NavigableMap<Double, Multimap<String, String>> results, ExportParams params) {
     NavigableMap<Double, TreeElement> aggregatedEntries = new TreeMap<>();
     int fullAggregated = 0;
-    for (Map.Entry<Double, NavigableMap<String, Set<String>>> entry : results.descendingMap().entrySet()) {
+    for (Map.Entry<Double, Multimap<String, String>> entry : results.descendingMap().entrySet()) {
       if (params.numberOfDetailedAggregation.isPresent() 
           && fullAggregated >= params.numberOfDetailedAggregation.get()) {
         aggregatedEntries.put(entry.getKey(), totalOfMap(entry.getValue()));
@@ -108,34 +109,30 @@ public final class PartWordExport extends ExportObject {
     return aggregatedEntries;
   }
   
-  private static TreeElement.Total totalOfMap(NavigableMap<String, Set<String>> map) {
-    int sum = 0;
-    for (Collection<String> entry : map.values()) {
-      sum += entry.size();
-    }
-    return new TreeElement.Total(sum);
+  private static TreeElement.Total totalOfMap(Multimap<String, String> map) {
+    return new TreeElement.Total(map.size());
   }
   
   // Trims the top entries list to conform to the export params' maxTopEntrySize setting
   private static NavigableMap<Double, NavigableMap<String, TreeElement>> trimTopEntries(
-      NavigableMap<Double, NavigableMap<String, Set<String>>> topEntries, ExportParams params) {    
+      NavigableMap<Double, Multimap<String, String>> topEntries, ExportParams params) {
     NavigableMap<Double, NavigableMap<String, TreeElement>> result = new TreeMap<>();
-    for (Map.Entry<Double, NavigableMap<String, Set<String>>> entry : topEntries.entrySet()) {
+    for (Map.Entry<Double, Multimap<String, String>> entry : topEntries.entrySet()) {
       result.put(entry.getKey(), trimTopEntriesSubMap(entry.getValue(), params));
     }
     return result;
   }
   
   // Helper method for order() to conveniently add an entry under its relevance
-  private static void addEntryByRelevance(SortedMap<Double, NavigableMap<String, Set<String>>> results, String key, 
-      Set<String> words, PartWordReducer reducer) {
+  private static void addEntryByRelevance(SortedMap<Double, Multimap<String, String>> results, String key,
+      Collection<String> words, PartWordReducer reducer) {
     double relevance = reducer.computeRelevance(key, words);
-    NavigableMap<String, Set<String>> entry = results.get(relevance);
+    Multimap<String, String> entry = results.get(relevance);
     if (entry == null) {
-      results.put(relevance, new TreeMap<>());
-      entry = results.get(relevance);
+      entry = TreeMultimap.create();
+      results.put(relevance, entry);
     }
-    entry.put(key, words);
+    entry.putAll(key, words);
   }
   
   private static <K, V> NavigableMap<Double, NavigableMap<K, V>> applyDescendingParamsToTopEntries(
@@ -163,10 +160,10 @@ public final class PartWordExport extends ExportObject {
   }
   
   private static NavigableMap<String, TreeElement> trimTopEntriesSubMap(
-      NavigableMap<String, Set<String>> subMap, ExportParams params) {
+      Multimap<String, String> subMap, ExportParams params) {
     NavigableMap<String, TreeElement> result = new TreeMap<>();
     int addedEntries = 0;
-    for (Map.Entry<String, Set<String>> entry : subMap.entrySet()) {
+    for (Map.Entry<String, Collection<String>> entry : subMap.asMap().entrySet()) {
       if (params.maxTopEntrySize.isPresent() && addedEntries >= params.maxTopEntrySize.get()) {
         result.put(INDEX_REST, new TreeElement.Rest(subMap.size() - addedEntries));
         break;

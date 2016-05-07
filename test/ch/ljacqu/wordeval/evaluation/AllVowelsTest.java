@@ -1,19 +1,16 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import ch.ljacqu.wordeval.language.LetterType;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
+import org.junit.Test;
+import org.mockito.Mockito;
+
 import static ch.ljacqu.wordeval.TestUtil.asSet;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import org.junit.Test;
-import org.mockito.Mockito;
-
-import ch.ljacqu.wordeval.language.LetterType;
 
 public class AllVowelsTest {
 
@@ -24,8 +21,8 @@ public class AllVowelsTest {
     AllVowels evaluator = new AllVowels(LetterType.VOWELS);
     
     evaluator.evaluateWith(counter);
-    
-    Map<String, Set<String>> results = evaluator.getResults();
+
+    Multimap<String, String> results = evaluator.getResults();
     assertThat(results.keySet(), containsInAnyOrder("aeiou", "eiou", "aeiu", "ae"));
     assertThat(results.get("aeiou"), containsInAnyOrder("sequoia", "miscellaneous", "simultaneous"));
     assertThat(results.get("eiou"), containsInAnyOrder("question", "questions", "questioning"));
@@ -55,24 +52,22 @@ public class AllVowelsTest {
     // Nothing happens
   }
   
-  private static Map<String, Set<String>> initializeSampleResults(LetterType letterType) {
+  private static TreeMultimap<String, String> initializeSampleResults(LetterType letterType) {
+    TreeMultimap<String, String> results = TreeMultimap.create();
     if (LetterType.VOWELS.equals(letterType)) {
-      Map<String, Set<String>> results = new HashMap<>();
-      results.put("ae", asSet("bear", "care"));
-      results.put("aeiu", asSet("beautiful"));
-      results.put("eiou", asSet("question", "questions", "questioning"));
-      results.put("aeiou", asSet("sequoia", "miscellaneous", "simultaneous"));
-      return results;
+      results.putAll("ae", asSet("bear", "care"));
+      results.putAll("aeiu", asSet("beautiful"));
+      results.putAll("eiou", asSet("question", "questions", "questioning"));
+      results.putAll("aeiou", asSet("sequoia", "miscellaneous", "simultaneous"));
     } else if (LetterType.CONSONANTS.equals(letterType)) {
-      Map<String, Set<String>> results = new HashMap<>();
-      results.put("", asSet("a", "I"));
-      results.put("tq", asSet("quite"));
-      results.put("hrst", asSet("shirt", "shirts", "short"));
-      results.put("ckrt", asSet("trick", "tricky"));
-      return results;
+      results.putAll("", asSet("a", "I"));
+      results.putAll("tq", asSet("quite"));
+      results.putAll("hrst", asSet("shirt", "shirts", "short"));
+      results.putAll("ckrt", asSet("trick", "tricky"));
     } else {
       throw new IllegalStateException("Given letter type is not supported");
     }
+    return results;
   }
 
 }

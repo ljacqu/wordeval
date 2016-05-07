@@ -1,13 +1,12 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 import ch.ljacqu.wordeval.language.LetterType;
+import com.google.common.collect.Multimap;
 import lombok.AllArgsConstructor;
+
+import java.util.Optional;
 
 /**
  * Evaluator that collects words with the most different vowels or consonants.
@@ -28,9 +27,9 @@ public class AllVowels extends PartWordEvaluator implements PostEvaluator<VowelC
    */
   @Override
   public void evaluateWith(VowelCount counter) {
-    Map<String, Set<String>> results = counter.getResults();
+    Multimap<String, String> results = counter.getResults();
     // TODO: This and SingleVowel actually just need the results from VowelCount and different reducers / export params
-    results.entrySet().stream()
+    results.entries().stream()
       .forEach(entry -> getResults().put(entry.getKey(), entry.getValue()));
   }
 

@@ -1,15 +1,16 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import static ch.ljacqu.wordeval.TestUtil.processWords;
-import static org.hamcrest.Matchers.aMapWithSize;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
-import java.util.Map;
-import java.util.Set;
+import com.google.common.collect.Multimap;
 import org.junit.Before;
 import org.junit.Test;
 
+import static ch.ljacqu.wordeval.TestUtil.processWords;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
+
+@SuppressWarnings("javadoc")
 public class PalindromesTest {
 
   private Palindromes evaluator;
@@ -26,9 +27,9 @@ public class PalindromesTest {
         "probability", "probable", "o" };
 
     processWords(evaluator, words);
-    Map<String, Set<String>> results = evaluator.getResults();
+    Multimap<String, String> results = evaluator.getResults();
 
-    assertThat(results, aMapWithSize(5));
+    assertThat(results.keySet(), hasSize(5));
     assertThat(results.get("bab"), containsInAnyOrder("probability", "probable"));
     assertThat(results.get("ili"), contains("probability"));
     assertThat(results.get("otto"), contains("trottoir"));
@@ -41,9 +42,9 @@ public class PalindromesTest {
     String[] words = { "gaaf", "aardvaark", "letter", "boot", "bleed" };
 
     processWords(evaluator, words);
-    Map<String, Set<String>> results = evaluator.getResults();
+    Multimap<String, String> results = evaluator.getResults();
 
-    assertThat(results, aMapWithSize(1));
+    assertThat(results.keySet(), hasSize(1));
     assertThat(results.get("ette"), contains("letter"));
   }
 

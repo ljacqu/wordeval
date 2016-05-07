@@ -1,10 +1,10 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
-import static org.apache.commons.lang3.ObjectUtils.firstNonNull;
+import lombok.Builder;
 
 import java.util.Optional;
 
-import lombok.Builder;
+import static org.apache.commons.lang3.ObjectUtils.firstNonNull;
 
 /**
  * The export parameters define how the results of an evaluator should be preserved

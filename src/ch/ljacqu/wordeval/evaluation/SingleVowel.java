@@ -1,13 +1,13 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
 import ch.ljacqu.wordeval.evaluation.export.ExportObject;
 import ch.ljacqu.wordeval.evaluation.export.ExportParams;
 import ch.ljacqu.wordeval.language.LetterType;
+import com.google.common.collect.TreeMultimap;
 import lombok.AllArgsConstructor;
+
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Evaluator collecting words which only have one distinct vowel or consonant,
@@ -29,7 +29,8 @@ public class SingleVowel extends PartWordEvaluator implements PostEvaluator<Vowe
    */
   @Override
   public void evaluateWith(VowelCount counter) {
-    Map<String, Set<String>> results = counter.getResults();
+    TreeMultimap<String, String> results = counter.getResults();
+
     Integer min = results.keySet().stream()
       .map(String::length)
       .min(Integer::compare)
@@ -41,7 +42,7 @@ public class SingleVowel extends PartWordEvaluator implements PostEvaluator<Vowe
     }
 
     // TODO: This just needs a proper reducer / params and we can just take the results of VowelCount
-    for (Map.Entry<String, Set<String>> entry : results.entrySet()) {
+    for (Map.Entry<String, String> entry : results.entries()) {
       if (entry.getKey().length() <= min) {
         getResults().put(entry.getKey(), entry.getValue());
       }

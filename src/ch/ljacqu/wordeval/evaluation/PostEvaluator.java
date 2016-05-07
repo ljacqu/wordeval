@@ -42,10 +42,8 @@ public interface PostEvaluator<T extends Evaluator> {
    * @return true if the evaluator can be used as base, false otherwise
    */
   default boolean isBaseMatch(Evaluator<?> evaluator) {
-    if (getType().isAssignableFrom(evaluator.getClass())) {
-      return isMatch((T) evaluator);
-    }
-    return false;
+    return getType().isAssignableFrom(evaluator.getClass())
+        && isMatch(getType().cast(evaluator));
   }
 
   /**

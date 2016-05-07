@@ -1,7 +1,6 @@
 package ch.ljacqu.wordeval.evaluation;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Evaluator that finds proper palindromes based on the results of the
@@ -17,13 +16,11 @@ public class FullPalindromes extends WordStatEvaluator implements PostEvaluator<
    */
   @Override
   public void evaluateWith(Palindromes palindromes) {
-    for (Map.Entry<String, Set<String>> entry : palindromes.getResults().entrySet()) {
-      for (String word : entry.getValue()) {
-        if (word.length() == entry.getKey().length()) {
-          addEntry(word.length(), word);
-        }
-      }
-    }
+    palindromes.getResults().entries()
+        .stream()
+        .filter(entry -> entry.getKey().length() == entry.getValue().length())
+        .map(Map.Entry::getValue)
+        .forEach(word -> addEntry(word.length(), word));
   }
 
   @Override

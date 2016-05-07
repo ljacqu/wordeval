@@ -1,13 +1,13 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import com.google.common.collect.Multimap;
+import org.junit.Test;
+
 import static ch.ljacqu.wordeval.TestUtil.processWords;
-import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
-import java.util.Map;
-import java.util.Set;
-import org.junit.Test;
 
 public class AnagramsTest {
 
@@ -19,8 +19,8 @@ public class AnagramsTest {
 
     processWords(evaluator, words);
 
-    Map<String, Set<String>> results = evaluator.getResults();
-    assertThat(results, aMapWithSize(6));
+    Multimap<String, String> results = evaluator.getResults();
+    assertThat(results.keySet(), hasSize(6));
     assertThat(results.get("acer"), containsInAnyOrder("race", "care", "acre"));
     assertThat(results.get("aet"), containsInAnyOrder("tea", "eat"));
     assertThat(results.get("for"), containsInAnyOrder("for", "fro"));

@@ -1,14 +1,14 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import static ch.ljacqu.wordeval.TestUtil.processWords;
-import static org.hamcrest.Matchers.aMapWithSize;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
-import java.util.Map;
-import java.util.Set;
+import com.google.common.collect.Multimap;
 import org.junit.Before;
 import org.junit.Test;
+
+import static ch.ljacqu.wordeval.TestUtil.processWords;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
 
 public class AlphabeticalOrderTest {
   private AlphabeticalOrder evaluator;
@@ -25,9 +25,9 @@ public class AlphabeticalOrderTest {
         "zymga", "contact", "ahpqtvwx", "beer" };
 
     processWords(evaluator, words);
-    Map<Integer, Set<String>> results = evaluator.getResults();
+    Multimap<Integer, String> results = evaluator.getResults();
 
-    assertThat(results, aMapWithSize(3));
+    assertThat(results.keySet(), hasSize(3));
     assertThat(results.get(4), containsInAnyOrder("acer", "mopr", "pong", "beer"));
     assertThat(results.get(5), containsInAnyOrder("bruxz", "zymga"));
     assertThat(results.get(8), contains("ahpqtvwx"));

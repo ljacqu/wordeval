@@ -1,18 +1,15 @@
 package ch.ljacqu.wordeval.evaluation;
 
+import ch.ljacqu.wordeval.language.Alphabet;
+import ch.ljacqu.wordeval.language.Language;
+import ch.ljacqu.wordeval.language.LanguageService;
+import com.google.common.collect.Multimap;
+import org.junit.Test;
+
 import static ch.ljacqu.wordeval.TestUtil.newLanguage;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
-
-import java.util.Map;
-import java.util.Set;
-
-import org.junit.Test;
-
-import ch.ljacqu.wordeval.language.Alphabet;
-import ch.ljacqu.wordeval.language.Language;
-import ch.ljacqu.wordeval.language.LanguageService;
 
 @SuppressWarnings("javadoc")
 public class DiacriticHomonymsTest {
@@ -27,7 +24,7 @@ public class DiacriticHomonymsTest {
     for (String word : words) {
       evaluator.processWord(LanguageService.removeAccentsFromWord(word, Alphabet.LATIN), word);
     }
-    Map<String, Set<String>> results = evaluator.getResults();
+    Multimap<String, String> results = evaluator.getResults();
     
     assertThat(results.keySet(), containsInAnyOrder("schon", "sur", "ca", "des", "le", "la"));
     assertThat(results.get("le"), contains("le"));

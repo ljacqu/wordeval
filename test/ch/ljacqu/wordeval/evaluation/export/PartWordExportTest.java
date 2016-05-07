@@ -1,9 +1,23 @@
 package ch.ljacqu.wordeval.evaluation.export;
 
-import static ch.ljacqu.wordeval.TestUtil.asSet;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.Optional;
+import java.util.Set;
+
 import static ch.ljacqu.wordeval.evaluation.export.ExportTestHelper.getIndexTotalCollValue;
 import static ch.ljacqu.wordeval.evaluation.export.ExportTestHelper.getTotalValue;
 import static ch.ljacqu.wordeval.evaluation.export.ExportTestHelper.getWordCollValue;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.anEmptyMap;
 import static org.hamcrest.Matchers.contains;
@@ -16,55 +30,42 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeMap;
-
-import org.junit.Before;
-import org.junit.Test;
-
 @SuppressWarnings("javadoc")
 public class PartWordExportTest {
 
-  private Map<String, Set<String>> results;
+  private Multimap<String, String> results;
 
   @Before
   public void initialize() {
     // Test data: list of words with a palindrome part in it
-    results = new TreeMap<>();
+    results = HashMultimap.create();
 
     // Length 9
-    results.put("taalplaat", asSet("metaalplaat", "staalplaat"));
-    results.put("ittesetti", asSet("hittesetting"));
-    results.put("sigologis", asSet("psigologisme"));
+    results.putAll("taalplaat", asList("metaalplaat", "staalplaat"));
+    results.putAll("ittesetti", singleton("hittesetting"));
+    results.putAll("sigologis", singleton("psigologisme"));
 
     // Length 8
-    results.put("aarddraa", asSet("aarddraad"));
-    results.put("erettere", asSet("veretterende"));
-    results.put("kaarraak", asSet("deurmekaarraak"));
+    results.putAll("aarddraa", singleton("aarddraad"));
+    results.putAll("erettere", singleton("veretterende"));
+    results.putAll("kaarraak", singleton("deurmekaarraak"));
 
     // Length 7
-    results.put("esifise", asSet("spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer"));
+    results.putAll("esifise", asList("spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer"));
 
     // Length 6
-    results.put("millim", asSet("millimeter"));
-    results.put("neffen", asSet("neffens", "hierneffens", "oneffenheid"));
-    results.put("marram", asSet("marram"));
-    results.put("leggel", asSet("inleggeld"));
-    results.put("gerreg", asSet("burgerreg"));
-    results.put("eellee", asSet("teëllêer"));
-    results.put("arkkra", asSet("markkrag"));
+    results.putAll("millim", singleton("millimeter"));
+    results.putAll("neffen", asList("neffens", "hierneffens", "oneffenheid"));
+    results.putAll("marram", singleton("marram"));
+    results.putAll("leggel", singleton("inleggeld"));
+    results.putAll("gerreg", singleton("burgerreg"));
+    results.putAll("eellee", singleton("teëllêer"));
+    results.putAll("arkkra", singleton("markkrag"));
 
     // Length 5
-    results.put("alkla", asSet("smalklap", "taalklas", "vokaalklank", "taalklank"));
-    results.put("anana", asSet("ananas"));
-    results.put("aadaa", asSet("daeraadaap"));
+    results.putAll("alkla", asList("smalklap", "taalklas", "vokaalklank", "taalklank"));
+    results.putAll("anana", singleton("ananas"));
+    results.putAll("aadaa", singleton("daeraadaap"));
   }
 
   @Test
@@ -133,7 +134,7 @@ public class PartWordExportTest {
     assertThat(topEntries.get(6.0), aMapWithSize(params.maxTopEntrySize.get() + 1));
     Set<String> foundKeysSet = topEntries.get(6.0).keySet();
     String[] foundKeys = foundKeysSet.toArray(new String[foundKeysSet.size()]);
-    assertThat(asSet("millim", "neffen", "marram", "leggel", "gerreg", "eellee", "arkkra", ExportObject.INDEX_REST),
+    assertThat(asList("millim", "neffen", "marram", "leggel", "gerreg", "eellee", "arkkra", ExportObject.INDEX_REST),
         hasItems(foundKeys));
     assertThat(topEntries.get(6.0).get(ExportObject.INDEX_REST), instanceOf(TreeElement.Rest.class));
     assertThat(topEntries.get(6.0).get(ExportObject.INDEX_REST).getValue(), equalTo(3));
@@ -250,7 +251,7 @@ public class PartWordExportTest {
 
   @Test
   public void shouldHandleEmptyResult() {
-    PartWordExport export = PartWordExport.create("empty test", new TreeMap<>());
+    PartWordExport export = PartWordExport.create("empty test", HashMultimap.create());
 
     assertEquals(export.getIdentifier(), "empty test");
     assertThat(export.getTopEntries(), anEmptyMap());
@@ -268,7 +269,7 @@ public class PartWordExportTest {
   
   private static void checkReducedCollection(Collection<String> foundItems, int maxAllowedSize, 
                                              String[] allowedItems, String restIndex) {
-    List<Object> allowedItemsList = new ArrayList<>(Arrays.asList(allowedItems));
+    List<Object> allowedItemsList = new ArrayList<>(asList(allowedItems));
     allowedItemsList.add(restIndex);
     
     // foundItems may only have elements given in allowedItemsList, but not necessarily all

@@ -1,20 +1,5 @@
 package ch.ljacqu.wordeval.extra;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Ignore;
-import org.junit.Test;
-
 import ch.ljacqu.wordeval.AppData;
 import ch.ljacqu.wordeval.dictionary.Dictionary;
 import ch.ljacqu.wordeval.dictionary.DictionarySettings;
@@ -24,6 +9,20 @@ import ch.ljacqu.wordeval.evaluation.PartWordEvaluator;
 import ch.ljacqu.wordeval.language.Language;
 import ch.ljacqu.wordeval.language.LanguageService;
 import ch.ljacqu.wordeval.language.LetterType;
+import com.google.common.collect.Multimap;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Utility test to verify how well a dictionary is being sanitized.
@@ -37,7 +36,7 @@ public class DictionarySanitationTest {
   @Test
   @Ignore
   public void shouldSanitizeDictionaries() {
-    Map<String, Map<String, Set<String>>> sanitationResult = new HashMap<>();
+    Map<String, Multimap<String, String>> sanitationResult = new HashMap<>();
     Iterable<String> languageCodes = DictionarySettings.getAllCodes();
     
     for (String languageCode : languageCodes) {
@@ -45,7 +44,7 @@ public class DictionarySanitationTest {
     }
     
     boolean isEmpty = true;
-    for (Map<String, Set<String>> entry : sanitationResult.values()) {
+    for (Multimap<String, String> entry : sanitationResult.values()) {
       if (!entry.isEmpty()) {
         isEmpty = false;
         break;
@@ -59,7 +58,7 @@ public class DictionarySanitationTest {
     }
   }
 
-  private Map<String, Set<String>> findBadWords(String languageCode) {
+  private Multimap<String, String> findBadWords(String languageCode) {
     List<Character> allowedChars = computeAllowedCharsList(languageCode);
     NoOtherCharsEvaluator testEvaluator = new NoOtherCharsEvaluator(allowedChars);
     List<Evaluator<?>> evaluators = Collections.singletonList(testEvaluator);

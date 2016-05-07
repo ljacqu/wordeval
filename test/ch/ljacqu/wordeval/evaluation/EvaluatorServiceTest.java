@@ -1,8 +1,16 @@
 package ch.ljacqu.wordeval.evaluation;
 
-import static ch.ljacqu.wordeval.TestUtil.asSet;
+import com.google.common.collect.TreeMultimap;
+import lombok.Getter;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static org.hamcrest.Matchers.aMapWithSize;
-import static org.hamcrest.Matchers.anEmptyMap;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.instanceOf;
@@ -10,17 +18,6 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.junit.Test;
-import org.mockito.Mockito;
-
-import lombok.Getter;
 
 @SuppressWarnings("JavaDoc")
 public class EvaluatorServiceTest {
@@ -56,8 +53,8 @@ public class EvaluatorServiceTest {
   @Test
   public void shouldExecutePostEvaluatorMethods() {
     Evaluator1 e1 = Mockito.mock(Evaluator1.class);
-    Map<String, Set<String>> results = new HashMap<>();
-    results.put("test", asSet("test", "testing", "tester"));
+    TreeMultimap<String, String> results = TreeMultimap.create();
+    results.putAll("test", Arrays.asList("test", "testing", "tester"));
     when(e1.getResults()).thenReturn(results);
     
     Evaluator2 e2 = new Evaluator2();
@@ -123,7 +120,7 @@ public class EvaluatorServiceTest {
     
     @Override
     public void evaluateWith(Evaluator1 e) {
-      assertThat(e.getResults(), not(anEmptyMap()));
+      assertThat(e.getResults().size(), not(equalTo(0)));
       postEvaluatorCalled = true;
     }
     
