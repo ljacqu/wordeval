@@ -12,7 +12,7 @@ import java.util.Optional;
 public class LongWords extends WordStatEvaluator {
 
   /** Ignore any words whose length is less than the minimum length. */
-  public static final int MIN_LENGTH = 6;
+  private static final int MIN_LENGTH = 6;
 
   @Override
   public void processWord(String word, String rawWord) {

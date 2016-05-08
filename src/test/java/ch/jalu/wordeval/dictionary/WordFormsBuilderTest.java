@@ -1,61 +1,74 @@
 package ch.jalu.wordeval.dictionary;
 
+import ch.jalu.wordeval.language.Language;
+import org.junit.Test;
+
 import static ch.jalu.wordeval.TestUtil.newLanguage;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-import org.junit.Test;
-
-import ch.jalu.wordeval.language.Language;
-
+/**
+ * Test for {@link WordFormsBuilder}.
+ */
 @SuppressWarnings("javadoc")
 public class WordFormsBuilderTest {
 
   @Test
   public void shouldKeepAdditionalLetters() {
+    // given
     Language language = newLanguage("da")
         .setAdditionalVowels("æ", "ø", "å");
-    WordFormsBuilder builder = new WordFormsBuilder(language);
     String[] words = { "forsøgte erklære trådte", "Å ǿ én býr" };
+    WordFormsBuilder builder = new WordFormsBuilder(language);
 
-    String[] result = new String[2];
-    result[0] = getForm(builder.computeForms(words[0]), WordForm.NO_ACCENTS);
-    result[1] = getForm(builder.computeForms(words[1]), WordForm.NO_ACCENTS);
+    // when
+    Word[] result = new Word[2];
+    result[0] = builder.computeForms(words[0]);
+    result[1] = builder.computeForms(words[1]);
 
-    String[] expected = { "forsøgte erklære trådte", "å ø en byr" };
-    assertThat(result, equalTo(expected));
+    // then
+    assertThat(result[0].getForm(WordForm.NO_ACCENTS), equalTo("forsøgte erklære trådte"));
+    assertThat(result[1].getForm(WordForm.NO_ACCENTS), equalTo("å ø en byr"));
   }
 
   @Test
   public void shouldRemoveAllAccentsByDefault() {
+    // given
     Language language = newLanguage("fr");
     WordFormsBuilder builder = new WordFormsBuilder(language);
 
-    String result = getForm(builder.computeForms("ÉÑÀÇÏÔ"), WordForm.NO_ACCENTS);
+    // when
+    Word result = builder.computeForms("ÉÑÀÇÏÔ");
 
-    assertThat(result, equalTo("enacio"));
+    // then
+    assertThat(result.getForm(WordForm.NO_ACCENTS), equalTo("enacio"));
   }
 
   @Test
   public void shouldUseLocaleForLowerCase() {
+    // given
     Language language = newLanguage("tr");
     WordFormsBuilder builder = new WordFormsBuilder(language);
 
-    String result = getForm(builder.computeForms("PRINÇE"), WordForm.LOWERCASE);
+    // when
+    Word result = builder.computeForms("PRINÇE");
 
-    assertThat(result, equalTo("prınçe"));
+    // then
+    assertThat(result.getForm(WordForm.LOWERCASE), equalTo("prınçe"));
   }
 
   @Test
   public void shouldComputeWordOnlyForm() {
+    // given
     Language language = newLanguage("cs")
         .setAdditionalConsonants("č", "ř");
     WordFormsBuilder builder = new WordFormsBuilder(language);
 
-    String result = getForm(builder.computeForms("ČL-OV'ěk-ůŘ"),
-        WordForm.NO_ACCENTS_WORD_CHARS_ONLY);
+    // when
+    Word result = builder.computeForms("ČL-OV'ěk-ůŘ");
 
-    assertThat(result, equalTo("človekuř"));
+    // then
+    assertThat(result.getForm(WordForm.NO_ACCENTS_WORD_CHARS_ONLY), equalTo("človekuř"));
   }
 
   @Test(expected = IllegalStateException.class)
@@ -63,10 +76,6 @@ public class WordFormsBuilderTest {
     Language language = newLanguage("nl");
     WordFormsBuilder builder = new WordFormsBuilder(language);
     builder.computeForms("");
-  }
-
-  private String getForm(String[] forms, WordForm wordForm) {
-    return forms[wordForm.ordinal()];
   }
 
 }

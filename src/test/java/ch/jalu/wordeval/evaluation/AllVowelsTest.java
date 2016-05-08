@@ -12,6 +12,10 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
+/**
+ * Test for {@link AllVowels}.
+ */
+@SuppressWarnings("javadoc")
 public class AllVowelsTest {
 
   @Test
@@ -42,14 +46,6 @@ public class AllVowelsTest {
     assertThat(allVowels2.isBaseMatch(counter2), equalTo(Boolean.TRUE));
     assertThat(allVowels1.isBaseMatch(counter2), equalTo(Boolean.FALSE));
     assertThat(allVowels2.isBaseMatch(counter1), equalTo(Boolean.FALSE));
-  }
-  
-  @Test
-  public void shouldHaveEmptyProcessWordMethod() {
-    AllVowels allVowels = new AllVowels(LetterType.CONSONANTS);
-    
-    allVowels.processWord("word", "word");
-    // Nothing happens
   }
   
   private static TreeMultimap<String, String> initializeSampleResults(LetterType letterType) {

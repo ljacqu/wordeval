@@ -1,23 +1,20 @@
 package ch.jalu.wordeval.evaluation;
 
+import ch.jalu.wordeval.evaluation.export.ExportObject;
+import ch.jalu.wordeval.evaluation.export.ExportParams;
+import ch.jalu.wordeval.evaluation.export.PartWordExport;
+import ch.jalu.wordeval.evaluation.export.PartWordReducer;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
-
-import ch.jalu.wordeval.evaluation.export.ExportObject;
-import ch.jalu.wordeval.evaluation.export.ExportParams;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Finds pairs of words that are equal to each other when reversed, e.g. German
  * "Lager" and "Regal".
  */
-public class BackwardsPairs extends PartWordEvaluator implements PostEvaluator<WordCollector> {
-
-  @Override
-  public void processWord(String word, String rawWord) {
-    // --
-  }
+public class BackwardsPairs extends PostEvaluator<String, WordCollector> {
 
   /**
    * Evaluate "backwards pairs" based on the collected words of a dictionary.
@@ -40,9 +37,18 @@ public class BackwardsPairs extends PartWordEvaluator implements PostEvaluator<W
 
   @Override
   public ExportObject toExportObject() {
-    return toExportObject(ExportParams.builder()
+    return toExportObject(this.getClass().getSimpleName(), ExportParams.builder()
         .topEntryMinimum(Optional.of(3.0))
         .build());
+  }
+
+  // FIXME: Implementation from PartWordEvaluator
+  @Override
+  protected ExportObject toExportObject(String identifier, ExportParams params) {
+    if (params == null) {
+      return PartWordExport.create(identifier, getResults());
+    }
+    return PartWordExport.create(identifier, getResults(), params, new PartWordReducer.ByLength());
   }
 
   @Override public Class<WordCollector> getType() { return WordCollector.class; }

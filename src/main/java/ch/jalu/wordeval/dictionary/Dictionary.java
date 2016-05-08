@@ -1,14 +1,11 @@
 package ch.jalu.wordeval.dictionary;
 
-import ch.jalu.wordeval.evaluation.Evaluator;
-import ch.jalu.wordeval.evaluation.EvaluatorService;
-import ch.jalu.wordeval.evaluation.PostEvaluator;
 import ch.jalu.wordeval.DataUtils;
+import ch.jalu.wordeval.evaluation.Evaluator;
+import ch.jalu.wordeval.evaluation.EvaluatorInvoker;
 import ch.jalu.wordeval.language.Language;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.Map;
 
 /**
  * A dictionary to process.
@@ -70,41 +67,19 @@ public class Dictionary {
    * @return The total number of words read
    */
   public long process(Iterable<Evaluator<?>> evaluators) {
-    Map<PostEvaluator<?>, Evaluator<?>> postEvaluators = EvaluatorService.getPostEvaluators(evaluators);
+    EvaluatorInvoker invoker = new EvaluatorInvoker(evaluators);
     
     long totalWords = dataUtils.readFileLines(fileName)
       .stream()
       .map(sanitizer::isolateWord)
       .filter(StringUtils::isNotEmpty)
-      .peek(word -> sendToEvaluators(word, evaluators))
+      .map(wordFormsBuilder::computeForms)
+      .peek(invoker::processWord)
       .count();
 
-    EvaluatorService.executePostEvaluators(postEvaluators);
+    invoker.executePostEvaluators();
     evaluators.forEach(e -> e.filterDuplicateWords(language.getLocale()));
     return totalWords;
-  }
-
-  /**
-   * Passes the current word to the evaluators in their desired form.
-   * @param word the word to process
-   * @param evaluators the list of evaluators
-   */
-  private void sendToEvaluators(String word, Iterable<Evaluator<?>> evaluators) {
-    String[] wordForms = wordFormsBuilder.computeForms(word);
-    for (Evaluator<?> evaluator : evaluators) {
-      evaluator.processWord(getWordForm(wordForms, evaluator.getWordForm()), 
-                            getWordForm(wordForms, WordForm.RAW));
-    }
-  }
-
-  /**
-   * Gets a given word form from the given list.
-   * @param wordForms the list to retrieve the word form from
-   * @param wordForm the word form type to get
-   * @return the requested word form
-   */
-  private static String getWordForm(String[] wordForms, WordForm wordForm) {
-    return wordForms[wordForm.ordinal()];
   }
 
 }

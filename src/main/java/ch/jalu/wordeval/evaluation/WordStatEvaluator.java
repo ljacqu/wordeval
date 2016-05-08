@@ -8,7 +8,7 @@ import ch.jalu.wordeval.evaluation.export.WordStatExport;
  * Base class for the word stat evaluator - evaluator that saves some figure
  * with a word (typically its length).
  */
-public abstract class WordStatEvaluator extends Evaluator<Integer> {
+public abstract class WordStatEvaluator extends DictionaryEvaluator<Integer> {
 
   @Override
   protected ExportObject toExportObject(String identifier, ExportParams params) {
@@ -20,6 +20,7 @@ public abstract class WordStatEvaluator extends Evaluator<Integer> {
 
   /**
    * Creates an export object with the given export parameters.
+   *
    * @param params The export parameters to use
    * @return The generated export object
    */

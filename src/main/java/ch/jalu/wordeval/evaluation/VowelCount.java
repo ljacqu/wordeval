@@ -1,14 +1,14 @@
 package ch.jalu.wordeval.evaluation;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import ch.jalu.wordeval.dictionary.WordForm;
-import ch.jalu.wordeval.language.LetterType;
 import ch.jalu.wordeval.evaluation.export.ExportObject;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LanguageService;
+import ch.jalu.wordeval.language.LetterType;
 import lombok.Getter;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Evaluator which collects all words by count of 
@@ -22,6 +22,7 @@ public class VowelCount extends PartWordEvaluator {
 
   /**
    * Creates a new VowelCount evaluator.
+   *
    * @param letterType the letter type (consonant, vowel) to consider
    * @param language the language of the words to process
    */

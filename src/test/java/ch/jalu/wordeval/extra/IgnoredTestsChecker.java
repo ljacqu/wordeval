@@ -1,16 +1,17 @@
 package ch.jalu.wordeval.extra;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import lombok.extern.log4j.Log4j2;
+import org.junit.Ignore;
+import org.junit.Test;
+
 import java.io.File;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Ignore;
-import org.junit.Test;
 
-import lombok.extern.log4j.Log4j2;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Scans the <code>.extra</code> test package and ensures that the tests which
@@ -20,11 +21,9 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class IgnoredTestsChecker {
 
-  private static final File FOLDER = new File("test/ch/ljacqu/wordeval/extra");
-  private static final String PACKAGE = "ch.ljacqu.wordeval.extra";
-
+  private static final File FOLDER = new File("src/test/java/ch/jalu/wordeval/extra");
+  private static final String PACKAGE = "ch.jalu.wordeval.extra";
   
-  @SuppressWarnings("rawtypes")
   @Test
   public void shouldAllBeIgnored() {
     List<Class> classes = getClasses();

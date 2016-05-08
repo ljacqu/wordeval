@@ -1,8 +1,7 @@
 package ch.jalu.wordeval.evaluation;
 
-import ch.jalu.wordeval.evaluation.export.ExportParams;
-import ch.jalu.wordeval.dictionary.WordForm;
 import ch.jalu.wordeval.evaluation.export.ExportObject;
+import ch.jalu.wordeval.evaluation.export.ExportParams;
 import com.google.common.collect.TreeMultimap;
 import lombok.Getter;
 
@@ -28,14 +27,8 @@ public abstract class Evaluator<K extends Comparable> {
   private TreeMultimap<K, String> results = TreeMultimap.create();
 
   /**
-   * Processes a word and adds it to results if it is relevant.
-   * @param word the word to check (sanitized: trimmed, all lowercase)
-   * @param rawWord the raw form of the word in the dictionary
-   */
-  public abstract void processWord(String word, String rawWord);
-
-  /**
    * Converts the evaluator's results to an export object.
+   *
    * @return the converted ExportObject instance
    */
   public ExportObject toExportObject() {
@@ -44,6 +37,7 @@ public abstract class Evaluator<K extends Comparable> {
 
   /**
    * Converts the evaluator's results to an export object.
+   *
    * @param identifier the identifier of the export object
    * @param params the export params; can be null
    * @return the converted ExportObject instance, or null if it should not be exported
@@ -52,6 +46,7 @@ public abstract class Evaluator<K extends Comparable> {
 
   /**
    * Gets the results of the evaluator as a navigable map.
+   *
    * @return a map with the results (key = property, entry = list of words)
    */
   public NavigableMap<K, List<String>> getNavigableResults() {
@@ -63,15 +58,8 @@ public abstract class Evaluator<K extends Comparable> {
   }
 
   /**
-   * Returns the desired form of the word to process.
-   * @return the word form
-   */
-  public WordForm getWordForm() {
-    return WordForm.LOWERCASE;
-  }
-
-  /**
    * Adds an entry to the results map.
+   *
    * @param key the key for the new entry
    * @param word the word to add to the key's list
    */

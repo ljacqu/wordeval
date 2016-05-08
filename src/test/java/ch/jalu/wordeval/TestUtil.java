@@ -1,10 +1,9 @@
 package ch.jalu.wordeval;
 
-import ch.jalu.wordeval.evaluation.Evaluator;
 import ch.jalu.wordeval.dictionary.Dictionary;
+import ch.jalu.wordeval.evaluation.DictionaryEvaluator;
 import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
-import lombok.Getter;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -48,7 +47,7 @@ public final class TestUtil {
    * @param evaluator the evaluator to process the words with
    * @param words the words to process
    */
-  public static void processWords(Evaluator<?> evaluator, String... words) {
+  public static void processWords(DictionaryEvaluator<?> evaluator, String... words) {
     processWords(evaluator, words, words);
   }
 
@@ -58,7 +57,7 @@ public final class TestUtil {
    * @param cleanWords the list of words in a certain WordForm format
    * @param words the list of words in their RAW WordFormat
    */
-  public static void processWords(Evaluator<?> evaluator, String[] cleanWords, String[] words) {
+  public static void processWords(DictionaryEvaluator<?> evaluator, String[] cleanWords, String[] words) {
     for (int i = 0; i < cleanWords.length; ++i) {
       evaluator.processWord(cleanWords[i], words[i]);
     }
@@ -170,40 +169,6 @@ public final class TestUtil {
       } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
         throw new IllegalStateException("Could not invoke '" + method + "'", e);
       }
-    }
-  }
-
-  /**
-   * Helper class to initialize a list with when a more verbose structure than {@link Arrays#asList} is desired.
-   * @param <T> the generic type of the list
-   */
-  public static class ANewList<T> {
-    @Getter
-    private List<T> list;
-
-    private ANewList() {
-      list = new ArrayList<>();
-    }
-
-    /**
-     * Generates a list builder with the first entry to add.
-     * @param value the value to add to the list
-     * @return the list builder
-     */
-    public static <T> ANewList with(T value) {
-      ANewList<T> listInit = new ANewList<>();
-      listInit.and(value);
-      return listInit;
-    }
-
-    /**
-     * Adds a value to the list that is being built.
-     * @param value the value to add
-     * @return the list builder
-     */
-    public ANewList and(T value) {
-      list.add(value);
-      return this;
     }
   }
 }

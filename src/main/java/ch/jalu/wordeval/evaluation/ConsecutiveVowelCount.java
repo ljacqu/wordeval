@@ -1,14 +1,14 @@
 package ch.jalu.wordeval.evaluation;
 
-import java.util.List;
-import java.util.Optional;
-
 import ch.jalu.wordeval.dictionary.WordForm;
-import ch.jalu.wordeval.evaluation.export.ExportParams;
-import ch.jalu.wordeval.language.LetterType;
 import ch.jalu.wordeval.evaluation.export.ExportObject;
+import ch.jalu.wordeval.evaluation.export.ExportParams;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LanguageService;
+import ch.jalu.wordeval.language.LetterType;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Searches words for clusters of vowels or consonants, e.g. "ngstschw" in
@@ -22,8 +22,9 @@ public class ConsecutiveVowelCount extends WordStatEvaluator {
 
   /**
    * Creates a new VowelCount evaluator instance.
-   * @param type The letter type to consider
-   * @param language The language of the words to evaluate
+   *
+   * @param type the letter type to consider
+   * @param language the language of the words to evaluate
    */
   public ConsecutiveVowelCount(LetterType type, Language language) {
     lettersToConsider = LanguageService.getLetters(type, language);

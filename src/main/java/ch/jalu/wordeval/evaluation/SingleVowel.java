@@ -1,6 +1,8 @@
 package ch.jalu.wordeval.evaluation;
 
 import ch.jalu.wordeval.evaluation.export.ExportParams;
+import ch.jalu.wordeval.evaluation.export.PartWordExport;
+import ch.jalu.wordeval.evaluation.export.PartWordReducer;
 import ch.jalu.wordeval.language.LetterType;
 import ch.jalu.wordeval.evaluation.export.ExportObject;
 import com.google.common.collect.TreeMultimap;
@@ -14,14 +16,9 @@ import java.util.Optional;
  * such as "abracadabra," which only uses the vowel 'a.' 
  */
 @AllArgsConstructor
-public class SingleVowel extends PartWordEvaluator implements PostEvaluator<VowelCount> {
+public class SingleVowel extends PostEvaluator<String, VowelCount> {
   
   private final LetterType letterType;
-  
-  @Override
-  public void processWord(String word, String rawWord) {
-    // --
-  }
 
   /**
    * Isolates the words with one letter type from a {@link VowelCount} instance.
@@ -49,11 +46,6 @@ public class SingleVowel extends PartWordEvaluator implements PostEvaluator<Vowe
     }
   }
 
-  /**
-   * Base matcher to match the correct VowelCount instance to this evaluator.
-   * @param counter the instance to match
-   * @return base match
-   */
   @Override
   public boolean isMatch(VowelCount counter) {
     return letterType.equals(counter.getLetterType());
@@ -70,5 +62,14 @@ public class SingleVowel extends PartWordEvaluator implements PostEvaluator<Vowe
   }
 
   @Override public Class<VowelCount> getType() { return VowelCount.class; }
+
+  // FIXME: Implemtnation from WOrdStatEvaluator
+  @Override
+  protected ExportObject toExportObject(String identifier, ExportParams params) {
+    if (params == null) {
+      return PartWordExport.create(identifier, getResults());
+    }
+    return PartWordExport.create(identifier, getResults(), params, new PartWordReducer.ByLength());
+  }
 
 }

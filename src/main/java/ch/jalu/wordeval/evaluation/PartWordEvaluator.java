@@ -9,7 +9,7 @@ import ch.jalu.wordeval.evaluation.export.ExportObject;
  * Base class for part word evaluators. These evaluators save a part of the word
  * as the key in their results.
  */
-public abstract class PartWordEvaluator extends Evaluator<String> {
+public abstract class PartWordEvaluator extends DictionaryEvaluator<String> {
 
   @Override
   protected ExportObject toExportObject(String identifier, ExportParams params) {

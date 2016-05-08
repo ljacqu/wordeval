@@ -1,17 +1,16 @@
 package ch.jalu.wordeval.language;
 
-import static ch.jalu.wordeval.TestUtil.newLanguage;
+import ch.jalu.wordeval.TestUtil;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import ch.jalu.wordeval.TestUtil;
-import org.junit.Test;
 
 @SuppressWarnings("javadoc")
 public class LanguageServiceTest {

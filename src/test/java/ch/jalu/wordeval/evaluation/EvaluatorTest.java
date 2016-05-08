@@ -39,7 +39,7 @@ public class EvaluatorTest {
     assertThat(results.get(5), contains("hello"));
   }
 
-  private static class TestEvaluator extends Evaluator<Integer> {
+  private static class TestEvaluator extends DictionaryEvaluator<Integer> {
     @Override
     public void processWord(String word, String rawWord) {
       addEntry(word.length(), rawWord);

@@ -1,5 +1,9 @@
 package ch.jalu.wordeval.evaluation;
 
+import ch.jalu.wordeval.evaluation.export.ExportObject;
+import ch.jalu.wordeval.evaluation.export.ExportParams;
+import ch.jalu.wordeval.evaluation.export.WordStatExport;
+
 import java.util.Map;
 
 /**
@@ -7,7 +11,7 @@ import java.util.Map;
  * {@link Palindromes} evaluator, which also matches parts of a word (e.g.
  * "ette" in "better").
  */
-public class FullPalindromes extends WordStatEvaluator implements PostEvaluator<Palindromes> {
+public class FullPalindromes extends PostEvaluator<Integer, Palindromes> {
 
   /**
    * Filters all words which are proper palindromes (i.e. the entire word is
@@ -23,11 +27,14 @@ public class FullPalindromes extends WordStatEvaluator implements PostEvaluator<
         .forEach(word -> addEntry(word.length(), word));
   }
 
-  @Override
-  public void processWord(String word, String rawWord) {
-    // --
-  }
-
   @Override public Class<Palindromes> getType() { return Palindromes.class; }
 
+  // FIXME: IMplemetation from WordStatEvaluator
+  @Override
+  protected ExportObject toExportObject(String identifier, ExportParams params) {
+    if (params == null) {
+      return WordStatExport.create(identifier, getNavigableResults());
+    }
+    return WordStatExport.create(identifier, getNavigableResults(), params);
+  }
 }

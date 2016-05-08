@@ -1,11 +1,11 @@
 package ch.jalu.wordeval.dictionary;
 
-import java.util.Locale;
-
 import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LanguageService;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Locale;
 
 /**
  * Utility class used in {@link Sanitizer} to 
@@ -26,12 +26,12 @@ class WordFormsBuilder {
   }
 
   /**
-   * Computes the different word forms (all lowercase, accents removed, etc.)
-   * for the given word.
-   * @param word The word to process
-   * @return Collection of all word forms
+   * Computes the different word forms (all lowercase, accents removed, etc.) for the given word.
+   *
+   * @param word the word to process
+   * @return Word with all its forms
    */
-  String[] computeForms(String word) {
+  Word computeForms(String word) {
     if (word.isEmpty()) {
       throw new IllegalStateException("The word may not be empty");
     }
@@ -44,7 +44,7 @@ class WordFormsBuilder {
     wordForms[WordForm.NO_ACCENTS.ordinal()] = removeNonLetterAccents(lowerCaseWord);
     wordForms[WordForm.NO_ACCENTS_WORD_CHARS_ONLY.ordinal()] = wordForms[WordForm.NO_ACCENTS.ordinal()]
         .replace("-", "").replace("'", "");
-    return wordForms;
+    return new Word(wordForms);
   }
 
   private String removeNonLetterAccents(String word) {

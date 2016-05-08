@@ -1,15 +1,13 @@
 package ch.jalu.wordeval.evaluation;
 
-import ch.jalu.wordeval.language.LetterType;
-import ch.jalu.wordeval.TestUtil.ANewList;
 import ch.jalu.wordeval.evaluation.export.ExportObject;
-import ch.jalu.wordeval.evaluation.export.PartWordExport;
-import ch.jalu.wordeval.evaluation.export.WordStatExport;
 import ch.jalu.wordeval.language.Language;
+import ch.jalu.wordeval.language.LetterType;
 import lombok.extern.log4j.Log4j2;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static ch.jalu.wordeval.TestUtil.newLanguage;
@@ -28,33 +26,32 @@ public class EvaluatorGlobalTest {
   private static List<Evaluator<?>> evaluators;
   
   @BeforeClass
-  @SuppressWarnings("unchecked")
   public static void initializeEvaluators() {
     Language lang = newLanguage("zxx");
-    evaluators = ANewList
-        .with(new AllVowels(LetterType.VOWELS))
-        .and(new AlphabeticalOrder())
-        .and(new AlphabeticalSequence())
-        .and(new Anagrams())
-        .and(new BackwardsPairs())
-        .and(new ConsecutiveLetterPairs())
-        .and(new ConsecutiveVowelCount(LetterType.VOWELS, lang))
-        .and(new DiacriticHomonyms(lang.getLocale()))
-        .and(new FullPalindromes())
-        .and(new Isograms())
-        .and(new LongWords())
-        .and(new Palindromes())
-        .and(new SameLetterConsecutive())
-        .and(new SingleVowel(LetterType.VOWELS))
-        .and(new VowelCount(LetterType.VOWELS, lang))
-        .and(new WordCollector())
-        .getList();
+    evaluators = Arrays.asList(
+        new AllVowels(LetterType.VOWELS),
+        new AlphabeticalOrder(),
+        new AlphabeticalSequence(),
+        new Anagrams(),
+        new BackwardsPairs(),
+        new ConsecutiveLetterPairs(),
+        new ConsecutiveVowelCount(LetterType.VOWELS, lang),
+        new DiacriticHomonyms(lang.getLocale()),
+        new FullPalindromes(),
+        new Isograms(),
+        new LongWords(),
+        new Palindromes(),
+        new SameLetterConsecutive(),
+        new SingleVowel(LetterType.VOWELS),
+        new VowelCount(LetterType.VOWELS, lang),
+        new WordCollector());
   }
   
   @Test
   public void shouldAllReturnWordForm() {
     evaluators.stream()
-      .map(Evaluator::getWordForm)
+      .filter(e -> e instanceof DictionaryEvaluator)
+      .map(e -> ((DictionaryEvaluator) e).getWordForm())
       .forEach(wordForm -> assertThat(wordForm, not(nullValue())));
   }
   
@@ -65,20 +62,10 @@ public class EvaluatorGlobalTest {
       if (exportObj == null) {
         log.info("Evaluator {} has null as export object", evaluator.getClass().getSimpleName());
       } else {
-        validateEmpty(exportObj);
+        assertThat(exportObj.getTopEntries(), anEmptyMap());
+        assertThat(exportObj.getAggregatedEntries(), anEmptyMap());
       }      
     }
   }
 
-  private static void validateEmpty(ExportObject eo) {
-    if (eo instanceof PartWordExport) {
-      assertThat(((PartWordExport) eo).getTopEntries(), anEmptyMap());
-      assertThat(((PartWordExport) eo).getAggregatedEntries(), anEmptyMap());
-    } else if (eo instanceof WordStatExport) {
-      assertThat(((WordStatExport) eo).getTopEntries(), anEmptyMap());
-      assertThat(((WordStatExport) eo).getAggregatedEntries(), anEmptyMap());
-    } else {
-      throw new IllegalStateException("Unknown ExportObject type " + eo);
-    }
-  }
 }

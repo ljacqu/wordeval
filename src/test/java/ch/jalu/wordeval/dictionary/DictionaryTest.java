@@ -1,11 +1,12 @@
 package ch.jalu.wordeval.dictionary;
 
-import ch.jalu.wordeval.evaluation.Evaluator;
-import ch.jalu.wordeval.evaluation.export.ExportParams;
 import ch.jalu.wordeval.DataUtils;
 import ch.jalu.wordeval.TestUtil;
+import ch.jalu.wordeval.evaluation.DictionaryEvaluator;
+import ch.jalu.wordeval.evaluation.Evaluator;
 import ch.jalu.wordeval.evaluation.PostEvaluator;
 import ch.jalu.wordeval.evaluation.export.ExportObject;
+import ch.jalu.wordeval.evaluation.export.ExportParams;
 import ch.jalu.wordeval.language.Language;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -68,7 +69,7 @@ public class DictionaryTest {
     assertTrue(postEval.getResults().get(Boolean.TRUE).contains(lowercaseResultSize));
   }
   
-  private static class LowercaseEvaluator extends Evaluator<Boolean> {
+  private static class LowercaseEvaluator extends DictionaryEvaluator<Boolean> {
     @Override
     public void processWord(String word, String rawWord) {
       addEntry(Boolean.TRUE, word);
@@ -85,7 +86,7 @@ public class DictionaryTest {
     }
   }
   
-  private static class NoAccentEvaluator extends Evaluator<Boolean> {
+  private static class NoAccentEvaluator extends DictionaryEvaluator<Boolean> {
     @Override
     public void processWord(String word, String rawWord) {
       addEntry(Boolean.TRUE, word);
@@ -102,12 +103,7 @@ public class DictionaryTest {
     }
   }
   
-  public static class TestPostEvaluator extends Evaluator<Boolean> implements PostEvaluator<LowercaseEvaluator> {
-    @Override
-    public void processWord(String word, String rawWord) {
-      // --
-    }
-    
+  public static class TestPostEvaluator extends PostEvaluator<Boolean, LowercaseEvaluator> {
     @Override
     public ExportObject toExportObject(String id, ExportParams params) {
       return null;
