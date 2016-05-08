@@ -1,13 +1,12 @@
 package ch.jalu.wordeval;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.google.common.collect.ImmutableMap;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ArrayUtils;
 
-import lombok.extern.log4j.Log4j2;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Map;
 
 /**
  * Utility class to rename the dictionaries from the Hunspell
@@ -79,70 +78,49 @@ public class DictionaryRenamer {
   }
   
   private static Map<String, String> initReplacements() {
-    return ReplacementBuilder.init()
-    .add("Basque", "eu")
-    .add("Bulgarian", "bg")
-    .add("Catalan", "ca")
-    .add("Croatian", "hr")
-    .add("Czech", "cs")
-    .add("Danish", "da")
-    .add("Dutch", "nl")
-    .add("English (American)", "en-us")
-    .add("English (Australian)", "en-au")
-    .add("English (British)", "en-uk")
-    .add("English (Canadian)", "en-ca")
-    .add("Estonian", "et")
-    .add("French", "fr")
-    .add("Galego", "gl")
-    .add("German", "de")
-    .add("German_de_AT", "de-at")
-    .add("German_de_CH", "de-ch")
-    .add("German_de_DE", "de-de")
-    .add("Greek", "el")
-    .add("Hungarian", "hu")
-    .add("Italian", "it")
-    .add("Lithuanian", "lt")
-    .add("Luxembourgish", "lb")
-    .add("Mongolian", "mn")
-    .add("Norwegian (Bokmal)", "nb")
-    .add("Norwegian (Nynorsk)", "nn")
-    .add("Polish", "pl")
-    .add("Portuguese (Brazilian)", "pt-br")
-    .add("Portuguese (European)", "pt-pt")
-    .add("Romanian", "ro")
-    .add("Romanian (Modern)", "ro")
-    .add("Russian", "ru")
-    .add("Serbian (Cyrillic)", "sr-cyrl")
-    .add("Serbian (Latin)", "sr-latn")
-    .add("Slovak_sk_SK", "sk")
-    .add("Slovenian", "sl")
-    .add("Spanish", "es")
-    .add("Swedish", "sv")
-    .add("Turkish", "tr")
-    .add("Ukrainian_uk_UA", "uk")
-    .add("Vietnamese_vi_VN", "vi")
+    return ImmutableMap.<String, String>builder()
+    .put("Basque", "eu")
+    .put("Bulgarian", "bg")
+    .put("Catalan", "ca")
+    .put("Croatian", "hr")
+    .put("Czech", "cs")
+    .put("Danish", "da")
+    .put("Dutch", "nl")
+    .put("English (American)", "en-us")
+    .put("English (Australian)", "en-au")
+    .put("English (British)", "en-uk")
+    .put("English (Canadian)", "en-ca")
+    .put("Estonian", "et")
+    .put("French", "fr")
+    .put("Galego", "gl")
+    .put("German", "de")
+    .put("German_de_AT", "de-at")
+    .put("German_de_CH", "de-ch")
+    .put("German_de_DE", "de-de")
+    .put("Greek", "el")
+    .put("Hungarian", "hu")
+    .put("Italian", "it")
+    .put("Lithuanian", "lt")
+    .put("Luxembourgish", "lb")
+    .put("Mongolian", "mn")
+    .put("Norwegian (Bokmal)", "nb")
+    .put("Norwegian (Nynorsk)", "nn")
+    .put("Polish", "pl")
+    .put("Portuguese (Brazilian)", "pt-br")
+    .put("Portuguese (European)", "pt-pt")
+    .put("Romanian", "ro")
+    .put("Romanian (Modern)", "ro")
+    .put("Russian", "ru")
+    .put("Serbian (Cyrillic)", "sr-cyrl")
+    .put("Serbian (Latin)", "sr-latn")
+    .put("Slovak_sk_SK", "sk")
+    .put("Slovenian", "sl")
+    .put("Spanish", "es")
+    .put("Swedish", "sv")
+    .put("Turkish", "tr")
+    .put("Ukrainian_uk_UA", "uk")
+    .put("Vietnamese_vi_VN", "vi")
     .build();
-  }
-  
-  private static final class ReplacementBuilder {
-    private Map<String, String> map;
-    
-    private ReplacementBuilder() {
-      map = new HashMap<>();
-    }
-    
-    public static ReplacementBuilder init() {
-      return new ReplacementBuilder();
-    }
-    
-    public ReplacementBuilder add(String name, String code) {
-      map.put(name, code);
-      return this;
-    }
-
-    public Map<String, String> build() {
-      return map;
-    }
   }
   
 }
