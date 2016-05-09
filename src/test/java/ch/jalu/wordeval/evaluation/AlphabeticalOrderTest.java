@@ -12,7 +12,6 @@ import static org.junit.Assert.assertThat;
 /**
  * Test for {@link AlphabeticalOrder}.
  */
-@SuppressWarnings("javadoc")
 public class AlphabeticalOrderTest {
 
   @Test

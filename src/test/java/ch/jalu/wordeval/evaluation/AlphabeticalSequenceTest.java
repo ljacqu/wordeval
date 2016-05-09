@@ -1,14 +1,19 @@
 package ch.jalu.wordeval.evaluation;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.List;
+import java.util.Map;
+
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
-import java.util.List;
-import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
 
+/**
+ * Test for {@link AlphabeticalSequence}.
+ */
 public class AlphabeticalSequenceTest {
 
   private AlphabeticalSequence evaluator;

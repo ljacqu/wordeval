@@ -21,7 +21,6 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 /**
  * Test for {@link EvaluatorInvoker}.
  */
-@SuppressWarnings("JavaDoc")
 public class EvaluatorInvokerTest {
 
   @Test

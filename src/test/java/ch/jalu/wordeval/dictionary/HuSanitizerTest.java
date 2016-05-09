@@ -1,23 +1,24 @@
 package ch.jalu.wordeval.dictionary;
 
-import static org.junit.Assert.fail;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import lombok.extern.log4j.Log4j2;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import ch.jalu.wordeval.AppData;
 import ch.jalu.wordeval.TestUtil;
 import ch.jalu.wordeval.evaluation.Evaluator;
 import ch.jalu.wordeval.evaluation.PartWordEvaluator;
+import lombok.extern.log4j.Log4j2;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.fail;
 
 /**
- * Test for the Hungarian dictionary (which has custom sanitation).
+ * Test for the {@link HuSanitizer Hungarian dictionary} (which has custom sanitation).
  */
 @Log4j2
-@SuppressWarnings("javadoc")
 public class HuSanitizerTest {
   
   

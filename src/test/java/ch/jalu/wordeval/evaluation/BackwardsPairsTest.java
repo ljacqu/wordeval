@@ -11,6 +11,9 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
+/**
+ * Test for {@link BackwardsPairs}.
+ */
 public class BackwardsPairsTest {
   
   @Test

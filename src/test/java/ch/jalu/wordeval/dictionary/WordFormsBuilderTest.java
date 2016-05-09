@@ -10,7 +10,6 @@ import static org.junit.Assert.assertThat;
 /**
  * Test for {@link WordFormsBuilder}.
  */
-@SuppressWarnings("javadoc")
 public class WordFormsBuilderTest {
 
   @Test

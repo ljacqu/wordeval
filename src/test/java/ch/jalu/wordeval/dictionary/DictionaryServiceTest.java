@@ -1,9 +1,12 @@
 package ch.jalu.wordeval.dictionary;
 
-import static org.junit.Assert.fail;
-
 import org.junit.Test;
 
+import static org.junit.Assert.fail;
+
+/**
+ * Test for {@link DictionaryService}.
+ */
 public class DictionaryServiceTest {
   
   @Test

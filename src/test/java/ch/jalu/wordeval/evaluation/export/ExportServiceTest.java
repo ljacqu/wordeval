@@ -1,20 +1,21 @@
 package ch.jalu.wordeval.evaluation.export;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
+import ch.jalu.wordeval.evaluation.export.TreeElement.IndexTotalColl;
+import ch.jalu.wordeval.evaluation.export.TreeElement.Rest;
+import ch.jalu.wordeval.evaluation.export.TreeElement.WordColl;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.junit.Test;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 
-import ch.jalu.wordeval.evaluation.export.TreeElement.IndexTotalColl;
-import ch.jalu.wordeval.evaluation.export.TreeElement.Rest;
-import ch.jalu.wordeval.evaluation.export.TreeElement.WordColl;
-
-@SuppressWarnings("javadoc")
+/**
+ * Test for {@link ExportService}.
+ */
 public class ExportServiceTest {
   
   @Test

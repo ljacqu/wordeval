@@ -1,17 +1,19 @@
 package ch.jalu.wordeval;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertThat;
+import com.google.gson.Gson;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.Arrays;
 
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertThat;
 
-import com.google.gson.Gson;
-
+/**
+ * Test for {@link DataUtils}.
+ */
 public class DataUtilsTest {
   
   @Test

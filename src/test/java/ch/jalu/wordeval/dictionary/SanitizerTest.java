@@ -1,15 +1,18 @@
 package ch.jalu.wordeval.dictionary;
 
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.Arrays;
+
 import static org.hamcrest.Matchers.arrayContaining;
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
-import java.util.Arrays;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-
+/**
+ * Test for {@link Sanitizer}.
+ */
 public class SanitizerTest {
   
   private static Sanitizer sanitizer;

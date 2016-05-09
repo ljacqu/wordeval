@@ -12,7 +12,9 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
-@SuppressWarnings("javadoc")
+/**
+ * Test for {@link LanguageService}.
+ */
 public class LanguageServiceTest {
 
   @Test

@@ -30,7 +30,9 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-@SuppressWarnings("javadoc")
+/**
+ * Test for {@link PartWordExport}.
+ */
 public class PartWordExportTest {
 
   private Multimap<String, String> results;

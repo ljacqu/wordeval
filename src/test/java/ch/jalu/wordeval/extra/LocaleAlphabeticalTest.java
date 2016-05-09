@@ -1,17 +1,18 @@
 package ch.jalu.wordeval.extra;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
+import org.junit.Test;
+
 import java.text.Collator;
 import java.util.Locale;
-import org.junit.Test;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 /**
  * Tests that show the general behavior of the collator coupled with a specific
  * locale.
  */
 @LightWeight
-@SuppressWarnings("javadoc")
 public class LocaleAlphabeticalTest {
 
   /**

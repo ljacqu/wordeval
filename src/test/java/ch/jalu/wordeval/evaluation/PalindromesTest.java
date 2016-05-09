@@ -10,7 +10,9 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
-@SuppressWarnings("javadoc")
+/**
+ * Test for {@link Palindromes}.
+ */
 public class PalindromesTest {
 
   private Palindromes evaluator;

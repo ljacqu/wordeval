@@ -15,7 +15,6 @@ import static org.mockito.Mockito.when;
 /**
  * Test for {@link AllVowels}.
  */
-@SuppressWarnings("javadoc")
 public class AllVowelsTest {
 
   @Test

@@ -24,7 +24,9 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
-@SuppressWarnings("javadoc")
+/**
+ * Test for {@link Dictionary}.
+ */
 public class DictionaryTest {
 
   private static Language zxxLanguage;
@@ -103,7 +105,7 @@ public class DictionaryTest {
     }
   }
   
-  public static class TestPostEvaluator extends PostEvaluator<Boolean, LowercaseEvaluator> {
+  private static class TestPostEvaluator extends PostEvaluator<Boolean, LowercaseEvaluator> {
     @Override
     public ExportObject toExportObject(String id, ExportParams params) {
       return null;

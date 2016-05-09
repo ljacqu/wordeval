@@ -10,7 +10,9 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
-@SuppressWarnings("javadoc")
+/**
+ * Test for {@link LongWords}.
+ */
 public class LongWordsTest {
 
   private LongWords longWords;

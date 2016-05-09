@@ -14,7 +14,9 @@ import static org.hamcrest.Matchers.emptyArray;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-@SuppressWarnings("javadoc")
+/**
+ * Test for {@link Language}.
+ */
 public class LanguageTest {
 
   @Test

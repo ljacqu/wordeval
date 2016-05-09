@@ -1,13 +1,15 @@
 package ch.jalu.wordeval.dictionary;
 
+import org.junit.Test;
+
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
-import org.junit.Test;
-
-@SuppressWarnings("javadoc")
+/**
+ * Test for {@link DictionarySettings}.
+ */
 public class DictionarySettingsTest {
 
   @Test(expected = IllegalArgumentException.class)

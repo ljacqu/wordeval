@@ -19,7 +19,9 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-@SuppressWarnings("javadoc")
+/**
+ * Test for {@link PartWordReducer}.
+ */
 public class PartWordReducerTest {
   
   private Multimap<String, String> results;

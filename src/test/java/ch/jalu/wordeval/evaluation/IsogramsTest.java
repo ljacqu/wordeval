@@ -5,11 +5,13 @@ import com.google.common.collect.Multimap;
 import org.junit.Before;
 import org.junit.Test;
 
-import static ch.jalu.wordeval.TestUtil.processWords;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Test for {@link Isograms}.
+ */
 public class IsogramsTest {
 
   private Isograms evaluator;

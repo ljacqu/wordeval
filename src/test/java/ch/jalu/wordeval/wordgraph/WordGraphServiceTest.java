@@ -1,5 +1,23 @@
 package ch.jalu.wordeval.wordgraph;
 
+import ch.jalu.wordeval.DataUtils;
+import ch.jalu.wordeval.TestUtil;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleGraph;
+import org.jgrapht.graph.builder.UndirectedGraphBuilder;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
+
+import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
@@ -15,25 +33,9 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.SimpleGraph;
-import org.jgrapht.graph.builder.UndirectedGraphBuilder;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-
-import ch.jalu.wordeval.DataUtils;
-import ch.jalu.wordeval.TestUtil;
-
+/**
+ * Test for {@link WordGraphService}.
+ */
 public class WordGraphServiceTest {
   
   private static SimpleGraph<String, DefaultWeightedEdge> graph;

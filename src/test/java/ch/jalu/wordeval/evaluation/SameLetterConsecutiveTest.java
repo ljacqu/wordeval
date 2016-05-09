@@ -10,6 +10,9 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Test for {@link SameLetterConsecutive}.
+ */
 public class SameLetterConsecutiveTest {
 
   private SameLetterConsecutive evaluator;

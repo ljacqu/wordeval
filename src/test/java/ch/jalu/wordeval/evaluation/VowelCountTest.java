@@ -7,13 +7,14 @@ import com.google.common.collect.Multimap;
 import org.junit.Before;
 import org.junit.Test;
 
-import static ch.jalu.wordeval.TestUtil.newLanguage;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
-@SuppressWarnings("javadoc")
+/**
+ * Test for {@link VowelCount}.
+ */
 public class VowelCountTest {
 
   private VowelCount vowelEvaluator;

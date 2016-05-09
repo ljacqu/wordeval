@@ -11,7 +11,9 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 
-@SuppressWarnings("javadoc")
+/**
+ * Test for {@link DiacriticHomonyms}.
+ */
 public class DiacriticHomonymsTest {
   
   private static Language language = newLanguage("zxx");

@@ -20,7 +20,6 @@ import static org.junit.Assert.assertThat;
  * Tests common functionality of the evaluators.
  */
 @Log4j2
-@SuppressWarnings("JavaDoc")
 public class EvaluatorGlobalTest {
 
   private static List<Evaluator<?>> evaluators;
