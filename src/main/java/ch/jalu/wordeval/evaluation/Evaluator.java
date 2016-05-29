@@ -29,7 +29,7 @@ public abstract class Evaluator<K extends Comparable> {
   /**
    * Converts the evaluator's results to an export object.
    *
-   * @return the converted ExportObject instance
+   * @return the converted ExportObject instance, or null if it should not be exported
    */
   public ExportObject toExportObject() {
     return toExportObject(this.getClass().getSimpleName(), null);

@@ -63,12 +63,8 @@ public class SingleVowel extends PostEvaluator<String, VowelCount> {
 
   @Override public Class<VowelCount> getType() { return VowelCount.class; }
 
-  // FIXME: Implemtnation from WOrdStatEvaluator
   @Override
   protected ExportObject toExportObject(String identifier, ExportParams params) {
-    if (params == null) {
-      return PartWordExport.create(identifier, getResults());
-    }
     return PartWordExport.create(identifier, getResults(), params, new PartWordReducer.ByLength());
   }
 

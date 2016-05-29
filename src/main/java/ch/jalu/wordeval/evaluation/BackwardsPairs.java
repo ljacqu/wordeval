@@ -42,7 +42,6 @@ public class BackwardsPairs extends PostEvaluator<String, WordCollector> {
         .build());
   }
 
-  // FIXME: Implementation from PartWordEvaluator
   @Override
   protected ExportObject toExportObject(String identifier, ExportParams params) {
     if (params == null) {

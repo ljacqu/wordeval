@@ -29,12 +29,8 @@ public class FullPalindromes extends PostEvaluator<Integer, Palindromes> {
 
   @Override public Class<Palindromes> getType() { return Palindromes.class; }
 
-  // FIXME: IMplemetation from WordStatEvaluator
   @Override
   protected ExportObject toExportObject(String identifier, ExportParams params) {
-    if (params == null) {
-      return WordStatExport.create(identifier, getNavigableResults());
-    }
     return WordStatExport.create(identifier, getNavigableResults(), params);
   }
 }

@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -65,6 +66,7 @@ public final class PartWordExport extends ExportObject {
    */
   public static PartWordExport create(String identifier, Multimap<String, String> results,
                                       ExportParams params, PartWordReducer reducer) {
+    params = Optional.ofNullable(params).orElseGet(ExportParams::defaultValues);
     NavigableMap<Double, Multimap<String, String>> orderedResults =
         ExportObjectService.applyGeneralMinimum(order(results, reducer), params.generalMinimum);
     NavigableMap<Double, Multimap<String, String>> topEntries =

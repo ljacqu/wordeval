@@ -1,12 +1,12 @@
 package ch.jalu.wordeval.evaluation.export;
 
+import ch.jalu.wordeval.evaluation.WordStatEvaluator;
+import lombok.Getter;
+
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Optional;
-
-import ch.jalu.wordeval.evaluation.WordStatEvaluator;
-import lombok.Getter;
 
 /**
  * ExportObject class for evaluators of type {@link WordStatEvaluator}.
@@ -57,8 +57,9 @@ public class WordStatExport extends ExportObject {
    * @param params The export parameters
    * @return A WordStatExport instance with the transformed data
    */
-  public static WordStatExport create(String identifier,
-      NavigableMap<Integer, List<String>> results, ExportParams params) {
+  public static WordStatExport create(String identifier, NavigableMap<Integer, List<String>> results,
+                                      ExportParams params) {
+    params = Optional.ofNullable(params).orElseGet(ExportParams::defaultValues);
     NavigableMap<Integer, List<String>> map =
         ExportObjectService.applyGeneralMinimum(results, toIntType(params.generalMinimum));
     NavigableMap<Integer, List<String>> topEntries = ExportObjectService.isolateTopEntries(map, params);

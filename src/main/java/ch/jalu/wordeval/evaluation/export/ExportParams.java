@@ -57,4 +57,13 @@ public class ExportParams {
     this.numberOfDetailedAggregation = firstNonNull(numberOfDetailedAggregation, Optional.of(3));
   }
 
+  /**
+   * Returns a new ExportParams object with default values.
+   *
+   * @return generated export params
+   */
+  public static ExportParams defaultValues() {
+    return ExportParams.builder().build();
+  }
+
 }
