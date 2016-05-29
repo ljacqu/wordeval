@@ -1,9 +1,9 @@
 package ch.jalu.wordeval.evaluation.export;
 
+import lombok.AllArgsConstructor;
+
 import java.util.Collection;
 import java.util.NavigableMap;
-
-import lombok.AllArgsConstructor;
 
 /**
  * Types encapsulating the elements the JSON export result may consist of.

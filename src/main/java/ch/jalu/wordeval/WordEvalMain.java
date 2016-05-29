@@ -1,26 +1,26 @@
 package ch.jalu.wordeval;
 
+import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.evaluation.AllVowels;
 import ch.jalu.wordeval.evaluation.AlphabeticalOrder;
+import ch.jalu.wordeval.evaluation.AlphabeticalSequence;
 import ch.jalu.wordeval.evaluation.Anagrams;
 import ch.jalu.wordeval.evaluation.BackwardsPairs;
 import ch.jalu.wordeval.evaluation.ConsecutiveLetterPairs;
+import ch.jalu.wordeval.evaluation.ConsecutiveVowelCount;
 import ch.jalu.wordeval.evaluation.DiacriticHomonyms;
 import ch.jalu.wordeval.evaluation.Evaluator;
 import ch.jalu.wordeval.evaluation.FullPalindromes;
 import ch.jalu.wordeval.evaluation.Isograms;
-import ch.jalu.wordeval.evaluation.SameLetterConsecutive;
-import ch.jalu.wordeval.evaluation.SingleVowel;
-import ch.jalu.wordeval.evaluation.export.ExportService;
-import ch.jalu.wordeval.language.LetterType;
-import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.evaluation.AlphabeticalSequence;
-import ch.jalu.wordeval.evaluation.ConsecutiveVowelCount;
 import ch.jalu.wordeval.evaluation.LongWords;
 import ch.jalu.wordeval.evaluation.Palindromes;
+import ch.jalu.wordeval.evaluation.SameLetterConsecutive;
+import ch.jalu.wordeval.evaluation.SingleVowel;
 import ch.jalu.wordeval.evaluation.VowelCount;
 import ch.jalu.wordeval.evaluation.WordCollector;
+import ch.jalu.wordeval.evaluation.export.ExportService;
 import ch.jalu.wordeval.language.Language;
+import ch.jalu.wordeval.language.LetterType;
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.log4j.Log4j2;
 

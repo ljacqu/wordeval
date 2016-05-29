@@ -1,8 +1,8 @@
 package ch.jalu.wordeval.evaluation;
 
 import ch.jalu.wordeval.dictionary.WordForm;
-import ch.jalu.wordeval.evaluation.export.ExportParams;
 import ch.jalu.wordeval.evaluation.export.ExportObject;
+import ch.jalu.wordeval.evaluation.export.ExportParams;
 
 /**
  * Finds words with multiple consecutive letter groups following each other,

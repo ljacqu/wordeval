@@ -1,9 +1,11 @@
 package ch.jalu.wordeval.extra;
 
-import static org.junit.Assert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import java.util.Locale;
 import org.junit.Test;
+
+import java.util.Locale;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 /**
  * Tests the general behavior of different Java locales.

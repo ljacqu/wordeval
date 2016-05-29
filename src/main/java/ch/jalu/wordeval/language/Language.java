@@ -1,10 +1,10 @@
 package ch.jalu.wordeval.language;
 
+import lombok.Getter;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
-import lombok.Getter;
 
 /**
  * Class with language-specific details, independent of any dictionary format.

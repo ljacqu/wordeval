@@ -1,8 +1,8 @@
 package ch.jalu.wordeval.evaluation;
 
-import ch.jalu.wordeval.evaluation.export.ExportParams;
 import ch.jalu.wordeval.TestUtil;
 import ch.jalu.wordeval.evaluation.export.ExportObject;
+import ch.jalu.wordeval.evaluation.export.ExportParams;
 import com.google.common.collect.Multimap;
 import org.junit.Test;
 

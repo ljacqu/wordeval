@@ -1,13 +1,13 @@
 package ch.jalu.wordeval.evaluation;
 
-import java.util.Arrays;
-import java.util.Optional;
-
-import ch.jalu.wordeval.evaluation.export.ExportParams;
 import ch.jalu.wordeval.dictionary.WordForm;
 import ch.jalu.wordeval.evaluation.export.ExportObject;
+import ch.jalu.wordeval.evaluation.export.ExportParams;
 import ch.jalu.wordeval.evaluation.export.PartWordExport;
 import ch.jalu.wordeval.evaluation.export.PartWordReducer;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Collects anagram groups (e.g. "acre", "care", "race").

@@ -1,11 +1,11 @@
 package ch.jalu.wordeval.evaluation;
 
-import java.util.Optional;
-
 import ch.jalu.wordeval.dictionary.WordForm;
+import ch.jalu.wordeval.evaluation.export.ExportObject;
 import ch.jalu.wordeval.evaluation.export.ExportParams;
 import org.apache.commons.lang3.StringUtils;
-import ch.jalu.wordeval.evaluation.export.ExportObject;
+
+import java.util.Optional;
 
 /**
  * Finds words wherein the same letter appears multiple times consecutively,

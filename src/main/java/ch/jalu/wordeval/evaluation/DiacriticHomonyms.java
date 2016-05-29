@@ -1,14 +1,14 @@
 package ch.jalu.wordeval.evaluation;
 
-import java.util.Locale;
-import java.util.Optional;
-
 import ch.jalu.wordeval.dictionary.WordForm;
-import ch.jalu.wordeval.evaluation.export.ExportParams;
 import ch.jalu.wordeval.evaluation.export.ExportObject;
+import ch.jalu.wordeval.evaluation.export.ExportParams;
 import ch.jalu.wordeval.evaluation.export.PartWordExport;
 import ch.jalu.wordeval.evaluation.export.PartWordReducer;
 import lombok.AllArgsConstructor;
+
+import java.util.Locale;
+import java.util.Optional;
 
 /**
  * Groups words which only differ in diacritics which are not considered

@@ -1,8 +1,8 @@
 package ch.jalu.wordeval.dictionary;
 
-import static org.apache.commons.lang3.StringUtils.containsAny;
-
 import org.apache.commons.lang3.StringUtils;
+
+import static org.apache.commons.lang3.StringUtils.containsAny;
 
 /**
  * Custom sanitizer implementing specific rules for the Hungarian dictionary.

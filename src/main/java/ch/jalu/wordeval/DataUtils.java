@@ -1,17 +1,16 @@
 package ch.jalu.wordeval;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 /**
  * Wrapper for interaction with the file system and JSON operations.

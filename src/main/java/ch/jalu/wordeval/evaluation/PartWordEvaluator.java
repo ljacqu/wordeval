@@ -1,9 +1,9 @@
 package ch.jalu.wordeval.evaluation;
 
+import ch.jalu.wordeval.evaluation.export.ExportObject;
 import ch.jalu.wordeval.evaluation.export.ExportParams;
 import ch.jalu.wordeval.evaluation.export.PartWordExport;
 import ch.jalu.wordeval.evaluation.export.PartWordReducer;
-import ch.jalu.wordeval.evaluation.export.ExportObject;
 
 /**
  * Base class for part word evaluators. These evaluators save a part of the word

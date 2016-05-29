@@ -1,19 +1,18 @@
 package ch.jalu.wordeval.extra;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-
+import ch.jalu.wordeval.AppData;
+import ch.jalu.wordeval.DataUtils;
 import ch.jalu.wordeval.TestUtil;
 import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.DictionaryService;
 import ch.jalu.wordeval.dictionary.Sanitizer;
+import lombok.extern.log4j.Log4j2;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import ch.jalu.wordeval.AppData;
-import ch.jalu.wordeval.DataUtils;
-import lombok.extern.log4j.Log4j2;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Prints the words of a dictionary which were skipped because they were

@@ -1,7 +1,7 @@
 package ch.jalu.wordeval.evaluation;
 
-import ch.jalu.wordeval.evaluation.export.ExportParams;
 import ch.jalu.wordeval.evaluation.export.ExportObject;
+import ch.jalu.wordeval.evaluation.export.ExportParams;
 import ch.jalu.wordeval.evaluation.export.WordStatExport;
 
 /**

@@ -1,9 +1,9 @@
 package ch.jalu.wordeval.evaluation;
 
+import ch.jalu.wordeval.dictionary.WordForm;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import ch.jalu.wordeval.dictionary.WordForm;
 
 /**
  * Finds isograms (words with all different letters).

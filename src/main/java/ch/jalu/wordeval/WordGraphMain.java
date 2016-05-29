@@ -1,5 +1,10 @@
 package ch.jalu.wordeval;
 
+import ch.jalu.wordeval.wordgraph.GraphBuilder;
+import ch.jalu.wordeval.wordgraph.WordGraphService;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleGraph;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -7,11 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
-
-import ch.jalu.wordeval.wordgraph.GraphBuilder;
-import ch.jalu.wordeval.wordgraph.WordGraphService;
-import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.SimpleGraph;
 
 /**
  * Entry point for the word graph feature of <i>wordeval</i>.

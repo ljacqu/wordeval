@@ -1,17 +1,16 @@
 package ch.jalu.wordeval.extra;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-
 import ch.jalu.wordeval.AppData;
 import ch.jalu.wordeval.TestUtil;
 import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.evaluation.Evaluator;
 import ch.jalu.wordeval.evaluation.PartWordEvaluator;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Utility test to verify if a certain word appears in a given dictionary.

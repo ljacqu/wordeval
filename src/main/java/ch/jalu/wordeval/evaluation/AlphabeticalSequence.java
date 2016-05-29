@@ -1,10 +1,10 @@
 package ch.jalu.wordeval.evaluation;
 
-import java.util.Optional;
-
 import ch.jalu.wordeval.dictionary.WordForm;
 import ch.jalu.wordeval.evaluation.export.ExportObject;
 import ch.jalu.wordeval.evaluation.export.ExportParams;
+
+import java.util.Optional;
 
 /**
  * Filters that checks if there is a group of letters in a word that is an

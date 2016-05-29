@@ -1,7 +1,7 @@
 package ch.jalu.wordeval.evaluation.export;
 
-import ch.jalu.wordeval.evaluation.Evaluator;
 import ch.jalu.wordeval.DataUtils;
+import ch.jalu.wordeval.evaluation.Evaluator;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;

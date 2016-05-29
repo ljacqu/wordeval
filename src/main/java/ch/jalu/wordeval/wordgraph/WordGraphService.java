@@ -1,5 +1,12 @@
 package ch.jalu.wordeval.wordgraph;
 
+import ch.jalu.wordeval.DataUtils;
+import com.google.gson.reflect.TypeToken;
+import org.jgrapht.UndirectedGraph;
+import org.jgrapht.alg.DijkstraShortestPath;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleGraph;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,15 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.jgrapht.UndirectedGraph;
-import org.jgrapht.alg.DijkstraShortestPath;
-import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.SimpleGraph;
-
-import com.google.gson.reflect.TypeToken;
-
-import ch.jalu.wordeval.DataUtils;
 
 /**
  * Service for word graphs.
@@ -102,7 +100,7 @@ public final class WordGraphService {
     LinkedHashSet<V> vertices = new LinkedHashSet<>();
     vertices.add(source);
     V lastVertex = source;
-    if (pathHasDisabledEdge(graph, edges)) {
+    if (edges == null || pathHasDisabledEdge(graph, edges)) {
       return new LinkedHashSet<>();
     }
     for (E edge : edges) {

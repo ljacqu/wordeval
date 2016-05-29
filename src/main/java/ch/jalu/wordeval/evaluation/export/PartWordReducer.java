@@ -1,9 +1,9 @@
 package ch.jalu.wordeval.evaluation.export;
 
-import java.util.Collection;
-
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+
+import java.util.Collection;
 
 /**
  * Defines how to compute the "relevance" of a PartWordEvaluator's results.

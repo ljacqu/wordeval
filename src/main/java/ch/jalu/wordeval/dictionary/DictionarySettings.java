@@ -1,10 +1,10 @@
 package ch.jalu.wordeval.dictionary;
 
+import lombok.Getter;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import lombok.Getter;
 
 /**
  * Class containing dictionary-specific parameters, based on which a sanitizer
