@@ -37,7 +37,10 @@ public abstract class ExportObject {
 
   /**
    * Creates a new ExportObject instance.
+   *
    * @param identifier The identifier of the new object
+   * @param topEntries collection of top entries
+   * @param aggregatedEntries collection of aggregated entries
    */
   ExportObject(String identifier, NavigableMap<?, ?> topEntries, NavigableMap<?, ?> aggregatedEntries) {
     this.identifier = identifier;

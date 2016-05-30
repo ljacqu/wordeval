@@ -84,14 +84,14 @@ public class PartWordExportTest {
     Map<Double, NavigableMap<String, TreeElement>> topEntries = export.getTopEntries();
     assertThat(topEntries, aMapWithSize(3));
     assertThat(topEntries.get(9.0), aMapWithSize(3));
-    assertThat(ExportTestHelper.getWordCollValue(topEntries.get(9.0).get("taalplaat")), 
+    assertThat(getWordCollValue(topEntries.get(9.0).get("taalplaat")),
         containsInAnyOrder("metaalplaat", "staalplaat"));
-    assertThat(ExportTestHelper.getWordCollValue(topEntries.get(9.0).get("ittesetti")), contains("hittesetting"));
-    assertThat(ExportTestHelper.getWordCollValue(topEntries.get(9.0).get("sigologis")), contains("psigologisme"));
+    assertThat(getWordCollValue(topEntries.get(9.0).get("ittesetti")), contains("hittesetting"));
+    assertThat(getWordCollValue(topEntries.get(9.0).get("sigologis")), contains("psigologisme"));
     assertThat(topEntries.get(8.0).keySet(), containsInAnyOrder("aarddraa", "erettere", "kaarraak"));
-    assertThat(ExportTestHelper.getWordCollValue(topEntries.get(8.0).get("kaarraak")), contains("deurmekaarraak"));
+    assertThat(getWordCollValue(topEntries.get(8.0).get("kaarraak")), contains("deurmekaarraak"));
     assertThat(topEntries.get(7.0), aMapWithSize(1));
-    assertThat(ExportTestHelper.getWordCollValue(topEntries.get(7.0).get("esifise")),
+    assertThat(getWordCollValue(topEntries.get(7.0).get("esifise")),
         containsInAnyOrder("spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer"));
 
     Map<Double, TreeElement> aggregatedEntries = export.getAggregatedEntries();
@@ -122,12 +122,12 @@ public class PartWordExportTest {
     Map<Double, NavigableMap<String, TreeElement>> topEntries = export.getTopEntries();
     assertThat(topEntries, aMapWithSize(4));
     assertThat(topEntries.get(9.0), aMapWithSize(3));
-    assertThat(ExportTestHelper.getWordCollValue(topEntries.get(9.0).get("taalplaat")), 
+    assertThat(getWordCollValue(topEntries.get(9.0).get("taalplaat")),
         containsInAnyOrder("metaalplaat", "staalplaat"));
-    assertThat(ExportTestHelper.getWordCollValue(topEntries.get(9.0).get("ittesetti")), contains("hittesetting"));
-    assertThat(ExportTestHelper.getWordCollValue(topEntries.get(9.0).get("sigologis")), contains("psigologisme"));
+    assertThat(getWordCollValue(topEntries.get(9.0).get("ittesetti")), contains("hittesetting"));
+    assertThat(getWordCollValue(topEntries.get(9.0).get("sigologis")), contains("psigologisme"));
     assertThat(topEntries.get(8.0).keySet(), containsInAnyOrder("aarddraa", "erettere", "kaarraak"));
-    assertThat(ExportTestHelper.getWordCollValue(topEntries.get(8.0).get("erettere")), contains("veretterende"));
+    assertThat(getWordCollValue(topEntries.get(8.0).get("erettere")), contains("veretterende"));
     
     assertThat(topEntries.get(7.0), aMapWithSize(1));
     String[] allowedItems = { "spesifisering", "gespesifiseer", "gespesifiseerd", "spesifiseer" };
@@ -253,7 +253,7 @@ public class PartWordExportTest {
 
   @Test
   public void shouldHandleEmptyResult() {
-    PartWordExport export = PartWordExport.create("empty test", HashMultimap.create());
+    PartWordExport export = PartWordExport.create("empty test", HashMultimap.create(), null, null);
 
     assertEquals(export.getIdentifier(), "empty test");
     assertThat(export.getTopEntries(), anEmptyMap());

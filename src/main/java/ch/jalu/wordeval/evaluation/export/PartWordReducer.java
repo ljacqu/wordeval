@@ -45,8 +45,8 @@ public abstract class PartWordReducer {
   @NoArgsConstructor
   @AllArgsConstructor
   public static class BySizeAndLength extends PartWordReducer {
-    double sizeWeight = 1.0;
-    double lengthWeight = 1.0;
+    private double sizeWeight = 1.0;
+    private double lengthWeight = 1.0;
 
     @Override
     public double computeRelevance(String key, Collection<String> words) {

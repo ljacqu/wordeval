@@ -95,12 +95,18 @@ public class EvaluatorInvokerTest {
 
   /** Sample dictionary evaluator 1. */
   private static final class DictEvaluator1 extends PartWordEvaluator {
-    @Override public void processWord(String a, String b) { }
+    @Override
+    public void processWord(String a, String b) {
+      // noop
+    }
   }
 
   /** Sample: dictionary evaluator 2. */
   private static class DictEvaluator2 extends WordStatEvaluator {
-    @Override public void processWord(String a, String b) { }
+    @Override
+    public void processWord(String a, String b) {
+      // noop
+    }
   }
 
   /** Sample: dictionary evaluator 3, child of dictEval 2. */

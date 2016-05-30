@@ -44,9 +44,6 @@ public class BackwardsPairs extends PostEvaluator<String, WordCollector> {
 
   @Override
   protected ExportObject toExportObject(String identifier, ExportParams params) {
-    if (params == null) {
-      return PartWordExport.create(identifier, getResults());
-    }
     return PartWordExport.create(identifier, getResults(), params, new PartWordReducer.ByLength());
   }
 

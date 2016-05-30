@@ -18,6 +18,11 @@ class WordFormsBuilder {
   private final String tempReplacements;
   private final Alphabet alphabet;
 
+  /**
+   * Constructor.
+   *
+   * @param language the language
+   */
   WordFormsBuilder(Language language) {
     lettersToKeep = language.getCharsToPreserve();
     tempReplacements = initializeTempReplacements(lettersToKeep);
@@ -31,7 +36,7 @@ class WordFormsBuilder {
    * @param word the word to process
    * @return Word with all its forms
    */
-  Word computeForms(String word) {
+  public Word computeForms(String word) {
     if (word.isEmpty()) {
       throw new IllegalStateException("The word may not be empty");
     }

@@ -111,16 +111,16 @@ public class DictionarySettings {
    * Subtype of dictionary settings for dictionaries that have a custom
    * sanitizer. The custom sanitizer must have a no-args constructor.
    */
-  static class CustomSettings extends DictionarySettings {
+  private static class CustomSettings extends DictionarySettings {
     private final Class<? extends Sanitizer> sanitizerClass;
 
-    CustomSettings(String identifier, Class<? extends Sanitizer> sanitizerClass) {
+    private CustomSettings(String identifier, Class<? extends Sanitizer> sanitizerClass) {
       super(identifier);
       this.sanitizerClass = sanitizerClass;
     }
 
     @Override
-    Sanitizer buildSanitizer() {
+    public Sanitizer buildSanitizer() {
       try {
         return sanitizerClass.newInstance();
       } catch (IllegalAccessException | InstantiationException e) {

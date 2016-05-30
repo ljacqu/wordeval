@@ -43,7 +43,7 @@ import java.util.TreeMap;
  */
 public class DamerauLevenshtein {
   // sentinel value for the end of contents in an "infinite" array
-  final static Null endMarker = new Null();
+  private final static Null endMarker = new Null();
 
   /**
    * Computes the true Damerau–Levenshtein edit distance

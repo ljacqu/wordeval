@@ -126,7 +126,7 @@ public class WordStatExportTest {
 
   @Test
   public void shouldExportWithDefaultParams() {
-    WordStatExport export = WordStatExport.create("default test", results);
+    WordStatExport export = WordStatExport.create("default test", results, null);
 
     assertEquals(export.getIdentifier(), "default test");
     assertThat(export.getAggregatedEntries(), notNullValue());
@@ -135,7 +135,7 @@ public class WordStatExportTest {
 
   @Test
   public void shouldHandleEmptyResult() {
-    WordStatExport export = WordStatExport.create("empty", new TreeMap<>());
+    WordStatExport export = WordStatExport.create("empty", new TreeMap<>(), null);
 
     assertEquals(export.getIdentifier(), "empty");
     assertThat(export.getAggregatedEntries(), anEmptyMap());

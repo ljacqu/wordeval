@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
-import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -46,17 +45,6 @@ public final class PartWordExport extends ExportObject {
   }
 
   /**
-   * Generates a new PartWordExport object based on an evaluator's results and
-   * default export settings.
-   * @param identifier the identifier of the export object to create
-   * @param map the evaluator result
-   * @return the generated PartWordExport object
-   */
-  public static PartWordExport create(String identifier, Multimap<String, String> map) {
-    return create(identifier, map, ExportParams.builder().build(), new PartWordReducer.ByLength());
-  }
-
-  /**
    * Generates a new PartWordExport object based on an evaluator's results and the given settings.
    * @param identifier the identifier of the export object to create
    * @param results the evaluator results
@@ -66,21 +54,22 @@ public final class PartWordExport extends ExportObject {
    */
   public static PartWordExport create(String identifier, Multimap<String, String> results,
                                       ExportParams params, PartWordReducer reducer) {
-    params = Optional.ofNullable(params).orElseGet(ExportParams::defaultValues);
+    ExportParams exportParams = params == null ? ExportParams.defaultValues() : params;
+    PartWordReducer wordReducer = reducer == null ? new PartWordReducer.ByLength() : reducer;
     NavigableMap<Double, Multimap<String, String>> orderedResults =
-        ExportObjectService.applyGeneralMinimum(order(results, reducer), params.generalMinimum);
+        ExportObjectService.applyGeneralMinimum(order(results, wordReducer), exportParams.generalMinimum);
     NavigableMap<Double, Multimap<String, String>> topEntries =
-        ExportObjectService.isolateTopEntries(orderedResults, params);
+        ExportObjectService.isolateTopEntries(orderedResults, exportParams);
 
     NavigableMap<Double, TreeElement> aggregatedEntries;
     if (topEntries.isEmpty()) {
-      aggregatedEntries = aggregateEntries(orderedResults, params);
+      aggregatedEntries = aggregateEntries(orderedResults, exportParams);
     } else {
       Double key = ExportService.getSmallestKey(topEntries);
-      aggregatedEntries = aggregateEntries(orderedResults.headMap(key, false), params);
+      aggregatedEntries = aggregateEntries(orderedResults.headMap(key, false), exportParams);
     }
     
-    return new PartWordExport(identifier, trimTopEntries(topEntries, params), aggregatedEntries, params);
+    return new PartWordExport(identifier, trimTopEntries(topEntries, exportParams), aggregatedEntries, exportParams);
   }
   
   // Assign the reducer's computed relevance to the entries 

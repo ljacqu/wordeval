@@ -4,6 +4,7 @@ import ch.jalu.wordeval.AppData;
 import ch.jalu.wordeval.TestUtil;
 import ch.jalu.wordeval.evaluation.Evaluator;
 import ch.jalu.wordeval.evaluation.PartWordEvaluator;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,7 +21,6 @@ import static org.junit.Assert.fail;
  */
 @Log4j2
 public class HuSanitizerTest {
-  
   
   @BeforeClass
   public static void initData() {
@@ -57,17 +57,18 @@ public class HuSanitizerTest {
       MissingWordsEvaluator testEvaluator = (MissingWordsEvaluator) evaluator;
       List<String> missingWords = testEvaluator.getMissingWords();
       if (!missingWords.isEmpty()) {
-        fail("Failed: Evaluator " + testEvaluator.intention
+        fail("Failed: Evaluator " + testEvaluator.getIntention()
             + ". Missing words: " + missingWords);
       }
     }
   }
 
+  @Getter
   private static class MissingWordsEvaluator extends PartWordEvaluator {
 
     private List<String> missingWords;
     // It should...
-    final String intention;
+    private final String intention;
 
     public MissingWordsEvaluator(String intention, String[] words) {
       this.intention = intention;
@@ -79,10 +80,6 @@ public class HuSanitizerTest {
       if (missingWords.contains(word)) {
         missingWords.remove(word);
       }
-    }
-
-    public List<String> getMissingWords() {
-      return missingWords;
     }
   }
 

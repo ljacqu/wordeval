@@ -16,6 +16,7 @@ public class WordStatExport extends ExportObject {
 
   /**
    * Creates a new WordStatExport object.
+   *
    * @param identifier the identifier of the export object
    * @param topEntries the collection of top entries
    * @param aggregatedEntries the collection of aggregated entries
@@ -41,29 +42,19 @@ public class WordStatExport extends ExportObject {
 
   /**
    * Creates a new WordStatExport object based on an evaluator's result map.
-   * @param identifier The identifier of the export object
-   * @param map The evaluator's result map to process
-   * @return A WordStatExport instance with the transformed data
-   */
-  public static WordStatExport create(String identifier,
-      NavigableMap<Integer, List<String>> map) {
-    return create(identifier, map, ExportParams.builder().build());
-  }
-
-  /**
-   * Creates a new WordStatExport object based on an evaluator's result map.
-   * @param identifier The identifier of the export object
-   * @param results The evaluator's result map to process
-   * @param params The export parameters
-   * @return A WordStatExport instance with the transformed data
+   *
+   * @param identifier the identifier of the export object
+   * @param results the evaluator's result map to process
+   * @param params the export parameters, or null for default parameters
+   * @return a WordStatExport instance with the transformed data
    */
   public static WordStatExport create(String identifier, NavigableMap<Integer, List<String>> results,
                                       ExportParams params) {
-    params = Optional.ofNullable(params).orElseGet(ExportParams::defaultValues);
+    ExportParams exportParams = params == null ? ExportParams.defaultValues() : params;
     NavigableMap<Integer, List<String>> map =
-        ExportObjectService.applyGeneralMinimum(results, toIntType(params.generalMinimum));
-    NavigableMap<Integer, List<String>> topEntries = ExportObjectService.isolateTopEntries(map, params);
-    topEntries = trimLargeTopEntries(topEntries, params);
+        ExportObjectService.applyGeneralMinimum(results, toIntType(exportParams.generalMinimum));
+    NavigableMap<Integer, List<String>> topEntries = ExportObjectService.isolateTopEntries(map, exportParams);
+    topEntries = trimLargeTopEntries(topEntries, exportParams);
 
     NavigableMap<Integer, Integer> aggregatedEntries;
     if (topEntries.isEmpty()) {
@@ -72,15 +63,16 @@ public class WordStatExport extends ExportObject {
       Integer toKey = ExportService.getSmallestKey(topEntries);
       aggregatedEntries = ExportObjectService.aggregateMap(map.headMap(toKey, false));
     }
-    return new WordStatExport(identifier, topEntries, aggregatedEntries, params.isDescending);
+    return new WordStatExport(identifier, topEntries, aggregatedEntries, exportParams.isDescending);
   }
 
   /**
    * Trims a map's entries such that none has a size that exceeds the param's
    * <code>maxTopEntrySize</code> if it is not null.
-   * @param topEntries The map to process
-   * @param params The export parameters
-   * @return Trimmed version of the map
+   *
+   * @param topEntries the map to process
+   * @param params the export parameters
+   * @return trimmed version of the map
    */
   private static <K> NavigableMap<K, List<String>> trimLargeTopEntries(
       NavigableMap<K, List<String>> topEntries, ExportParams params) {

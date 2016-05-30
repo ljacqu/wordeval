@@ -25,7 +25,7 @@ abstract class TreeElement {
    */
   @AllArgsConstructor
   private abstract static class Wrapper<T> extends TreeElement {
-    final T value;
+    private final T value;
     
     public T getTypedValue() {
       return value;
