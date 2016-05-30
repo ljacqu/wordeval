@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -53,8 +52,6 @@ public class DictionarySanitationTest {
     if (!isEmpty) {
       System.err.println(sanitationResult);
       fail("Found errors!");
-    } else {
-      assertTrue(true);
     }
   }
 
