@@ -6,6 +6,7 @@ import ch.jalu.wordeval.evaluation.export.ExportParams;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LanguageService;
 import ch.jalu.wordeval.language.LetterType;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import java.util.Optional;
 public class ConsecutiveVowelCount extends WordStatEvaluator {
 
   private List<String> lettersToConsider;
+  @Getter
   private LetterType letterType;
 
   /**

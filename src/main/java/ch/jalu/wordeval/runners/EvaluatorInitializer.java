@@ -64,7 +64,7 @@ public class EvaluatorInitializer {
         return (Class<? extends Evaluator<?>>) clazz;
       }
     } catch (ClassNotFoundException e) {
-      log.error("Could not load class '{}'", className);
+      throw new IllegalStateException("Could not load class '" + className + "'");
     }
     return null;
   }

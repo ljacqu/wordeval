@@ -10,7 +10,7 @@ import java.util.Map;
  * Class with language-specific details, independent of any dictionary format.
  */
 @Getter
-public final class Language {
+public class Language {
 
   private static Map<String, Language> languages = new HashMap<>();
   private static final int ASCII_MAX_INDEX = 127;

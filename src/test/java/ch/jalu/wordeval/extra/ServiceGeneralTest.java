@@ -46,7 +46,7 @@ public class ServiceGeneralTest {
       Files.walkFileTree(Paths.get(SOURCE_FOLDER), visitor);
       services = classes;
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new IllegalStateException(e);
     }
   }
   
@@ -90,15 +90,17 @@ public class ServiceGeneralTest {
     try {
       constr.setAccessible(true);
       constr.newInstance();
-    } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-        | InvocationTargetException e) {
-      throw new RuntimeException(e);
+    } catch (InstantiationException | IllegalAccessException
+        | IllegalArgumentException | InvocationTargetException e) {
+      throw new IllegalStateException(e);
     }
   }
   
   @AllArgsConstructor
   private static final class ServiceFileVisitor extends SimpleFileVisitor<Path> {
+
     private List<Class<?>> resultList;
+
     @Override
     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
       if (attrs.isRegularFile() && file.getFileName().toString().endsWith("Service.java")) {
@@ -109,7 +111,7 @@ public class ServiceGeneralTest {
           log.info("Found service '{}'", className);
           resultList.add(Class.forName(className));
         } catch (ClassNotFoundException e) {
-          throw new RuntimeException(e);
+          throw new IllegalStateException(e);
         }
       }
       return FileVisitResult.CONTINUE;
