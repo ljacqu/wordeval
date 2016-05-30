@@ -3,7 +3,8 @@ _wordeval_
 <a href="https://travis-ci.org/ljacqu/wordeval">![Build Status]
 (https://travis-ci.org/ljacqu/wordeval.svg?branch=master)</a> <a href="https://coveralls.io/github/ljacqu/wordeval?branch=master">![Coverage Status]
 (https://coveralls.io/repos/ljacqu/wordeval/badge.svg?branch=master&service=github)</a> [![Dependency Status]
-(https://www.versioneye.com/user/projects/572e346fa0ca350034be705b/badge.svg?style=flat)](https://www.versioneye.com/user/projects/572e346fa0ca350034be705b)
+(https://www.versioneye.com/user/projects/572e346fa0ca350034be705b/badge.svg?style=flat)](https://www.versioneye.com/user/projects/572e346fa0ca350034be705b) [![Codacy Badge]
+(https://api.codacy.com/project/badge/Grade/8b630febc46242f594970a4aba8cf0d5)](https://www.codacy.com/app/ljacqu/wordeval?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ljacqu/wordeval&amp;utm_campaign=Badge_Grade)
 <br />
 Java application that processes dictionaries of various languages to find "interesting" words based on
 various criteria. The results are exported as JSON so they can be displayed by another module (planned).
