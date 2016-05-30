@@ -19,8 +19,8 @@ public class RepeatedSegmentTest {
   @Test
   public void shouldFindMatch() {
     // given
-    // 3x est; 2x an; 2x ssi, 2x iss; 2x an, 2x na; -
-    String[] words = {"geestestoestand", "banane", "mississippi", "ananas", "something"};
+    // 3x est; 2x an; 2x ssi, 2x iss; 2x an, 2x na; -; 2x er; 2x bar
+    String[] words = {"geestestoestand", "banane", "mississippi", "ananas", "something", "derber", "barbar"};
     RepeatedSegment evaluator = new RepeatedSegment();
 
     // when
@@ -28,12 +28,14 @@ public class RepeatedSegmentTest {
 
     // then
     Map<String, Collection<String>> results = evaluator.getResults().asMap();
-    assertThat(results, aMapWithSize(5));
+    assertThat(results, aMapWithSize(7));
     assertThat(results.get("3,est"), contains("geestestoestand"));
     assertThat(results.get("2,an"), containsInAnyOrder("banane", "ananas"));
     assertThat(results.get("2,ssi"), contains("mississippi"));
     assertThat(results.get("2,iss"), contains("mississippi"));
     assertThat(results.get("2,na"), contains("ananas"));
+    assertThat(results.get("2,er"), contains("derber"));
+    assertThat(results.get("2,bar"), contains("barbar"));
   }
 
 }

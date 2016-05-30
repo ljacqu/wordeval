@@ -17,11 +17,18 @@ public class RepeatedSegment extends PartWordEvaluator {
 
   @Override
   public void processWord(String word, String rawWord) {
-    Map<String, Integer> results = new NgramCollector(word).getResults();
+    Map<String, Integer> results = new NgramGenerator(word).getResults();
     removeNgramSubsets(results);
     results.forEach((ngram, count) -> addEntry(count + "," + ngram, word));
   }
 
+  /**
+   * Removes "subset" results that are covered by larger results. For example, processing the word
+   * "geestestoestand" will yield the pairs (3, est), (3, es), (3, st). The last two are "contained"
+   * in the first and so are removed.
+   *
+   * @param results the result to trim
+   */
   private static void removeNgramSubsets(Map<String, Integer> results) {
     Set<String> subsets = new HashSet<>();
     for (Map.Entry<String, Integer> entry : results.entrySet()) {
@@ -33,9 +40,16 @@ public class RepeatedSegment extends PartWordEvaluator {
     subsets.forEach(results::remove);
   }
 
+  /**
+   * Creates all possible n-grams for the given word.
+   *
+   * @param word the word to create n-grams for
+   * @return constructed of n-grams
+   */
   private static List<String> createNgrams(String word) {
     List<String> ngrams = new ArrayList<>();
     for (int start = 0; start < word.length(); ++start) {
+      // need to adjust end if start == 0 or else we will also include the entire word
       int end = start == 0 ? word.length() - 1 : word.length();
       for ( ; end > start; --end) {
         ngrams.add(word.substring(start, end));
@@ -44,22 +58,29 @@ public class RepeatedSegment extends PartWordEvaluator {
     return ngrams;
   }
 
-  private static final class NgramCollector {
+  /**
+   * Counts all n-grams of a word.
+   */
+  private static final class NgramGenerator {
 
     private final String word;
     private final int maxNgramSize;
     private final Map<String, Integer> ngramCount;
 
-    private NgramCollector(String word) {
+    public NgramGenerator(String word) {
       this.word = word;
       this.maxNgramSize = word.length() / 2;
       this.ngramCount = new HashMap<>();
       countNgrams();
     }
 
+    /**
+     * Returns all n-grams with multiple occurrences.
+     *
+     * @return collection of n-grams occurring multiple times (ngram -> count)
+     */
     public Map<String, Integer> getResults() {
       return ngramCount.entrySet().stream()
-        .filter(entry -> entry.getValue() > 1)
         .peek(this::adjustCount)
         .filter(entry -> entry.getValue() > 1)
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -81,13 +102,22 @@ public class RepeatedSegment extends PartWordEvaluator {
       }
     }
 
+    /**
+     * Adjusts the count of an n-gram to ensure that it really occurs as many times as counted.
+     * For instance, in "Mississippi" the initial count of "issi" is 2 but they overlap, so it
+     * needs to be corrected to 1.
+     *
+     * @param entry the entry to adjust
+     */
     private void adjustCount(Map.Entry<String, Integer> entry) {
-      // int division result -> gets ceil'd automatically
-      int lengthDiff = (word.length() - word.replaceAll(entry.getKey(), "").length())
-          / entry.getKey().length();
-      if (lengthDiff != entry.getValue()) {
-        // May still not be correct...
-        entry.setValue(entry.getValue() - 1);
+      if (entry.getValue() > 1) {
+        // int division result -> gets ceil'd automatically
+        int lengthDiff = (word.length() - word.replaceAll(entry.getKey(), "").length())
+            / entry.getKey().length();
+        if (lengthDiff != entry.getValue()) {
+          // May still not be correct...
+          entry.setValue(entry.getValue() - 1);
+        }
       }
     }
 
