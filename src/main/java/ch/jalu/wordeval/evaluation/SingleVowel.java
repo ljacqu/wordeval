@@ -5,7 +5,7 @@ import ch.jalu.wordeval.evaluation.export.ExportParams;
 import ch.jalu.wordeval.evaluation.export.PartWordExport;
 import ch.jalu.wordeval.evaluation.export.PartWordReducer;
 import ch.jalu.wordeval.language.LetterType;
-import com.google.common.collect.TreeMultimap;
+import com.google.common.collect.Multimap;
 import lombok.AllArgsConstructor;
 
 import java.util.Map;
@@ -26,7 +26,7 @@ public class SingleVowel extends PostEvaluator<String, VowelCount> {
    */
   @Override
   public void evaluateWith(VowelCount counter) {
-    TreeMultimap<String, String> results = counter.getResults();
+    Multimap<String, String> results = counter.getResults();
 
     Integer min = results.keySet().stream()
       .map(String::length)

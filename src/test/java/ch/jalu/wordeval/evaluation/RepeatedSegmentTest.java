@@ -17,7 +17,7 @@ import static org.junit.Assert.assertThat;
 public class RepeatedSegmentTest {
 
   @Test
-  public void shouldFindMatch() {
+  public void shouldFindMatches() {
     // given
     // 3x est; 2x an; 2x ssi, 2x iss; 2x an, 2x na; -; 2x er; 2x bar
     String[] words = {"geestestoestand", "banane", "mississippi", "ananas", "something", "derber", "barbar"};

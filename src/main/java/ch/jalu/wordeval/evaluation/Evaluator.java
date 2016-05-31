@@ -2,6 +2,7 @@ package ch.jalu.wordeval.evaluation;
 
 import ch.jalu.wordeval.evaluation.export.ExportObject;
 import ch.jalu.wordeval.evaluation.export.ExportParams;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
 import lombok.Getter;
 
@@ -24,7 +25,7 @@ public abstract class Evaluator<K extends Comparable> {
 
   /** Collection of relevant words. */
   @Getter
-  private TreeMultimap<K, String> results = TreeMultimap.create();
+  private Multimap<K, String> results = TreeMultimap.create();
 
   /**
    * Converts the evaluator's results to an export object.
