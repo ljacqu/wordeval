@@ -55,7 +55,6 @@ public final class WordEvalMain {
     outputDiff(times, "got dictionary object");
 
     EvaluatorInitializer initializer = new EvaluatorInitializer(language);
-    initializer.buildAllEvaluators();
     List<Evaluator<?>> evaluators = initializer.getEvaluators();
     outputDiff(times, "instantiated evaluators");
 

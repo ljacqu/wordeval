@@ -3,7 +3,6 @@ package ch.jalu.wordeval.runners;
 import ch.jalu.wordeval.evaluation.Evaluator;
 import ch.jalu.wordeval.language.Language;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.File;
@@ -18,7 +17,6 @@ import java.util.Locale;
 /**
  * Service for initializing all available evaluators.
  */
-@RequiredArgsConstructor
 @Log4j2
 public class EvaluatorInitializer {
 
@@ -30,9 +28,19 @@ public class EvaluatorInitializer {
   private final List<Evaluator<?>> evaluators = new ArrayList<>();
 
   /**
+   * Constructor.
+   *
+   * @param language the language to construct evaluators for
+   */
+  public EvaluatorInitializer(Language language) {
+    this.language = language;
+    buildAllEvaluators();
+  }
+
+  /**
    * Builds a list of all available evaluators located in the {@link #EVALUATOR_FOLDER evaluators folder}.
    */
-  public void buildAllEvaluators() {
+  private void buildAllEvaluators() {
     File[] files = new File(EVALUATOR_FOLDER).listFiles();
     if (files == null || files.length == 0) {
       throw new IllegalStateException("Could not read folder '" + EVALUATOR_FOLDER + "'");

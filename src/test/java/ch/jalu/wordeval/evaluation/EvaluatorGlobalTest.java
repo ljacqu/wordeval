@@ -2,12 +2,11 @@ package ch.jalu.wordeval.evaluation;
 
 import ch.jalu.wordeval.evaluation.export.ExportObject;
 import ch.jalu.wordeval.language.Language;
-import ch.jalu.wordeval.language.LetterType;
+import ch.jalu.wordeval.runners.EvaluatorInitializer;
 import lombok.extern.log4j.Log4j2;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static ch.jalu.wordeval.TestUtil.newLanguage;
@@ -27,23 +26,10 @@ public class EvaluatorGlobalTest {
   @BeforeClass
   public static void initializeEvaluators() {
     Language lang = newLanguage("zxx");
-    evaluators = Arrays.asList(
-        new AllVowels(LetterType.VOWELS),
-        new AlphabeticalOrder(),
-        new AlphabeticalSequence(),
-        new Anagrams(),
-        new BackwardsPairs(),
-        new ConsecutiveLetterPairs(),
-        new ConsecutiveVowelCount(LetterType.VOWELS, lang),
-        new DiacriticHomonyms(lang.getLocale()),
-        new FullPalindromes(),
-        new Isograms(),
-        new LongWords(),
-        new Palindromes(),
-        new SameLetterConsecutive(),
-        new SingleVowel(LetterType.VOWELS),
-        new VowelCount(LetterType.VOWELS, lang),
-        new WordCollector());
+    evaluators = new EvaluatorInitializer(lang).getEvaluators();
+    if (evaluators.isEmpty()) {
+      throw new IllegalStateException("Could not instantiate evaluators");
+    }
   }
   
   @Test
@@ -65,6 +51,14 @@ public class EvaluatorGlobalTest {
         assertThat(exportObj.getAggregatedEntries(), anEmptyMap());
       }      
     }
+  }
+
+  @Test
+  public void shouldReturnBaseClassIfPostEvaluator() {
+    evaluators.stream()
+        .filter(e -> e instanceof PostEvaluator)
+        .map(PostEvaluator.class::cast)
+        .forEach(postEvaluator -> assertThat(postEvaluator.getType(), not(nullValue())));
   }
 
 }

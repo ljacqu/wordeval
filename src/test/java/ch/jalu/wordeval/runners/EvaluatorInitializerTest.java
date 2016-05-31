@@ -37,10 +37,9 @@ public class EvaluatorInitializerTest {
     given(language.getAlphabet()).willReturn(Alphabet.LATIN);
     given(language.getAdditionalVowels()).willReturn(EMPTY_STRING_ARRAY);
     given(language.getAdditionalConsonants()).willReturn(EMPTY_STRING_ARRAY);
-    EvaluatorInitializer initializer = new EvaluatorInitializer(language);
 
     // when
-    initializer.buildAllEvaluators();
+    EvaluatorInitializer initializer = new EvaluatorInitializer(language);
 
     // then
     List<Evaluator<?>> evaluators = initializer.getEvaluators();
