@@ -10,7 +10,6 @@ import static org.junit.Assert.assertThat;
 /**
  * Tests the general behavior of different Java locales.
  */
-@LightWeight
 public class LocaleTest {
 
   @Test
@@ -40,8 +39,7 @@ public class LocaleTest {
 
     assertThat(huUpperCase, equalTo("SZÓÖSSZETÉTELEKBEN"));
     assertThat(ptUpperCase, equalTo("POPULAÇÃO"));
-    assertThat(ltUpperCase,
-        equalTo("SOVIETMEČIU MŪŠOS TYRELIO PELKĖ BUVO NUMATYTA DURPIŲ"));
+    assertThat(ltUpperCase, equalTo("SOVIETMEČIU MŪŠOS TYRELIO PELKĖ BUVO NUMATYTA DURPIŲ"));
   }
 
   @Test

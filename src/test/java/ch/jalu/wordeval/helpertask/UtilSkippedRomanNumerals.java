@@ -1,4 +1,4 @@
-package ch.jalu.wordeval.extra;
+package ch.jalu.wordeval.helpertask;
 
 import ch.jalu.wordeval.AppData;
 import ch.jalu.wordeval.DataUtils;
@@ -7,35 +7,38 @@ import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.DictionaryService;
 import ch.jalu.wordeval.dictionary.Sanitizer;
 import lombok.extern.log4j.Log4j2;
-import org.junit.Ignore;
-import org.junit.Test;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Prints the words of a dictionary which were skipped because they were
  * recognized as a Roman numeral.
  */
-@Ignore
 @Log4j2
 public class UtilSkippedRomanNumerals {
-  
-  private static final String DICTIONARY = "en-us";
   
   static {
     AppData.init();
   }
-  
-  @Test
-  public void findRomanNumeralSkips() {
-    Dictionary dict = Dictionary.getDictionary(DICTIONARY);
+
+  public static void main(String... args) {
+    Scanner sc = new Scanner(System.in);
+    System.out.println("Enter dictionary code:");
+    String code = sc.nextLine();
+    sc.close();
+    findRomanNumeralSkips(code);
+  }
+
+  public static void findRomanNumeralSkips(String dictionaryCode) {
+    Dictionary dict = Dictionary.getDictionary(dictionaryCode);
     String fileName = (String) ReflectionTestUtil.getField(Dictionary.class, dict, "fileName");
     Sanitizer sanitizer = (Sanitizer) ReflectionTestUtil.getField(Dictionary.class, dict, "sanitizer");
     if (sanitizer.getClass() != Sanitizer.class) {
       log.info("Custom sanitizer of type '{}' detected for language '{}'", 
-          sanitizer.getClass().getSimpleName(), DICTIONARY);
+          sanitizer.getClass().getSimpleName(), dictionaryCode);
     }
     Method lineToWord = ReflectionTestUtil.getMethod(Sanitizer.class, "removeDelimiters", String.class);
     
@@ -51,7 +54,7 @@ public class UtilSkippedRomanNumerals {
       }
     }
     
-    log.info("Skipped words for '{}':\n- {}", DICTIONARY, String.join("\n- ", skippedNumerals));
+    log.info("Skipped words for '{}':\n- {}", dictionaryCode, String.join("\n- ", skippedNumerals));
   }
 
 }
