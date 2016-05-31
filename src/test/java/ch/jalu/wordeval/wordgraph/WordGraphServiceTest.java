@@ -1,7 +1,7 @@
 package ch.jalu.wordeval.wordgraph;
 
 import ch.jalu.wordeval.DataUtils;
-import ch.jalu.wordeval.TestUtil;
+import ch.jalu.wordeval.ReflectionTestUtil;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
 import org.jgrapht.graph.builder.UndirectedGraphBuilder;
@@ -48,7 +48,7 @@ public class WordGraphServiceTest {
     
     // Set mock for DataUtils
     mockDataUtils = Mockito.mock(DataUtils.class);
-    TestUtil.R.setField(WordGraphService.class, null, "dataUtils", mockDataUtils);
+    ReflectionTestUtil.setField(WordGraphService.class, null, "dataUtils", mockDataUtils);
   }
   
   // ---

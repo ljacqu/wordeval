@@ -2,7 +2,7 @@ package ch.jalu.wordeval.extra;
 
 import ch.jalu.wordeval.AppData;
 import ch.jalu.wordeval.DataUtils;
-import ch.jalu.wordeval.TestUtil;
+import ch.jalu.wordeval.ReflectionTestUtil;
 import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.DictionaryService;
 import ch.jalu.wordeval.dictionary.Sanitizer;
@@ -31,20 +31,20 @@ public class UtilSkippedRomanNumerals {
   @Test
   public void findRomanNumeralSkips() {
     Dictionary dict = Dictionary.getDictionary(DICTIONARY);
-    String fileName = (String) TestUtil.R.getField(Dictionary.class, dict, "fileName");
-    Sanitizer sanitizer = (Sanitizer) TestUtil.R.getField(Dictionary.class, dict, "sanitizer");
+    String fileName = (String) ReflectionTestUtil.getField(Dictionary.class, dict, "fileName");
+    Sanitizer sanitizer = (Sanitizer) ReflectionTestUtil.getField(Dictionary.class, dict, "sanitizer");
     if (sanitizer.getClass() != Sanitizer.class) {
       log.info("Custom sanitizer of type '{}' detected for language '{}'", 
           sanitizer.getClass().getSimpleName(), DICTIONARY);
     }
-    Method lineToWord = TestUtil.R.getMethod(Sanitizer.class, "removeDelimiters", String.class);
+    Method lineToWord = ReflectionTestUtil.getMethod(Sanitizer.class, "removeDelimiters", String.class);
     
     DataUtils dataUtils = new DataUtils();
     List<String> skippedNumerals = new ArrayList<>();
     for (String line : dataUtils.readFileLines(fileName)) {
       String sanitizerResult = sanitizer.isolateWord(line);
       if (sanitizerResult.isEmpty()) {
-        String word = (String) TestUtil.R.invokeMethod(lineToWord, sanitizer, line);
+        String word = (String) ReflectionTestUtil.invokeMethod(lineToWord, sanitizer, line);
         if (DictionaryService.isRomanNumeral(word)) {
           skippedNumerals.add(word);
         }

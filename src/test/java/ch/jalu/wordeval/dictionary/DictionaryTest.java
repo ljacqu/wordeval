@@ -1,7 +1,7 @@
 package ch.jalu.wordeval.dictionary;
 
 import ch.jalu.wordeval.DataUtils;
-import ch.jalu.wordeval.TestUtil;
+import ch.jalu.wordeval.ReflectionTestUtil;
 import ch.jalu.wordeval.evaluation.DictionaryEvaluator;
 import ch.jalu.wordeval.evaluation.Evaluator;
 import ch.jalu.wordeval.evaluation.PostEvaluator;
@@ -21,8 +21,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
 
 /**
  * Test for {@link Dictionary}.
@@ -55,8 +55,8 @@ public class DictionaryTest {
     List<Evaluator<?>> evaluators = Arrays.asList(lowercaseEval, noAccentEval, postEval);
     Dictionary dict = Dictionary.getDictionary("zxx");
     DataUtils dataUtils = Mockito.mock(DataUtils.class);
-    when(dataUtils.readFileLines(anyString())).thenReturn(Arrays.asList("Some", "/a", "tëst", "Wôrds", "here/23"));
-    TestUtil.R.setField(Dictionary.class, dict, "dataUtils", dataUtils);
+    given(dataUtils.readFileLines(anyString())).willReturn(Arrays.asList("Some", "/a", "tëst", "Wôrds", "here/23"));
+    ReflectionTestUtil.setField(Dictionary.class, dict, "dataUtils", dataUtils);
     
     dict.process(evaluators);
     
