@@ -1,5 +1,6 @@
 package ch.jalu.wordeval;
 
+import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.wordgraph.GraphBuilder;
 import ch.jalu.wordeval.wordgraph.WordGraphService;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -21,10 +22,6 @@ public final class WordGraphMain {
   /** Directory for graph exports. */
   private static final String GRAPH_EXPORT_DIRECTORY = "export/graph/";
   
-  static {
-    AppData.init();
-  }
-  
   private WordGraphMain() {
   }
   
@@ -41,7 +38,8 @@ public final class WordGraphMain {
     if (exportFilename.isPresent()) {
       graph = WordGraphService.importConnections(exportFilename.get());
     } else {
-      GraphBuilder builder = new GraphBuilder(dictionaryCode);
+      AppData appData = new AppData();
+      GraphBuilder builder = new GraphBuilder(appData.getDictionary(dictionaryCode));
       processExportChoice(scanner, dictionaryCode, builder);
       graph = builder.getGraph();
     }

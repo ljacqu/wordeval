@@ -1,15 +1,15 @@
 package ch.jalu.wordeval.helpertask;
 
-import ch.jalu.wordeval.AppData;
-import ch.jalu.wordeval.dictionary.Dictionary;
+import ch.jalu.wordeval.DataUtils;
+import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.dictionary.DictionarySettings;
 import ch.jalu.wordeval.dictionary.WordForm;
-import ch.jalu.wordeval.evaluation.Evaluator;
 import ch.jalu.wordeval.evaluation.PartWordEvaluator;
 import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LanguageService;
 import ch.jalu.wordeval.language.LetterType;
+import ch.jalu.wordeval.runners.DictionaryProcessor;
 import com.google.common.collect.Multimap;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -25,10 +25,6 @@ import java.util.Scanner;
  * Utility task to verify how well a dictionary is being sanitized.
  */
 public class DictionarySanitationTest {
-  
-  static {
-    AppData.init();
-  }
 
   private DictionarySanitationTest() { }
   
@@ -39,9 +35,11 @@ public class DictionarySanitationTest {
     String dictCode = sc.nextLine();
     sc.close();
 
+    AppData appData = new AppData();
+
     Map<String, Multimap<String, String>> sanitationResult = new HashMap<>();
     Iterable<String> languageCodes = StringUtils.isEmpty(dictCode.trim())
-        ? DictionarySettings.getAllCodes()
+        ? appData.getAllDictionaryCodes()
         : Collections.singletonList(dictCode);
     
     for (String languageCode : languageCodes) {
@@ -62,10 +60,11 @@ public class DictionarySanitationTest {
   private static Multimap<String, String> findBadWords(String languageCode) {
     List<Character> allowedChars = computeAllowedCharsList(languageCode);
     NoOtherCharsEvaluator testEvaluator = new NoOtherCharsEvaluator(allowedChars);
-    List<Evaluator<?>> evaluators = Collections.singletonList(testEvaluator);
-    Dictionary dictionary = Dictionary.getDictionary(languageCode);
+    AppData appData = new AppData();
+    DictionarySettings dictionary = appData.getDictionary(languageCode);
 
-    dictionary.process(evaluators);
+    new DictionaryProcessor(new DataUtils())
+        .process(dictionary, Collections.singletonList(testEvaluator));
     
     return testEvaluator.getResults();
   }
@@ -93,7 +92,7 @@ public class DictionarySanitationTest {
   private static final class NoOtherCharsEvaluator extends PartWordEvaluator {
     private final char[] allowedChars;
 
-    public NoOtherCharsEvaluator(List<Character> allowedChars) {
+    NoOtherCharsEvaluator(List<Character> allowedChars) {
       Character[] allowedCharsArray = allowedChars
           .toArray(new Character[allowedChars.size()]);
       this.allowedChars = ArrayUtils.toPrimitive(allowedCharsArray);

@@ -11,7 +11,7 @@ import java.util.Locale;
  * Utility class used in {@link Sanitizer} to 
  * generate the various word forms of a word.
  */
-class WordFormsBuilder {
+public class WordFormsBuilder {
 
   private final Locale locale;
   private final String lettersToKeep;
@@ -23,7 +23,7 @@ class WordFormsBuilder {
    *
    * @param language the language
    */
-  WordFormsBuilder(Language language) {
+  public WordFormsBuilder(Language language) {
     lettersToKeep = language.getCharsToPreserve();
     tempReplacements = initializeTempReplacements(lettersToKeep);
     locale = language.getLocale();

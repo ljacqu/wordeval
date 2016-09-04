@@ -1,11 +1,15 @@
 package ch.jalu.wordeval.wordgraph;
 
+import ch.jalu.wordeval.DataUtils;
+import ch.jalu.wordeval.dictionary.DictionarySettings;
 import ch.jalu.wordeval.evaluation.WordCollector;
+import ch.jalu.wordeval.runners.DictionaryProcessor;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,24 +31,29 @@ public class GraphBuilder {
   /**
    * Builds a new ConnectionsBuilder object and computes the
    * connections for the given dictionary.
-   * @param dictionary the dictionary code
+   *
+   * @param dictionary the dictionary
    */
-  public GraphBuilder(String dictionary) {    
+  public GraphBuilder(DictionarySettings dictionary) {
     this(getDictionaryWords(dictionary));
   }
   
   /**
    * Builds a new ConnectionsBuilder object and computes the
    * connections based on the given list of words.
+   *
    * @param words the list of words to process
    */
   public GraphBuilder(List<String> words) {
     constructGraph(words);
   }
   
-  private static List<String> getDictionaryWords(String dictionaryCode) {
+  private static List<String> getDictionaryWords(DictionarySettings dictionaryCode) {
     WordCollector collector = new WordCollector();
-    return collector.getSortedWordsFromDictionary(dictionaryCode);
+    new DictionaryProcessor(new DataUtils())
+      .process(dictionaryCode, Collections.singletonList(collector));
+
+    return collector.returnSortedWords();
   }
 
   private void constructGraph(List<String> words) {

@@ -1,5 +1,6 @@
 package ch.jalu.wordeval.dictionary;
 
+import ch.jalu.wordeval.language.Language;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -9,6 +10,7 @@ import static org.hamcrest.Matchers.arrayContaining;
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
 /**
  * Test for {@link Sanitizer}.
@@ -19,9 +21,14 @@ public class SanitizerTest {
   
   @BeforeClass
   public static void setUpSettings() {
-    DictionarySettings settings = new DictionarySettings("zxx")
-        .setDelimiters('/', '#')
-        .setSkipSequences("aaa", "è");
+    Language language = mock(Language.class);
+    DictionarySettings settings = DictionarySettings.builder()
+        .identifier("zxx")
+        .file("bogus")
+        .language(language)
+        .delimiters('/', '#')
+        .skipSequences("aaa", "è")
+        .build();
     sanitizer = new Sanitizer(settings);
   }
 

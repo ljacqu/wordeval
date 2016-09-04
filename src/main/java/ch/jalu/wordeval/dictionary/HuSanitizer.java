@@ -13,9 +13,11 @@ public class HuSanitizer extends Sanitizer {
 
   /**
    * Creates a new instance of a sanitizer for the Hungarian dictionary.
+   *
+   * @param dictionary the dictionary
    */
-  public HuSanitizer() {
-    super(initSettings());
+  public HuSanitizer(DictionarySettings dictionary) {
+    super(dictionary);
   }
 
   @Override
@@ -124,12 +126,6 @@ public class HuSanitizer extends Sanitizer {
       }
     }
     return null;
-  }
-
-  private static DictionarySettings initSettings() {
-    return new DictionarySettings("hu")
-        .setDelimiters('/', '\t')
-        .setSkipSequences(".", "+", "±", "ø", "ʻ", "’", "­");
   }
 
   private static boolean equalsAny(String word, String... parts) {

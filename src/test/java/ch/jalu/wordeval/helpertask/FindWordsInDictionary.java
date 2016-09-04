@@ -1,9 +1,11 @@
 package ch.jalu.wordeval.helpertask;
 
-import ch.jalu.wordeval.AppData;
-import ch.jalu.wordeval.dictionary.Dictionary;
+import ch.jalu.wordeval.DataUtils;
+import ch.jalu.wordeval.appdata.AppData;
+import ch.jalu.wordeval.dictionary.DictionarySettings;
 import ch.jalu.wordeval.evaluation.Evaluator;
 import ch.jalu.wordeval.evaluation.PartWordEvaluator;
+import ch.jalu.wordeval.runners.DictionaryProcessor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -20,10 +22,6 @@ import java.util.stream.Collectors;
  * (Useful to make sure a custom sanitizer is not too strict.)
  */
 public class FindWordsInDictionary {
-  
-  static {
-    AppData.init();
-  }
 
   private FindWordsInDictionary() { }
 
@@ -31,7 +29,8 @@ public class FindWordsInDictionary {
     Scanner scanner = new Scanner(System.in);
     System.out.println("Enter language code of dictionary:");
     String code = scanner.nextLine();
-    Dictionary dictionary = Dictionary.getDictionary(code);
+    AppData appData = new AppData();
+    DictionarySettings dictionary = appData.getDictionary(code);
 
     System.out.println("Enter words to find (comma-separated)");
     String line = scanner.nextLine();
@@ -42,11 +41,12 @@ public class FindWordsInDictionary {
     findWordsInDict(dictionary, wordsToFind);
   }
 
-  private static void findWordsInDict(Dictionary dictionary, Set<String> wordsToFind) {
+  private static void findWordsInDict(DictionarySettings dictionary, Set<String> wordsToFind) {
     TestEvaluator testEvaluator = new TestEvaluator(wordsToFind);
     List<Evaluator<?>> evaluators = Collections.singletonList(testEvaluator);
 
-    dictionary.process(evaluators);
+    DictionaryProcessor processor = new DictionaryProcessor(new DataUtils());
+    processor.process(dictionary, evaluators);
 
     Collection<String> missingWords = testEvaluator.getMissingWords();
     if (missingWords.isEmpty()) {

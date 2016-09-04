@@ -1,6 +1,6 @@
 package ch.jalu.wordeval;
 
-import ch.jalu.wordeval.dictionary.Dictionary;
+import ch.jalu.wordeval.dictionary.DictionarySettings;
 import ch.jalu.wordeval.evaluation.DictionaryEvaluator;
 import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
@@ -65,8 +65,8 @@ public final class TestUtil {
    * @param dictionary the dictionary to verify
    * @return true if the file exists, false otherwise
    */
-  public static boolean doesDictionaryFileExist(Dictionary dictionary) {
-    return Files.exists(Paths.get(dictionary.getFileName()));
+  public static boolean doesDictionaryFileExist(DictionarySettings dictionary) {
+    return Files.exists(Paths.get(dictionary.getFile()));
   }
 
   /**

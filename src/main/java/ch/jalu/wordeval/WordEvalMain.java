@@ -1,9 +1,12 @@
 package ch.jalu.wordeval;
 
-import ch.jalu.wordeval.dictionary.Dictionary;
+import ch.jalu.wordeval.appdata.DictionarySettingsStore;
+import ch.jalu.wordeval.appdata.LanguageStore;
+import ch.jalu.wordeval.dictionary.DictionarySettings;
 import ch.jalu.wordeval.evaluation.Evaluator;
 import ch.jalu.wordeval.evaluation.export.ExportService;
 import ch.jalu.wordeval.language.Language;
+import ch.jalu.wordeval.runners.DictionaryProcessor;
 import ch.jalu.wordeval.runners.EvaluatorInitializer;
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.log4j.Log4j2;
@@ -19,11 +22,14 @@ import java.util.Map;
 @Log4j2
 public final class WordEvalMain {
 
-  static {
-    AppData.init();
-  }
+  private final LanguageStore languageStore;
+  private final DictionarySettingsStore dictionarySettingsStore;
+  private final DictionaryProcessor dictionaryProcessor;
   
   private WordEvalMain() {
+    languageStore = new LanguageStore();
+    dictionarySettingsStore = new DictionarySettingsStore(languageStore);
+    dictionaryProcessor = new DictionaryProcessor(new DataUtils());
   }
 
   /**
@@ -35,8 +41,9 @@ public final class WordEvalMain {
     // All codes: DictionarySettings.getAllCodes()
     Iterable<String> codes = Arrays.asList("af", "en-us", "fr");
 
+    WordEvalMain main = new WordEvalMain();
     for (String code : codes) {
-      exportLanguage(code);
+      main.exportLanguage(code);
     }
   }
 
@@ -45,12 +52,12 @@ public final class WordEvalMain {
    *
    * @param code the code of the dictionary to evaluate
    */
-  public static void exportLanguage(String code) {
+  public void exportLanguage(String code) {
     log.info("Exporting language '{}'", code);
     List<Long> times = new ArrayList<>();
     times.add(System.nanoTime());
-    
-    Dictionary dictionary = Dictionary.getDictionary(code);
+
+    DictionarySettings dictionary = dictionarySettingsStore.get(code);
     Language language = dictionary.getLanguage();
     outputDiff(times, "got dictionary object");
 
@@ -58,7 +65,7 @@ public final class WordEvalMain {
     List<Evaluator<?>> evaluators = initializer.getEvaluators();
     outputDiff(times, "instantiated evaluators");
 
-    long totalWords = dictionary.process(evaluators);
+    long totalWords = dictionaryProcessor.process(dictionary, evaluators);
     Map<String, String> metaInfo = ImmutableMap.of(
         "dictionary", code,
         "language", language.getName(),

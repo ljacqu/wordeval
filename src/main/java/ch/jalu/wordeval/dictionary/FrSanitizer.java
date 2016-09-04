@@ -9,9 +9,11 @@ public class FrSanitizer extends Sanitizer {
 
   /**
    * Creates a new sanitizer for the French dictionary.
+   *
+   * @param dictionary the dictionary
    */
-  public FrSanitizer() {
-    super(initSettings());
+  public FrSanitizer(DictionarySettings dictionary) {
+    super(dictionary);
   }
   
   @Override
@@ -23,12 +25,6 @@ public class FrSanitizer extends Sanitizer {
       return "";
     }
     return word;
-  }
-  
-  private static DictionarySettings initSettings() {
-    return new DictionarySettings("fr")
-      .setDelimiters('/', '\t')
-      .setSkipSequences(".", "&", "µ");
   }
 
 }

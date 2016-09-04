@@ -1,10 +1,11 @@
 package ch.jalu.wordeval.dictionary;
 
+import ch.jalu.wordeval.language.Language;
 import lombok.Getter;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.Objects;
+
+import static com.google.common.base.MoreObjects.firstNonNull;
 
 /**
  * Class containing dictionary-specific parameters, based on which a sanitizer
@@ -13,70 +14,41 @@ import java.util.Set;
 @Getter
 public class DictionarySettings {
 
-  private static Map<String, DictionarySettings> settings = new HashMap<>();
-
   /**
    * The dictionary identifier is typically the ISO-639-1 abbreviation of its
    * language.
    */
   private final String identifier;
+
+  private final String file;
+
+  private final Language language;
+
   /**
    * Collection of characters to search for in a read line. The line is cut
    * before the first occurrence of a delimiter, returning the word without any
    * additional data the dictionary may store.
    */
-  private char[] delimiters;
+  private final char[] delimiters;
   /**
    * Collection of skip sequences - if any such sequence is found in the word,
    * it is skipped.
    */
-  private String[] skipSequences;
+  private final String[] skipSequences;
 
-  DictionarySettings(String identifier) {
+  private final Class<? extends Sanitizer> sanitizerClass;
+
+  @Getter(lazy = true)
+  private final Sanitizer sanitizer = buildSanitizer();
+
+  private DictionarySettings(String identifier, String file, Language language, char[] delimiters,
+                             String[] skipSequences, Class<? extends Sanitizer> sanitizerClass) {
     this.identifier = identifier;
-  }
-  
-  /**
-   * Creates and saves a new set of dictionary settings for the given identifier.
-   * @param identifier The dictionary identifier to create settings for
-   * @return The created DictionarySettings object
-   */
-  public static DictionarySettings add(String identifier) {
-    DictionarySettings dictionarySettings = new DictionarySettings(identifier);
-    settings.put(dictionarySettings.identifier, dictionarySettings);
-    return dictionarySettings;
-  }
-  
-  /**
-   * Saves a new dictionary settings entry with a custom sanitizer.
-   * @param identifier The identifier of the dictionary
-   * @param sanitizerClass The class of the custom sanitizer. It must have a
-   * public no-arguments constructor.
-   */
-  public static void add(String identifier, Class<? extends Sanitizer> sanitizerClass) {
-    DictionarySettings dictionarySettings = new CustomSettings(identifier, sanitizerClass);
-    settings.put(identifier, dictionarySettings);
-  }
-
-  /**
-   * Gets the dictionary settings for the given identifier.
-   * @param identifier The identifier to retrieve the settings for
-   * @return The dictionary settings
-   */
-  public static DictionarySettings get(String identifier) {
-    DictionarySettings result = settings.get(identifier);
-    if (result == null) {
-      throw new IllegalArgumentException("Dictionary settings with identifier '" + identifier + "' is unknown");
-    }
-    return result;
-  }
-
-  /**
-   * Returns all known dictionary settings.
-   * @return List of all dictionary codes
-   */
-  public static Set<String> getAllCodes() {
-    return settings.keySet();
+    this.file = file;
+    this.language = language;
+    this.delimiters = delimiters;
+    this.skipSequences = skipSequences;
+    this.sanitizerClass = sanitizerClass;
   }
 
   /**
@@ -84,49 +56,77 @@ public class DictionarySettings {
    * @return The created sanitizer
    */
   Sanitizer buildSanitizer() {
-    return new Sanitizer(this);
+    return sanitizerClass == null
+        ? new Sanitizer(this)
+        : createSanitizer(sanitizerClass);
   }
 
-  /**
-   * Sets the delimiters for the dictionary.
-   * @param delimiters The delimiters to set
-   * @return The current DictionarySettings object
-   */
-  public DictionarySettings setDelimiters(char... delimiters) {
-    this.delimiters = delimiters;
-    return this;
+  private static <T extends Sanitizer> T createSanitizer(Class<T> clazz) {
+    try {
+      return clazz.newInstance();
+    } catch (IllegalAccessException | InstantiationException e) {
+      throw new UnsupportedOperationException("Could not create sanitizer", e);
+    }
   }
 
-  /**
-   * Sets the skip sequences for the dictionary.
-   * @param skipSequences The skip sequences to set
-   * @return The current DictionarySettings object
-   */
-  public DictionarySettings setSkipSequences(String... skipSequences) {
-    this.skipSequences = skipSequences;
-    return this;
+  public static Builder builder() {
+    return new Builder();
   }
 
-  /**
-   * Subtype of dictionary settings for dictionaries that have a custom
-   * sanitizer. The custom sanitizer must have a no-args constructor.
-   */
-  private static class CustomSettings extends DictionarySettings {
-    private final Class<? extends Sanitizer> sanitizerClass;
+  public static final class Builder {
 
-    private CustomSettings(String identifier, Class<? extends Sanitizer> sanitizerClass) {
-      super(identifier);
+    private String identifier;
+    private String file;
+    private Language language;
+    private char[] delimiters;
+    private String[] skipSequences;
+    private Class<? extends Sanitizer> sanitizerClass;
+
+    private Builder() {
+    }
+
+    public DictionarySettings build() {
+      Objects.requireNonNull(identifier, "identifier");
+      Objects.requireNonNull(file, "file");
+      Objects.requireNonNull(language, "language");
+
+      return new DictionarySettings(
+        identifier,
+        file,
+        language,
+        firstNonNull(delimiters, new char[0]),
+        firstNonNull(skipSequences, new String[0]),
+        sanitizerClass);
+    }
+
+    public Builder identifier(String identifier) {
+      this.identifier = identifier;
+      return this;
+    }
+
+    public Builder file(String file) {
+      this.file = file;
+      return this;
+    }
+
+    public Builder language(Language language) {
+      this.language = language;
+      return this;
+    }
+
+    public Builder delimiters(char... delimiters) {
+      this.delimiters = delimiters;
+      return this;
+    }
+
+    public Builder skipSequences(String... skipSequences) {
+      this.skipSequences = skipSequences;
+      return this;
+    }
+
+    public Builder sanitizerClass(Class<? extends Sanitizer> sanitizerClass) {
       this.sanitizerClass = sanitizerClass;
-    }
-
-    @Override
-    public Sanitizer buildSanitizer() {
-      try {
-        return sanitizerClass.newInstance();
-      } catch (IllegalAccessException | InstantiationException e) {
-        throw new UnsupportedOperationException("Could not create sanitizer", e);
-      }
+      return this;
     }
   }
-
 }

@@ -43,6 +43,7 @@ public class Language {
    * @param code the code of the language
    * @return Language object for the given language
    */
+  @Deprecated
   public static Language get(String code) {
     Language language = languages.get(code);
     if (language == null) {
@@ -58,6 +59,7 @@ public class Language {
    * Adds a new language to the list of known languages.
    * @param language the Language object to add
    */
+  @Deprecated
   public static void add(Language language) {
     languages.put(language.code, language);
   }
