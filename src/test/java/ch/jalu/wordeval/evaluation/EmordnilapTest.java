@@ -12,16 +12,16 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
- * Test for {@link BackwardsPairs}.
+ * Test for {@link Emordnilap}.
  */
-public class BackwardsPairsTest {
+public class EmordnilapTest {
   
   @Test
   public void shouldFindBackwardsPairs() {
     String[] words = new String[]{ "but", "parts", "potato", "strap", "tub", "working" };
     WordCollector collector = setUpCollector(words);
     
-    BackwardsPairs evaluator = new BackwardsPairs();
+    Emordnilap evaluator = new Emordnilap();
     evaluator.evaluateWith(collector);
     Multimap<String, String> results = evaluator.getResults();
     
@@ -34,7 +34,7 @@ public class BackwardsPairsTest {
   public void shouldNotAddPalindromes() {
     WordCollector collector = setUpCollector("net", "otto", "Redder", "redder", "ten");
     
-    BackwardsPairs evaluator = new BackwardsPairs();
+    Emordnilap evaluator = new Emordnilap();
     evaluator.evaluateWith(collector);
     Multimap<String, String> results = evaluator.getResults();
     
@@ -45,7 +45,7 @@ public class BackwardsPairsTest {
   public void shouldBeCaseInsensitive() {
     WordCollector collector = setUpCollector("BUT", "Net", "parts", "Strap", "TEN", "tub");
     
-    BackwardsPairs evaluator = new BackwardsPairs();
+    Emordnilap evaluator = new Emordnilap();
     evaluator.evaluateWith(collector);
     Multimap<String, String> results = evaluator.getResults();
     

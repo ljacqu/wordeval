@@ -11,15 +11,11 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * Finds pairs of words that are equal to each other when reversed, e.g. German
- * "Lager" and "Regal".
+ * Finds emordnilaps, words that produce another word when reversed,
+ * such as German "Lager" and "Regal".
  */
-public class BackwardsPairs extends PostEvaluator<String, WordCollector> {
+public class Emordnilap extends PostEvaluator<String, WordCollector> {
 
-  /**
-   * Evaluate "backwards pairs" based on the collected words of a dictionary.
-   * @param collector the word collector
-   */
   @Override
   public void evaluateWith(WordCollector collector) {
     Set<String> words = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
