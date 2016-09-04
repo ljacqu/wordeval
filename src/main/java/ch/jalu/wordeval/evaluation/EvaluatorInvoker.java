@@ -46,7 +46,8 @@ public class EvaluatorInvoker {
       } else if (evaluator instanceof PostEvaluator<?, ?>) {
         postEvaluators.add((PostEvaluator<?, ?>) evaluator);
       } else {
-        log.info("Evaluator '{}' of unknown subtype", evaluator.getClass());
+        throw new IllegalStateException("Evaluator of class '"
+            + evaluator.getClass() + "' does not implement a known subtype.");
       }
     }
   }

@@ -65,8 +65,6 @@ public abstract class Evaluator<K extends Comparable> {
    * @param word the word to add to the key's list
    */
   protected void addEntry(K key, String word) {
-    // It is massively faster to use a TreeSet from the beginning
-    // rather than using a HashSet and then converting it to TreeSet
     results.put(key, word);
   }
 

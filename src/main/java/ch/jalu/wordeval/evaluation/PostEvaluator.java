@@ -2,6 +2,9 @@ package ch.jalu.wordeval.evaluation;
 
 /**
  * Common interface for evaluators which generate results based on another evaluator.
+ *
+ * @param <K> the key type
+ * @param <B> the evaluator type the post evaluator is based on
  */
 public abstract class PostEvaluator<K extends Comparable, B extends Evaluator> extends Evaluator<K> {
 

@@ -28,8 +28,7 @@ public class BackwardsPairs extends PostEvaluator<String, WordCollector> {
     for (String word : words) {
       String wordToLower = word.toLowerCase();
       String reversed = StringUtils.reverse(wordToLower);
-      if (wordToLower.compareTo(reversed) < 0
-          && words.contains(reversed)) {
+      if (wordToLower.compareTo(reversed) < 0 && words.contains(reversed)) {
         addEntry(wordToLower, reversed);
       }
     }

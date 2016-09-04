@@ -12,11 +12,10 @@ various criteria. The results are exported as JSON so they can be displayed by a
 
 Requirements
 ------------
-- Requires Java 8
+- Java 8
 - Requires you install the [Lombok plugin](https://projectlombok.org/download.html) for your IDE or you won't see the
   accessors and builders it generates
-- Project is set up with Maven. If you don't have Maven, you need to download the dependencies defined in the pom.xml 
-  file manually.
+- Maven
 
 
 General setup
