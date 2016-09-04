@@ -56,8 +56,7 @@ public class EvaluatorInitializer {
     if (clazz != null) {
       Constructor<? extends Evaluator<?>> constructor =
           (Constructor<? extends Evaluator<?>>) clazz.getDeclaredConstructors()[0];
-      // TODO: Should be on debug level
-      log.info("Resolving instantation of class '{}'", clazz.getSimpleName());
+      log.debug("Resolving instantiation of class '{}'", clazz.getSimpleName());
       createEvaluators(constructor, new ArrayList<>(Arrays.asList(constructor.getParameterTypes())), new ArrayList<>());
     }
   }
