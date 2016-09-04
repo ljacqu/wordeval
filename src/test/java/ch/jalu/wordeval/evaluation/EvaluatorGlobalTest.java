@@ -43,7 +43,7 @@ public class EvaluatorGlobalTest {
   @Test
   public void shouldConvertToExportObjectOrNull() {
     for (Evaluator evaluator : evaluators) {
-      ExportObject exportObj = evaluator.toExportObject();
+      ExportObject<?, ?, ?> exportObj = evaluator.toExportObject();
       if (exportObj == null) {
         log.info("Evaluator {} has null as export object", evaluator.getClass().getSimpleName());
       } else {

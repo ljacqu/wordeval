@@ -12,7 +12,7 @@ import java.util.Optional;
  * ExportObject class for evaluators of type {@link WordStatEvaluator}.
  */
 @Getter
-public class WordStatExport extends ExportObject {
+public class WordStatExport extends ExportObject<Integer, List<String>, Integer> {
 
   /**
    * Creates a new WordStatExport object.
@@ -28,16 +28,6 @@ public class WordStatExport extends ExportObject {
     super(identifier,
         ExportObjectService.checkDescending(topEntries, isDescending),
         ExportObjectService.checkDescending(aggregatedEntries, isDescending));
-  }
-
-  @Override
-  public NavigableMap<Integer, List<String>> getTopEntries() {
-    return (NavigableMap<Integer, List<String>>) super.getTopEntries();
-  }
-
-  @Override
-  public NavigableMap<Integer, Integer> getAggregatedEntries() {
-    return (NavigableMap<Integer, Integer>) super.getAggregatedEntries();
   }
 
   /**

@@ -10,9 +10,13 @@ import java.util.NavigableMap;
  * exporting. An object typically has a collection of <i>top entries</i> which
  * are the most extreme/interesting elements the evaluator looks for. The other
  * entries are summed up and displayed as <i>aggregated entries</i>.
+ *
+ * @param <K> the key of the entries (scores)
+ * @param <T> values of top entries
+ * @param <A> values of the aggregated entries
  */
 @Getter
-public abstract class ExportObject {
+public abstract class ExportObject<K, T, A> {
 
   /**
    * String used as special key to include the total of a group.
@@ -30,19 +34,19 @@ public abstract class ExportObject {
   private final String identifier;
 
   /** List of most relevant entries. */
-  private final NavigableMap<?, ?> topEntries;
+  private final NavigableMap<K, T> topEntries;
 
   /** List of aggregated entries. */
-  private final NavigableMap<?, ?> aggregatedEntries;
+  private final NavigableMap<K, A> aggregatedEntries;
 
   /**
    * Creates a new ExportObject instance.
    *
-   * @param identifier The identifier of the new object
+   * @param identifier the identifier of the new object
    * @param topEntries collection of top entries
    * @param aggregatedEntries collection of aggregated entries
    */
-  ExportObject(String identifier, NavigableMap<?, ?> topEntries, NavigableMap<?, ?> aggregatedEntries) {
+  ExportObject(String identifier, NavigableMap<K, T> topEntries, NavigableMap<K, A> aggregatedEntries) {
     this.identifier = identifier;
     this.topEntries = topEntries;
     this.aggregatedEntries = aggregatedEntries;

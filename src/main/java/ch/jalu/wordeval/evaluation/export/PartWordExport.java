@@ -16,10 +16,11 @@ import java.util.TreeMap;
  * ExportObject class for evaluators of type PartWordEvaluator.
  */
 @Getter
-public final class PartWordExport extends ExportObject {
+public final class PartWordExport extends ExportObject<Double, NavigableMap<String, TreeElement>, TreeElement> {
 
   /**
    * Creates a new PartWordExport object.
+   *
    * @param identifier the identifier of the export object
    * @param topEntries the collection of top entries
    * @param aggregatedEntries the collection of aggregated entries
@@ -34,18 +35,9 @@ public final class PartWordExport extends ExportObject {
       applyDescendingParamsToAggrEntries(aggregatedEntries, params));
   }
 
-  @Override
-  public NavigableMap<Double, NavigableMap<String, TreeElement>> getTopEntries() {
-    return (NavigableMap<Double, NavigableMap<String, TreeElement>>) super.getTopEntries();
-  }
-
-  @Override
-  public NavigableMap<Double, TreeElement> getAggregatedEntries() {
-    return (NavigableMap<Double, TreeElement>) super.getAggregatedEntries();
-  }
-
   /**
    * Generates a new PartWordExport object based on an evaluator's results and the given settings.
+   *
    * @param identifier the identifier of the export object to create
    * @param results the evaluator results
    * @param params the export parameters
