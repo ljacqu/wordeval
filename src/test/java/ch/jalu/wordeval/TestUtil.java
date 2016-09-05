@@ -70,24 +70,27 @@ public final class TestUtil {
   }
 
   /**
-   * Initializes a new Language object with the given code and the Latin alphabet.
+   * Initializes a new Language builder with the given code and the Latin alphabet.
    *
    * @param code the language code
-   * @return the generated Language instance
+   * @return the Language builder
    */
-  public static Language newLanguage(String code) {
+  public static Language.Builder newLanguage(String code) {
     return newLanguage(code, Alphabet.LATIN);
   }
 
   /**
-   * Initializes a new Language object with the given code and alphabet.
+   * Initializes a new Language builder with the given code and alphabet.
    *
    * @param code the language code
    * @param alphabet the alphabet
-   * @return the generated Language instance
+   * @return the generated Language builder
    */
-  public static Language newLanguage(String code, Alphabet alphabet) {
-    return new Language(code, "", alphabet);
+  public static Language.Builder newLanguage(String code, Alphabet alphabet) {
+    return Language.builder()
+        .code(code)
+        .alphabet(alphabet)
+        .name("");
   }
 
 }

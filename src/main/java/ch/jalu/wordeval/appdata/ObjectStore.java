@@ -21,11 +21,22 @@ abstract class ObjectStore<K, V> {
   }
 
   /**
+   * Adds all given objects to the store.
+   *
+   * @param objects the objects to add
+   */
+  public void addAll(V... objects) {
+    for (V object : objects) {
+      add(object);
+    }
+  }
+
+  /**
    * Adds the given object to the store.
    *
    * @param object the object to store
    */
-  public void add(V object) {
+  private void add(V object) {
     K key = getKey(object);
     if (entries.containsKey(key)) {
       throw new IllegalStateException("An object for key '" + key + "' has already been stored");

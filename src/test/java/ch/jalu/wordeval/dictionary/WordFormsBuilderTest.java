@@ -16,7 +16,8 @@ public class WordFormsBuilderTest {
   public void shouldKeepAdditionalLetters() {
     // given
     Language language = newLanguage("da")
-        .setAdditionalVowels("æ", "ø", "å");
+        .additionalVowels("æ", "ø", "å")
+        .build();
     String[] words = { "forsøgte erklære trådte", "Å ǿ én býr" };
     WordFormsBuilder builder = new WordFormsBuilder(language);
 
@@ -33,7 +34,7 @@ public class WordFormsBuilderTest {
   @Test
   public void shouldRemoveAllAccentsByDefault() {
     // given
-    Language language = newLanguage("fr");
+    Language language = newLanguage("fr").build();
     WordFormsBuilder builder = new WordFormsBuilder(language);
 
     // when
@@ -46,7 +47,7 @@ public class WordFormsBuilderTest {
   @Test
   public void shouldUseLocaleForLowerCase() {
     // given
-    Language language = newLanguage("tr");
+    Language language = newLanguage("tr").build();
     WordFormsBuilder builder = new WordFormsBuilder(language);
 
     // when
@@ -60,7 +61,8 @@ public class WordFormsBuilderTest {
   public void shouldComputeWordOnlyForm() {
     // given
     Language language = newLanguage("cs")
-        .setAdditionalConsonants("č", "ř");
+        .additionalConsonants("č", "ř")
+        .build();
     WordFormsBuilder builder = new WordFormsBuilder(language);
 
     // when
@@ -72,7 +74,7 @@ public class WordFormsBuilderTest {
 
   @Test(expected = IllegalStateException.class)
   public void shouldThrowForEmptyWord() {
-    Language language = newLanguage("nl");
+    Language language = newLanguage("nl").build();
     WordFormsBuilder builder = new WordFormsBuilder(language);
     builder.computeForms("");
   }

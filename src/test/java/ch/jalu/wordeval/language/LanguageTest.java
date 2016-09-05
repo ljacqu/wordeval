@@ -21,7 +21,7 @@ public class LanguageTest {
 
   @Test
   public void shouldHandleUnsetProperties() {
-    Language lang = newLanguage("zxx");
+    Language lang = newLanguage("zxx").build();
 
     assertThat(lang.getCode(), equalTo("zxx"));
     assertThat(lang.getAdditionalConsonants(), emptyArray());
@@ -30,43 +30,30 @@ public class LanguageTest {
 
   @Test
   public void shouldNotHaveLettersToPreserveIfNonApplicable() {
-    Language lang = newLanguage("zxx").setAdditionalVowels("ij")
-        .setAdditionalConsonants("cs", "ny");
+    Language lang = newLanguage("zxx")
+        .additionalVowels("ij")
+        .additionalConsonants("cs", "ny")
+        .build();
 
     assertThat(lang.getAdditionalVowels(), arrayWithSize(1));
     assertThat(lang.getAdditionalConsonants(), arrayWithSize(2));
   }
   
-  @Test(expected = IllegalArgumentException.class)
-  public void shouldThrowExceptionForUnknownLanguageCode() {
-    Language.get("bogusCode");
-  }
-  
-  @Test
-  public void shouldGetLanguageWithoutHyphen() {
-    Language zxxLang = newLanguage("zxx");
-    Language.add(zxxLang);
-    
-    Language result = Language.get("zxx-ww");
-    
-    assertThat(result, equalTo(zxxLang));
-  }
-  
   @Test
   public void shouldReturnCharsToPreserve() {
     Language lang = newLanguage("zxx")
-      .setAdditionalConsonants("cs", "þ", "y")
-      .setAdditionalVowels("w", "eu", "ø", "öy");
+      .additionalConsonants("cs", "þ", "y")
+      .additionalVowels("w", "eu", "ø", "öy").build();
 
     assertThat(toCharList(lang.getCharsToPreserve()), containsInAnyOrder('þ', 'ø'));
   }
 
   @Test
   public void shouldReturnEmptyCharsToPreserve() {
-    Language lang1 = newLanguage("zxx");
+    Language lang1 = newLanguage("zxx").build();
     Language lang2 = newLanguage("zxx")
-      .setAdditionalConsonants("tt", "ff", "gg")
-      .setAdditionalVowels("ii", "w", "øu");
+      .additionalConsonants("tt", "ff", "gg")
+      .additionalVowels("ii", "w", "øu").build();
 
     assertThat(toCharList(lang1.getCharsToPreserve()), empty());
     assertThat(toCharList(lang2.getCharsToPreserve()), empty());

@@ -26,7 +26,7 @@ public class ConsecutiveVowelCountTest {
   @Test
   public void shouldProcessVowelClusters() {
     // 4, 3, 0, 3, {2, 3}, 2
-    initializeEvaluators(TestUtil.newLanguage("en", Alphabet.LATIN));
+    initializeEvaluators(TestUtil.newLanguage("en", Alphabet.LATIN).build());
     String[] words = { "sequoia", "eaux", "abodef", "geëet", "oicąeèl", "ůý" };
     String[] clean = { "sequoia", "eaux", "abodef", "geeet", "oicaeel", "uy" };
 
@@ -46,7 +46,7 @@ public class ConsecutiveVowelCountTest {
   @Test
   public void shouldProcessConsonantClusters() {
     // {3, 2}, 0, 3, {4, 3}, 0
-    initializeEvaluators(TestUtil.newLanguage("en", Alphabet.LATIN));
+    initializeEvaluators(TestUtil.newLanguage("en", Alphabet.LATIN).build());
     String[] words = { "pfrund", "potato", "przy", "wśrżystkęm", "arigato" };
     String[] clean = { "pfrund", "potato", "przy", "wsrzystkem", "arigato" };
 
@@ -65,7 +65,7 @@ public class ConsecutiveVowelCountTest {
 
   @Test
   public void shouldProcessCyrillicWords() {
-    initializeEvaluators(TestUtil.newLanguage("ru", Alphabet.CYRILLIC));
+    initializeEvaluators(TestUtil.newLanguage("ru", Alphabet.CYRILLIC).build());
     // Vowels: 2, 2, 0, 0 | Consonants: 0, 2, {3, 4, 2}, {2, 2}
     // ь is neither consonant nor vowel
     String[] words = { "википедия", "вооружённый", "здравствуйте", "апрельская" };
@@ -88,7 +88,7 @@ public class ConsecutiveVowelCountTest {
   @Test
   public void shouldProcessBulgarianCorrectly() {
     Language lang = TestUtil.newLanguage("bg", Alphabet.CYRILLIC)
-        .setAdditionalVowels("ъ");
+        .additionalVowels("ъ").build();
     initializeEvaluators(lang);
     // Vowels: 2, 2, 0; Consonants: 3, 2, 0
     String[] words = { "възприема", "неъзабза", "обособени" };

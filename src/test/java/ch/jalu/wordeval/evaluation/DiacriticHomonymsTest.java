@@ -16,7 +16,7 @@ import static org.junit.Assert.assertThat;
  */
 public class DiacriticHomonymsTest {
   
-  private static Language language = newLanguage("zxx");
+  private static final Language language = newLanguage("zxx").build();
   
   @Test
   public void shouldFindDiacriticHomonyms() {

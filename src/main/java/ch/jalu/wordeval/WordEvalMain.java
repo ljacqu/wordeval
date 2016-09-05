@@ -1,7 +1,6 @@
 package ch.jalu.wordeval;
 
-import ch.jalu.wordeval.appdata.DictionarySettingsStore;
-import ch.jalu.wordeval.appdata.LanguageStore;
+import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.dictionary.DictionarySettings;
 import ch.jalu.wordeval.evaluation.Evaluator;
 import ch.jalu.wordeval.evaluation.export.ExportService;
@@ -22,13 +21,11 @@ import java.util.Map;
 @Log4j2
 public final class WordEvalMain {
 
-  private final LanguageStore languageStore;
-  private final DictionarySettingsStore dictionarySettingsStore;
+  private final AppData appData;
   private final DictionaryProcessor dictionaryProcessor;
   
   private WordEvalMain() {
-    languageStore = new LanguageStore();
-    dictionarySettingsStore = new DictionarySettingsStore(languageStore);
+    appData = new AppData();
     dictionaryProcessor = new DictionaryProcessor(new DataUtils());
   }
 
@@ -57,7 +54,7 @@ public final class WordEvalMain {
     List<Long> times = new ArrayList<>();
     times.add(System.nanoTime());
 
-    DictionarySettings dictionary = dictionarySettingsStore.get(code);
+    DictionarySettings dictionary = appData.getDictionary(code);
     Language language = dictionary.getLanguage();
     outputDiff(times, "got dictionary object");
 

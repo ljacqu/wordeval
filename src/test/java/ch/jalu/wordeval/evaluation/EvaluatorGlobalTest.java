@@ -25,7 +25,7 @@ public class EvaluatorGlobalTest {
   
   @BeforeClass
   public static void initializeEvaluators() {
-    Language lang = newLanguage("zxx");
+    Language lang = newLanguage("zxx").build();
     evaluators = new EvaluatorInitializer(lang).getEvaluators();
     if (evaluators.isEmpty()) {
       throw new IllegalStateException("Could not instantiate evaluators");

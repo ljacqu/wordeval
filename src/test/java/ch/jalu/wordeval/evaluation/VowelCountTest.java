@@ -22,7 +22,7 @@ public class VowelCountTest {
 
   @Before
   public void initializeEvaluator() {
-    Language lang = TestUtil.newLanguage("zxx");
+    Language lang = TestUtil.newLanguage("zxx").build();
     vowelEvaluator = new VowelCount(LetterType.VOWELS, lang);
     consonantEvaluator = new VowelCount(LetterType.CONSONANTS, lang);
   }

@@ -26,16 +26,15 @@ import java.util.Scanner;
  */
 public class DictionarySanitationTest {
 
+  private static final AppData appData = new AppData();
+
   private DictionarySanitationTest() { }
-  
 
   public static void main(String... args) {
     Scanner sc = new Scanner(System.in);
     System.out.println("Enter dictionary code to verify (or empty for all):");
     String dictCode = sc.nextLine();
     sc.close();
-
-    AppData appData = new AppData();
 
     Map<String, Multimap<String, String>> sanitationResult = new HashMap<>();
     Iterable<String> languageCodes = StringUtils.isEmpty(dictCode.trim())
@@ -70,7 +69,7 @@ public class DictionarySanitationTest {
   }
   
   private static List<Character> computeAllowedCharsList(String languageCode) {
-    Language lang = Language.get(languageCode);
+    Language lang = appData.getLanguage(languageCode);
     List<Character> allowedChars = new ArrayList<>();
     for (String entry : LanguageService.getLetters(LetterType.VOWELS, lang)) {
       if (entry.length() == 1) {

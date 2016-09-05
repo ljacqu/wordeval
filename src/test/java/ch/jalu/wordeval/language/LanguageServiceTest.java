@@ -1,9 +1,8 @@
 package ch.jalu.wordeval.language;
 
-import ch.jalu.wordeval.TestUtil;
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -11,6 +10,8 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 /**
  * Test for {@link LanguageService}.
@@ -19,10 +20,10 @@ public class LanguageServiceTest {
 
   @Test
   public void shouldRemoveDiacritics() {
-    String[] givenWords = { "křižáků", "nőstényét", "iš vėlyvojo Jų",
-        "mogą trwać występy koreańskich że", "požiūriu" };
-    String[] expected = { "krizaku", "nostenyet", "is velyvojo Ju",
-        "moga trwac wystepy koreanskich ze", "poziuriu" };
+    String[] givenWords = {
+        "křižáků", "nőstényét", "iš vėlyvojo Jų", "mogą trwać występy koreańskich że", "požiūriu" };
+    String[] expected = {
+        "krizaku", "nostenyet", "is velyvojo Ju", "moga trwac wystepy koreanskich ze", "poziuriu" };
 
     for (int i = 0; i < givenWords.length; ++i) {
       assertThat(LanguageService.removeAccentsFromWord(givenWords[i], Alphabet.LATIN),
@@ -32,27 +33,32 @@ public class LanguageServiceTest {
 
   @Test
   public void shouldRemoveDiacriticsForCyrillic() {
-    String[] words = { "ѝ", "призёр", "Менько́в", "аўтар", "куќата",
-        "військової" };
-    String[] expected = { "и", "призёр", "Меньков", "аўтар", "куќата",
-        "військової" };
+    // given
+    String[] words = { "ѝ", "призёр", "Менько́в", "аўтар", "куќата", "військової" };
 
-    List<String> result = new ArrayList<>();
-    for (String word : words) {
-      result.add(LanguageService.removeAccentsFromWord(word, Alphabet.CYRILLIC));
-    }
-    assertThat(result.toArray(), equalTo(expected));
+    // when
+    String[] result = Arrays.stream(words)
+        .map(word -> LanguageService.removeAccentsFromWord(word, Alphabet.CYRILLIC))
+        .toArray(String[]::new);
+
+    // then
+    String[] expected = { "и", "призёр", "Меньков", "аўтар", "куќата", "військової" };
+    assertThat(result, equalTo(expected));
   }
 
   @Test
   public void shouldGetLettersWithAdditional() {
-    Language language = new Language("zxx", "", Alphabet.CYRILLIC)
-        .setAdditionalConsonants("rz", "s")
-        .setAdditionalVowels("u", "èö");
+    // given
+    Language language = Language.builder()
+        .name("").code("zxx").alphabet(Alphabet.CYRILLIC)
+        .additionalConsonants("rz", "s")
+        .additionalVowels("u", "èö").build();
 
+    // when
     List<String> vowels = LanguageService.getLetters(LetterType.VOWELS, language);
     List<String> consonants = LanguageService.getLetters(LetterType.CONSONANTS, language);
 
+    // then
     // Check the additional letters + a few other random ones
     assertThat(vowels, hasItems("u", "èö", "и", "я"));
     assertThat(consonants, hasItems("rz", "s", "т", "ж"));
@@ -60,9 +66,10 @@ public class LanguageServiceTest {
 
   @Test
   public void shouldRemoveLettersFromDefaultList() {
-    Language lang = TestUtil.newLanguage("zxx")
-        .setAdditionalVowels("w")
-        .setLettersToRemove("w");
+    Language lang = Language.builder()
+        .code("zxx").name("").alphabet(Alphabet.LATIN)
+        .additionalVowels("w")
+        .lettersToRemove("w").build();
 
     List<String> vowels = LanguageService.getLetters(LetterType.VOWELS, lang);
     List<String> consonants = LanguageService.getLetters(LetterType.CONSONANTS, lang);
@@ -74,13 +81,15 @@ public class LanguageServiceTest {
   
   @Test(expected = IllegalArgumentException.class)
   public void shouldThrowForUnknownAlphabet() {
-    Language lang = new Language("zxx", "", null);
+    Language lang = mock(Language.class);
+    given(lang.getAlphabet()).willReturn(null);
     LanguageService.getLetters(LetterType.VOWELS, lang);
   }
   
   @Test(expected = IllegalArgumentException.class)
   public void shouldThrowForUnknownAlphabet2() {
-    Language lang = new Language("zxx", "", null);
+    Language lang = mock(Language.class);
+    given(lang.getAlphabet()).willReturn(null);
     LanguageService.getLetters(LetterType.CONSONANTS, lang);
   }
 

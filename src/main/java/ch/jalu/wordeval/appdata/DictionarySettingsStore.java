@@ -8,24 +8,19 @@ import ch.jalu.wordeval.language.Language;
 /**
  * Stores {@link DictionarySettings} objects.
  */
-public class DictionarySettingsStore extends ObjectStore<String, DictionarySettings> {
+class DictionarySettingsStore extends ObjectStore<String, DictionarySettings> {
 
   private static final String DICT_PATH = "dict/";
 
   private final LanguageStore languageStore;
 
-  public DictionarySettingsStore(LanguageStore languageStore) {
+  DictionarySettingsStore(LanguageStore languageStore) {
     this.languageStore = languageStore;
-    initDictionaries();
+    addAll(buildEntries());
   }
 
-  @Override
-  protected String getKey(DictionarySettings settings) {
-    return settings.getIdentifier();
-  }
-
-  private void initDictionaries() {
-    DictionarySettings[] dictionaries = {
+  private DictionarySettings[] buildEntries() {
+    return new DictionarySettings[] {
       newDictionary("af").delimiters('/').skipSequences(".", "µ", "Ð", "ø").build(),
       newDictionary("bg").delimiters('/').build(),
       newDictionary("da").delimiters('/').build(),
@@ -53,10 +48,11 @@ public class DictionarySettingsStore extends ObjectStore<String, DictionarySetti
       newDictionary("sr-latn").delimiters('/').build(),
       newDictionary("tr").delimiters(' ').build()
     };
+  }
 
-    for (DictionarySettings dictionary : dictionaries) {
-      add(dictionary);
-    }
+  @Override
+  protected String getKey(DictionarySettings settings) {
+    return settings.getIdentifier();
   }
 
   private DictionarySettings.Builder newDictionary(String identifier) {
