@@ -1,6 +1,5 @@
 package ch.jalu.wordeval.helpertask;
 
-import ch.jalu.wordeval.DataUtils;
 import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.dictionary.DictionarySettings;
 import ch.jalu.wordeval.dictionary.WordForm;
@@ -62,8 +61,7 @@ public class DictionarySanitationTest {
     AppData appData = new AppData();
     DictionarySettings dictionary = appData.getDictionary(languageCode);
 
-    new DictionaryProcessor(new DataUtils())
-        .process(dictionary, Collections.singletonList(testEvaluator));
+    DictionaryProcessor.process(dictionary, Collections.singletonList(testEvaluator));
     
     return testEvaluator.getResults();
   }

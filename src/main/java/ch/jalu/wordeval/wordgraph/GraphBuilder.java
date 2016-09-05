@@ -1,6 +1,5 @@
 package ch.jalu.wordeval.wordgraph;
 
-import ch.jalu.wordeval.DataUtils;
 import ch.jalu.wordeval.dictionary.DictionarySettings;
 import ch.jalu.wordeval.evaluation.WordCollector;
 import ch.jalu.wordeval.runners.DictionaryProcessor;
@@ -48,11 +47,9 @@ public class GraphBuilder {
     constructGraph(words);
   }
   
-  private static List<String> getDictionaryWords(DictionarySettings dictionaryCode) {
+  private static List<String> getDictionaryWords(DictionarySettings dictionary) {
     WordCollector collector = new WordCollector();
-    new DictionaryProcessor(new DataUtils())
-      .process(dictionaryCode, Collections.singletonList(collector));
-
+    DictionaryProcessor.process(dictionary, Collections.singletonList(collector));
     return collector.returnSortedWords();
   }
 

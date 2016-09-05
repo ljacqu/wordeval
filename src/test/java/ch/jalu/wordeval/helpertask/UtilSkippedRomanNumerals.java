@@ -39,9 +39,8 @@ public class UtilSkippedRomanNumerals {
     }
     Method lineToWord = ReflectionTestUtil.getMethod(Sanitizer.class, "removeDelimiters", String.class);
     
-    DataUtils dataUtils = new DataUtils();
     List<String> skippedNumerals = new ArrayList<>();
-    for (String line : dataUtils.readFileLines(fileName)) {
+    for (String line : DataUtils.readAllLines(fileName)) {
       String sanitizerResult = sanitizer.isolateWord(line);
       if (sanitizerResult.isEmpty()) {
         String word = (String) ReflectionTestUtil.invokeMethod(lineToWord, sanitizer, line);

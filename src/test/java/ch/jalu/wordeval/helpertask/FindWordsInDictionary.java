@@ -1,6 +1,5 @@
 package ch.jalu.wordeval.helpertask;
 
-import ch.jalu.wordeval.DataUtils;
 import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.dictionary.DictionarySettings;
 import ch.jalu.wordeval.evaluation.Evaluator;
@@ -45,8 +44,7 @@ public class FindWordsInDictionary {
     TestEvaluator testEvaluator = new TestEvaluator(wordsToFind);
     List<Evaluator<?>> evaluators = Collections.singletonList(testEvaluator);
 
-    DictionaryProcessor processor = new DictionaryProcessor(new DataUtils());
-    processor.process(dictionary, evaluators);
+    DictionaryProcessor.process(dictionary, evaluators);
 
     Collection<String> missingWords = testEvaluator.getMissingWords();
     if (missingWords.isEmpty()) {

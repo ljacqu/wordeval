@@ -22,11 +22,9 @@ import java.util.Map;
 public final class WordEvalMain {
 
   private final AppData appData;
-  private final DictionaryProcessor dictionaryProcessor;
-  
+
   private WordEvalMain() {
     appData = new AppData();
-    dictionaryProcessor = new DictionaryProcessor(new DataUtils());
   }
 
   /**
@@ -62,7 +60,7 @@ public final class WordEvalMain {
     List<Evaluator<?>> evaluators = initializer.getEvaluators();
     outputDiff(times, "instantiated evaluators");
 
-    long totalWords = dictionaryProcessor.process(dictionary, evaluators);
+    long totalWords = DictionaryProcessor.process(dictionary, evaluators);
     Map<String, String> metaInfo = ImmutableMap.of(
         "dictionary", code,
         "language", language.getName(),

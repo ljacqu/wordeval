@@ -10,23 +10,27 @@ import ch.jalu.wordeval.language.Language;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Loads a dictionary and passes each word to the evaluators.
+ * Processes a dictionary.
  */
-public class DictionaryProcessor {
+public final class DictionaryProcessor {
 
-  private final DataUtils dataUtils;
-
-  public DictionaryProcessor(DataUtils dataUtils) { // TODO: Remove DataUtils from constructor
-    this.dataUtils = dataUtils;
+  private DictionaryProcessor() {
   }
 
-  public long process(DictionarySettings dictionary, Iterable<Evaluator<?>> evaluators) {
+  /**
+   * Reads the given dictionary and passes each word to the given collection of evaluators.
+   *
+   * @param dictionary the dictionary to read
+   * @param evaluators the evaluators to use
+   * @return number of words processed
+   */
+  public static long process(DictionarySettings dictionary, Iterable<Evaluator<?>> evaluators) {
     final EvaluatorInvoker invoker = new EvaluatorInvoker(evaluators);
     final Sanitizer sanitizer = dictionary.getSanitizer();
     final Language language = dictionary.getLanguage();
     final WordFormsBuilder wordFormsBuilder = new WordFormsBuilder(language);
 
-    long totalWords = dataUtils.readFileLines(dictionary.getFile())
+    long totalWords = DataUtils.readAllLines(dictionary.getFile())
         .stream()
         .map(sanitizer::isolateWord)
         .filter(StringUtils::isNotEmpty)

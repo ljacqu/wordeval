@@ -1,6 +1,5 @@
 package ch.jalu.wordeval.dictionary;
 
-import ch.jalu.wordeval.DataUtils;
 import ch.jalu.wordeval.TestUtil;
 import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.evaluation.Evaluator;
@@ -56,8 +55,7 @@ public class HuSanitizerTest {
     List<Evaluator<?>> evaluatorList = Arrays.asList(evaluator1, evaluator2, evaluator3);
 
     // when
-    DictionaryProcessor processor = new DictionaryProcessor(new DataUtils());
-    processor.process(huDictionary, evaluatorList);
+    DictionaryProcessor.process(huDictionary, evaluatorList);
 
     // then
     for (Evaluator<?> evaluator : evaluatorList) {

@@ -45,7 +45,7 @@ public final class WordGraphService {
    */
   public static SimpleGraph<String, DefaultWeightedEdge> importConnections(String filename) {
     Type type = new TypeToken<Map<String, List<String>>>(){}.getType();
-    Map<String, List<String>> connections = dataUtils.fromJson(dataUtils.readFile(filename), type);
+    Map<String, List<String>> connections = dataUtils.fromJson(DataUtils.readFile(filename), type);
     return convertConnectionsMapToGraph(connections);
   }
   
@@ -167,9 +167,7 @@ public final class WordGraphService {
     for (E edge : graph.edgeSet()) {
       V source = graph.getEdgeSource(edge);
       V target = graph.getEdgeTarget(edge);
-      if (connections.get(source) == null) {
-        connections.put(source, new ArrayList<>());
-      }
+      connections.putIfAbsent(source, new ArrayList<>());
       connections.get(source).add(target);
     }
     return connections;

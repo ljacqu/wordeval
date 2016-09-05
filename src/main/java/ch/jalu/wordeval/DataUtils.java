@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -29,6 +30,7 @@ public class DataUtils {
   
   /**
    * Initializes an instance and sets whether to use JSON Pretty Print or not.
+   *
    * @param usePrettyPrint JSON pretty print setting
    */
   public DataUtils(boolean usePrettyPrint) {
@@ -37,6 +39,7 @@ public class DataUtils {
   
   /**
    * Sets the root path (the path to append to file references).
+   *
    * @param root the root to append to file paths
    */
   public void setRoot(String root) {
@@ -49,6 +52,7 @@ public class DataUtils {
   
   /**
    * Writes the content to the given file.
+   *
    * @param filename the name of the file to write to
    * @param content the content to write
    */
@@ -61,29 +65,37 @@ public class DataUtils {
   }
   
   /**
-   * Reads a file's contents.
+   * Reads a file's contents as UTF-8.
+   *
    * @param filename the name of the file to read
    * @return the contents of the file
    */
-  public String readFile(String filename) {
-    return String.join("", readFileLines(filename));
-  }
-  
-  /**
-   * Returns a file's contents by line.
-   * @param filename the name of the file to read
-   * @return the lines in the file
-   */
-  public List<String> readFileLines(String filename) {
+  public static String readFile(String filename) {
     try {
-      return Files.readAllLines(Paths.get(root + filename));
+      return new String(Files.readAllBytes(Paths.get(filename)),
+                        Charset.forName("UTF-8"));
+    } catch (IOException e) {
+      throw new IllegalStateException("Could not read file '" + filename + "'", e);
+    }
+  }
+
+  /**
+   * Reads all lines of a file as UTF-8.
+   *
+   * @param filename the name of the file to read
+   * @return the file's contents by line
+   */
+  public static List<String> readAllLines(String filename) {
+    try {
+      return Files.readAllLines(Paths.get(filename));
     } catch (IOException e) {
       throw new IllegalStateException("Could not read from file '" + filename + "'", e);
-    }    
+    }
   }
   
   /**
    * Converts an object to its JSON representation.
+   *
    * @param o the object to convert
    * @return the generated JSON
    */
@@ -93,6 +105,7 @@ public class DataUtils {
   
   /**
    * Deserializes JSON to the specified class.
+   *
    * @param <T> the result type
    * @param json the JSON text to deserialize
    * @param classOfT the class of the resulting object
@@ -104,6 +117,7 @@ public class DataUtils {
 
   /**
    * Deserializes JSON to the specified type.
+   *
    * @param <T> the result type
    * @param json the JSON text to deserialize
    * @param typeOfT the type of the resulting object
