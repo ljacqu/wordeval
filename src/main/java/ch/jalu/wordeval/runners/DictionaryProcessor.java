@@ -1,7 +1,7 @@
 package ch.jalu.wordeval.runners;
 
 import ch.jalu.wordeval.DataUtils;
-import ch.jalu.wordeval.dictionary.DictionarySettings;
+import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.Sanitizer;
 import ch.jalu.wordeval.dictionary.WordFormsBuilder;
 import ch.jalu.wordeval.evaluation.Evaluator;
@@ -24,7 +24,7 @@ public final class DictionaryProcessor {
    * @param evaluators the evaluators to use
    * @return number of words processed
    */
-  public static long process(DictionarySettings dictionary, Iterable<Evaluator<?>> evaluators) {
+  public static long process(Dictionary dictionary, Iterable<Evaluator<?>> evaluators) {
     final EvaluatorInvoker invoker = new EvaluatorInvoker(evaluators);
     final Sanitizer sanitizer = dictionary.getSanitizer();
     final Language language = dictionary.getLanguage();

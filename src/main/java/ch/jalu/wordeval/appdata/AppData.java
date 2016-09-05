@@ -1,6 +1,6 @@
 package ch.jalu.wordeval.appdata;
 
-import ch.jalu.wordeval.dictionary.DictionarySettings;
+import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.language.Language;
 
 import java.util.Set;
@@ -22,7 +22,7 @@ public class AppData {
     return languageStore.get(code);
   }
 
-  public DictionarySettings getDictionary(String code) {
+  public Dictionary getDictionary(String code) {
     return dictionaryStore.get(code);
   }
 

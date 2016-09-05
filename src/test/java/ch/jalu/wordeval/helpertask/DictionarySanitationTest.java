@@ -1,7 +1,7 @@
 package ch.jalu.wordeval.helpertask;
 
 import ch.jalu.wordeval.appdata.AppData;
-import ch.jalu.wordeval.dictionary.DictionarySettings;
+import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.WordForm;
 import ch.jalu.wordeval.evaluation.PartWordEvaluator;
 import ch.jalu.wordeval.language.Alphabet;
@@ -59,7 +59,7 @@ public class DictionarySanitationTest {
     List<Character> allowedChars = computeAllowedCharsList(languageCode);
     NoOtherCharsEvaluator testEvaluator = new NoOtherCharsEvaluator(allowedChars);
     AppData appData = new AppData();
-    DictionarySettings dictionary = appData.getDictionary(languageCode);
+    Dictionary dictionary = appData.getDictionary(languageCode);
 
     DictionaryProcessor.process(dictionary, Collections.singletonList(testEvaluator));
     

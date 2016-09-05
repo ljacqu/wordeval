@@ -1,7 +1,7 @@
 package ch.jalu.wordeval;
 
 import ch.jalu.wordeval.appdata.AppData;
-import ch.jalu.wordeval.dictionary.DictionarySettings;
+import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.evaluation.Evaluator;
 import ch.jalu.wordeval.evaluation.export.ExportService;
 import ch.jalu.wordeval.language.Language;
@@ -33,7 +33,7 @@ public final class WordEvalMain {
    * @param args .
    */
   public static void main(String[] args) {
-    // All codes: DictionarySettings.getAllCodes()
+    // All codes: Dictionary.getAllCodes()
     Iterable<String> codes = Arrays.asList("af", "en-us", "fr");
 
     WordEvalMain main = new WordEvalMain();
@@ -52,7 +52,7 @@ public final class WordEvalMain {
     List<Long> times = new ArrayList<>();
     times.add(System.nanoTime());
 
-    DictionarySettings dictionary = appData.getDictionary(code);
+    Dictionary dictionary = appData.getDictionary(code);
     Language language = dictionary.getLanguage();
     outputDiff(times, "got dictionary object");
 

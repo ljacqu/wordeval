@@ -3,20 +3,21 @@ package ch.jalu.wordeval.dictionary;
 import ch.jalu.wordeval.language.Language;
 import lombok.Getter;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
 
 /**
- * Class containing dictionary-specific parameters, based on which a sanitizer
- * can be generated for the dictionary.
+ * Dictionary. Stores the {@link #file location} as well as various parameters
+ * on its format so that its entries can be read correctly.
  */
 @Getter
-public class DictionarySettings {
+public class Dictionary {
 
   /**
-   * The dictionary identifier is typically the ISO-639-1 abbreviation of its
-   * language.
+   * The dictionary identifier is typically the ISO-639-1 abbreviation of its language.
    */
   private final String identifier;
 
@@ -35,14 +36,16 @@ public class DictionarySettings {
    * it is skipped.
    */
   private final String[] skipSequences;
-
+  /**
+   * Class of the sanitizer to use if a custom sanitizer should be used.
+   */
   private final Class<? extends Sanitizer> sanitizerClass;
 
   @Getter(lazy = true)
   private final Sanitizer sanitizer = buildSanitizer();
 
-  private DictionarySettings(String identifier, String file, Language language, char[] delimiters,
-                             String[] skipSequences, Class<? extends Sanitizer> sanitizerClass) {
+  private Dictionary(String identifier, String file, Language language, char[] delimiters,
+                     String[] skipSequences, Class<? extends Sanitizer> sanitizerClass) {
     this.identifier = identifier;
     this.file = file;
     this.language = language;
@@ -61,10 +64,11 @@ public class DictionarySettings {
         : createSanitizer(sanitizerClass);
   }
 
-  private static <T extends Sanitizer> T createSanitizer(Class<T> clazz) {
+  private <T extends Sanitizer> T createSanitizer(Class<T> clazz) {
     try {
-      return clazz.newInstance();
-    } catch (IllegalAccessException | InstantiationException e) {
+      Constructor<?> constructor = clazz.getDeclaredConstructor(Dictionary.class);
+      return clazz.cast(constructor.newInstance(this));
+    } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
       throw new UnsupportedOperationException("Could not create sanitizer", e);
     }
   }
@@ -85,12 +89,12 @@ public class DictionarySettings {
     private Builder() {
     }
 
-    public DictionarySettings build() {
+    public Dictionary build() {
       Objects.requireNonNull(identifier, "identifier");
       Objects.requireNonNull(file, "file");
       Objects.requireNonNull(language, "language");
 
-      return new DictionarySettings(
+      return new Dictionary(
         identifier,
         file,
         language,

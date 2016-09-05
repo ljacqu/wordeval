@@ -18,7 +18,7 @@ public class Sanitizer {
    * Creates a new sanitizer.
    * @param settings the dictionary settings
    */
-  public Sanitizer(DictionarySettings settings) {
+  public Sanitizer(Dictionary settings) {
     delimiters = settings.getDelimiters();
     skipSequences = settings.getSkipSequences();
   }

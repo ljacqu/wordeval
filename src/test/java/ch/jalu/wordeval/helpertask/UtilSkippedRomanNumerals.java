@@ -4,7 +4,7 @@ import ch.jalu.wordeval.DataUtils;
 import ch.jalu.wordeval.ReflectionTestUtil;
 import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.dictionary.DictionaryService;
-import ch.jalu.wordeval.dictionary.DictionarySettings;
+import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.Sanitizer;
 import lombok.extern.log4j.Log4j2;
 
@@ -30,9 +30,9 @@ public class UtilSkippedRomanNumerals {
 
   public static void findRomanNumeralSkips(String dictionaryCode) {
     AppData appData = new AppData();
-    DictionarySettings dict = appData.getDictionary(dictionaryCode);
-    String fileName = (String) ReflectionTestUtil.getField(DictionarySettings.class, dict, "file");
-    Sanitizer sanitizer = (Sanitizer) ReflectionTestUtil.getField(DictionarySettings.class, dict, "sanitizer");
+    Dictionary dict = appData.getDictionary(dictionaryCode);
+    String fileName = (String) ReflectionTestUtil.getField(Dictionary.class, dict, "file");
+    Sanitizer sanitizer = (Sanitizer) ReflectionTestUtil.getField(Dictionary.class, dict, "sanitizer");
     if (sanitizer.getClass() != Sanitizer.class) {
       log.info("Custom sanitizer of type '{}' detected for language '{}'", 
           sanitizer.getClass().getSimpleName(), dictionaryCode);

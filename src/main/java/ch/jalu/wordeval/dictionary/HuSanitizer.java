@@ -16,7 +16,7 @@ public class HuSanitizer extends Sanitizer {
    *
    * @param dictionary the dictionary
    */
-  public HuSanitizer(DictionarySettings dictionary) {
+  public HuSanitizer(Dictionary dictionary) {
     super(dictionary);
   }
 

@@ -1,14 +1,14 @@
 package ch.jalu.wordeval.appdata;
 
-import ch.jalu.wordeval.dictionary.DictionarySettings;
+import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.FrSanitizer;
 import ch.jalu.wordeval.dictionary.HuSanitizer;
 import ch.jalu.wordeval.language.Language;
 
 /**
- * Stores {@link DictionarySettings} objects.
+ * Stores {@link Dictionary} objects.
  */
-class DictionarySettingsStore extends ObjectStore<String, DictionarySettings> {
+class DictionarySettingsStore extends ObjectStore<String, Dictionary> {
 
   private static final String DICT_PATH = "dict/";
 
@@ -19,8 +19,8 @@ class DictionarySettingsStore extends ObjectStore<String, DictionarySettings> {
     addAll(buildEntries());
   }
 
-  private DictionarySettings[] buildEntries() {
-    return new DictionarySettings[] {
+  private Dictionary[] buildEntries() {
+    return new Dictionary[] {
       newDictionary("af").delimiters('/').skipSequences(".", "µ", "Ð", "ø").build(),
       newDictionary("bg").delimiters('/').build(),
       newDictionary("da").delimiters('/').build(),
@@ -51,14 +51,14 @@ class DictionarySettingsStore extends ObjectStore<String, DictionarySettings> {
   }
 
   @Override
-  protected String getKey(DictionarySettings settings) {
+  protected String getKey(Dictionary settings) {
     return settings.getIdentifier();
   }
 
-  private DictionarySettings.Builder newDictionary(String identifier) {
-    return DictionarySettings.builder()
+  private Dictionary.Builder newDictionary(String identifier) {
+    return Dictionary.builder()
         .identifier(identifier)
-        .file(DICT_PATH + identifier)
+        .file(DICT_PATH + identifier + ".dic")
         .language(getLanguage(identifier));
   }
 

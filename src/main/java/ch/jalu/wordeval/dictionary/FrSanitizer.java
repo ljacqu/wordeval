@@ -12,7 +12,7 @@ public class FrSanitizer extends Sanitizer {
    *
    * @param dictionary the dictionary
    */
-  public FrSanitizer(DictionarySettings dictionary) {
+  public FrSanitizer(Dictionary dictionary) {
     super(dictionary);
   }
   

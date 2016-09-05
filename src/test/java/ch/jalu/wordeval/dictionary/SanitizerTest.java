@@ -22,7 +22,7 @@ public class SanitizerTest {
   @BeforeClass
   public static void setUpSettings() {
     Language language = mock(Language.class);
-    DictionarySettings settings = DictionarySettings.builder()
+    Dictionary settings = Dictionary.builder()
         .identifier("zxx")
         .file("bogus")
         .language(language)

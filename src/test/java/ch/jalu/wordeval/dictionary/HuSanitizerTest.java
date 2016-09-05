@@ -23,7 +23,7 @@ import static org.junit.Assert.fail;
 @Log4j2
 public class HuSanitizerTest {
 
-  private static DictionarySettings huDictionary;
+  private static Dictionary huDictionary;
   
   @BeforeClass
   public static void initData() {
