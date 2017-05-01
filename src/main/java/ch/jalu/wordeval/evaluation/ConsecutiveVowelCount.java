@@ -4,7 +4,6 @@ import ch.jalu.wordeval.dictionary.WordForm;
 import ch.jalu.wordeval.evaluation.export.ExportObject;
 import ch.jalu.wordeval.evaluation.export.ExportParams;
 import ch.jalu.wordeval.language.Language;
-import ch.jalu.wordeval.language.LanguageService;
 import ch.jalu.wordeval.language.LetterType;
 import lombok.Getter;
 
@@ -25,12 +24,12 @@ public class ConsecutiveVowelCount extends WordStatEvaluator {
   /**
    * Creates a new VowelCount evaluator instance.
    *
-   * @param type the letter type to consider
+   * @param letterType the letter type to consider
    * @param language the language of the words to evaluate
    */
-  public ConsecutiveVowelCount(LetterType type, Language language) {
-    lettersToConsider = LanguageService.getLetters(type, language);
-    letterType = type;
+  public ConsecutiveVowelCount(LetterType letterType, Language language) {
+    this.lettersToConsider = letterType.getLetters(language);
+    this.letterType = letterType;
   }
 
   @Override

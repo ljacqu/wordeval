@@ -6,8 +6,6 @@ import ch.jalu.wordeval.dictionary.WordForm;
 import ch.jalu.wordeval.evaluation.PartWordEvaluator;
 import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
-import ch.jalu.wordeval.language.LanguageService;
-import ch.jalu.wordeval.language.LetterType;
 import ch.jalu.wordeval.runners.DictionaryProcessor;
 import com.google.common.collect.Multimap;
 import org.apache.commons.lang3.ArrayUtils;
@@ -48,7 +46,7 @@ public class DictionarySanitationTest {
     }
 
     if (!sanitationResult.isEmpty()) {
-      sanitationResult.entrySet().stream()
+      sanitationResult.entrySet()
           .forEach(e -> System.err.println(e.getKey() + ": " + e.getValue()));
     } else {
       System.out.println("Verification successful");
@@ -69,12 +67,12 @@ public class DictionarySanitationTest {
   private static List<Character> computeAllowedCharsList(String languageCode) {
     Language lang = appData.getLanguage(languageCode);
     List<Character> allowedChars = new ArrayList<>();
-    for (String entry : LanguageService.getLetters(LetterType.VOWELS, lang)) {
+    for (String entry : lang.getVowels()) {
       if (entry.length() == 1) {
         allowedChars.add(entry.charAt(0));
       }
     }
-    for (String entry : LanguageService.getLetters(LetterType.CONSONANTS, lang)) {
+    for (String entry : lang.getConsonants()) {
       if (entry.length() == 1) {
         allowedChars.add(entry.charAt(0));
       }

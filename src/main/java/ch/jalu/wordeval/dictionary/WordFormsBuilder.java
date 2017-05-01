@@ -2,7 +2,6 @@ package ch.jalu.wordeval.dictionary;
 
 import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
-import ch.jalu.wordeval.language.LanguageService;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Locale;
@@ -54,11 +53,10 @@ public class WordFormsBuilder {
 
   private String removeNonLetterAccents(String word) {
     if (lettersToKeep.isEmpty()) {
-      return LanguageService.removeAccentsFromWord(word, alphabet);
+      alphabet.removeAccents(word);
     }
 
-    String escapedWord = LanguageService.removeAccentsFromWord(
-        StringUtils.replaceChars(word, lettersToKeep, tempReplacements), alphabet);
+    String escapedWord = alphabet.removeAccents(StringUtils.replaceChars(word, lettersToKeep, tempReplacements));
     return StringUtils.replaceChars(escapedWord, tempReplacements, lettersToKeep);
   }
 

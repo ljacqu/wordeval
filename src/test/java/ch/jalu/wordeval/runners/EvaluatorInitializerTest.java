@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
@@ -28,15 +29,13 @@ import static org.mockito.Mockito.mock;
  */
 public class EvaluatorInitializerTest {
 
-  private static final String[] EMPTY_STRING_ARRAY = new String[0];
-
   @Test
   public void shouldInstantiateAllEvaluators() {
     // given
     Language language = mock(Language.class);
     given(language.getAlphabet()).willReturn(Alphabet.LATIN);
-    given(language.getAdditionalVowels()).willReturn(EMPTY_STRING_ARRAY);
-    given(language.getAdditionalConsonants()).willReturn(EMPTY_STRING_ARRAY);
+    given(language.getAdditionalVowels()).willReturn(emptyList());
+    given(language.getAdditionalConsonants()).willReturn(emptyList());
 
     // when
     EvaluatorInitializer initializer = new EvaluatorInitializer(language);

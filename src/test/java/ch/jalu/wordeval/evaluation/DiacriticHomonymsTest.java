@@ -2,7 +2,6 @@ package ch.jalu.wordeval.evaluation;
 
 import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
-import ch.jalu.wordeval.language.LanguageService;
 import com.google.common.collect.Multimap;
 import org.junit.Test;
 
@@ -24,7 +23,7 @@ public class DiacriticHomonymsTest {
     DiacriticHomonyms evaluator = new DiacriticHomonyms(language.getLocale());
     
     for (String word : words) {
-      evaluator.processWord(LanguageService.removeAccentsFromWord(word, Alphabet.LATIN), word);
+      evaluator.processWord(Alphabet.LATIN.removeAccents(word), word);
     }
     Multimap<String, String> results = evaluator.getResults();
     

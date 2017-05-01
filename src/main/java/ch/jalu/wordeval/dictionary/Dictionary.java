@@ -3,9 +3,8 @@ package ch.jalu.wordeval.dictionary;
 import ch.jalu.wordeval.language.Language;
 import lombok.Getter;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
+import java.util.function.Function;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
 
@@ -37,21 +36,21 @@ public class Dictionary {
    */
   private final String[] skipSequences;
   /**
-   * Class of the sanitizer to use if a custom sanitizer should be used.
+   * Function that creates a custom sanitizer (null if none available).
    */
-  private final Class<? extends Sanitizer> sanitizerClass;
+  private final Function<Dictionary, Sanitizer> sanitizerCreator;
 
   @Getter(lazy = true)
   private final Sanitizer sanitizer = buildSanitizer();
 
   private Dictionary(String identifier, String file, Language language, char[] delimiters,
-                     String[] skipSequences, Class<? extends Sanitizer> sanitizerClass) {
+                     String[] skipSequences, Function<Dictionary, Sanitizer> sanitizerCreator) {
     this.identifier = identifier;
     this.file = file;
     this.language = language;
     this.delimiters = delimiters;
     this.skipSequences = skipSequences;
-    this.sanitizerClass = sanitizerClass;
+    this.sanitizerCreator = sanitizerCreator;
   }
 
   /**
@@ -59,18 +58,9 @@ public class Dictionary {
    * @return The created sanitizer
    */
   Sanitizer buildSanitizer() {
-    return sanitizerClass == null
+    return sanitizerCreator == null
         ? new Sanitizer(this)
-        : createSanitizer(sanitizerClass);
-  }
-
-  private <T extends Sanitizer> T createSanitizer(Class<T> clazz) {
-    try {
-      Constructor<?> constructor = clazz.getDeclaredConstructor(Dictionary.class);
-      return clazz.cast(constructor.newInstance(this));
-    } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
-      throw new UnsupportedOperationException("Could not create sanitizer", e);
-    }
+        : sanitizerCreator.apply(this);
   }
 
   public static Builder builder() {
@@ -84,7 +74,7 @@ public class Dictionary {
     private Language language;
     private char[] delimiters;
     private String[] skipSequences;
-    private Class<? extends Sanitizer> sanitizerClass;
+    private Function<Dictionary, Sanitizer> sanitizerCreator;
 
     private Builder() {
     }
@@ -100,7 +90,7 @@ public class Dictionary {
         language,
         firstNonNull(delimiters, new char[0]),
         firstNonNull(skipSequences, new String[0]),
-        sanitizerClass);
+        sanitizerCreator);
     }
 
     public Builder identifier(String identifier) {
@@ -128,8 +118,8 @@ public class Dictionary {
       return this;
     }
 
-    public Builder sanitizerClass(Class<? extends Sanitizer> sanitizerClass) {
-      this.sanitizerClass = sanitizerClass;
+    public Builder sanitizerCreator(Function<Dictionary, Sanitizer> sanitizerClass) {
+      this.sanitizerCreator = sanitizerClass;
       return this;
     }
   }

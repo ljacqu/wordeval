@@ -3,7 +3,6 @@ package ch.jalu.wordeval.evaluation;
 import ch.jalu.wordeval.dictionary.WordForm;
 import ch.jalu.wordeval.evaluation.export.ExportObject;
 import ch.jalu.wordeval.language.Language;
-import ch.jalu.wordeval.language.LanguageService;
 import ch.jalu.wordeval.language.LetterType;
 import lombok.Getter;
 
@@ -27,7 +26,7 @@ public class VowelCount extends PartWordEvaluator {
    * @param language the language of the words to process
    */
   public VowelCount(LetterType letterType, Language language) {
-    letters = LanguageService.getLetters(letterType, language);
+    this.letters = letterType.getLetters(language);
     this.letterType = letterType;
   }
 

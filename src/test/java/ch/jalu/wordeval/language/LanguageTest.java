@@ -7,11 +7,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import static ch.jalu.wordeval.TestUtil.newLanguage;
-import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.emptyArray;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -24,8 +26,8 @@ public class LanguageTest {
     Language lang = newLanguage("zxx").build();
 
     assertThat(lang.getCode(), equalTo("zxx"));
-    assertThat(lang.getAdditionalConsonants(), emptyArray());
-    assertThat(lang.getAdditionalVowels(), emptyArray());
+    assertThat(lang.getAdditionalConsonants(), empty());
+    assertThat(lang.getAdditionalVowels(), empty());
   }
 
   @Test
@@ -35,8 +37,8 @@ public class LanguageTest {
         .additionalConsonants("cs", "ny")
         .build();
 
-    assertThat(lang.getAdditionalVowels(), arrayWithSize(1));
-    assertThat(lang.getAdditionalConsonants(), arrayWithSize(2));
+    assertThat(lang.getAdditionalVowels(), hasSize(1));
+    assertThat(lang.getAdditionalConsonants(), hasSize(2));
   }
   
   @Test
@@ -46,6 +48,40 @@ public class LanguageTest {
       .additionalVowels("w", "eu", "ø", "öy").build();
 
     assertThat(toCharList(lang.getCharsToPreserve()), containsInAnyOrder('þ', 'ø'));
+  }
+
+  @Test
+  public void shouldGetLettersWithAdditional() {
+    // given
+    Language language = Language.builder("zxx", "", Alphabet.CYRILLIC)
+        .additionalConsonants("rz", "s")
+        .additionalVowels("u", "èö").build();
+
+    // when
+    List<String> vowels = language.getVowels();
+    List<String> consonants = language.getConsonants();
+
+    // then
+    // Check the additional letters + a few other random ones
+    assertThat(vowels, hasItems("u", "èö", "и", "я"));
+    assertThat(consonants, hasItems("rz", "s", "т", "ж"));
+  }
+
+  @Test
+  public void shouldRemoveLettersFromDefaultList() {
+    // given
+    Language language = Language.builder("zxx", "", Alphabet.LATIN)
+        .additionalVowels("w")
+        .lettersToRemove("w").build();
+
+    // when
+    List<String> vowels = language.getVowels();
+    List<String> consonants = language.getConsonants();
+
+    // then
+    assertThat(vowels, hasItem("w"));
+    assertThat(consonants, not(hasItem("w")));
+    assertThat(consonants, hasItems("c", "g", "v", "z"));
   }
 
   @Test

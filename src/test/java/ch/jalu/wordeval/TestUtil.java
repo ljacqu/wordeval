@@ -87,10 +87,7 @@ public final class TestUtil {
    * @return the generated Language builder
    */
   public static Language.Builder newLanguage(String code, Alphabet alphabet) {
-    return Language.builder()
-        .code(code)
-        .alphabet(alphabet)
-        .name("");
+    return Language.builder(code, "", alphabet);
   }
 
 }
