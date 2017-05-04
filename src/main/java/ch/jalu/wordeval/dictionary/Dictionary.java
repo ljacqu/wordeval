@@ -40,9 +40,6 @@ public class Dictionary {
    */
   private final Function<Dictionary, Sanitizer> sanitizerCreator;
 
-  @Getter(lazy = true)
-  private final Sanitizer sanitizer = buildSanitizer();
-
   private Dictionary(String identifier, String file, Language language, char[] delimiters,
                      String[] skipSequences, Function<Dictionary, Sanitizer> sanitizerCreator) {
     this.identifier = identifier;
@@ -57,7 +54,7 @@ public class Dictionary {
    * Builds a sanitizer with the required information.
    * @return The created sanitizer
    */
-  Sanitizer buildSanitizer() {
+  public Sanitizer buildSanitizer() {
     return sanitizerCreator == null
         ? new Sanitizer(this)
         : sanitizerCreator.apply(this);

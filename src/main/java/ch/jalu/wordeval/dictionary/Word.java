@@ -1,14 +1,15 @@
 package ch.jalu.wordeval.dictionary;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 
 /**
  * Word with all its word form types.
  */
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class Word {
 
-  private String[] wordForms;
+  private final String[] wordForms;
 
   /**
    * Gets a given word form from the given list.

@@ -8,9 +8,9 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 /**
- * Test for {@link WordFormsBuilder}.
+ * Test for {@link WordFactory}.
  */
-public class WordFormsBuilderTest {
+public class WordFactoryTest {
 
   @Test
   public void shouldKeepAdditionalLetters() {
@@ -19,7 +19,7 @@ public class WordFormsBuilderTest {
         .additionalVowels("æ", "ø", "å")
         .build();
     String[] words = { "forsøgte erklære trådte", "Å ǿ én býr" };
-    WordFormsBuilder builder = new WordFormsBuilder(language);
+    WordFactory builder = new WordFactory(language);
 
     // when
     Word[] result = new Word[2];
@@ -35,7 +35,7 @@ public class WordFormsBuilderTest {
   public void shouldRemoveAllAccentsByDefault() {
     // given
     Language language = newLanguage("fr").build();
-    WordFormsBuilder builder = new WordFormsBuilder(language);
+    WordFactory builder = new WordFactory(language);
 
     // when
     Word result = builder.computeForms("ÉÑÀÇÏÔ");
@@ -48,7 +48,7 @@ public class WordFormsBuilderTest {
   public void shouldUseLocaleForLowerCase() {
     // given
     Language language = newLanguage("tr").build();
-    WordFormsBuilder builder = new WordFormsBuilder(language);
+    WordFactory builder = new WordFactory(language);
 
     // when
     Word result = builder.computeForms("PRINÇE");
@@ -63,7 +63,7 @@ public class WordFormsBuilderTest {
     Language language = newLanguage("cs")
         .additionalConsonants("č", "ř")
         .build();
-    WordFormsBuilder builder = new WordFormsBuilder(language);
+    WordFactory builder = new WordFactory(language);
 
     // when
     Word result = builder.computeForms("ČL-OV'ěk-ůŘ");
@@ -72,10 +72,10 @@ public class WordFormsBuilderTest {
     assertThat(result.getForm(WordForm.NO_ACCENTS_WORD_CHARS_ONLY), equalTo("človekuř"));
   }
 
-  @Test(expected = IllegalStateException.class)
+  @Test(expected = IllegalArgumentException.class)
   public void shouldThrowForEmptyWord() {
     Language language = newLanguage("nl").build();
-    WordFormsBuilder builder = new WordFormsBuilder(language);
+    WordFactory builder = new WordFactory(language);
     builder.computeForms("");
   }
 

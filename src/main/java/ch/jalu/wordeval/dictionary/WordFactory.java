@@ -10,7 +10,7 @@ import java.util.Locale;
  * Utility class used in {@link Sanitizer} to 
  * generate the various word forms of a word.
  */
-public class WordFormsBuilder {
+public class WordFactory {
 
   private final Locale locale;
   private final String lettersToKeep;
@@ -22,7 +22,7 @@ public class WordFormsBuilder {
    *
    * @param language the language
    */
-  public WordFormsBuilder(Language language) {
+  public WordFactory(Language language) {
     lettersToKeep = language.getCharsToPreserve();
     tempReplacements = initializeTempReplacements(lettersToKeep);
     locale = language.getLocale();
@@ -32,12 +32,12 @@ public class WordFormsBuilder {
   /**
    * Computes the different word forms (all lowercase, accents removed, etc.) for the given word.
    *
-   * @param word the word to process
+   * @param word the word to process in its raw form
    * @return Word with all its forms
    */
   public Word computeForms(String word) {
     if (word.isEmpty()) {
-      throw new IllegalStateException("The word may not be empty");
+      throw new IllegalArgumentException("The word may not be empty");
     }
 
     String[] wordForms = new String[WordForm.values().length];

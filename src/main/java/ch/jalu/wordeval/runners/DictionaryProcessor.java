@@ -3,7 +3,7 @@ package ch.jalu.wordeval.runners;
 import ch.jalu.wordeval.DataUtils;
 import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.Sanitizer;
-import ch.jalu.wordeval.dictionary.WordFormsBuilder;
+import ch.jalu.wordeval.dictionary.WordFactory;
 import ch.jalu.wordeval.evaluation.Evaluator;
 import ch.jalu.wordeval.evaluation.EvaluatorInvoker;
 import ch.jalu.wordeval.language.Language;
@@ -26,15 +26,41 @@ public final class DictionaryProcessor {
    */
   public static long process(Dictionary dictionary, Iterable<Evaluator<?>> evaluators) {
     final EvaluatorInvoker invoker = new EvaluatorInvoker(evaluators);
-    final Sanitizer sanitizer = dictionary.getSanitizer();
+    final Sanitizer sanitizer = dictionary.buildSanitizer();
     final Language language = dictionary.getLanguage();
-    final WordFormsBuilder wordFormsBuilder = new WordFormsBuilder(language);
+    final WordFactory wordFactory = new WordFactory(language);
 
     long totalWords = DataUtils.readAllLines(dictionary.getFile())
         .stream()
         .map(sanitizer::isolateWord)
         .filter(StringUtils::isNotEmpty)
-        .map(wordFormsBuilder::computeForms)
+        .map(wordFactory::computeForms)
+        .peek(invoker::processWord)
+        .count();
+
+    invoker.executePostEvaluators();
+    evaluators.forEach(e -> e.filterDuplicateWords(language.getLocale()));
+    return totalWords;
+  }
+
+  /**
+   * Reads the given dictionary and passes each word to the given collection of evaluators.
+   *
+   * @param dictionary the dictionary to read
+   * @param evaluators the evaluators to use
+   * @return number of words processed
+   */
+  public static long process0(Dictionary dictionary, Iterable<Evaluator<?>> evaluators) {
+    final EvaluatorInvoker invoker = new EvaluatorInvoker(evaluators);
+    final Sanitizer sanitizer = dictionary.buildSanitizer();
+    final Language language = dictionary.getLanguage();
+    final WordFactory wordFactory = new WordFactory(language);
+
+    long totalWords = DataUtils.readAllLines(dictionary.getFile())
+        .stream()
+        .map(sanitizer::isolateWord)
+        .filter(StringUtils::isNotEmpty)
+        .map(wordFactory::computeForms)
         .peek(invoker::processWord)
         .count();
 
