@@ -10,6 +10,7 @@ import java.util.Optional;
  * Filters that checks if there is a group of letters in a word that is an
  * alphabetical sequence, e.g. "rstu" in German "Erstuntersuchung."
  */
+@Deprecated
 public class AlphabeticalSequence extends PartWordEvaluator {
 
   private static final int FORWARDS = -1;

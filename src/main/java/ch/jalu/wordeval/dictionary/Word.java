@@ -2,13 +2,15 @@ package ch.jalu.wordeval.dictionary;
 
 import lombok.AllArgsConstructor;
 
+import static ch.jalu.wordeval.dictionary.WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
+
 /**
  * Word with all its word form types.
  */
 @AllArgsConstructor
 public class Word {
 
-  private String[] wordForms;
+  private final String[] wordForms;
 
   /**
    * Gets a given word form from the given list.
@@ -18,6 +20,10 @@ public class Word {
    */
   public String getForm(WordForm wordForm) {
     return wordForms[wordForm.ordinal()];
+  }
+
+  public String noAccentsWordCharsOnly() {
+    return getForm(NO_ACCENTS_WORD_CHARS_ONLY);
   }
 
 }

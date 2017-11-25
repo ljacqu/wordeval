@@ -27,7 +27,7 @@ public class AllVowels extends PostEvaluator<String, VowelCount> {
   public void evaluateWith(VowelCount counter) {
     Multimap<String, String> results = counter.getResults();
     // TODO: This and SingleVowel actually just need the results from VowelCount and different reducers / export params
-    results.entries().stream()
+    results.entries()
       .forEach(entry -> getResults().put(entry.getKey(), entry.getValue()));
   }
 

@@ -15,7 +15,7 @@ abstract class TreeElement {
    *
    * @return the value of the element
    */
-  public abstract Object getValue();
+  abstract Object getValue();
 
   /**
    * Internal, intermediary class to define and handle a generic type without exposing it to the main
@@ -27,36 +27,36 @@ abstract class TreeElement {
   private abstract static class Wrapper<T> extends TreeElement {
     private final T value;
     
-    public T getTypedValue() {
+    T getTypedValue() {
       return value;
     }
     
     @Override
-    public Object getValue() {
+    Object getValue() {
       return getTypedValue();
     }
   }
 
   static final class Rest extends Wrapper<Integer> {
-    public Rest(int i) {
+    Rest(int i) {
       super(i);
     }
   }
   
   static final class Total extends Wrapper<Integer> {
-    public Total(int i) {
+    Total(int i) {
       super(i);
     }
   }
   
   static final class WordColl extends Wrapper<Collection<String>> {
-    public WordColl(Collection<String> c) {
+    WordColl(Collection<String> c) {
       super(c);
     }
   }
   
   static final class IndexTotalColl extends Wrapper<NavigableMap<String, Integer>> {
-    public IndexTotalColl(NavigableMap<String, Integer> map) {
+    IndexTotalColl(NavigableMap<String, Integer> map) {
       super(map);
     }
   }

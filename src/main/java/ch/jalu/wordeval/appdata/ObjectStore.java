@@ -25,7 +25,8 @@ abstract class ObjectStore<K, V> {
    *
    * @param objects the objects to add
    */
-  public void addAll(V... objects) {
+  @SafeVarargs
+  public final void addAll(V... objects) {
     for (V object : objects) {
       add(object);
     }
@@ -53,7 +54,7 @@ abstract class ObjectStore<K, V> {
   public V get(K key) {
     V value = entries.get(key);
     if (value == null) {
-      throw new IllegalStateException("No language has been stored for key '" + key + "'");
+      throw new IllegalStateException("No object has been stored for key '" + key + "'");
     }
     return value;
   }

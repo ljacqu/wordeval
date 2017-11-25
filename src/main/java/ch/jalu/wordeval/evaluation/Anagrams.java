@@ -12,6 +12,7 @@ import java.util.Optional;
 /**
  * Collects anagram groups (e.g. "acre", "care", "race").
  */
+@Deprecated
 public class Anagrams extends PartWordEvaluator {
 
   @Override
