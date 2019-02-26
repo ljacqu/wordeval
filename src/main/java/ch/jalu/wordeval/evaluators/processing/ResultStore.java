@@ -1,6 +1,8 @@
 package ch.jalu.wordeval.evaluators.processing;
 
+import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.EvaluatedWord;
+import ch.jalu.wordeval.evaluators.EvaluationResult;
 import com.google.common.collect.Multimap;
 
 import java.util.Collection;
@@ -23,4 +25,7 @@ public interface ResultStore<K extends Comparable<K>> {
    */
   Collection<EvaluatedWord<K>> getEntries(K score);
 
+  void addResult(Word word, EvaluationResult<K> result);
+
+  void addResults(Collection<EvaluatedWord<K>> results);
 }

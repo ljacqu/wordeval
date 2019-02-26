@@ -23,8 +23,8 @@ public class WordFactoryTest {
 
     // when
     Word[] result = new Word[2];
-    result[0] = builder.computeForms(words[0]);
-    result[1] = builder.computeForms(words[1]);
+    result[0] = builder.createWordObject(words[0]);
+    result[1] = builder.createWordObject(words[1]);
 
     // then
     assertThat(result[0].getForm(WordForm.NO_ACCENTS), equalTo("forsøgte erklære trådte"));
@@ -38,7 +38,7 @@ public class WordFactoryTest {
     WordFactory builder = new WordFactory(language);
 
     // when
-    Word result = builder.computeForms("ÉÑÀÇÏÔ");
+    Word result = builder.createWordObject("ÉÑÀÇÏÔ");
 
     // then
     assertThat(result.getForm(WordForm.NO_ACCENTS), equalTo("enacio"));
@@ -51,7 +51,7 @@ public class WordFactoryTest {
     WordFactory builder = new WordFactory(language);
 
     // when
-    Word result = builder.computeForms("PRINÇE");
+    Word result = builder.createWordObject("PRINÇE");
 
     // then
     assertThat(result.getForm(WordForm.LOWERCASE), equalTo("prınçe"));
@@ -66,7 +66,7 @@ public class WordFactoryTest {
     WordFactory builder = new WordFactory(language);
 
     // when
-    Word result = builder.computeForms("ČL-OV'ěk-ůŘ");
+    Word result = builder.createWordObject("ČL-OV'ěk-ůŘ");
 
     // then
     assertThat(result.getForm(WordForm.NO_ACCENTS_WORD_CHARS_ONLY), equalTo("človekuř"));
@@ -76,7 +76,7 @@ public class WordFactoryTest {
   public void shouldThrowForEmptyWord() {
     Language language = newLanguage("nl").build();
     WordFactory builder = new WordFactory(language);
-    builder.computeForms("");
+    builder.createWordObject("");
   }
 
 }

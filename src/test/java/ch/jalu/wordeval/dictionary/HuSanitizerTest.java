@@ -2,6 +2,7 @@ package ch.jalu.wordeval.dictionary;
 
 import ch.jalu.wordeval.TestUtil;
 import ch.jalu.wordeval.appdata.AppData;
+import ch.jalu.wordeval.dictionary.sanitizer.HuSanitizer;
 import ch.jalu.wordeval.evaluation.Evaluator;
 import ch.jalu.wordeval.evaluation.PartWordEvaluator;
 import ch.jalu.wordeval.runners.DictionaryProcessor;
@@ -10,7 +11,6 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +31,7 @@ public class HuSanitizerTest {
   }
 
   @Test
-  public void shouldFindTheGivenWords() throws IOException {
+  public void shouldFindTheGivenWords() {
     if (!TestUtil.doesDictionaryFileExist(huDictionary)) {
       log.warn("Skipping Hu sanitizer test because dictionary doesn't exist");
       return;
@@ -82,9 +82,7 @@ public class HuSanitizerTest {
 
     @Override
     public void processWord(String word, String rawWord) {
-      if (missingWords.contains(word)) {
-        missingWords.remove(word);
-      }
+      missingWords.remove(word);
     }
   }
 

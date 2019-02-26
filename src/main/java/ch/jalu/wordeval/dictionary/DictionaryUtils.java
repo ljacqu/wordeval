@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 /**
  * Utility methods for the dictionary.
  */
-public final class DictionaryService {
+public final class DictionaryUtils {
   
   /** 
    * Regexp that matches valid Roman numerals.
@@ -14,7 +14,7 @@ public final class DictionaryService {
   private static final Pattern ROMAN_NUMERAL_PATTERN = 
       Pattern.compile("M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})", Pattern.CASE_INSENSITIVE);
   
-  private DictionaryService() {
+  private DictionaryUtils() {
   }
   
   /**

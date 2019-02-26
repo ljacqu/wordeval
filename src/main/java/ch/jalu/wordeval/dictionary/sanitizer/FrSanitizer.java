@@ -1,4 +1,6 @@
-package ch.jalu.wordeval.dictionary;
+package ch.jalu.wordeval.dictionary.sanitizer;
+
+import ch.jalu.wordeval.dictionary.Dictionary;
 
 /**
  * Custom sanitizer for the French dictionary.

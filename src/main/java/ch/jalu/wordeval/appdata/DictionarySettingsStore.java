@@ -1,8 +1,8 @@
 package ch.jalu.wordeval.appdata;
 
 import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.dictionary.FrSanitizer;
-import ch.jalu.wordeval.dictionary.HuSanitizer;
+import ch.jalu.wordeval.dictionary.sanitizer.FrSanitizer;
+import ch.jalu.wordeval.dictionary.sanitizer.HuSanitizer;
 import ch.jalu.wordeval.language.Language;
 
 /**

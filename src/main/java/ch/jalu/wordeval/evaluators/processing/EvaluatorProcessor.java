@@ -17,8 +17,8 @@ import java.util.Map;
 @SuppressWarnings("unchecked")
 public class EvaluatorProcessor {
 
-  private final Map<WordEvaluator, ResultStoreImpl> wordEvaluators = new HashMap<>();
-  private final Map<PostEvaluator, ResultStoreImpl> postEvaluators = new HashMap<>();
+  private final Map<WordEvaluator, ResultStore> wordEvaluators = new HashMap<>();
+  private final Map<PostEvaluator, ResultStore> postEvaluators = new HashMap<>();
 
   public EvaluatorProcessor(Iterable<Evaluator> evaluators) {
     for (Evaluator evaluator : evaluators) {
@@ -34,7 +34,7 @@ public class EvaluatorProcessor {
   }
 
   public void processWord(Word word) {
-    for (Map.Entry<WordEvaluator, ResultStoreImpl> evaluatorEntry : wordEvaluators.entrySet()) {
+    for (Map.Entry<WordEvaluator, ResultStore> evaluatorEntry : wordEvaluators.entrySet()) {
       EvaluationResult result = evaluatorEntry.getKey().evaluate(word);
       if (result != null) {
         evaluatorEntry.getValue().addResult(word, result);
@@ -43,15 +43,15 @@ public class EvaluatorProcessor {
   }
 
   public void processPostEvaluators() {
-    for (Map.Entry<PostEvaluator, ResultStoreImpl> evaluatorEntry : postEvaluators.entrySet()) {
+    for (Map.Entry<PostEvaluator, ResultStore> evaluatorEntry : postEvaluators.entrySet()) {
       evaluatorEntry.getValue().addResults(
         processEvaluator(evaluatorEntry.getKey(), wordEvaluators));
     }
   }
 
   private static Collection<EvaluatedWord> processEvaluator(PostEvaluator postEvaluator,
-                                                            Map<WordEvaluator, ResultStoreImpl> wordEvaluators) {
-    for (Map.Entry<WordEvaluator, ResultStoreImpl> wordEvaluatorEntry : wordEvaluators.entrySet()) {
+                                                            Map<WordEvaluator, ResultStore> wordEvaluators) {
+    for (Map.Entry<WordEvaluator, ResultStore> wordEvaluatorEntry : wordEvaluators.entrySet()) {
       WordEvaluator wordEvaluator = wordEvaluatorEntry.getKey();
       if (postEvaluator.getBaseClass().isAssignableFrom(wordEvaluator.getClass())
           && postEvaluator.isBaseMatch(wordEvaluator)) {

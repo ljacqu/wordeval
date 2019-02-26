@@ -1,5 +1,6 @@
 package ch.jalu.wordeval.dictionary;
 
+import ch.jalu.wordeval.dictionary.sanitizer.Sanitizer;
 import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
 import org.apache.commons.lang3.StringUtils;
@@ -7,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Locale;
 
 /**
- * Utility class used in {@link Sanitizer} to 
+ * Utility class used in {@link Sanitizer} to
  * generate the various word forms of a word.
  */
 public class WordFactory {
@@ -35,7 +36,7 @@ public class WordFactory {
    * @param word the word to process in its raw form
    * @return Word with all its forms
    */
-  public Word computeForms(String word) {
+  public Word createWordObject(String word) {
     if (word.isEmpty()) {
       throw new IllegalArgumentException("The word may not be empty");
     }

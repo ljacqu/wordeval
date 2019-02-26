@@ -1,5 +1,6 @@
-package ch.jalu.wordeval.dictionary;
+package ch.jalu.wordeval.dictionary.sanitizer;
 
+import ch.jalu.wordeval.dictionary.Dictionary;
 import org.apache.commons.lang3.StringUtils;
 
 import static org.apache.commons.lang3.StringUtils.containsAny;

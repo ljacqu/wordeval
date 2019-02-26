@@ -5,7 +5,6 @@ import ch.jalu.wordeval.evaluation.export.ExportParams;
 import ch.jalu.wordeval.evaluation.export.PartWordExport;
 import ch.jalu.wordeval.evaluation.export.PartWordReducer;
 import ch.jalu.wordeval.language.Language;
-import ch.jalu.wordeval.language.LanguageService;
 import ch.jalu.wordeval.language.LetterType;
 import com.google.common.collect.Multimap;
 
@@ -21,7 +20,7 @@ public class AllVowelsAlphabetically extends PostEvaluator<String, VowelCount> {
   private final List<String> vowels;
 
   public AllVowelsAlphabetically(Language language) {
-    vowels = LanguageService.getLetters(LetterType.VOWELS, language);
+    vowels = language.getVowels();
   }
 
   /**

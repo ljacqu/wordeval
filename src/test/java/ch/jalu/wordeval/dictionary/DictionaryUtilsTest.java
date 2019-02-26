@@ -5,16 +5,16 @@ import org.junit.Test;
 import static org.junit.Assert.fail;
 
 /**
- * Test for {@link DictionaryService}.
+ * Test for {@link DictionaryUtils}.
  */
-public class DictionaryServiceTest {
+public class DictionaryUtilsTest {
   
   @Test
   public void shouldRecognizeRomanNumerals() {
     String[] words = {"xvii", "MXIX", "XCI", "lxxxviii", "clxxxviii", "mccliv"};
     
     for (String word : words) {
-      boolean result = DictionaryService.isRomanNumeral(word);
+      boolean result = DictionaryUtils.isRomanNumeral(word);
       if (!result) {
         fail("'" + word + "' was not recognized as Roman numeral");
       }
@@ -26,7 +26,7 @@ public class DictionaryServiceTest {
     String[] words = {"house", "xoxo", "cicil", "mic", "clim", "mill", "dill", "did"};
     
     for (String word : words) {
-      boolean result = DictionaryService.isRomanNumeral(word);
+      boolean result = DictionaryUtils.isRomanNumeral(word);
       if (result) {
         fail("'" + word + "' should not have been recognized as Roman numeral");
       }

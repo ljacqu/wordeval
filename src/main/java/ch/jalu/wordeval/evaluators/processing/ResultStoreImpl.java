@@ -27,10 +27,12 @@ class ResultStoreImpl<K extends Comparable<K>> implements ResultStore<K> {
     return Collections.unmodifiableCollection(entries.get(score));
   }
 
+  @Override
   public void addResult(Word word, EvaluationResult<K> result) {
     entries.put(result.getScore(), new EvaluatedWord<>(word, result));
   }
 
+  @Override
   public void addResults(Collection<EvaluatedWord<K>> results) {
     results.forEach(evalWord -> entries.put(evalWord.getResult().getScore(), evalWord));
   }

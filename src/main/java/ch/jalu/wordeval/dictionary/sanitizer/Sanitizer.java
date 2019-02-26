@@ -1,5 +1,7 @@
-package ch.jalu.wordeval.dictionary;
+package ch.jalu.wordeval.dictionary.sanitizer;
 
+import ch.jalu.wordeval.dictionary.Dictionary;
+import ch.jalu.wordeval.dictionary.DictionaryUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -30,7 +32,7 @@ public class Sanitizer {
    * @return the sanitized word (empty string to signal skip)
    */
   protected String customSanitize(String word) {
-    return DictionaryService.isRomanNumeral(word) ? "" : word;
+    return DictionaryUtils.isRomanNumeral(word) ? "" : word;
   }
 
   /**

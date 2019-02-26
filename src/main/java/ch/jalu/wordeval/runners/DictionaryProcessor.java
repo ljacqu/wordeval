@@ -2,7 +2,7 @@ package ch.jalu.wordeval.runners;
 
 import ch.jalu.wordeval.DataUtils;
 import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.dictionary.Sanitizer;
+import ch.jalu.wordeval.dictionary.sanitizer.Sanitizer;
 import ch.jalu.wordeval.dictionary.WordFactory;
 import ch.jalu.wordeval.evaluation.Evaluator;
 import ch.jalu.wordeval.evaluation.EvaluatorInvoker;
@@ -34,7 +34,7 @@ public final class DictionaryProcessor {
         .stream()
         .map(sanitizer::isolateWord)
         .filter(StringUtils::isNotEmpty)
-        .map(wordFactory::computeForms)
+        .map(wordFactory::createWordObject)
         .peek(invoker::processWord)
         .count();
 
@@ -60,7 +60,7 @@ public final class DictionaryProcessor {
         .stream()
         .map(sanitizer::isolateWord)
         .filter(StringUtils::isNotEmpty)
-        .map(wordFactory::computeForms)
+        .map(wordFactory::createWordObject)
         .peek(invoker::processWord)
         .count();
 

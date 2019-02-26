@@ -1,5 +1,6 @@
 package ch.jalu.wordeval.dictionary;
 
+import ch.jalu.wordeval.dictionary.sanitizer.Sanitizer;
 import ch.jalu.wordeval.language.Language;
 import lombok.Getter;
 
@@ -115,8 +116,8 @@ public class Dictionary {
       return this;
     }
 
-    public Builder sanitizerCreator(Function<Dictionary, Sanitizer> sanitizerClass) {
-      this.sanitizerCreator = sanitizerClass;
+    public Builder sanitizerCreator(Function<Dictionary, Sanitizer> sanitizerCreator) {
+      this.sanitizerCreator = sanitizerCreator;
       return this;
     }
   }

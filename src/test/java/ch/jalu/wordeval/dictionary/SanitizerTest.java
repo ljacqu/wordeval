@@ -1,5 +1,6 @@
 package ch.jalu.wordeval.dictionary;
 
+import ch.jalu.wordeval.dictionary.sanitizer.Sanitizer;
 import ch.jalu.wordeval.language.Language;
 import org.junit.BeforeClass;
 import org.junit.Test;

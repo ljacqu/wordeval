@@ -3,9 +3,9 @@ package ch.jalu.wordeval.helpertask;
 import ch.jalu.wordeval.DataUtils;
 import ch.jalu.wordeval.ReflectionTestUtil;
 import ch.jalu.wordeval.appdata.AppData;
-import ch.jalu.wordeval.dictionary.DictionaryService;
+import ch.jalu.wordeval.dictionary.DictionaryUtils;
 import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.dictionary.Sanitizer;
+import ch.jalu.wordeval.dictionary.sanitizer.Sanitizer;
 import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.Method;
@@ -44,7 +44,7 @@ public class UtilSkippedRomanNumerals {
       String sanitizerResult = sanitizer.isolateWord(line);
       if (sanitizerResult.isEmpty()) {
         String word = (String) ReflectionTestUtil.invokeMethod(lineToWord, sanitizer, line);
-        if (DictionaryService.isRomanNumeral(word)) {
+        if (DictionaryUtils.isRomanNumeral(word)) {
           skippedNumerals.add(word);
         }
       }
