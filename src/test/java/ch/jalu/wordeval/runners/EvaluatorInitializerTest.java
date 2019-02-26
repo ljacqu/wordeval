@@ -42,7 +42,7 @@ public class EvaluatorInitializerTest {
 
     // then
     List<Evaluator<?>> evaluators = initializer.getEvaluators();
-    assertThat(evaluators, hasSize(22));
+    assertThat(evaluators, hasSize(23));
     // Test presence for a sample of evaluators
     assertThat(evaluators, hasItem(instanceOf(AlphabeticalSequence.class)));
     assertThat(evaluators, hasItem(instanceOf(FullPalindromes.class)));
