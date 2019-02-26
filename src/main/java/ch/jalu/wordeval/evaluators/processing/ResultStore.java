@@ -3,19 +3,19 @@ package ch.jalu.wordeval.evaluators.processing;
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.EvaluatedWord;
 import ch.jalu.wordeval.evaluators.EvaluationResult;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.ImmutableMultimap;
 
 import java.util.Collection;
 
 /**
  * Stores the results of an evaluator.
  */
-public interface ResultStore<K extends Comparable<K>> {
+public interface ResultStore {
 
   /**
    * @return read-only view of the results
    */
-  Multimap<K, EvaluatedWord<K>> getEntries();
+  ImmutableMultimap<Double, EvaluatedWord> getEntries();
 
   /**
    * Fetches all results for the given score (read-only).
@@ -23,9 +23,9 @@ public interface ResultStore<K extends Comparable<K>> {
    * @param score the key to get the entries for
    * @return the entries for the given key
    */
-  Collection<EvaluatedWord<K>> getEntries(K score);
+  Collection<EvaluatedWord> getEntries(Double score);
 
-  void addResult(Word word, EvaluationResult<K> result);
+  void addResult(Word word, EvaluationResult result);
 
-  void addResults(Collection<EvaluatedWord<K>> results);
+  void addResults(Collection<EvaluatedWord> results);
 }

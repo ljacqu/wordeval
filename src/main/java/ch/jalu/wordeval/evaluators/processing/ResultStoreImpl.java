@@ -13,27 +13,27 @@ import java.util.Collections;
 /**
  * Implementation of {@link ResultStore}.
  */
-class ResultStoreImpl<K extends Comparable<K>> implements ResultStore<K> {
+class ResultStoreImpl implements ResultStore {
 
-  private final Multimap<K, EvaluatedWord<K>> entries = TreeMultimap.create();
+  private final Multimap<Double, EvaluatedWord> entries = TreeMultimap.create();
 
   @Override
-  public Multimap<K, EvaluatedWord<K>> getEntries() {
+  public ImmutableMultimap<Double, EvaluatedWord> getEntries() {
     return ImmutableMultimap.copyOf(entries);
   }
 
   @Override
-  public Collection<EvaluatedWord<K>> getEntries(K score) {
+  public Collection<EvaluatedWord> getEntries(Double score) {
     return Collections.unmodifiableCollection(entries.get(score));
   }
 
   @Override
-  public void addResult(Word word, EvaluationResult<K> result) {
-    entries.put(result.getScore(), new EvaluatedWord<>(word, result));
+  public void addResult(Word word, EvaluationResult result) {
+    entries.put(result.getScore(), new EvaluatedWord(word, result));
   }
 
   @Override
-  public void addResults(Collection<EvaluatedWord<K>> results) {
+  public void addResults(Collection<EvaluatedWord> results) {
     results.forEach(evalWord -> entries.put(evalWord.getResult().getScore(), evalWord));
   }
 }

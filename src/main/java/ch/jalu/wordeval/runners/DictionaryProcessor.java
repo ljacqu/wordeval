@@ -42,30 +42,4 @@ public final class DictionaryProcessor {
     evaluators.forEach(e -> e.filterDuplicateWords(language.getLocale()));
     return totalWords;
   }
-
-  /**
-   * Reads the given dictionary and passes each word to the given collection of evaluators.
-   *
-   * @param dictionary the dictionary to read
-   * @param evaluators the evaluators to use
-   * @return number of words processed
-   */
-  public static long process0(Dictionary dictionary, Iterable<Evaluator<?>> evaluators) {
-    final EvaluatorInvoker invoker = new EvaluatorInvoker(evaluators);
-    final Sanitizer sanitizer = dictionary.buildSanitizer();
-    final Language language = dictionary.getLanguage();
-    final WordFactory wordFactory = new WordFactory(language);
-
-    long totalWords = DataUtils.readAllLines(dictionary.getFile())
-        .stream()
-        .map(sanitizer::isolateWord)
-        .filter(StringUtils::isNotEmpty)
-        .map(wordFactory::createWordObject)
-        .peek(invoker::processWord)
-        .count();
-
-    invoker.executePostEvaluators();
-    evaluators.forEach(e -> e.filterDuplicateWords(language.getLocale()));
-    return totalWords;
-  }
 }

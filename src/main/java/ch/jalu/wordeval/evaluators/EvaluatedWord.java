@@ -12,21 +12,21 @@ import java.util.Comparator;
  */
 @Getter
 @AllArgsConstructor
-public class EvaluatedWord<R extends Comparable<R>> implements Comparable<EvaluatedWord<R>> {
+public class EvaluatedWord implements Comparable<EvaluatedWord> {
 
-  private static final Comparator<EvaluatedWord<?>> COMPARATOR = buildComparator();
+  private static final Comparator<EvaluatedWord> COMPARATOR = buildComparator();
 
   private final Word word;
-  private final EvaluationResult<R> result;
+  private final EvaluationResult result;
 
   @Override
-  public int compareTo(EvaluatedWord<R> o) {
+  public int compareTo(EvaluatedWord o) {
     return COMPARATOR.compare(this, o);
   }
 
-  private static Comparator<EvaluatedWord<?>> buildComparator() {
-    Comparator<EvaluatedWord<?>> scoreComparator = Comparator.comparing(ew -> ew.getResult().getScore());
-    Comparator<EvaluatedWord<?>> wordComparator = Comparator.comparing(ew -> ew.getWord().getForm(WordForm.RAW));
+  private static Comparator<EvaluatedWord> buildComparator() {
+    Comparator<EvaluatedWord> scoreComparator = Comparator.comparing(ew -> ew.getResult().getScore());
+    Comparator<EvaluatedWord> wordComparator = Comparator.comparing(ew -> ew.getWord().getForm(WordForm.RAW));
     return scoreComparator.thenComparing(wordComparator);
   }
 }
