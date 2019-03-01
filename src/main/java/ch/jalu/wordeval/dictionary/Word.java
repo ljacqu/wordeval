@@ -21,4 +21,19 @@ public class Word {
     return wordForms[wordForm.ordinal()];
   }
 
+  public String getRaw() {
+    return getForm(WordForm.RAW);
+  }
+
+  public String getLowercase() {
+    return getForm(WordForm.LOWERCASE);
+  }
+
+  public String getWithoutAccents() {
+    return getForm(WordForm.NO_ACCENTS);
+  }
+
+  public String getWithoutAccentsWordCharsOnly() {
+    return getForm(WordForm.NO_ACCENTS_WORD_CHARS_ONLY);
+  }
 }

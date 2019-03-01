@@ -18,4 +18,13 @@ public class EvaluationResult {
   private final double score;
   private final String key;
 
+  /**
+   * Copy constructor.
+   *
+   * @param source the source to copy from
+   */
+  public EvaluationResult(EvaluationResult source) {
+    this.score = source.score;
+    this.key = source.key;
+  }
 }
