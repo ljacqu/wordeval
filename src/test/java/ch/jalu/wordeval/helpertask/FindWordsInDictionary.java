@@ -2,7 +2,6 @@ package ch.jalu.wordeval.helpertask;
 
 import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.evaluation.Evaluator;
 import ch.jalu.wordeval.evaluation.PartWordEvaluator;
 import ch.jalu.wordeval.runners.DictionaryProcessor;
 import lombok.Getter;
@@ -10,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,9 +39,8 @@ public class FindWordsInDictionary {
 
   private static void findWordsInDict(Dictionary dictionary, Set<String> wordsToFind) {
     TestEvaluator testEvaluator = new TestEvaluator(wordsToFind);
-    List<Evaluator<?>> evaluators = Collections.singletonList(testEvaluator);
-
-    DictionaryProcessor.process(dictionary, evaluators);
+    DictionaryProcessor.readAllWords(dictionary)
+      .forEach(word -> testEvaluator.processWord(word.getLowercase(), word.getRaw()));
 
     Collection<String> missingWords = testEvaluator.getMissingWords();
     if (missingWords.isEmpty()) {

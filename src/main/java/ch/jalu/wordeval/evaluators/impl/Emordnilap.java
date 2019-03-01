@@ -6,7 +6,7 @@ import ch.jalu.wordeval.evaluators.EvaluationResult;
 import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class Emordnilap implements AllWordsEvaluator {
 
   @Override
-  public void evaluate(List<Word> words, ResultStore resultStore) {
+  public void evaluate(Collection<Word> words, ResultStore resultStore) {
     TreeMap<String, Word> wordsByLowercase = words.stream()
       .collect(Collectors.toMap(Word::getLowercase, word -> word, (a, b) -> b, TreeMap::new));
 

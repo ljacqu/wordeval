@@ -1,7 +1,7 @@
 package ch.jalu.wordeval.evaluators.processing;
 
+import ch.jalu.wordeval.evaluators.AllWordsEvaluator;
 import ch.jalu.wordeval.evaluators.EvaluatedWord;
-import ch.jalu.wordeval.evaluators.WordEvaluator;
 import com.google.common.collect.ImmutableMultimap;
 
 import java.util.List;
@@ -15,15 +15,15 @@ import java.util.stream.Collectors;
  */
 public class ResultsProvider {
 
-  private final Map<WordEvaluator, ResultStore> wordEvaluators;
+  private final Map<AllWordsEvaluator, ResultStore> evaluatorResults;
 
   /**
    * Constructor.
    *
-   * @param wordEvaluators the evaluator processor with the results
+   * @param evaluatorResults the evaluator processor with the results
    */
-  ResultsProvider(Map<WordEvaluator, ResultStore> wordEvaluators) {
-    this.wordEvaluators = wordEvaluators;
+  ResultsProvider(Map<AllWordsEvaluator, ResultStore> evaluatorResults) {
+    this.evaluatorResults = evaluatorResults;
   }
 
   /**
@@ -33,7 +33,7 @@ public class ResultsProvider {
    * @param clz the evaluator class to search for
    * @return the results of the evaluator of the provided class
    */
-  public ImmutableMultimap<Double, EvaluatedWord> getResultsOfEvaluatorOfType(Class<? extends WordEvaluator> clz) {
+  public ImmutableMultimap<Double, EvaluatedWord> getResultsOfEvaluatorOfType(Class<? extends AllWordsEvaluator> clz) {
     return getResultsOfEvaluatorOfType(clz, e -> true);
   }
 
@@ -43,18 +43,18 @@ public class ResultsProvider {
    *
    * @param clz the evaluator class to search for
    * @param predicate the predicate the evaluator must satisfy
-   * @param <W> the evaluator type
+   * @param <E> the evaluator type
    * @return the results of the matching evaluator
    */
-  public <W extends WordEvaluator> ImmutableMultimap<Double, EvaluatedWord> getResultsOfEvaluatorOfType(Class<W> clz,
-                                                                                               Predicate<W> predicate) {
-    W evaluator = findEvaluatorOfTypeMatching(clz, predicate);
-    return wordEvaluators.get(evaluator).getEntries();
+  public <E extends AllWordsEvaluator> ImmutableMultimap<Double, EvaluatedWord> getResultsOfEvaluatorOfType(
+      Class<E> clz, Predicate<E> predicate) {
+
+    E evaluator = findEvaluatorOfTypeMatching(clz, predicate);
+    return evaluatorResults.get(evaluator).getEntries();
   }
 
-  private <W extends WordEvaluator> W findEvaluatorOfTypeMatching(Class<W> evaluatorClass,
-                                                                  Predicate<W> predicate) {
-    List<W> matchingEvaluators = wordEvaluators.keySet().stream()
+  private <E extends AllWordsEvaluator> E findEvaluatorOfTypeMatching(Class<E> evaluatorClass, Predicate<E> predicate) {
+    List<E> matchingEvaluators = evaluatorResults.keySet().stream()
       .filter(evaluatorClass::isInstance)
       .map(evaluatorClass::cast)
       .filter(predicate)

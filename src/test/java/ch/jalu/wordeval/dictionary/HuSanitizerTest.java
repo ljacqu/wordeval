@@ -52,10 +52,11 @@ public class HuSanitizerTest {
     MissingWordsEvaluator evaluator3 = new MissingWordsEvaluator(
         "should get other words that have special treatment", words3);
 
-    List<Evaluator<?>> evaluatorList = Arrays.asList(evaluator1, evaluator2, evaluator3);
+    List<PartWordEvaluator> evaluatorList = Arrays.asList(evaluator1, evaluator2, evaluator3);
 
     // when
-    DictionaryProcessor.process(huDictionary, evaluatorList);
+    DictionaryProcessor.readAllWords(huDictionary)
+      .forEach(word -> evaluatorList.forEach(evaluator -> evaluator.processWord(word.getRaw(), word.getRaw())));
 
     // then
     for (Evaluator<?> evaluator : evaluatorList) {

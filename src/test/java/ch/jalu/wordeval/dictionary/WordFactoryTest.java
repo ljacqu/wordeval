@@ -27,8 +27,8 @@ public class WordFactoryTest {
     result[1] = builder.createWordObject(words[1]);
 
     // then
-    assertThat(result[0].getForm(WordForm.NO_ACCENTS), equalTo("forsøgte erklære trådte"));
-    assertThat(result[1].getForm(WordForm.NO_ACCENTS), equalTo("å ø en byr"));
+    assertThat(result[0].getWithoutAccents(), equalTo("forsøgte erklære trådte"));
+    assertThat(result[1].getWithoutAccents(), equalTo("å ø en byr"));
   }
 
   @Test
@@ -41,7 +41,7 @@ public class WordFactoryTest {
     Word result = builder.createWordObject("ÉÑÀÇÏÔ");
 
     // then
-    assertThat(result.getForm(WordForm.NO_ACCENTS), equalTo("enacio"));
+    assertThat(result.getWithoutAccents(), equalTo("enacio"));
   }
 
   @Test
@@ -54,7 +54,7 @@ public class WordFactoryTest {
     Word result = builder.createWordObject("PRINÇE");
 
     // then
-    assertThat(result.getForm(WordForm.LOWERCASE), equalTo("prınçe"));
+    assertThat(result.getLowercase(), equalTo("prınçe"));
   }
 
   @Test
@@ -69,7 +69,7 @@ public class WordFactoryTest {
     Word result = builder.createWordObject("ČL-OV'ěk-ůŘ");
 
     // then
-    assertThat(result.getForm(WordForm.NO_ACCENTS_WORD_CHARS_ONLY), equalTo("človekuř"));
+    assertThat(result.getWithoutAccentsWordCharsOnly(), equalTo("človekuř"));
   }
 
   @Test(expected = IllegalArgumentException.class)

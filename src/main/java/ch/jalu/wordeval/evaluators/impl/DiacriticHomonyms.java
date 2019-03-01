@@ -5,10 +5,9 @@ import ch.jalu.wordeval.evaluators.AllWordsEvaluator;
 import ch.jalu.wordeval.evaluators.EvaluationResult;
 import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimaps;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 /**
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 public class DiacriticHomonyms implements AllWordsEvaluator {
 
   @Override
-  public void evaluate(List<Word> words, ResultStore resultStore) {
+  public void evaluate(Collection<Word> words, ResultStore resultStore) {
     HashMultimap<String, Word> wordsByNoAccentRep = words.stream()
       .collect(Multimaps.toMultimap(
         Word::getWithoutAccents,
@@ -31,7 +30,7 @@ public class DiacriticHomonyms implements AllWordsEvaluator {
         String wordList = wordsInGroup.stream()
           .map(Word::getRaw)
           .collect(Collectors.joining(", "));
-        resultStore.addResult(Iterables.get(wordsInGroup, 0), new EvaluationResult(wordsInGroup.size(), wordList));
+        resultStore.addResult(null, new EvaluationResult(wordsInGroup.size(), wordList));
       }
     });
   }

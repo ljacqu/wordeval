@@ -3,9 +3,9 @@ package ch.jalu.wordeval.evaluators.processing;
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.EvaluatedWord;
 import ch.jalu.wordeval.evaluators.EvaluationResult;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.TreeMultimap;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -13,9 +13,9 @@ import java.util.Collections;
 /**
  * Implementation of {@link ResultStore}.
  */
-class ResultStoreImpl implements ResultStore {
+public class ResultStoreImpl implements ResultStore {
 
-  private final Multimap<Double, EvaluatedWord> entries = TreeMultimap.create();
+  private final Multimap<Double, EvaluatedWord> entries = HashMultimap.create();
 
   @Override
   public ImmutableMultimap<Double, EvaluatedWord> getEntries() {

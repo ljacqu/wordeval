@@ -1,8 +1,8 @@
 package ch.jalu.wordeval.evaluators.processing;
 
 import ch.jalu.wordeval.dictionary.Word;
+import ch.jalu.wordeval.evaluators.AllWordsEvaluator;
 import ch.jalu.wordeval.evaluators.PostEvaluator;
-import ch.jalu.wordeval.evaluators.WordEvaluator;
 
 import java.util.Collection;
 import java.util.Map;
@@ -14,31 +14,24 @@ import java.util.stream.Collectors;
  */
 public class EvaluatorProcessor {
 
-  private final Map<WordEvaluator, ResultStore> wordEvaluators;
+  private final Map<AllWordsEvaluator, ResultStore> wordEvaluators;
   private final Map<PostEvaluator, ResultStore> postEvaluators;
 
-  public EvaluatorProcessor(Collection<WordEvaluator> wordEvaluators, Collection<PostEvaluator> postEvaluators) {
+  public EvaluatorProcessor(Collection<AllWordsEvaluator> wordEvaluators, Collection<PostEvaluator> postEvaluators) {
     this.wordEvaluators = wordEvaluators.stream()
       .collect(Collectors.toMap(Function.identity(), k -> new ResultStoreImpl()));
     this.postEvaluators = postEvaluators.stream()
       .collect(Collectors.toMap(Function.identity(), k -> new ResultStoreImpl()));
   }
 
-  public void processWord(Word word) {
-    for (Map.Entry<WordEvaluator, ResultStore> evaluatorEntry : wordEvaluators.entrySet()) {
-      evaluatorEntry.getKey().evaluate(word, evaluatorEntry.getValue());
-    }
+  public EvaluatorProcessor(EvaluatorInitializer evaluatorInitializer) {
+    this(evaluatorInitializer.getAllWordsEvaluators(), evaluatorInitializer.getPostEvaluators());
   }
 
-  public void processPostEvaluators() {
+  public void processAllWords(Collection<Word> words) {
+    wordEvaluators.forEach((evaluator, resultStore) -> evaluator.evaluate(words, resultStore));
+
     ResultsProvider resultsProvider = new ResultsProvider(wordEvaluators);
-    for (Map.Entry<PostEvaluator, ResultStore> evaluatorEntry : postEvaluators.entrySet()) {
-      PostEvaluator postEvaluator = evaluatorEntry.getKey();
-      postEvaluator.evaluateAndSaveResults(resultsProvider, evaluatorEntry.getValue());
-    }
-  }
-
-  Map<WordEvaluator, ResultStore> getWordEvaluators() {
-    return wordEvaluators;
+    postEvaluators.forEach((evaluator, resultStore) -> evaluator.evaluateAndSaveResults(resultsProvider, resultStore));
   }
 }

@@ -41,15 +41,13 @@ public class WordFactory {
       throw new IllegalArgumentException("The word may not be empty");
     }
 
-    String[] wordForms = new String[WordForm.values().length];
-    wordForms[WordForm.RAW.ordinal()] = word;
-
-    String lowerCaseWord = word.toLowerCase(locale);
-    wordForms[WordForm.LOWERCASE.ordinal()] = lowerCaseWord;
-    wordForms[WordForm.NO_ACCENTS.ordinal()] = removeNonLetterAccents(lowerCaseWord);
-    wordForms[WordForm.NO_ACCENTS_WORD_CHARS_ONLY.ordinal()] = wordForms[WordForm.NO_ACCENTS.ordinal()]
-        .replace("-", "").replace("'", "");
-    return new Word(wordForms);
+    Word wordObject = new Word();
+    wordObject.setRaw(word);
+    wordObject.setLowercase(word.toLowerCase(locale));
+    wordObject.setWithoutAccents(removeNonLetterAccents(wordObject.getLowercase()));
+    wordObject.setWithoutAccentsWordCharsOnly(wordObject.getWithoutAccents()
+      .replace("-", "").replace("'", ""));
+    return wordObject;
   }
 
   private String removeNonLetterAccents(String word) {

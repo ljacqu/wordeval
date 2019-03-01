@@ -6,10 +6,12 @@ import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.processing.ResultsProvider;
 import ch.jalu.wordeval.language.LetterType;
 import com.google.common.collect.ImmutableMultimap;
+import lombok.Getter;
 
 /**
  * Evaluator that collects words with the most different vowels or consonants.
  */
+@Getter
 public class AllVowels implements PostEvaluator {
 
   private final LetterType letterType;

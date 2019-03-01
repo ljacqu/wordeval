@@ -59,8 +59,9 @@ public class DictionarySanitationTest {
     AppData appData = new AppData();
     Dictionary dictionary = appData.getDictionary(languageCode);
 
-    DictionaryProcessor.process(dictionary, Collections.singletonList(testEvaluator));
-    
+    DictionaryProcessor.readAllWords(dictionary)
+      .forEach(word -> testEvaluator.processWord(word.getWithoutAccentsWordCharsOnly(), word.getRaw()));
+
     return testEvaluator.getResults();
   }
   

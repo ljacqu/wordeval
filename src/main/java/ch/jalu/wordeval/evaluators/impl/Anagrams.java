@@ -5,12 +5,11 @@ import ch.jalu.wordeval.evaluators.AllWordsEvaluator;
 import ch.jalu.wordeval.evaluators.EvaluationResult;
 import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 public class Anagrams implements AllWordsEvaluator {
 
   @Override
-  public void evaluate(List<Word> words, ResultStore resultStore) {
+  public void evaluate(Collection<Word> words, ResultStore resultStore) {
     Multimap<String, Word> wordsBySortedChars = words.stream()
       .collect(Multimaps.toMultimap(this::sortLettersAlphabetically, Function.identity(), HashMultimap::create));
 
@@ -29,7 +28,8 @@ public class Anagrams implements AllWordsEvaluator {
         String wordList = groupedWords.stream()
           .map(Word::getRaw)
           .collect(Collectors.joining(", "));
-        resultStore.addResult(Iterables.get(groupedWords, 0),
+        // FIXME it would be nice to keep the 'sequence'
+        resultStore.addResult(null,
           new EvaluationResult(groupedWords.size(), wordList));
       }
     });
