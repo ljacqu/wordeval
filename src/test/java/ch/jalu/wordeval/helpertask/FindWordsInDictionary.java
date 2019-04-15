@@ -2,13 +2,11 @@ package ch.jalu.wordeval.helpertask;
 
 import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.evaluation.PartWordEvaluator;
+import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.runners.DictionaryProcessor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import com.google.common.collect.Sets;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,29 +36,15 @@ public class FindWordsInDictionary {
   }
 
   private static void findWordsInDict(Dictionary dictionary, Set<String> wordsToFind) {
-    TestEvaluator testEvaluator = new TestEvaluator(wordsToFind);
-    DictionaryProcessor.readAllWords(dictionary)
-      .forEach(word -> testEvaluator.processWord(word.getLowercase(), word.getRaw()));
+    Set<String> actualWords = DictionaryProcessor.readAllWords(dictionary).stream()
+      .map(Word::getLowercase)
+      .collect(Collectors.toSet());
 
-    Collection<String> missingWords = testEvaluator.getMissingWords();
+    Set<String> missingWords = Sets.difference(wordsToFind, actualWords);
     if (missingWords.isEmpty()) {
       System.out.println("Success -- found all words");
     } else {
       System.out.println("Words missing: " + missingWords);
-    }
-  }
-
-  @RequiredArgsConstructor
-  @Getter
-  private static class TestEvaluator extends PartWordEvaluator {
-
-    private final Set<String> missingWords;
-
-    @Override
-    public void processWord(String word, String rawWord) {
-      if (missingWords.contains(word)) {
-        missingWords.remove(word);
-      }
     }
   }
 }
