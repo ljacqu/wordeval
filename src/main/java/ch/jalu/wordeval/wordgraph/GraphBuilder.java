@@ -50,6 +50,7 @@ public class GraphBuilder {
   private static List<String> getDictionaryWords(Dictionary dictionary) {
     return DictionaryProcessor.readAllWords(dictionary).stream()
       .map(Word::getRaw)
+      .distinct()
       .sorted()
       .collect(Collectors.toList());
   }
