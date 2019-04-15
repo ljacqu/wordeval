@@ -11,9 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,43 +33,34 @@ public class DictionarySanitationTest {
     String dictCode = sc.nextLine();
     sc.close();
 
-    Map<String, Set<String>> sanitationResult = new HashMap<>();
-    Iterable<String> languageCodes = StringUtils.isEmpty(dictCode.trim())
-        ? appData.getAllDictionaryCodes()
-        : Collections.singletonList(dictCode);
+    Iterable<Dictionary> dictionaries = StringUtils.isBlank(dictCode)
+        ? appData.getAllDictionaries()
+        : Collections.singletonList(appData.getDictionary(dictCode.trim()));
     
-    for (String languageCode : languageCodes) {
-      Set<String> badWords = findBadWords(languageCode);
+    for (Dictionary dictionary : dictionaries) {
+      Set<String> badWords = findBadWords(dictionary);
       if (!badWords.isEmpty()) {
-        sanitationResult.put(languageCode, badWords);
+        System.err.println(dictionary.getIdentifier() + ": " + badWords);
+      } else {
+        System.out.println(dictionary.getIdentifier() + " passed");
       }
-    }
-
-    if (!sanitationResult.isEmpty()) {
-      sanitationResult.forEach((key, value) -> System.err.println(key + ": " + value));
-    } else {
-      System.out.println("Verification successful");
     }
   }
 
-  private static Set<String> findBadWords(String languageCode) {
-    char[] allowedChars = createStringOfAllowedChars(languageCode);
-    AppData appData = new AppData();
-    Dictionary dictionary = appData.getDictionary(languageCode);
-
+  private static Set<String> findBadWords(Dictionary dictionary) {
+    char[] allowedChars = createStringOfAllowedChars(dictionary.getLanguage());
     return DictionaryProcessor.readAllWords(dictionary).stream()
       .map(Word::getWithoutAccentsWordCharsOnly)
       .filter(word -> !StringUtils.containsOnly(word, allowedChars))
       .collect(Collectors.toSet());
   }
   
-  private static char[] createStringOfAllowedChars(String languageCode) {
-    Language lang = appData.getLanguage(languageCode);
-    List<String> additions = lang.getAlphabet() == Alphabet.CYRILLIC
+  private static char[] createStringOfAllowedChars(Language language) {
+    List<String> additions = language.getAlphabet() == Alphabet.CYRILLIC
       ? Arrays.asList("ь", "ъ")
       : Collections.emptyList();
 
-    String allowedChars = Stream.of(additions, lang.getVowels(), lang.getConsonants())
+    String allowedChars = Stream.of(additions, language.getVowels(), language.getConsonants())
       .flatMap(Collection::stream)
       .filter(letter -> letter.length() == 1)
       .distinct()

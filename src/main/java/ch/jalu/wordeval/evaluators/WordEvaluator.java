@@ -3,12 +3,11 @@ package ch.jalu.wordeval.evaluators;
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.result.EvaluationResult;
-import ch.jalu.wordeval.evaluators.result.ScoreAndKeyResult;
 
 import java.util.Collection;
 
 /**
- * Simple evaluator which produces an {@link ScoreAndKeyResult} object for each {@link Word} it is passed.
+ * Simple evaluator which produces an {@link EvaluationResult} object for each {@link Word} it is passed.
  */
 public interface WordEvaluator<R extends EvaluationResult> extends AllWordsEvaluator<R> {
 
