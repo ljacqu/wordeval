@@ -1,9 +1,9 @@
 package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.evaluators.EvaluationResult;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
 import ch.jalu.wordeval.evaluators.processing.ResultStore;
+import ch.jalu.wordeval.evaluators.result.WordWithScore;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,10 +11,10 @@ import java.util.Set;
 /**
  * Finds isograms (words with all different letters).
  */
-public class Isograms implements WordEvaluator {
+public class Isograms implements WordEvaluator<WordWithScore> {
 
   @Override
-  public void evaluate(Word wordObject, ResultStore resultStore) {
+  public void evaluate(Word wordObject, ResultStore<WordWithScore> resultStore) {
     String word = wordObject.getWithoutAccentsWordCharsOnly();
     Set<Character> charList = new HashSet<>();
     for (int i = 0; i < word.length(); ++i) {
@@ -24,6 +24,6 @@ public class Isograms implements WordEvaluator {
         return;
       }
     }
-    resultStore.addResult(wordObject, new EvaluationResult(word.length(), null));
+    resultStore.addResult(new WordWithScore(wordObject, word.length()));
   }
 }

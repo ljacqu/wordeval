@@ -1,18 +1,18 @@
 package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.evaluators.EvaluationResult;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
 import ch.jalu.wordeval.evaluators.processing.ResultStore;
+import ch.jalu.wordeval.evaluators.result.WordWithScore;
 
 /**
  * Finds words with multiple consecutive letter groups following each other,
  * e.g. <code>voorraaddrakoste</code> in Afrikaans (oo + rr + aa + dd = 4).
  */
-public class ConsecutiveLetterPairs implements WordEvaluator {
+public class ConsecutiveLetterPairs implements WordEvaluator<WordWithScore> {
 
   @Override
-  public void evaluate(Word wordObject, ResultStore resultStore) {
+  public void evaluate(Word wordObject, ResultStore<WordWithScore> resultStore) {
     String word = wordObject.getWithoutAccents();
 
     int letterCounter = 0;
@@ -28,7 +28,7 @@ public class ConsecutiveLetterPairs implements WordEvaluator {
       }
       if (letterCounter <= 1 || i == word.length()) {
         if (pairCounter > 1) {
-          resultStore.addResult(wordObject, new EvaluationResult(pairCounter, null));
+          resultStore.addResult(new WordWithScore(wordObject, pairCounter));
         }
         pairCounter = 0;
       }

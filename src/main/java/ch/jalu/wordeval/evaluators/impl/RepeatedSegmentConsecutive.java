@@ -1,12 +1,12 @@
 package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.evaluators.EvaluatedWord;
-import ch.jalu.wordeval.evaluators.EvaluationResult;
 import ch.jalu.wordeval.evaluators.PostEvaluator;
 import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.processing.ResultsProvider;
-import com.google.common.collect.ImmutableMultimap;
+import ch.jalu.wordeval.evaluators.result.WordWithKey;
+import ch.jalu.wordeval.evaluators.result.WordWithKeyAndScore;
+import com.google.common.collect.ImmutableList;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,19 +17,18 @@ import java.util.regex.Pattern;
  * Finds words with repeating, consecutive sequences,
  * such as "elijk" in nl. "gelijkelijk".
  */
-public class RepeatedSegmentConsecutive implements PostEvaluator {
+public class RepeatedSegmentConsecutive implements PostEvaluator<WordWithKey> {
 
   private static final Pattern REPETITION_AT_START = Pattern.compile("^(.{2,})(\\1+)");
 
   @Override
-  public void evaluateAndSaveResults(ResultsProvider resultsProvider, ResultStore resultStore) {
-    ImmutableMultimap<Double, EvaluatedWord> repeatedSegmentResults =
-      resultsProvider.getResultsOfEvaluatorOfType(ch.jalu.wordeval.evaluators.impl.RepeatedSegment.class);
-    repeatedSegmentResults.values()
-      .forEach(result -> processWord(result.getWord(), resultStore));
+  public void evaluateAndSaveResults(ResultsProvider resultsProvider, ResultStore<WordWithKey> resultStore) {
+    ImmutableList<WordWithKeyAndScore> repeatedSegmentResults =
+      resultsProvider.getResultsOfEvaluatorOfType(RepeatedSegment.class);
+    repeatedSegmentResults.forEach(result -> processWord(result.getWord(), resultStore));
   }
 
-  private void processWord(Word wordObject, ResultStore resultStore) {
+  private void processWord(Word wordObject, ResultStore<WordWithKey> resultStore) {
     String word = wordObject.getLowercase();
     Map<String, String> results = new HashMap<>();
     for (int i = 0; i < word.length() - 2; ++i) {
@@ -40,7 +39,7 @@ public class RepeatedSegmentConsecutive implements PostEvaluator {
         addResult(results, segment, repetition);
       }
     }
-    results.values().forEach(v -> resultStore.addResult(wordObject, new EvaluationResult(v.length(), v)));
+    results.values().forEach(v -> resultStore.addResult(new WordWithKey(wordObject, v)));
   }
 
   private static void addResult(Map<String, String> results, String segment, String repetition) {

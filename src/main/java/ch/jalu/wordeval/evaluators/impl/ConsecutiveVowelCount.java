@@ -1,9 +1,9 @@
 package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.evaluators.EvaluationResult;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
 import ch.jalu.wordeval.evaluators.processing.ResultStore;
+import ch.jalu.wordeval.evaluators.result.WordWithScore;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LetterType;
 import lombok.Getter;
@@ -16,7 +16,7 @@ import java.util.Set;
  * German "Angstschweiss". The same word can appear multiple times in the
  * results, e.g. "poignée" will count twice ("oi", "ée").
  */
-public class ConsecutiveVowelCount implements WordEvaluator {
+public class ConsecutiveVowelCount implements WordEvaluator<WordWithScore> {
 
   private Set<String> lettersToConsider;
   @Getter
@@ -34,13 +34,13 @@ public class ConsecutiveVowelCount implements WordEvaluator {
   }
 
   @Override
-  public void evaluate(Word wordObject, ResultStore resultStore) {
+  public void evaluate(Word wordObject, ResultStore<WordWithScore> resultStore) {
     String word = wordObject.getWithoutAccents();
     int count = 0;
     for (int i = 0; i <= word.length(); ++i) {
       if (i == word.length() || !lettersToConsider.contains(word.substring(i, i + 1))) {
         if (count > 1) {
-          resultStore.addResult(wordObject, new EvaluationResult(count, null));
+          resultStore.addResult(new WordWithScore(wordObject, count));
         }
         count = 0;
       } else {

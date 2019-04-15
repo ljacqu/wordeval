@@ -1,6 +1,7 @@
 package ch.jalu.wordeval.dictionary;
 
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter(AccessLevel.PACKAGE)
+@EqualsAndHashCode(of = "raw")
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class Word {
 

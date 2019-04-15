@@ -1,6 +1,5 @@
 package ch.jalu.wordeval.evaluation;
 
-import ch.jalu.wordeval.dictionary.WordForm;
 import ch.jalu.wordeval.evaluation.export.ExportObject;
 import ch.jalu.wordeval.evaluation.export.ExportParams;
 
@@ -11,6 +10,7 @@ import java.util.List;
 /**
  * Dummy evaluator that gathers all words from a dictionary for further processing.
  */
+@Deprecated // use AllWordsEvaluator
 public class WordCollector extends DictionaryEvaluator<Boolean> {
 
   private List<String> words = new LinkedList<>();
@@ -28,11 +28,6 @@ public class WordCollector extends DictionaryEvaluator<Boolean> {
   @Override
   public void processWord(String word, String rawWord) {
     words.add(word);
-  }
-  
-  @Override
-  public WordForm getWordForm() {
-    return WordForm.RAW;
   }
 
   @Override

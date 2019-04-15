@@ -1,8 +1,8 @@
 package ch.jalu.wordeval.evaluators.processing;
 
 import ch.jalu.wordeval.evaluators.AllWordsEvaluator;
-import ch.jalu.wordeval.evaluators.EvaluatedWord;
-import com.google.common.collect.ImmutableMultimap;
+import ch.jalu.wordeval.evaluators.result.EvaluationResult;
+import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 import java.util.Map;
@@ -26,18 +26,19 @@ public class ResultsProvider {
     this.evaluatorResults = evaluatorResults;
   }
 
-  /**
+  /** // TODO JAVADOC
    * Returns the results of the evaluator of the given class. Throws an exception if more than one evaluator of
    * this class exists.
    *
    * @param clz the evaluator class to search for
    * @return the results of the evaluator of the provided class
    */
-  public ImmutableMultimap<Double, EvaluatedWord> getResultsOfEvaluatorOfType(Class<? extends AllWordsEvaluator> clz) {
+  public <R extends EvaluationResult, E extends AllWordsEvaluator<R>> ImmutableList<R> getResultsOfEvaluatorOfType(
+      Class<E> clz) {
     return getResultsOfEvaluatorOfType(clz, e -> true);
   }
 
-  /**
+  /** TODO JAVADOC
    * Returns the results of the evaluator that is an instance of the given class and which satisfies the provided
    * predicate. An exception is thrown if more than one evaluator is matched successfully.
    *
@@ -46,7 +47,7 @@ public class ResultsProvider {
    * @param <E> the evaluator type
    * @return the results of the matching evaluator
    */
-  public <E extends AllWordsEvaluator> ImmutableMultimap<Double, EvaluatedWord> getResultsOfEvaluatorOfType(
+  public <R extends EvaluationResult, E extends AllWordsEvaluator<R>> ImmutableList<R> getResultsOfEvaluatorOfType(
       Class<E> clz, Predicate<E> predicate) {
 
     E evaluator = findEvaluatorOfTypeMatching(clz, predicate);

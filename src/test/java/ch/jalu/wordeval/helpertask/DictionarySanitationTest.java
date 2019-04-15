@@ -2,7 +2,6 @@ package ch.jalu.wordeval.helpertask;
 
 import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.dictionary.WordForm;
 import ch.jalu.wordeval.evaluation.PartWordEvaluator;
 import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
@@ -101,11 +100,6 @@ public class DictionarySanitationTest {
         String key = subIndex > -1 ? word.substring(subIndex, subIndex + 1) : "__";
         addEntry(key, word);
       }
-    }
-
-    @Override
-    public WordForm getWordForm() {
-      return WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
     }
   }
 }

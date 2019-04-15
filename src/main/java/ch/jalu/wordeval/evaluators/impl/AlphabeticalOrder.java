@@ -1,26 +1,26 @@
 package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.evaluators.EvaluationResult;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
 import ch.jalu.wordeval.evaluators.processing.ResultStore;
+import ch.jalu.wordeval.evaluators.result.WordWithScore;
 
 /**
  * Filter that saves words whose letters are alphabetical from beginning to end,
  * forwards or backwards. For example, in German "einst", each following letter
  * comes later in the alphabet.
  */
-public class AlphabeticalOrder implements WordEvaluator {
+public class AlphabeticalOrder implements WordEvaluator<WordWithScore> {
 
   private static final int FORWARDS = -1;
   private static final int BACKWARDS = 1;
 
   @Override
-  public void evaluate(Word word, ResultStore resultStore) {
+  public void evaluate(Word word, ResultStore<WordWithScore> resultStore) {
     // TODO #15: Make locale-aware instead
     String text = word.getWithoutAccentsWordCharsOnly();
     if (areLettersOrdered(text, FORWARDS) || areLettersOrdered(text, BACKWARDS)) {
-      resultStore.addResult(word, new EvaluationResult(text.length(), null));
+      resultStore.addResult(new WordWithScore(word, text.length()));
     }
   }
 

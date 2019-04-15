@@ -1,23 +1,23 @@
 package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.evaluators.EvaluationResult;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
 import ch.jalu.wordeval.evaluators.processing.ResultStore;
+import ch.jalu.wordeval.evaluators.result.WordWithKey;
 
 /**
  * Finds palindromes or palindrome-parts inside a word, e.g. "awkwa" in
  * "awkward".
  */
-public class Palindromes implements WordEvaluator {
+public class Palindromes implements WordEvaluator<WordWithKey> {
 
   @Override
-  public void evaluate(Word wordObject, ResultStore resultStore) {
+  public void evaluate(Word wordObject, ResultStore<WordWithKey> resultStore) {
     String word = wordObject.getWithoutAccentsWordCharsOnly();
     for (int i = 1; i < word.length() - 1; ++i) {
       String palindrome = findPalindrome(word, i);
       if (palindrome != null) {
-        resultStore.addResult(wordObject, new EvaluationResult(palindrome.length(), palindrome));
+        resultStore.addResult(new WordWithKey(wordObject, palindrome));
       }
     }
   }

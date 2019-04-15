@@ -21,6 +21,7 @@ import java.util.TreeMap;
  * @param <K> the key the evaluator uses to store special words (typically: the
  *        sequences the evaluator identifies, or the word length)
  */
+@Deprecated
 public abstract class Evaluator<K extends Comparable> {
 
   /** Collection of relevant words. */

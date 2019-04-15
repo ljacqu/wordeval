@@ -1,9 +1,9 @@
 package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.evaluators.EvaluationResult;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
 import ch.jalu.wordeval.evaluators.processing.ResultStore;
+import ch.jalu.wordeval.evaluators.result.WordWithKeyAndScore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,14 +18,14 @@ import java.util.stream.Collectors;
  * Finds segments in words that are repeated multiple times,
  * e.g. 3x "est" in af. "geestestoestand".
  */
-public class RepeatedSegment implements WordEvaluator {
+public class RepeatedSegment implements WordEvaluator<WordWithKeyAndScore> {
 
   @Override
-  public void evaluate(Word wordObject, ResultStore resultStore) {
+  public void evaluate(Word wordObject, ResultStore<WordWithKeyAndScore> resultStore) {
     String word = wordObject.getLowercase();
     Map<String, Integer> results = new NgramGenerator(word).getResults();
     removeNgramSubsets(results);
-    results.forEach((ngram, count) -> resultStore.addResult(wordObject, new EvaluationResult(count, ngram)));
+    results.forEach((ngram, count) -> resultStore.addResult(new WordWithKeyAndScore(wordObject, ngram, count)));
   }
 
   /**

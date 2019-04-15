@@ -1,18 +1,18 @@
 package ch.jalu.wordeval.evaluators.impl;
 
-import ch.jalu.wordeval.evaluators.EvaluatedWord;
 import ch.jalu.wordeval.evaluators.PostEvaluator;
 import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.processing.ResultsProvider;
+import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.language.LetterType;
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 
 /**
  * Evaluator that collects words with the most different vowels or consonants.
  */
 @Getter
-public class AllVowels implements PostEvaluator {
+public class AllVowels implements PostEvaluator<WordWithKey> {
 
   private final LetterType letterType;
 
@@ -21,10 +21,10 @@ public class AllVowels implements PostEvaluator {
   }
 
   @Override
-  public void evaluateAndSaveResults(ResultsProvider resultsProvider, ResultStore resultStore) {
-    ImmutableMultimap<Double, EvaluatedWord> vowelCountResults =
+  public void evaluateAndSaveResults(ResultsProvider resultsProvider, ResultStore<WordWithKey> resultStore) {
+    ImmutableList<WordWithKey> vowelCountResults =
       resultsProvider.getResultsOfEvaluatorOfType(VowelCount.class, vw -> vw.getLetterType() == letterType);
-    resultStore.addResults(vowelCountResults.values());
+    resultStore.addResults(vowelCountResults);
     // TODO : Check this. Does this make sense?
   }
 

@@ -1,16 +1,13 @@
 package ch.jalu.wordeval;
 
 import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.evaluation.DictionaryEvaluator;
 import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -28,36 +25,6 @@ public final class TestUtil {
    */
   public static Set<String> asSet(String... items) {
     return new HashSet<>(Arrays.asList(items));
-  }
-
-  /**
-   * Creates a mutable list based on the input items.
-   * @param item the items to create a list with
-   * @return mutable list (as opposed to Arrays.asList()).
-   */
-  public static List<String> asList(String... item) {
-    return new ArrayList<>(Arrays.asList(item));
-  }
-
-  /**
-   * Makes an evaluator process the given list of words.
-   * @param evaluator the evaluator to process the words with
-   * @param words the words to process
-   */
-  public static void processWords(DictionaryEvaluator<?> evaluator, String... words) {
-    processWords(evaluator, words, words);
-  }
-
-  /**
-   * Makes an evaluator process the given list of words.
-   * @param evaluator the evaluator to process the words with
-   * @param cleanWords the list of words in a certain WordForm format
-   * @param words the list of words in their RAW WordFormat
-   */
-  public static void processWords(DictionaryEvaluator<?> evaluator, String[] cleanWords, String[] words) {
-    for (int i = 0; i < cleanWords.length; ++i) {
-      evaluator.processWord(cleanWords[i], words[i]);
-    }
   }
   
   /**

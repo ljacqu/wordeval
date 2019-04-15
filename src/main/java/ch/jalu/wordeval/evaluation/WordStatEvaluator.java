@@ -2,17 +2,17 @@ package ch.jalu.wordeval.evaluation;
 
 import ch.jalu.wordeval.evaluation.export.ExportObject;
 import ch.jalu.wordeval.evaluation.export.ExportParams;
-import ch.jalu.wordeval.evaluation.export.WordStatExport;
 
 /**
  * Base class for the word stat evaluator - evaluator that saves some figure
  * with a word (typically its length).
  */
+@Deprecated
 public abstract class WordStatEvaluator extends DictionaryEvaluator<Integer> {
 
   @Override
   protected ExportObject toExportObject(String identifier, ExportParams params) {
-    return WordStatExport.create(identifier, getNavigableResults(), params);
+    return null;
   }
 
   /**
