@@ -2,26 +2,26 @@ package ch.jalu.wordeval.dictionary;
 
 import ch.jalu.wordeval.dictionary.sanitizer.Sanitizer;
 import ch.jalu.wordeval.language.Language;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContaining;
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
 /**
  * Test for {@link Sanitizer}.
  */
-public class SanitizerTest {
+class SanitizerTest {
   
   private static Sanitizer sanitizer;
   
-  @BeforeClass
-  public static void setUpSettings() {
+  @BeforeAll
+  static void setUpSettings() {
     Language language = mock(Language.class);
     Dictionary settings = Dictionary.builder()
         .identifier("zxx")
@@ -34,7 +34,7 @@ public class SanitizerTest {
   }
 
   @Test
-  public void shouldRemoveDelimiters() {
+  void shouldRemoveDelimiters() {
     String[] lines = { "tëst/23", "abcdef#abc", "Vutsr/abc#ef", "emptyWord" };
 
     String[] results = new String[lines.length];
@@ -47,7 +47,7 @@ public class SanitizerTest {
   }
 
   @Test
-  public void shouldSkipWordsWithSkipSequence() {
+  void shouldSkipWordsWithSkipSequence() {
     String[] words = { "test", "tèst", "abcaaa", "abcdefg", "abcdefgè" };
     boolean[] shouldBeSkipped = { false, true, true, false, true };
 
@@ -62,7 +62,7 @@ public class SanitizerTest {
   }
   
   @Test
-  public void shouldSkipWordsWithNumbers() {
+  void shouldSkipWordsWithNumbers() {
     String[] words = { "9th", "asdf1", "3.1415926", "to4st" };
     
     Arrays.stream(words)

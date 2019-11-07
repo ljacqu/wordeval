@@ -1,19 +1,19 @@
 package ch.jalu.wordeval.extra;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 /**
  * Tests the general behavior of different Java locales.
  */
-public class LocaleTest {
+class LocaleTest {
 
   @Test
-  public void shouldLowerCaseAccentedWordsProperly() {
+  void shouldLowerCaseAccentedWordsProperly() {
     String text = "AÇ Êè OČ ÏŚ";
     String plText = "STANOWIĄCEJ CZĘŚĆ RODZINY JĘZYKÓW";
     String skText = "TU ŽIADNA VEĽKÁ JAZYKOVÁ ČISTKA";
@@ -28,7 +28,7 @@ public class LocaleTest {
   }
 
   @Test
-  public void shouldUpperCaseAccentedWordsProperly() {
+  void shouldUpperCaseAccentedWordsProperly() {
     String huText = "szóösszetételekben";
     String ptText = "população";
     String ltText = "sovietmečiu mūšos tyrelio pelkė buvo numatyta durpių";
@@ -43,7 +43,7 @@ public class LocaleTest {
   }
 
   @Test
-  public void shouldHandleTurkishCorrectly() {
+  void shouldHandleTurkishCorrectly() {
     String text1 = "tunçtan yapılmış olan heykelin yüksekliği";
     String text2 = "YAPMIŞ OLDUĞU ÖZVERİLİ ÇALIŞMALARI";
 
