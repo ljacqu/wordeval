@@ -5,32 +5,32 @@ import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.dictionary.sanitizer.HuSanitizer;
 import ch.jalu.wordeval.runners.DictionaryProcessor;
 import lombok.extern.log4j.Log4j2;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static ch.jalu.wordeval.TestUtil.assumeThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assume.assumeThat;
 
 /**
  * Test for the {@link HuSanitizer Hungarian dictionary} (which has custom sanitation).
  */
 @Log4j2
-public class HuSanitizerTest {
+class HuSanitizerTest {
 
   private static Dictionary huDictionary;
   
-  @BeforeClass
-  public static void initData() {
+  @BeforeAll
+  static void initData() {
     huDictionary = new AppData().getDictionary("hu");
   }
 
   @Test
-  public void shouldFindTheGivenWords() {
+  void shouldFindTheGivenWords() {
     if (!TestUtil.doesDictionaryFileExist(huDictionary)) {
       log.warn("Skipping Hu sanitizer test because dictionary doesn't exist");
       assumeThat(true, equalTo(false));

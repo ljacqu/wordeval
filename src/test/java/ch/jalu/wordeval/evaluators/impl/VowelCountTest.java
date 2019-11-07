@@ -4,35 +4,35 @@ import ch.jalu.wordeval.TestUtil;
 import ch.jalu.wordeval.evaluators.EvaluatorTestHelper;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LetterType;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 import java.util.Set;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link VowelCount}.
  */
-public class VowelCountTest {
+class VowelCountTest {
 
   private VowelCount vowelEvaluator;
   private VowelCount consonantEvaluator;
 
-  @Before
-  public void initializeEvaluators() {
+  @BeforeEach
+  void initializeEvaluators() {
     Language lang = TestUtil.newLanguage("zxx").build();
     vowelEvaluator = new VowelCount(lang, LetterType.VOWELS);
     consonantEvaluator = new VowelCount(lang, LetterType.CONSONANTS);
   }
 
   @Test
-  public void shouldProcessWordsCorrectly() {
+  void shouldProcessWordsCorrectly() {
     // given
     // vowels: aeio, eio, eu, e, a, aou, aio, aeu, e
     // consonants: s, ghnst, flt, gt, cdgmrs, t, c, -, flt

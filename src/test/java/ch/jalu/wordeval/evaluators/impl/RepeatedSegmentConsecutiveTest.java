@@ -5,28 +5,28 @@ import ch.jalu.wordeval.evaluators.EvaluatorTestHelper;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.evaluators.result.WordWithKeyAndScore;
 import com.google.common.collect.ImmutableList;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link RepeatedSegmentConsecutive}.
  */
-public class RepeatedSegmentConsecutiveTest {
+class RepeatedSegmentConsecutiveTest {
 
   private RepeatedSegmentConsecutive evaluator = new RepeatedSegmentConsecutive();
 
   @Test
-  public void shouldAddResults() {
+  void shouldAddResults() {
     // given
     ImmutableList<WordWithKeyAndScore> repeatedSegmentResult = createRepeatedSegmentResult();
 

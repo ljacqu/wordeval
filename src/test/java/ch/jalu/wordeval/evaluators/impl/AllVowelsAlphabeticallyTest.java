@@ -9,25 +9,25 @@ import ch.jalu.wordeval.language.Language;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import static ch.jalu.wordeval.TestUtil.newLanguage;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link AllVowelsAlphabetically}.
  */
-public class AllVowelsAlphabeticallyTest {
+class AllVowelsAlphabeticallyTest {
 
   @Test
-  public void shouldFindMatches() {
+  void shouldFindMatches() {
     // given
     Language lang = newLanguage("zxx").build();
     AllVowelsAlphabetically allVowelsAlphabetically = new AllVowelsAlphabetically(lang);

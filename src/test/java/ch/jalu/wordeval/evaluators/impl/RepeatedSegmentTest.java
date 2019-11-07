@@ -1,25 +1,25 @@
 package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.evaluators.EvaluatorTestHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 import java.util.Set;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link RepeatedSegment}.
  */
-public class RepeatedSegmentTest {
+class RepeatedSegmentTest {
 
   private RepeatedSegment evaluator = new RepeatedSegment();
 
   @Test
-  public void shouldFindMatches() {
+  void shouldFindMatches() {
     // given
     // 3x est; 2x an; 2x ssi, 2x iss; 2x an, 2x na; -; 2x er; 2x bar
     String[] words = {"geestestoestand", "banane", "mississippi", "ananas", "something", "derber", "barbar"};

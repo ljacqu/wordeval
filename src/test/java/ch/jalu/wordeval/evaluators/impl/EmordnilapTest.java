@@ -1,24 +1,24 @@
 package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.evaluators.EvaluatorTestHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Set;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link Emordnilap}.
  */
-public class EmordnilapTest {
+class EmordnilapTest {
 
   private Emordnilap emordnilap = new Emordnilap();
 
   @Test
-  public void shouldFindBackwardsPairs() {
+  void shouldFindBackwardsPairs() {
     // given
     String[] words = new String[]{ "but", "parts", "potato", "strap", "tub", "working" };
 
@@ -32,7 +32,7 @@ public class EmordnilapTest {
   }
 
   @Test
-  public void shouldNotAddPalindromes() {
+  void shouldNotAddPalindromes() {
     // given
     String[] words = new String[]{"net", "otto", "Redder", "redder", "ten"};
 

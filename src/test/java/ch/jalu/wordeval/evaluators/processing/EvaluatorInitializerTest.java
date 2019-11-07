@@ -12,28 +12,28 @@ import ch.jalu.wordeval.evaluators.impl.VowelCount;
 import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LetterType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 /**
  * Test for {@link EvaluatorInitializer}.
  */
-public class EvaluatorInitializerTest {
+class EvaluatorInitializerTest {
 
   @Test
-  public void shouldInstantiateAllEvaluators() {
+  void shouldInstantiateAllEvaluators() {
     // given
     Language language = mock(Language.class);
     given(language.getAlphabet()).willReturn(Alphabet.LATIN);

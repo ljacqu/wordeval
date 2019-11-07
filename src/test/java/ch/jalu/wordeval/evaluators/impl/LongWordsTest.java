@@ -1,24 +1,24 @@
 package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.evaluators.EvaluatorTestHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 import java.util.Set;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link LongWords}.
  */
-public class LongWordsTest {
+class LongWordsTest {
 
   private LongWords evaluator = new LongWords();
 
   @Test
-  public void shouldAddLongWords() {
+  void shouldAddLongWords() {
     // given
     // 8, 9, 9, 4, 6, 4
     String[] words = { "köszönöm", "piszących", "something", "test", "žodžių", "šalį" };
@@ -34,7 +34,7 @@ public class LongWordsTest {
   }
 
   @Test
-  public void shouldProcessCyrillicWords() {
+  void shouldProcessCyrillicWords() {
     // given
     // 15, 7, 0, 7
     String[] words = { "Морфологические", "градина", "ушёл", "наречие" };

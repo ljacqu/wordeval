@@ -1,24 +1,24 @@
 package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.evaluators.EvaluatorTestHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 import java.util.Set;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link Isograms}.
  */
-public class IsogramsTest {
+class IsogramsTest {
 
   private Isograms evaluator = new Isograms();
 
   @Test
-  public void shouldRecognizeIsograms() {
+  void shouldRecognizeIsograms() {
     // given
     String[] words = { "halfduimspyker", "abcdefga", "abcdefgcijk", "jigsaw" };
 

@@ -1,19 +1,21 @@
 package ch.jalu.wordeval.dictionary;
 
 import ch.jalu.wordeval.language.Language;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static ch.jalu.wordeval.TestUtil.newLanguage;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 /**
  * Test for {@link WordFactory}.
  */
-public class WordFactoryTest {
+class WordFactoryTest {
 
   @Test
-  public void shouldKeepAdditionalLetters() {
+  void shouldKeepAdditionalLetters() {
     // given
     Language language = newLanguage("da")
         .additionalVowels("æ", "ø", "å")
@@ -32,7 +34,7 @@ public class WordFactoryTest {
   }
 
   @Test
-  public void shouldRemoveAllAccentsByDefault() {
+  void shouldRemoveAllAccentsByDefault() {
     // given
     Language language = newLanguage("fr").build();
     WordFactory builder = new WordFactory(language);
@@ -45,7 +47,7 @@ public class WordFactoryTest {
   }
 
   @Test
-  public void shouldUseLocaleForLowerCase() {
+  void shouldUseLocaleForLowerCase() {
     // given
     Language language = newLanguage("tr").build();
     WordFactory builder = new WordFactory(language);
@@ -58,7 +60,7 @@ public class WordFactoryTest {
   }
 
   @Test
-  public void shouldComputeWordOnlyForm() {
+  void shouldComputeWordOnlyForm() {
     // given
     Language language = newLanguage("cs")
         .additionalConsonants("č", "ř")
@@ -72,11 +74,14 @@ public class WordFactoryTest {
     assertThat(result.getWithoutAccentsWordCharsOnly(), equalTo("človekuř"));
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void shouldThrowForEmptyWord() {
+  @Test
+  void shouldThrowForEmptyWord() {
+    // given
     Language language = newLanguage("nl").build();
     WordFactory builder = new WordFactory(language);
-    builder.createWordObject("");
+
+    // when / then
+    assertThrows(IllegalArgumentException.class, () -> builder.createWordObject(""));
   }
 
 }

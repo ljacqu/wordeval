@@ -1,25 +1,25 @@
 package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.evaluators.EvaluatorTestHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 import java.util.Set;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link ConsecutiveLetterPairs}.
  */
-public class ConsecutiveLetterPairsTest {
+class ConsecutiveLetterPairsTest {
 
   private ConsecutiveLetterPairs evaluator = new ConsecutiveLetterPairs();
 
   @Test
-  public void shouldRecognizeLetterPairs() {
+  void shouldRecognizeLetterPairs() {
     // given
     // 2, 0, 0, 3, 2, 2, 2, 4, 2
     String[] words = { "aallorr", "potato", "klokken", "maaiill", "oppaan",
@@ -36,7 +36,7 @@ public class ConsecutiveLetterPairsTest {
   }
 
   @Test
-  public void shouldRecognizeSeparatePairs() {
+  void shouldRecognizeSeparatePairs() {
     // given
     // 2, {2,3}, 0
     String[] words = { "massaage", "aabbcdefgghhiij", "something" };
@@ -55,7 +55,7 @@ public class ConsecutiveLetterPairsTest {
    * i.e. "sseee" should count as 2 groups.
    */
   @Test
-  public void shouldRecognizeTriplesOrMore() {
+  void shouldRecognizeTriplesOrMore() {
     // given
     // 2, 0, 3, 4, 0
     String[] words = { "laaaii", "kayak", "poolooeeerr", "aabbbccdddef",

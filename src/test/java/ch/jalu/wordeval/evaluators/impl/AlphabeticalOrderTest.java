@@ -1,25 +1,25 @@
 package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.evaluators.EvaluatorTestHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 import java.util.Set;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link AlphabeticalOrder}.
  */
-public class AlphabeticalOrderTest {
+class AlphabeticalOrderTest {
 
   private AlphabeticalOrder evaluator = new AlphabeticalOrder();
 
   @Test
-  public void shouldRecognizeWordsWithAlphabeticalOrder() {
+  void shouldRecognizeWordsWithAlphabeticalOrder() {
     // given
     // 4, 0, 5, 0, 4, 4, 5, 0, 8, 4
     String[] words = { "acer", "paper", "bruxz", "jigsaw", "mopr", "pong",

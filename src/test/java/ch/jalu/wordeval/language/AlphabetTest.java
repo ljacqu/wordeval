@@ -1,19 +1,19 @@
 package ch.jalu.wordeval.language;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link Alphabet}.
  */
-public class AlphabetTest {
+class AlphabetTest {
 
   @Test
-  public void shouldRemoveDiacritics() {
+  void shouldRemoveDiacritics() {
     // given
     String[] words = {
         "křižáků", "nőstényét", "iš vėlyvojo Jų", "mogą trwać występy koreańskich że", "požiūriu" };
@@ -30,7 +30,7 @@ public class AlphabetTest {
   }
 
   @Test
-  public void shouldRemoveDiacriticsForCyrillic() {
+  void shouldRemoveDiacriticsForCyrillic() {
     // given
     String[] words = { "ѝ", "призёр", "Менько́в", "аўтар", "куќата", "військової" };
 

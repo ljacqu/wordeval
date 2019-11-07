@@ -8,22 +8,22 @@ import ch.jalu.wordeval.language.LetterType;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link AllVowels}.
  */
-public class AllVowelsTest {
+class AllVowelsTest {
 
   @Test
-  public void shouldFindWordsWithAllVowels() {
+  void shouldFindWordsWithAllVowels() {
     // given
     AllVowels evaluator = new AllVowels(LetterType.VOWELS);
 
