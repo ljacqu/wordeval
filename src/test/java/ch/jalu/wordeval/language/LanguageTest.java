@@ -1,26 +1,26 @@
 package ch.jalu.wordeval.language;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static ch.jalu.wordeval.TestUtil.newLanguage;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.emptyArray;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link Language}.
  */
-public class LanguageTest {
+class LanguageTest {
 
   @Test
-  public void shouldHandleUnsetProperties() {
+  void shouldHandleUnsetProperties() {
     Language lang = newLanguage("zxx").build();
 
     assertThat(lang.getCode(), equalTo("zxx"));
@@ -29,7 +29,7 @@ public class LanguageTest {
   }
 
   @Test
-  public void shouldNotHaveLettersToPreserveIfNonApplicable() {
+  void shouldNotHaveLettersToPreserveIfNonApplicable() {
     Language lang = newLanguage("zxx")
         .additionalVowels("ij")
         .additionalConsonants("cs", "ny")
@@ -40,7 +40,7 @@ public class LanguageTest {
   }
   
   @Test
-  public void shouldReturnCharsToPreserve() {
+  void shouldReturnCharsToPreserve() {
     Language lang = newLanguage("zxx")
       .additionalConsonants("cs", "þ", "y")
       .additionalVowels("w", "eu", "ø", "öy").build();
@@ -49,7 +49,7 @@ public class LanguageTest {
   }
 
   @Test
-  public void shouldReturnEmptyCharsToPreserve() {
+  void shouldReturnEmptyCharsToPreserve() {
     Language lang1 = newLanguage("zxx").build();
     Language lang2 = newLanguage("zxx")
       .additionalConsonants("tt", "ff", "gg")

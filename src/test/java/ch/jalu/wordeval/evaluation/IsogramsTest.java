@@ -2,27 +2,27 @@ package ch.jalu.wordeval.evaluation;
 
 import ch.jalu.wordeval.TestUtil;
 import com.google.common.collect.Multimap;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link Isograms}.
  */
-public class IsogramsTest {
+class IsogramsTest {
 
   private Isograms evaluator;
 
-  @Before
-  public void initializeEvaluator() {
+  @BeforeEach
+  void initializeEvaluator() {
     evaluator = new Isograms();
   }
 
   @Test
-  public void shouldRecognizeIsograms() {
+  void shouldRecognizeIsograms() {
     String[] words = { "halfduimspyker", "abcdefga", "abcdefgcijk", "jigsaw" };
 
     TestUtil.processWords(evaluator, words);

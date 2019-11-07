@@ -4,24 +4,24 @@ import ch.jalu.wordeval.TestUtil;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LetterType;
 import com.google.common.collect.Multimap;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link VowelCount}.
  */
-public class VowelCountTest {
+class VowelCountTest {
 
   private VowelCount vowelEvaluator;
   private VowelCount consonantEvaluator;
 
-  @Before
-  public void initializeEvaluator() {
+  @BeforeEach
+  void initializeEvaluator() {
     Language lang = TestUtil.newLanguage("zxx").build();
     vowelEvaluator = new VowelCount(LetterType.VOWELS, lang);
     consonantEvaluator = new VowelCount(LetterType.CONSONANTS, lang);
@@ -33,7 +33,7 @@ public class VowelCountTest {
   }
 
   @Test
-  public void shouldProcessWordsCorrectly() {
+  void shouldProcessWordsCorrectly() {
     // vowels: aeio, eio, eu, e, a, aou, aio, aeu, e
     // consonants: s, ghnst, flt, gt, cdgmrs, t, c, -, flt
     String[] words = { "assosiasie", "something", "flute", "geeet",

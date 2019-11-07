@@ -4,22 +4,22 @@ import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LanguageService;
 import com.google.common.collect.Multimap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static ch.jalu.wordeval.TestUtil.newLanguage;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link DiacriticHomonyms}.
  */
-public class DiacriticHomonymsTest {
+class DiacriticHomonymsTest {
   
   private static final Language language = newLanguage("zxx").build();
   
   @Test
-  public void shouldFindDiacriticHomonyms() {
+  void shouldFindDiacriticHomonyms() {
     String[] words = { "schön", "schon", "sûr", "sur", "ça", "çà", "des", "dés", "dès", "le", "la", "là" };
     DiacriticHomonyms evaluator = new DiacriticHomonyms(language.getLocale());
     

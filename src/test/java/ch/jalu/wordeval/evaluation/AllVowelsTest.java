@@ -4,21 +4,21 @@ import ch.jalu.wordeval.TestUtil;
 import ch.jalu.wordeval.language.LetterType;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
  * Test for {@link AllVowels}.
  */
-public class AllVowelsTest {
+class AllVowelsTest {
 
   @Test
-  public void shouldFindWordsWithAllVowels() {
+  void shouldFindWordsWithAllVowels() {
     VowelCount counter = Mockito.mock(VowelCount.class);
     when(counter.getResults()).thenReturn(initializeSampleResults(LetterType.VOWELS));
     AllVowels evaluator = new AllVowels(LetterType.VOWELS);
@@ -32,7 +32,7 @@ public class AllVowelsTest {
   }
   
   @Test
-  public void shouldMatchLetterType() {
+  void shouldMatchLetterType() {
     VowelCount counter1 = Mockito.mock(VowelCount.class);
     when(counter1.getLetterType()).thenReturn(LetterType.CONSONANTS);
     AllVowels allVowels1 = new AllVowels(LetterType.CONSONANTS);

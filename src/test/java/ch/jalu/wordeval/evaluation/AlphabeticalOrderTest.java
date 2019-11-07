@@ -1,21 +1,21 @@
 package ch.jalu.wordeval.evaluation;
 
 import com.google.common.collect.Multimap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static ch.jalu.wordeval.TestUtil.processWords;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link AlphabeticalOrder}.
  */
-public class AlphabeticalOrderTest {
+class AlphabeticalOrderTest {
 
   @Test
-  public void shouldRecognizeWordsWithAlphabeticalOrder() {
+  void shouldRecognizeWordsWithAlphabeticalOrder() {
     // given
     // 4, 0, 5, 0, 4, 4, 5, 0, 8, 4
     String[] words = { "acer", "paper", "bruxz", "jigsaw", "mopr", "pong",

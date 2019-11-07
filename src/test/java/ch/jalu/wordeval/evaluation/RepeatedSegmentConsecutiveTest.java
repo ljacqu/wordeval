@@ -1,27 +1,27 @@
 package ch.jalu.wordeval.evaluation;
 
 import com.google.common.collect.ImmutableMultimap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.Map;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 /**
  * Test for {@link RepeatedSegmentConsecutive}.
  */
-public class RepeatedSegmentConsecutiveTest {
+class RepeatedSegmentConsecutiveTest {
 
   @Test
-  public void shouldAddResults() {
+  void shouldAddResults() {
     // given
     RepeatedSegment base = mock(RepeatedSegment.class);
     ImmutableMultimap<String, String> baseResults =

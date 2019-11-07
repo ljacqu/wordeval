@@ -4,27 +4,27 @@ import ch.jalu.wordeval.TestUtil;
 import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LetterType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.anEmptyMap;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link ConsecutiveVowelCount}.
  */
-public class ConsecutiveVowelCountTest {
+class ConsecutiveVowelCountTest {
 
   private ConsecutiveVowelCount vowelCount;
   private ConsecutiveVowelCount consonantCount;
 
   @Test
-  public void shouldProcessVowelClusters() {
+  void shouldProcessVowelClusters() {
     // 4, 3, 0, 3, {2, 3}, 2
     initializeEvaluators(TestUtil.newLanguage("en", Alphabet.LATIN).build());
     String[] words = { "sequoia", "eaux", "abodef", "geëet", "oicąeèl", "ůý" };
@@ -44,7 +44,7 @@ public class ConsecutiveVowelCountTest {
   }
 
   @Test
-  public void shouldProcessConsonantClusters() {
+  void shouldProcessConsonantClusters() {
     // {3, 2}, 0, 3, {4, 3}, 0
     initializeEvaluators(TestUtil.newLanguage("en", Alphabet.LATIN).build());
     String[] words = { "pfrund", "potato", "przy", "wśrżystkęm", "arigato" };
@@ -64,7 +64,7 @@ public class ConsecutiveVowelCountTest {
   }
 
   @Test
-  public void shouldProcessCyrillicWords() {
+  void shouldProcessCyrillicWords() {
     initializeEvaluators(TestUtil.newLanguage("ru", Alphabet.CYRILLIC).build());
     // Vowels: 2, 2, 0, 0 | Consonants: 0, 2, {3, 4, 2}, {2, 2}
     // ь is neither consonant nor vowel
@@ -86,7 +86,7 @@ public class ConsecutiveVowelCountTest {
   }
 
   @Test
-  public void shouldProcessBulgarianCorrectly() {
+  void shouldProcessBulgarianCorrectly() {
     Language lang = TestUtil.newLanguage("bg", Alphabet.CYRILLIC)
         .additionalVowels("ъ").build();
     initializeEvaluators(lang);

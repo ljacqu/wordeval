@@ -2,26 +2,26 @@ package ch.jalu.wordeval.wordgraph;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.equalTo;
 
 /**
  * Test for {@link GraphBuilder}.
  */
-public class GraphBuilderTest {
+class GraphBuilderTest {
   
   @Test
-  public void shouldBuildConnections() {
+  void shouldBuildConnections() {
     final String emptyVertex = "emptyempty";
     List<String> words = getTestWords();
     words.add(emptyVertex);
@@ -30,7 +30,7 @@ public class GraphBuilderTest {
     // Build & check connections
     SimpleGraph<String, DefaultWeightedEdge> graph = builder.getGraph();
     assertThat(graph.vertexSet(), containsInAnyOrder(words.toArray()));
-    assertTrue(graph.containsEdge("acre", "care"));
+    assertThat(graph.containsEdge("acre", "care"), equalTo(true));
     assertThat(WordGraphService.getNeighbors(graph, "bar"), containsInAnyOrder("bare", "bear", "boar", "car"));
     assertThat(WordGraphService.getNeighbors(graph, "car"), containsInAnyOrder("bar", "care"));
     assertThat(WordGraphService.getNeighbors(graph, "brat"), contains("rat"));
@@ -39,7 +39,7 @@ public class GraphBuilderTest {
   }
   
   @Test
-  public void shouldWorkWithEmptyList() {
+  void shouldWorkWithEmptyList() {
     GraphBuilder builder = new GraphBuilder(new ArrayList<>());
     SimpleGraph<String, DefaultWeightedEdge> graph = builder.getGraph();
     assertThat(graph.edgeSet(), empty());

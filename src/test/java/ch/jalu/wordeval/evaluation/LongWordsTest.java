@@ -1,29 +1,29 @@
 package ch.jalu.wordeval.evaluation;
 
 import com.google.common.collect.Multimap;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static ch.jalu.wordeval.TestUtil.processWords;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link LongWords}.
  */
-public class LongWordsTest {
+class LongWordsTest {
 
   private LongWords longWords;
 
-  @Before
-  public void setUpLongWords() {
+  @BeforeEach
+  void setUpLongWords() {
     longWords = new LongWords();
   }
 
   @Test
-  public void shouldAddLongWords() {
+  void shouldAddLongWords() {
     // 8, 9, 9, 4, 6, 4
     String[] words = { "köszönöm", "piszących", "something", "test", "žodžių",
         "šalį" };
@@ -39,7 +39,7 @@ public class LongWordsTest {
   }
 
   @Test
-  public void shouldProcessCyrillicWords() {
+  void shouldProcessCyrillicWords() {
     // 15, 7, 0, 7
     String[] words = { "Морфологические", "градина", "ушёл", "наречие" };
 

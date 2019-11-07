@@ -1,16 +1,16 @@
 package ch.jalu.wordeval.dictionary;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Test for {@link DictionaryService}.
  */
-public class DictionaryServiceTest {
+class DictionaryServiceTest {
   
   @Test
-  public void shouldRecognizeRomanNumerals() {
+  void shouldRecognizeRomanNumerals() {
     String[] words = {"xvii", "MXIX", "XCI", "lxxxviii", "clxxxviii", "mccliv"};
     
     for (String word : words) {
@@ -22,7 +22,7 @@ public class DictionaryServiceTest {
   }
   
   @Test
-  public void shouldNotRecognizeOtherWordsAsNumerals() {
+  void shouldNotRecognizeOtherWordsAsNumerals() {
     String[] words = {"house", "xoxo", "cicil", "mic", "clim", "mill", "dill", "did"};
     
     for (String word : words) {

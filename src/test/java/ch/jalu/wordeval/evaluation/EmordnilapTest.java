@@ -1,23 +1,23 @@
 package ch.jalu.wordeval.evaluation;
 
 import com.google.common.collect.Multimap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Arrays;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
  * Test for {@link Emordnilap}.
  */
-public class EmordnilapTest {
+class EmordnilapTest {
   
   @Test
-  public void shouldFindBackwardsPairs() {
+  void shouldFindBackwardsPairs() {
     String[] words = new String[]{ "but", "parts", "potato", "strap", "tub", "working" };
     WordCollector collector = setUpCollector(words);
     
@@ -31,7 +31,7 @@ public class EmordnilapTest {
   }
   
   @Test
-  public void shouldNotAddPalindromes() {
+  void shouldNotAddPalindromes() {
     WordCollector collector = setUpCollector("net", "otto", "Redder", "redder", "ten");
     
     Emordnilap evaluator = new Emordnilap();
@@ -42,7 +42,7 @@ public class EmordnilapTest {
   }
   
   @Test
-  public void shouldBeCaseInsensitive() {
+  void shouldBeCaseInsensitive() {
     WordCollector collector = setUpCollector("BUT", "Net", "parts", "Strap", "TEN", "tub");
     
     Emordnilap evaluator = new Emordnilap();

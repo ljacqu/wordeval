@@ -7,31 +7,30 @@ import ch.jalu.wordeval.evaluation.PartWordEvaluator;
 import ch.jalu.wordeval.runners.DictionaryProcessor;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Test for the {@link HuSanitizer Hungarian dictionary} (which has custom sanitation).
  */
 @Log4j2
-public class HuSanitizerTest {
+class HuSanitizerTest {
 
   private static Dictionary huDictionary;
   
-  @BeforeClass
-  public static void initData() {
+  @BeforeAll
+  static void initData() {
     huDictionary = new AppData().getDictionary("hu");
   }
 
   @Test
-  public void shouldFindTheGivenWords() throws IOException {
+  void shouldFindTheGivenWords() {
     if (!TestUtil.doesDictionaryFileExist(huDictionary)) {
       log.warn("Skipping Hu sanitizer test because dictionary doesn't exist");
       return;

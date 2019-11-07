@@ -1,30 +1,30 @@
 package ch.jalu.wordeval.evaluation;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link AlphabeticalSequence}.
  */
-public class AlphabeticalSequenceTest {
+class AlphabeticalSequenceTest {
 
   private AlphabeticalSequence evaluator;
 
-  @Before
-  public void initializeEvaluator() {
+  @BeforeEach
+  void initializeEvaluator() {
     evaluator = new AlphabeticalSequence();
   }
 
   @Test
-  public void shouldRecognizeWordsWithForwardsSequence() {
+  void shouldRecognizeWordsWithForwardsSequence() {
     String[] words = { "STUdent", "neMNOgo", "HIJK", "potato", "HIJKen",
         "funGHI", "acdfgg" };
 
@@ -41,7 +41,7 @@ public class AlphabeticalSequenceTest {
   }
 
   @Test
-  public void shouldRecognizeWordsWithBackwardsSequence() {
+  void shouldRecognizeWordsWithBackwardsSequence() {
     String[] words = { "south", "FEDex", "aJIHaa", "jaPON", "sweet",
         "DCBAffftZYX", "gowkzsr" };
 

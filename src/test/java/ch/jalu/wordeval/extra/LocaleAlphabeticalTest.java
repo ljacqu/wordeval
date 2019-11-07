@@ -1,18 +1,18 @@
 package ch.jalu.wordeval.extra;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.text.Collator;
 import java.util.Locale;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 /**
  * Tests that show the general behavior of the collator coupled with a specific
  * locale.
  */
-public class LocaleAlphabeticalTest {
+class LocaleAlphabeticalTest {
 
   /**
    * Note that a collator may even return a specific sort order for letters with
@@ -24,7 +24,7 @@ public class LocaleAlphabeticalTest {
    * such that only the real, distinct letters are retained.
    */
   @Test
-  public void generalComparison() {
+  void generalComparison() {
     Collator collator = Collator.getInstance(new Locale("sv"));
 
     shouldCompareTo(collator, 1, "ê", "e");
@@ -33,7 +33,7 @@ public class LocaleAlphabeticalTest {
   }
 
   @Test
-  public void csComparisonTest() {
+  void csComparisonTest() {
     // Ch is a separate letter: H < Ch < I
     // CČ, RŘ, SŠ, ZŽ are seen as distinct letters following each other
     // All other accents (e.g. NŇ, UÚŮ) have same sorting order
@@ -51,7 +51,7 @@ public class LocaleAlphabeticalTest {
   }
 
   @Test
-  public void deComparisonTest() {
+  void deComparisonTest() {
     Collator collator = Collator.getInstance(new Locale("de"));
 
     shouldCompareTo(collator, -1, "ää", "az");
@@ -61,7 +61,7 @@ public class LocaleAlphabeticalTest {
   }
 
   @Test
-  public void huComparisonTest() {
+  void huComparisonTest() {
     Collator collator = Collator.getInstance(new Locale("hu"));
 
     // D, Dz, Dzs; G, Gy; L, Ly; N, Ny; S, Sz; T, Ty; Z, Zs
@@ -84,7 +84,7 @@ public class LocaleAlphabeticalTest {
   }
 
   @Test
-  public void nlComparisonTest() {
+  void nlComparisonTest() {
     Collator collator = Collator.getInstance(new Locale("nl"));
 
     // The collator correctly uses the more modern sorting where ij is
@@ -98,7 +98,7 @@ public class LocaleAlphabeticalTest {
   }
 
   @Test
-  public void svComparisonTest() {
+  void svComparisonTest() {
     Collator collator = Collator.getInstance(new Locale("sv"));
 
     shouldCompareTo(collator, 1, "ää", "az");
@@ -107,7 +107,7 @@ public class LocaleAlphabeticalTest {
   }
 
   @Test
-  public void trComparisonTest() {
+  void trComparisonTest() {
     Collator collator = Collator.getInstance(new Locale("tr"));
 
     // Ensure that {g, ı, o, s} come before {ğ, i, ö, ş}, respectively

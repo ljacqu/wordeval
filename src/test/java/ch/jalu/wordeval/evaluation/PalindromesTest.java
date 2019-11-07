@@ -1,29 +1,29 @@
 package ch.jalu.wordeval.evaluation;
 
 import com.google.common.collect.Multimap;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static ch.jalu.wordeval.TestUtil.processWords;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link Palindromes}.
  */
-public class PalindromesTest {
+class PalindromesTest {
 
   private Palindromes evaluator;
 
-  @Before
-  public void initializeEvaluator() {
+  @BeforeEach
+  void initializeEvaluator() {
     evaluator = new Palindromes();
   }
 
   @Test
-  public void shouldRecognizePalindromes() {
+  void shouldRecognizePalindromes() {
     // otto, bagab, -, awkwa, bab/ili, bab, -
     String[] words = { "trottoir", "ebagabo", "palindrome", "awkward",
         "probability", "probable", "o" };
@@ -40,7 +40,7 @@ public class PalindromesTest {
   }
 
   @Test
-  public void shouldNotAddSimplePairs() {
+  void shouldNotAddSimplePairs() {
     String[] words = { "gaaf", "aardvaark", "letter", "boot", "bleed" };
 
     processWords(evaluator, words);

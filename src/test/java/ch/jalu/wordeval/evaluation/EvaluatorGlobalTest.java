@@ -4,27 +4,27 @@ import ch.jalu.wordeval.evaluation.export.ExportObject;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.runners.EvaluatorInitializer;
 import lombok.extern.log4j.Log4j2;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static ch.jalu.wordeval.TestUtil.newLanguage;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.anEmptyMap;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
 
 /**
  * Tests common functionality of the evaluators.
  */
 @Log4j2
-public class EvaluatorGlobalTest {
+class EvaluatorGlobalTest {
 
   private static List<Evaluator<?>> evaluators;
   
-  @BeforeClass
-  public static void initializeEvaluators() {
+  @BeforeAll
+  static void initializeEvaluators() {
     Language lang = newLanguage("zxx").build();
     evaluators = new EvaluatorInitializer(lang).getEvaluators();
     if (evaluators.isEmpty()) {
@@ -33,7 +33,7 @@ public class EvaluatorGlobalTest {
   }
   
   @Test
-  public void shouldAllReturnWordForm() {
+  void shouldAllReturnWordForm() {
     evaluators.stream()
       .filter(e -> e instanceof DictionaryEvaluator)
       .map(e -> ((DictionaryEvaluator) e).getWordForm())
@@ -41,7 +41,7 @@ public class EvaluatorGlobalTest {
   }
   
   @Test
-  public void shouldConvertToExportObjectOrNull() {
+  void shouldConvertToExportObjectOrNull() {
     for (Evaluator evaluator : evaluators) {
       ExportObject<?, ?, ?> exportObj = evaluator.toExportObject();
       if (exportObj == null) {
@@ -54,7 +54,7 @@ public class EvaluatorGlobalTest {
   }
 
   @Test
-  public void shouldReturnBaseClassIfPostEvaluator() {
+  void shouldReturnBaseClassIfPostEvaluator() {
     evaluators.stream()
         .filter(e -> e instanceof PostEvaluator)
         .map(PostEvaluator.class::cast)
