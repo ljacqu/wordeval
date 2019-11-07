@@ -35,6 +35,14 @@
           <!-- Provided by Travis CI -->
           <repoToken>${env.coveralls_repo_token}</repoToken>
         </configuration>
+        <dependencies>
+          <!-- Workaround for https://github.com/trautonen/coveralls-maven-plugin/issues/112 -->
+          <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
@@ -48,13 +56,6 @@
             </goals>
           </execution>
         </executions>
-        <dependencies>
-          <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.2.3</version>
-          </dependency>
-        </dependencies>
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
