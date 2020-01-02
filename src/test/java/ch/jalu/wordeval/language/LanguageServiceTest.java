@@ -1,25 +1,26 @@
 package ch.jalu.wordeval.language;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 /**
  * Test for {@link LanguageService}.
  */
-public class LanguageServiceTest {
+class LanguageServiceTest {
 
   @Test
-  public void shouldRemoveDiacritics() {
+  void shouldRemoveDiacritics() {
     String[] givenWords = {
         "křižáků", "nőstényét", "iš vėlyvojo Jų", "mogą trwać występy koreańskich że", "požiūriu" };
     String[] expected = {
@@ -32,7 +33,7 @@ public class LanguageServiceTest {
   }
 
   @Test
-  public void shouldRemoveDiacriticsForCyrillic() {
+  void shouldRemoveDiacriticsForCyrillic() {
     // given
     String[] words = { "ѝ", "призёр", "Менько́в", "аўтар", "куќата", "військової" };
 
@@ -47,7 +48,7 @@ public class LanguageServiceTest {
   }
 
   @Test
-  public void shouldGetLettersWithAdditional() {
+  void shouldGetLettersWithAdditional() {
     // given
     Language language = Language.builder()
         .name("").code("zxx").alphabet(Alphabet.CYRILLIC)
@@ -65,7 +66,7 @@ public class LanguageServiceTest {
   }
 
   @Test
-  public void shouldRemoveLettersFromDefaultList() {
+  void shouldRemoveLettersFromDefaultList() {
     Language lang = Language.builder()
         .code("zxx").name("").alphabet(Alphabet.LATIN)
         .additionalVowels("w")
@@ -79,18 +80,23 @@ public class LanguageServiceTest {
     assertThat(consonants, hasItems("c", "g", "v", "z"));
   }
   
-  @Test(expected = IllegalArgumentException.class)
-  public void shouldThrowForUnknownAlphabet() {
+  @Test
+  void shouldThrowForUnknownAlphabet() {
+    // given
     Language lang = mock(Language.class);
     given(lang.getAlphabet()).willReturn(null);
-    LanguageService.getLetters(LetterType.VOWELS, lang);
+
+    // when / then
+    assertThrows(IllegalArgumentException.class, () -> LanguageService.getLetters(LetterType.VOWELS, lang));
   }
   
-  @Test(expected = IllegalArgumentException.class)
-  public void shouldThrowForUnknownAlphabet2() {
+  @Test
+  void shouldThrowForUnknownAlphabet2() {
     Language lang = mock(Language.class);
     given(lang.getAlphabet()).willReturn(null);
-    LanguageService.getLetters(LetterType.CONSONANTS, lang);
+
+    // when / then
+    assertThrows(IllegalArgumentException.class, () -> LanguageService.getLetters(LetterType.CONSONANTS, lang));
   }
 
 }

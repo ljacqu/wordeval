@@ -2,8 +2,8 @@ package ch.jalu.wordeval.evaluation.export;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,6 +18,7 @@ import static ch.jalu.wordeval.evaluation.export.ExportTestHelper.getTotalValue;
 import static ch.jalu.wordeval.evaluation.export.ExportTestHelper.getWordCollValue;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.anEmptyMap;
 import static org.hamcrest.Matchers.contains;
@@ -27,18 +28,17 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test for {@link PartWordExport}.
  */
-public class PartWordExportTest {
+class PartWordExportTest {
 
   private Multimap<String, String> results;
 
-  @Before
-  public void initialize() {
+  @BeforeEach
+  void initialize() {
     // Test data: list of words with a palindrome part in it
     results = HashMultimap.create();
 
@@ -71,7 +71,7 @@ public class PartWordExportTest {
   }
 
   @Test
-  public void shouldExportWithTopKeys() {
+  void shouldExportWithTopKeys() {
     ExportParams params = ExportParams.builder()
         .topKeys(3)
         .maxTopEntrySize(Optional.empty())
@@ -109,7 +109,7 @@ public class PartWordExportTest {
   }
 
   @Test
-  public void shouldRespectMaxParams() {
+  void shouldRespectMaxParams() {
     ExportParams params = ExportParams.builder()
         .maxTopEntrySize(Optional.of(4))
         .maxPartWordListSize(Optional.of(2))
@@ -151,7 +151,7 @@ public class PartWordExportTest {
   }
 
   @Test
-  public void shouldUseDescendingOrder() {
+  void shouldUseDescendingOrder() {
     ExportParams params = ExportParams.builder()
         .isDescending(true)
         .topKeys(10)
@@ -173,7 +173,7 @@ public class PartWordExportTest {
   }
   
   @Test
-  public void shouldRespectGeneralMinimum() {
+  void shouldRespectGeneralMinimum() {
     ExportParams params = ExportParams.builder()
         .generalMinimum(Optional.of(6.0))
         .topEntryMinimum(Optional.of(8.0))
@@ -188,7 +188,7 @@ public class PartWordExportTest {
   }
   
   @Test
-  public void shouldRespectDescendingEntryParam() {
+  void shouldRespectDescendingEntryParam() {
     ExportParams params = ExportParams.builder()
         .hasDescendingEntries(true)
         .isDescending(false)
@@ -209,7 +209,7 @@ public class PartWordExportTest {
   }
   
   @Test
-  public void shouldHandleMaxTopEntryAndMaxPartWordListSizeParams() {
+  void shouldHandleMaxTopEntryAndMaxPartWordListSizeParams() {
     ExportParams params = ExportParams.builder()
         .maxTopEntrySize(Optional.of(2))
         .maxPartWordListSize(Optional.of(1))
@@ -231,7 +231,7 @@ public class PartWordExportTest {
   }
   
   @Test
-  public void shouldHandleNumberOfDetailedAggregationSetting() {
+  void shouldHandleNumberOfDetailedAggregationSetting() {
     ExportParams params = ExportParams.builder()
         .topKeys(1)
         .numberOfDetailedAggregation(Optional.of(2))
@@ -252,7 +252,7 @@ public class PartWordExportTest {
   }
 
   @Test
-  public void shouldHandleEmptyResult() {
+  void shouldHandleEmptyResult() {
     PartWordExport export = PartWordExport.create("empty test", HashMultimap.create(), null, null);
 
     assertEquals(export.getIdentifier(), "empty test");

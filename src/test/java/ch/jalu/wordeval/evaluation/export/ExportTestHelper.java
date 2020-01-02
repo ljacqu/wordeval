@@ -7,7 +7,7 @@ import java.util.NavigableMap;
  * Test helper for the export package, particularly for casting
  * {@link TreeElement} objects to the proper subtype.
  */
-public final class ExportTestHelper {
+final class ExportTestHelper {
   private ExportTestHelper() {
   }
   

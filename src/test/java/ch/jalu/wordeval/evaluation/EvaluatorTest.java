@@ -4,27 +4,27 @@ import ch.jalu.wordeval.TestUtil;
 import ch.jalu.wordeval.evaluation.export.ExportObject;
 import ch.jalu.wordeval.evaluation.export.ExportParams;
 import com.google.common.collect.Multimap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.oneOf;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link Evaluator}.
  */
-public class EvaluatorTest {
+class EvaluatorTest {
 
   /**
    * The evaluator should not add results that just differ in uppercase / lowercase.
    * It should prefer all-lowercase entries.
    */
   @Test
-  public void shouldHaveCaseInsensitiveResults() {
+  void shouldHaveCaseInsensitiveResults() {
     String[] words = { "test", "Cup", "Test", "Word", "HELLO", "CUP", "hello", "word", "Hello" };
     TestEvaluator evaluator = new TestEvaluator();
     

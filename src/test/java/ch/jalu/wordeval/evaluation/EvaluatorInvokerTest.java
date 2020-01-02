@@ -7,10 +7,11 @@ import ch.jalu.wordeval.evaluation.export.ExportParams;
 import ch.jalu.wordeval.language.LetterType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -21,10 +22,10 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 /**
  * Test for {@link EvaluatorInvoker}.
  */
-public class EvaluatorInvokerTest {
+class EvaluatorInvokerTest {
 
   @Test
-  public void shouldInvokeAllDictionaryEvaluators() {
+  void shouldInvokeAllDictionaryEvaluators() {
     // given
     DictionaryEvaluator de1 = mockDictionaryEvaluator();
     DictionaryEvaluator de2 = mockDictionaryEvaluator();
@@ -47,7 +48,7 @@ public class EvaluatorInvokerTest {
   }
 
   @Test
-  public void shouldInvokePostEvaluators() {
+  void shouldInvokePostEvaluators() {
     // given
     DictEvaluator1 de1 = new DictEvaluator1();
     DictEvaluator3 de3 = new DictEvaluator3();
@@ -72,17 +73,15 @@ public class EvaluatorInvokerTest {
     verify(pepCons).evaluateWith(depCons);
   }
 
-  @Test(expected = RuntimeException.class)
-  public void shouldThrowForUnmatchedBase() {
+  @Test
+  void shouldThrowForUnmatchedBase() {
     // given
     DictEvaluator1 de1 = new DictEvaluator1();
     PostEvaluator2 pe2 = new PostEvaluator2();
     EvaluatorInvoker invoker = new EvaluatorInvoker(Arrays.asList(de1, pe2));
 
-    // when
-    invoker.executePostEvaluators();
-
-    // then - expect exception: base required by pe2 is not present
+    // when / then
+    assertThrows(IllegalStateException.class, invoker::executePostEvaluators);
   }
 
   private static DictionaryEvaluator mockDictionaryEvaluator() {
@@ -126,14 +125,14 @@ public class EvaluatorInvokerTest {
 
   /** Sample post evaluator 1. */
   private static class PostEvaluator1 extends PostEvaluatorAbstraction<Integer, DictEvaluator1> {
-    public PostEvaluator1() {
+    PostEvaluator1() {
       super(DictEvaluator1.class);
     }
   }
 
   /** Sample post evaluator 2. */
   private static class PostEvaluator2 extends PostEvaluatorAbstraction<Boolean, DictEvaluator2> {
-    public PostEvaluator2() {
+    PostEvaluator2() {
       super(DictEvaluator2.class);
     }
   }
@@ -143,7 +142,7 @@ public class EvaluatorInvokerTest {
 
     private final LetterType letterType;
 
-    public PostEvalWithParam(LetterType letterType) {
+    PostEvalWithParam(LetterType letterType) {
       super(DictEvalWithParam.class);
       this.letterType = letterType;
     }
@@ -161,7 +160,7 @@ public class EvaluatorInvokerTest {
     private final Class<B> type;
     private boolean wasEvaluatorCalled;
 
-    public PostEvaluatorAbstraction(Class<B> type) {
+    PostEvaluatorAbstraction(Class<B> type) {
       this.type = type;
     }
 

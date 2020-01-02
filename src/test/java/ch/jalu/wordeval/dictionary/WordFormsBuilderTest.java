@@ -1,19 +1,20 @@
 package ch.jalu.wordeval.dictionary;
 
 import ch.jalu.wordeval.language.Language;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static ch.jalu.wordeval.TestUtil.newLanguage;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Test for {@link WordFormsBuilder}.
  */
-public class WordFormsBuilderTest {
+class WordFormsBuilderTest {
 
   @Test
-  public void shouldKeepAdditionalLetters() {
+  void shouldKeepAdditionalLetters() {
     // given
     Language language = newLanguage("da")
         .additionalVowels("æ", "ø", "å")
@@ -32,7 +33,7 @@ public class WordFormsBuilderTest {
   }
 
   @Test
-  public void shouldRemoveAllAccentsByDefault() {
+  void shouldRemoveAllAccentsByDefault() {
     // given
     Language language = newLanguage("fr").build();
     WordFormsBuilder builder = new WordFormsBuilder(language);
@@ -45,7 +46,7 @@ public class WordFormsBuilderTest {
   }
 
   @Test
-  public void shouldUseLocaleForLowerCase() {
+  void shouldUseLocaleForLowerCase() {
     // given
     Language language = newLanguage("tr").build();
     WordFormsBuilder builder = new WordFormsBuilder(language);
@@ -58,7 +59,7 @@ public class WordFormsBuilderTest {
   }
 
   @Test
-  public void shouldComputeWordOnlyForm() {
+  void shouldComputeWordOnlyForm() {
     // given
     Language language = newLanguage("cs")
         .additionalConsonants("č", "ř")
@@ -72,11 +73,11 @@ public class WordFormsBuilderTest {
     assertThat(result.getForm(WordForm.NO_ACCENTS_WORD_CHARS_ONLY), equalTo("človekuř"));
   }
 
-  @Test(expected = IllegalStateException.class)
-  public void shouldThrowForEmptyWord() {
+  @Test
+  void shouldThrowForEmptyWord() {
     Language language = newLanguage("nl").build();
     WordFormsBuilder builder = new WordFormsBuilder(language);
-    builder.computeForms("");
+    assertThrows(IllegalStateException.class, () -> builder.computeForms(""));
   }
 
 }

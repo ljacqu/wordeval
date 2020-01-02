@@ -3,23 +3,23 @@ package ch.jalu.wordeval.evaluation.export;
 import ch.jalu.wordeval.evaluation.export.TreeElement.IndexTotalColl;
 import ch.jalu.wordeval.evaluation.export.TreeElement.Rest;
 import ch.jalu.wordeval.evaluation.export.TreeElement.WordColl;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link ExportService}.
  */
-public class ExportServiceTest {
+class ExportServiceTest {
   
   @Test
-  public void shouldSerializeWithoutActualTreeClass() {
+  void shouldSerializeWithoutActualTreeClass() {
     IndexTotalColl indexTotal = new IndexTotalColl(new TreeMap<>());
     indexTotal.getTypedValue().put("www", 1);
     indexTotal.getTypedValue().put("eee", 2);

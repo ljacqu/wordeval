@@ -1,29 +1,29 @@
 package ch.jalu.wordeval.evaluation;
 
 import com.google.common.collect.Multimap;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static ch.jalu.wordeval.TestUtil.processWords;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link SameLetterConsecutive}.
  */
-public class SameLetterConsecutiveTest {
+class SameLetterConsecutiveTest {
 
   private SameLetterConsecutive evaluator;
 
-  @Before
-  public void initializeEvaluator() {
+  @BeforeEach
+  void initializeEvaluator() {
     evaluator = new SameLetterConsecutive();
   }
 
   @Test
-  public void shouldRecognizeConsecutiveLetters() {
+  void shouldRecognizeConsecutiveLetters() {
     // ll, fff, eee, -, fff, ll, ll
     String[] words = { "hello", "Schifffahrt", "geëet", "window", "Töfffahrer",
         "schnell", "Llama" };
@@ -42,7 +42,7 @@ public class SameLetterConsecutiveTest {
   }
 
   @Test
-  public void shouldRecognizeSeparateOccurrences() {
+  void shouldRecognizeSeparateOccurrences() {
     // {sss,bb}, {ss,pp}, {aa,ss}, {ooo,ee,oo}
     String[] words = { "Massstabbrecher", "Reisstopp", "aabesso", "oooeemoo" };
 
@@ -61,7 +61,7 @@ public class SameLetterConsecutiveTest {
   }
 
   @Test
-  public void shouldProcessCyrillicWords() {
+  void shouldProcessCyrillicWords() {
     // нн, -, дд, нн, -
     String[] words = { "Избранные", "величайший", "поддержки", "старинного",
         "независимая" };

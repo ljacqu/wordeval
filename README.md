@@ -2,7 +2,6 @@ _wordeval_
 ==========
 [![Build Status](https://travis-ci.org/ljacqu/wordeval.svg?branch=master)](https://travis-ci.org/ljacqu/wordeval)
 [![Coverage Status](https://coveralls.io/repos/ljacqu/wordeval/badge.svg?branch=master&service=github)](https://coveralls.io/github/ljacqu/wordeval?branch=master)
-[![Dependency Status](https://www.versioneye.com/user/projects/572e346fa0ca350034be705b/badge.svg?style=flat)](https://www.versioneye.com/user/projects/572e346fa0ca350034be705b)
 [![Code Climate](https://codeclimate.com/github/ljacqu/wordeval/badges/gpa.svg)](https://codeclimate.com/github/ljacqu/wordeval)
 
 Java application that processes dictionaries of various languages to find "interesting" words based on
@@ -11,7 +10,7 @@ various criteria. The results are exported as JSON so they can be displayed by a
 
 Requirements
 ------------
-- Java 8
+- Java 11
 - Requires you install the [Lombok plugin](https://projectlombok.org/download.html) for your IDE or you won't see the
   accessors and builders it generates
 - Maven

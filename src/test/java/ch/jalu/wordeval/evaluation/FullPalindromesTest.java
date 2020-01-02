@@ -2,22 +2,22 @@ package ch.jalu.wordeval.evaluation;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static ch.jalu.wordeval.TestUtil.asSet;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
  * Test for {@link FullPalindromes}.
  */
-public class FullPalindromesTest {
+class FullPalindromesTest {
 
   @Test
-  public void shouldFindFullPalindromes() {
+  void shouldFindFullPalindromes() {
     TreeMultimap<String, String> result = TreeMultimap.create();
     result.putAll("atta", asSet("attack", "attacked", "battalion"));
     result.putAll("ette", asSet("better", "letter"));

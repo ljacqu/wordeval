@@ -1,21 +1,21 @@
 package ch.jalu.wordeval.evaluation;
 
 import com.google.common.collect.Multimap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static ch.jalu.wordeval.TestUtil.processWords;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link Anagrams}.
  */
-public class AnagramsTest {
+class AnagramsTest {
 
   @Test
-  public void shouldFindAnagrams() {
+  void shouldFindAnagrams() {
     Anagrams evaluator = new Anagrams();
     // {race, care, acre}, {tea, eat}, {fro, for}, a, something, test
     String[] words = { "race", "for", "a", "eat", "care", "something", "acre", "fro", "tea", "test", "test" };

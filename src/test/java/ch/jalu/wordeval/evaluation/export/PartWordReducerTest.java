@@ -2,8 +2,8 @@ package ch.jalu.wordeval.evaluation.export;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.NavigableMap;
 
@@ -12,17 +12,17 @@ import static ch.jalu.wordeval.evaluation.export.ExportTestHelper.getTotalValue;
 import static ch.jalu.wordeval.evaluation.export.ExportTestHelper.getWordCollValue;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test for {@link PartWordReducer}.
  */
-public class PartWordReducerTest {
+class PartWordReducerTest {
   
   private Multimap<String, String> results;
   private ExportParams params = ExportParams.builder()
@@ -30,8 +30,8 @@ public class PartWordReducerTest {
       .isDescending(true)
       .build();
   
-  @Before
-  public void initialize() {
+  @BeforeEach
+  void initialize() {
     results = HashMultimap.create();
     // Length 9
     results.putAll("taalplaat", asList("metaalplaat", "staalplaat"));
@@ -50,7 +50,7 @@ public class PartWordReducerTest {
   }
   
   @Test
-  public void shouldOrderByLength() {
+  void shouldOrderByLength() {
     PartWordReducer reducer = new PartWordReducer.ByLength();
     
     PartWordExport export = PartWordExport.create("test", results, params, reducer);
@@ -60,7 +60,7 @@ public class PartWordReducerTest {
   }
   
   @Test
-  public void shouldOrderBySize() {
+  void shouldOrderBySize() {
     PartWordReducer reducer = new PartWordReducer.BySize();
     
     PartWordExport export = PartWordExport.create("by_size", results, params, reducer);
@@ -76,7 +76,7 @@ public class PartWordReducerTest {
   }
   
   @Test
-  public void shouldOrderBySizeAndLength() {
+  void shouldOrderBySizeAndLength() {
     PartWordReducer reducer = new PartWordReducer.BySizeAndLength(1.0, 0.5);
     
     PartWordExport export = PartWordExport.create("sizeAndLength", results, params, reducer);

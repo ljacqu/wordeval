@@ -1,7 +1,7 @@
 package ch.jalu.wordeval.evaluation.export;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.anEmptyMap;
 import static org.hamcrest.Matchers.contains;
@@ -20,18 +21,17 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test for {@link WordStatExport}.
  */
-public class WordStatExportTest {
+class WordStatExportTest {
 
   private NavigableMap<Integer, List<String>> results;
 
-  @Before
-  public void initialize() {
+  @BeforeEach
+  void initialize() {
     // Test setup: List of consecutive vowels, indices 7 through 2
     String[][] words = {
         { "eeueoue" },
@@ -48,7 +48,7 @@ public class WordStatExportTest {
   }
 
   @Test
-  public void shouldBuildExportObjectAccordingToParams() {
+  void shouldBuildExportObjectAccordingToParams() {
     ExportParams params = ExportParams.builder()
         .maxTopEntrySize(Optional.of(3))
         .topKeys(4)
@@ -74,7 +74,7 @@ public class WordStatExportTest {
   }
 
   @Test
-  public void shouldRespectMinimumKeyParam() {
+  void shouldRespectMinimumKeyParam() {
     ExportParams params = ExportParams.builder()
         .topEntryMinimum(Optional.of(6.0))
         .maxTopEntrySize(Optional.empty())
@@ -91,7 +91,7 @@ public class WordStatExportTest {
   }
 
   @Test
-  public void shouldHandleEmptyTopEntries() {
+  void shouldHandleEmptyTopEntries() {
     ExportParams params = ExportParams.builder().topKeys(0).build();
 
     WordStatExport export = WordStatExport.create("test", results, params);
@@ -101,7 +101,7 @@ public class WordStatExportTest {
   }
 
   @Test
-  public void shouldBeInDescendingOrder() {
+  void shouldBeInDescendingOrder() {
     ExportParams params = ExportParams.builder()
         .isDescending(true)
         .topKeys(2)
@@ -125,7 +125,7 @@ public class WordStatExportTest {
   }
 
   @Test
-  public void shouldExportWithDefaultParams() {
+  void shouldExportWithDefaultParams() {
     WordStatExport export = WordStatExport.create("default test", results, null);
 
     assertEquals(export.getIdentifier(), "default test");
@@ -134,7 +134,7 @@ public class WordStatExportTest {
   }
 
   @Test
-  public void shouldHandleEmptyResult() {
+  void shouldHandleEmptyResult() {
     WordStatExport export = WordStatExport.create("empty", new TreeMap<>(), null);
 
     assertEquals(export.getIdentifier(), "empty");

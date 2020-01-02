@@ -5,9 +5,9 @@ import ch.jalu.wordeval.ReflectionTestUtil;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
 import org.jgrapht.graph.builder.UndirectedGraphBuilder;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
@@ -26,8 +27,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -37,13 +37,13 @@ import static org.mockito.Mockito.when;
 /**
  * Test for {@link WordGraphService}.
  */
-public class WordGraphServiceTest {
+class WordGraphServiceTest {
   
   private static SimpleGraph<String, DefaultWeightedEdge> graph;
   private static DataUtils mockDataUtils;
   
-  @BeforeClass
-  public static void setUpGraph() {
+  @BeforeAll
+  static void setUpGraph() {
     GraphBuilder builder = new GraphBuilder(getTestWords());
     graph = builder.getGraph();
     
@@ -56,7 +56,7 @@ public class WordGraphServiceTest {
   // Shortest path
   // ---
   @Test
-  public void shouldGetShortestPath() {    
+  void shouldGetShortestPath() {
     Set<String> path = WordGraphService.getShortestPath(graph, "bare", "brat");
     assertThat(path.size(), equalTo(13));
     assertThat(path, contains("bare", "bar", "bear", "bears", "beers", "bees", "beet", "meet", "meat", "heat", 
@@ -64,13 +64,13 @@ public class WordGraphServiceTest {
   }
   
   @Test
-  public void shouldGetShortestPathForSameWord() {
+  void shouldGetShortestPathForSameWord() {
     Set<String> path = WordGraphService.getShortestPath(graph, "bear", "bear");
     assertThat(path, contains("bear"));
   }
   
   @Test
-  public void shouldReturnEmptySetForNonExistentWord() {
+  void shouldReturnEmptySetForNonExistentWord() {
     Set<String> path = WordGraphService.getShortestPath(graph, "bear", "does-not-exist");
     assertThat(path, empty());
     path = WordGraphService.getShortestPath(graph, "does-not-exist", "bear");
@@ -83,7 +83,7 @@ public class WordGraphServiceTest {
   // Disable/enable vertices
   // ---
   @Test
-  public void shouldDisableAndEnableVertex() {
+  void shouldDisableAndEnableVertex() {
     // Disable
     final String vertex = "bar";
     boolean result = WordGraphService.disableVertexEdges(graph, vertex);
@@ -101,13 +101,13 @@ public class WordGraphServiceTest {
   }
   
   @Test
-  public void shouldReturnFalseForNonExistentVertex() {
+  void shouldReturnFalseForNonExistentVertex() {
     assertThat(WordGraphService.disableVertexEdges(graph, "non-existent"), equalTo(Boolean.FALSE));
     assertThat(WordGraphService.enableVertexEdges(graph, "non-existent"), equalTo(Boolean.FALSE));
   }
   
   @Test
-  public void shouldNotReturnShortestPathForDisabledEdge() {
+  void shouldNotReturnShortestPathForDisabledEdge() {
     SimpleGraph<String, DefaultWeightedEdge> simpleGraph = 
         new UndirectedGraphBuilder<String, DefaultWeightedEdge, SimpleGraph<String, DefaultWeightedEdge>>(
             new SimpleGraph<>(DefaultWeightedEdge.class))
@@ -123,7 +123,7 @@ public class WordGraphServiceTest {
   // Get neighbors
   // ---
   @Test
-  public void shouldGetNeighborsOfVertex() {
+  void shouldGetNeighborsOfVertex() {
     Set<String> neighbors = WordGraphService.getNeighbors(graph, "bear");
     assertThat(neighbors, containsInAnyOrder("bar", "bears", "boar"));
     
@@ -132,7 +132,7 @@ public class WordGraphServiceTest {
   }
   
   @Test
-  public void shouldReturnEmptyListForNonExistentVertex() {
+  void shouldReturnEmptyListForNonExistentVertex() {
     Set<String> neighbors = WordGraphService.getNeighbors(graph, "unknown-vertex");
     assertThat(neighbors, empty());
   }
@@ -141,7 +141,7 @@ public class WordGraphServiceTest {
   // Export/import
   // ---
   @Test
-  public void shouldExportGraph() {
+  void shouldExportGraph() {
     final String filename = "test-export.json";
     final String sampleJson = "{isMock: true}";
     ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
@@ -161,8 +161,8 @@ public class WordGraphServiceTest {
   }
   
   @Test
-  @Ignore
-  public void shouldImportGraph() {
+  @Disabled
+  void shouldImportGraph() {
     final String sampleJson = "{context: \"test\"}";
     final String filename = "import-test.json";
     Map<String, List<String>> connections = new HashMap<>();

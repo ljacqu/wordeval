@@ -2,28 +2,28 @@ package ch.jalu.wordeval.evaluation;
 
 import ch.jalu.wordeval.TestUtil;
 import com.google.common.collect.Multimap;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for {@link ConsecutiveLetterPairs}.
  */
-public class ConsecutiveLetterPairsTest {
+class ConsecutiveLetterPairsTest {
 
   private ConsecutiveLetterPairs evaluator;
 
-  @Before
-  public void initializeEvaluator() {
+  @BeforeEach
+  void initializeEvaluator() {
     evaluator = new ConsecutiveLetterPairs();
   }
 
   @Test
-  public void shouldRecognizeLetterPairs() {
+  void shouldRecognizeLetterPairs() {
     // 2, 0, 0, 3, 2, 2, 2, 4, 2
     String[] words = { "aallorr", "potato", "klokken", "maaiill", "oppaan",
         "reennag", "baaggage", "voorraaddra", "reell" };
@@ -38,7 +38,7 @@ public class ConsecutiveLetterPairsTest {
   }
 
   @Test
-  public void shouldRecognizeSeparatePairs() {
+  void shouldRecognizeSeparatePairs() {
     // 2, {2,3}, 0
     String[] words = { "massaage", "aabbcdefgghhiij", "something" };
 
@@ -50,12 +50,13 @@ public class ConsecutiveLetterPairsTest {
     assertThat(results.get(3), containsInAnyOrder("aabbcdefgghhiij"));
   }
 
-  @Test
+
   /**
    * Triplets ("eee") or bigger groups should also count towards "pair groups",
    * i.e. "sseee" should count as 2 groups.
    */
-  public void shouldRecognizeTriplesOrMore() {
+  @Test
+  void shouldRecognizeTriplesOrMore() {
     // 2, 0, 3, 4, 0
     String[] words = { "laaaii", "kayak", "poolooeeerr", "aabbbccdddef",
         "walking" };
