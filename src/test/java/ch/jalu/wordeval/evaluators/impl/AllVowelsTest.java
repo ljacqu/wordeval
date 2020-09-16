@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -41,10 +42,10 @@ class AllVowelsTest {
 
   private static List<WordWithKey> createVowelCountResults() {
     Multimap<String, String> results = HashMultimap.create();
-    results.putAll("ae", TestUtil.asSet("bear", "care"));
-    results.putAll("aeiu", TestUtil.asSet("beautiful"));
-    results.putAll("eiou", TestUtil.asSet("question", "questions", "questioning"));
-    results.putAll("aeiou", TestUtil.asSet("sequoia", "miscellaneous", "simultaneous"));
+    results.putAll("ae", Set.of("bear", "care"));
+    results.putAll("aeiu", Set.of("beautiful"));
+    results.putAll("eiou", Set.of("question", "questions", "questioning"));
+    results.putAll("aeiou", Set.of("sequoia", "miscellaneous", "simultaneous"));
 
     return results.entries().stream()
       .map(entry -> new WordWithKey(new TestWord(entry.getValue()), entry.getKey()))

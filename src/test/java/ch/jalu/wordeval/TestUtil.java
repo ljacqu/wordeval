@@ -20,18 +20,10 @@ public final class TestUtil {
 
   private TestUtil() {
   }
-
-  /**
-   * Helper method to easily create a mutable Set with the given items.
-   * @param items the items to add into a set
-   * @return a Set with the given items
-   */
-  public static Set<String> asSet(String... items) {
-    return new HashSet<>(Arrays.asList(items));
-  }
   
   /**
    * Returns whether a dictionary's file exists or not.
+   *
    * @param dictionary the dictionary to verify
    * @return true if the file exists, false otherwise
    */
@@ -63,5 +55,4 @@ public final class TestUtil {
   public static <T> void assumeThat(T item, Matcher<? super T> matcher) {
     assumeTrue(matcher.matches(item));
   }
-
 }

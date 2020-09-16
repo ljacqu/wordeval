@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static ch.jalu.wordeval.TestUtil.asSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -32,10 +32,10 @@ class FullPalindromesTest {
   void shouldFindFullPalindromes() {
     // given
     TreeMultimap<String, String> result = TreeMultimap.create();
-    result.putAll("atta", asSet("attack", "attacked", "battalion"));
-    result.putAll("ette", asSet("better", "letter"));
-    result.putAll("eve", asSet("eve", "steve"));
-    result.putAll("lagerregal", asSet("lagerregal"));
+    result.putAll("atta", Set.of("attack", "attacked", "battalion"));
+    result.putAll("ette", Set.of("better", "letter"));
+    result.putAll("eve", Set.of("eve", "steve"));
+    result.putAll("lagerregal", Set.of("lagerregal"));
 
     // when
     ImmutableList<WordWithScore> results = EvaluatorTestHelper.evaluatePostEvaluatorWithResults(evaluator, createResultFromPalindromesEvaluator());
@@ -50,10 +50,10 @@ class FullPalindromesTest {
 
   private static List<WordWithKey> createResultFromPalindromesEvaluator() {
     Multimap<String, String> result = HashMultimap.create();
-    result.putAll("atta", asSet("attack", "attacked", "battalion"));
-    result.putAll("ette", asSet("better", "letter"));
-    result.putAll("eve", asSet("eve", "steve"));
-    result.putAll("lagerregal", asSet("lagerregal"));
+    result.putAll("atta", Set.of("attack", "attacked", "battalion"));
+    result.putAll("ette", Set.of("better", "letter"));
+    result.putAll("eve", Set.of("eve", "steve"));
+    result.putAll("lagerregal", Set.of("lagerregal"));
 
     List<WordWithKey> wordsWithKey = new ArrayList<>();
     for (Map.Entry<String, Collection<String>> entry : result.asMap().entrySet()) {
