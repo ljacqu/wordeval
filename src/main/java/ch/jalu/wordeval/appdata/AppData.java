@@ -1,9 +1,8 @@
 package ch.jalu.wordeval.appdata;
 
 import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.language.Language;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * Application data holder.
@@ -18,15 +17,11 @@ public class AppData {
     this.dictionaryStore = new DictionarySettingsStore(languageStore);
   }
 
-  public Language getLanguage(String code) {
-    return languageStore.get(code);
-  }
-
   public Dictionary getDictionary(String code) {
     return dictionaryStore.get(code);
   }
 
-  public Set<String> getAllDictionaryCodes() {
-    return dictionaryStore.keySet();
+  public Collection<Dictionary> getAllDictionaries() {
+    return dictionaryStore.entries.values();
   }
 }

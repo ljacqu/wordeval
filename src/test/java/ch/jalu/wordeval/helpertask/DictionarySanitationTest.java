@@ -2,23 +2,20 @@ package ch.jalu.wordeval.helpertask;
 
 import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.dictionary.WordForm;
-import ch.jalu.wordeval.evaluation.PartWordEvaluator;
+import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
-import ch.jalu.wordeval.language.LanguageService;
-import ch.jalu.wordeval.language.LetterType;
 import ch.jalu.wordeval.runners.DictionaryProcessor;
-import com.google.common.collect.Multimap;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Utility task to verify how well a dictionary is being sanitized.
@@ -27,7 +24,8 @@ public class DictionarySanitationTest {
 
   private static final AppData appData = new AppData();
 
-  private DictionarySanitationTest() { }
+  private DictionarySanitationTest() {
+  }
 
   public static void main(String... args) {
     Scanner sc = new Scanner(System.in);
@@ -35,78 +33,38 @@ public class DictionarySanitationTest {
     String dictCode = sc.nextLine();
     sc.close();
 
-    Map<String, Multimap<String, String>> sanitationResult = new HashMap<>();
-    Iterable<String> languageCodes = StringUtils.isEmpty(dictCode.trim())
-        ? appData.getAllDictionaryCodes()
-        : Collections.singletonList(dictCode);
+    Iterable<Dictionary> dictionaries = StringUtils.isBlank(dictCode)
+        ? appData.getAllDictionaries()
+        : Collections.singletonList(appData.getDictionary(dictCode.trim()));
     
-    for (String languageCode : languageCodes) {
-      Multimap<String, String> badWords = findBadWords(languageCode);
+    for (Dictionary dictionary : dictionaries) {
+      Set<String> badWords = findBadWords(dictionary);
       if (!badWords.isEmpty()) {
-        sanitationResult.put(languageCode, badWords);
+        System.err.println(dictionary.getIdentifier() + ": " + badWords);
+      } else {
+        System.out.println(dictionary.getIdentifier() + " passed");
       }
-    }
-
-    if (!sanitationResult.isEmpty()) {
-      sanitationResult.entrySet().stream()
-          .forEach(e -> System.err.println(e.getKey() + ": " + e.getValue()));
-    } else {
-      System.out.println("Verification successful");
     }
   }
 
-  private static Multimap<String, String> findBadWords(String languageCode) {
-    List<Character> allowedChars = computeAllowedCharsList(languageCode);
-    NoOtherCharsEvaluator testEvaluator = new NoOtherCharsEvaluator(allowedChars);
-    AppData appData = new AppData();
-    Dictionary dictionary = appData.getDictionary(languageCode);
-
-    DictionaryProcessor.process(dictionary, Collections.singletonList(testEvaluator));
-    
-    return testEvaluator.getResults();
+  private static Set<String> findBadWords(Dictionary dictionary) {
+    char[] allowedChars = createStringOfAllowedChars(dictionary.getLanguage());
+    return DictionaryProcessor.readAllWords(dictionary).stream()
+      .map(Word::getWithoutAccentsWordCharsOnly)
+      .filter(word -> !StringUtils.containsOnly(word, allowedChars))
+      .collect(Collectors.toSet());
   }
   
-  private static List<Character> computeAllowedCharsList(String languageCode) {
-    Language lang = appData.getLanguage(languageCode);
-    List<Character> allowedChars = new ArrayList<>();
-    for (String entry : LanguageService.getLetters(LetterType.VOWELS, lang)) {
-      if (entry.length() == 1) {
-        allowedChars.add(entry.charAt(0));
-      }
-    }
-    for (String entry : LanguageService.getLetters(LetterType.CONSONANTS, lang)) {
-      if (entry.length() == 1) {
-        allowedChars.add(entry.charAt(0));
-      }
-    }
-    if (Alphabet.CYRILLIC.equals(lang.getAlphabet())) {
-      allowedChars.add('ь');
-      allowedChars.add('ъ');
-    }
-    return allowedChars;
-  }
+  private static char[] createStringOfAllowedChars(Language language) {
+    List<String> additions = language.getAlphabet() == Alphabet.CYRILLIC
+      ? Arrays.asList("ь", "ъ")
+      : Collections.emptyList();
 
-  private static final class NoOtherCharsEvaluator extends PartWordEvaluator {
-    private final char[] allowedChars;
-
-    NoOtherCharsEvaluator(List<Character> allowedChars) {
-      Character[] allowedCharsArray = allowedChars
-          .toArray(new Character[allowedChars.size()]);
-      this.allowedChars = ArrayUtils.toPrimitive(allowedCharsArray);
-    }
-
-    @Override
-    public void processWord(String word, String rawWord) {
-      if (!StringUtils.containsOnly(word, allowedChars)) {
-        int subIndex = StringUtils.indexOfAnyBut(word, allowedChars);
-        String key = subIndex > -1 ? word.substring(subIndex, subIndex + 1) : "__";
-        addEntry(key, word);
-      }
-    }
-
-    @Override
-    public WordForm getWordForm() {
-      return WordForm.NO_ACCENTS_WORD_CHARS_ONLY;
-    }
+    String allowedChars = Stream.of(additions, language.getVowels(), language.getConsonants())
+      .flatMap(Collection::stream)
+      .filter(letter -> letter.length() == 1)
+      .distinct()
+      .collect(Collectors.joining());
+    return allowedChars.toCharArray();
   }
 }

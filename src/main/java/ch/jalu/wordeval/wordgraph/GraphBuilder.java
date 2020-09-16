@@ -1,15 +1,15 @@
 package ch.jalu.wordeval.wordgraph;
 
 import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.evaluation.WordCollector;
+import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.runners.DictionaryProcessor;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Finds which words have a Damerau-Levenshtein distance of 1 and saves these
@@ -48,9 +48,11 @@ public class GraphBuilder {
   }
   
   private static List<String> getDictionaryWords(Dictionary dictionary) {
-    WordCollector collector = new WordCollector();
-    DictionaryProcessor.process(dictionary, Collections.singletonList(collector));
-    return collector.returnSortedWords();
+    return DictionaryProcessor.readAllWords(dictionary).stream()
+      .map(Word::getRaw)
+      .distinct()
+      .sorted()
+      .collect(Collectors.toList());
   }
 
   private void constructGraph(List<String> words) {

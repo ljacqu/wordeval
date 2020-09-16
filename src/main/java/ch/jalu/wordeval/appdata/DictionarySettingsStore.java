@@ -1,8 +1,8 @@
 package ch.jalu.wordeval.appdata;
 
 import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.dictionary.FrSanitizer;
-import ch.jalu.wordeval.dictionary.HuSanitizer;
+import ch.jalu.wordeval.dictionary.sanitizer.FrSanitizer;
+import ch.jalu.wordeval.dictionary.sanitizer.HuSanitizer;
 import ch.jalu.wordeval.language.Language;
 
 /**
@@ -33,8 +33,8 @@ class DictionarySettingsStore extends ObjectStore<String, Dictionary> {
       // TODO #62: Some Basque entries have _ but most parts seem to be present alone
       newDictionary("es").delimiters('/').build(),
       newDictionary("eu").delimiters('/').skipSequences(".", "+", "_").build(),
-      newDictionary("fr").sanitizerClass(FrSanitizer.class).delimiters('/', '\t').skipSequences(".", "&", "µ").build(),
-      newDictionary("hu").sanitizerClass(HuSanitizer.class).delimiters('/', '\t').skipSequences(".", "+", "±", "ø", "ʻ", "’", "­").build(),
+      newDictionary("fr").sanitizerCreator(FrSanitizer::new).delimiters('/', '\t').skipSequences(".", "&", "µ").build(),
+      newDictionary("hu").sanitizerCreator(HuSanitizer::new).delimiters('/', '\t').skipSequences(".", "+", "±", "ø", "ʻ", "’", "­").build(),
       newDictionary("it").delimiters('/').build(),
       newDictionary("nb").delimiters('/').build(),
       // TODO: The nl dictionary uses the digraph symbol 'ĳ' instead of 'i'+'j'

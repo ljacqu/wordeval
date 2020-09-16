@@ -2,10 +2,13 @@ package ch.jalu.wordeval.language;
 
 import lombok.Getter;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
-import static com.google.common.base.MoreObjects.firstNonNull;
+import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Arrays.asList;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Class with language-specific details, independent of any dictionary format.
@@ -18,17 +21,17 @@ public class Language {
   private final String code;
   private final String name;
   private final Alphabet alphabet;
-  private final String[] additionalVowels;
-  private final String[] additionalConsonants;
-  private final String[] lettersToRemove;
+  private final List<String> additionalVowels;
+  private final List<String> additionalConsonants;
+  private final List<String> lettersToRemove;
 
   @Getter(lazy = true)
   private final Locale locale = buildLocale();
   @Getter(lazy = true)
   private final String charsToPreserve = computeCharsToPreserve();
   
-  private Language(String code, String name, Alphabet alphabet, String[] additionalVowels,
-                   String[] additionalConsonants, String[] lettersToRemove) {
+  private Language(String code, String name, Alphabet alphabet, List<String> additionalVowels,
+                   List<String> additionalConsonants, List<String> lettersToRemove) {
     this.code = code;
     this.name = name;
     this.alphabet = alphabet;
@@ -64,50 +67,49 @@ public class Language {
     return sb.toString();
   }
 
+  public List<String> getVowels() {
+    List<String> vowels = newArrayList(alphabet.getStandardVowels());
+    vowels.removeAll(lettersToRemove);
+    vowels.addAll(additionalVowels);
+    return vowels;
+  }
+
+  public List<String> getConsonants() {
+    List<String> consonants = newArrayList(alphabet.getStandardConsonants());
+    consonants.removeAll(lettersToRemove);
+    consonants.addAll(additionalConsonants);
+    return consonants;
+  }
+
   // --- Builder
-  public static Builder builder() {
-    return new Builder();
+  public static Builder builder(String code, String name, Alphabet alphabet) {
+    return new Builder(code, name, alphabet);
   }
 
   public static final class Builder {
 
-    private String code;
-    private String name;
-    private Alphabet alphabet;
+    private final String code;
+    private final String name;
+    private final Alphabet alphabet;
     private String[] additionalVowels;
     private String[] additionalConsonants;
     private String[] lettersToRemove;
 
-    private Builder() {
+    private Builder(String code, String name, Alphabet alphabet) {
+      this.code = requireNonNull(code, "code");
+      this.name = requireNonNull(name, "name");
+      this.alphabet = requireNonNull(alphabet, "alphabet");
     }
 
     public Language build() {
-      Objects.requireNonNull(code, "code");
-      Objects.requireNonNull(name, "name");
-      Objects.requireNonNull(alphabet, "alphabet");
-
-      return new Language(
-        code,
-        name,
-        alphabet,
-        firstNonNull(additionalVowels,     new String[0]),
-        firstNonNull(additionalConsonants, new String[0]),
-        firstNonNull(lettersToRemove,      new String[0]));
+      return new Language(code, name, alphabet,
+        asListNullSafe(additionalVowels),
+        asListNullSafe(additionalConsonants),
+        asListNullSafe(lettersToRemove));
     }
 
-    public Builder code(String code) {
-      this.code = code;
-      return this;
-    }
-
-    public Builder name(String name) {
-      this.name = name;
-      return this;
-    }
-
-    public Builder alphabet(Alphabet alphabet) {
-      this.alphabet = alphabet;
-      return this;
+    private static List<String> asListNullSafe(String[] elements) {
+      return elements == null ? Collections.emptyList() : asList(elements);
     }
 
     /**

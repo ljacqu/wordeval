@@ -10,10 +10,10 @@
     </Console>
   </Appenders>
   <Loggers>
-    <Logger name="ch.jalu" level="trace" additivity="false">
+    <Logger name="ch.jalu" level="debug" additivity="false">
       <AppenderRef ref="Console"/>
     </Logger>
-    <Root level="warn">
+    <Root level="info">
       <AppenderRef ref="Console"/>
     </Root>
   </Loggers>

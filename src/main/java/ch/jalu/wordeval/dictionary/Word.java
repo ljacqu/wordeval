@@ -1,23 +1,23 @@
 package ch.jalu.wordeval.dictionary;
 
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Word with all its word form types.
  */
-@AllArgsConstructor
+@Getter
+@Setter(AccessLevel.PACKAGE)
+@EqualsAndHashCode(of = "raw")
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class Word {
 
-  private String[] wordForms;
-
-  /**
-   * Gets a given word form from the given list.
-   *
-   * @param wordForm the word form type to get
-   * @return the requested word form
-   */
-  public String getForm(WordForm wordForm) {
-    return wordForms[wordForm.ordinal()];
-  }
+  private String raw;
+  private String lowercase;
+  private String withoutAccents;
+  private String withoutAccentsWordCharsOnly;
 
 }

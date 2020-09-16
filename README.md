@@ -1,6 +1,6 @@
 _wordeval_
 ==========
-[![Build Status](https://travis-ci.org/ljacqu/wordeval.svg?branch=master)](https://travis-ci.org/ljacqu/wordeval)
+[![Build Status](https://github.com/ljacqu/wordeval/workflows/build/badge.svg)](https://github.com/ljacqu/wordeval/actions?query=workflow%3A%22build%22)
 [![Coverage Status](https://coveralls.io/repos/ljacqu/wordeval/badge.svg?branch=master&service=github)](https://coveralls.io/github/ljacqu/wordeval?branch=master)
 [![Code Climate](https://codeclimate.com/github/ljacqu/wordeval/badges/gpa.svg)](https://codeclimate.com/github/ljacqu/wordeval)
 
