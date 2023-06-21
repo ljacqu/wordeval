@@ -10,7 +10,7 @@ various criteria. The results are exported as JSON so they can be displayed by a
 
 Requirements
 ------------
-- Java 11
+- Java 17
 - Requires you install the [Lombok plugin](https://projectlombok.org/download.html) for your IDE or you won't see the
   accessors and builders it generates
 - Maven
