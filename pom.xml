@@ -29,23 +29,6 @@
         <version>3.0.2</version>
       </plugin>
       <plugin>
-        <groupId>org.eluder.coveralls</groupId>
-        <artifactId>coveralls-maven-plugin</artifactId>
-        <version>4.3.0</version>
-        <configuration>
-          <!-- Provided by GitHub action -->
-          <repoToken>${env.coveralls_repo_token}</repoToken>
-        </configuration>
-        <dependencies>
-          <!-- Workaround for https://github.com/trautonen/coveralls-maven-plugin/issues/112 -->
-          <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.3.1</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-      <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>0.8.10</version>
