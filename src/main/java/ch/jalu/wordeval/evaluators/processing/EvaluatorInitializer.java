@@ -29,9 +29,9 @@ public class EvaluatorInitializer {
   private final Locale[] locale;
 
   @Getter
-  private final List<AllWordsEvaluator> allWordsEvaluators = new ArrayList<>();
+  private final List<AllWordsEvaluator<?>> allWordsEvaluators = new ArrayList<>();
   @Getter
-  private final List<PostEvaluator> postEvaluators = new ArrayList<>();
+  private final List<PostEvaluator<?>> postEvaluators = new ArrayList<>();
 
   /**
    * Constructor.
@@ -56,20 +56,20 @@ public class EvaluatorInitializer {
 
     reflections.getSubTypesOf(AllWordsEvaluator.class).stream()
       .filter(this::isInstantiableClass)
-      .forEach(clz -> createObjectsAndSaveToList(clz, allWordsEvaluators));
+      .forEach(clz -> createObjectsAndSaveToList(clz, (List) allWordsEvaluators));
 
     reflections.getSubTypesOf(PostEvaluator.class).stream()
       .filter(this::isInstantiableClass)
-      .forEach(clz -> createObjectsAndSaveToList(clz, postEvaluators));
+      .forEach(clz -> createObjectsAndSaveToList(clz, (List) postEvaluators));
   }
 
-  private <T> void createObjectsAndSaveToList(Class<? extends T> clazz, List<T> list) {
+  private <T> void createObjectsAndSaveToList(Class<T> clazz, List<? super T> list) {
     log.trace("Creating instances of class '{}'", clazz.getSimpleName());
-    Constructor<? extends T> constructor = (Constructor) clazz.getDeclaredConstructors()[0];
+    Constructor<T> constructor = (Constructor<T>) clazz.getDeclaredConstructors()[0];
     createAndAddObjects(list, constructor, newArrayList(constructor.getParameterTypes()), new ArrayList<>());
   }
 
-  private <T> void createAndAddObjects(List<T> instancesList, Constructor<? extends T> constructor,
+  private <T> void createAndAddObjects(List<? super T> instancesList, Constructor<T> constructor,
                                        List<Class<?>> unresolvedDependencies, List<Object> resolvedDependencies) {
     if (unresolvedDependencies.isEmpty()) {
       instancesList.add(newInstance(constructor, resolvedDependencies));

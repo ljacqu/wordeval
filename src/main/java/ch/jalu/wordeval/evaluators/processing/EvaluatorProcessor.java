@@ -14,24 +14,27 @@ import java.util.stream.Collectors;
  */
 public class EvaluatorProcessor {
 
-  private final Map<AllWordsEvaluator, ResultStore> wordEvaluators;
-  private final Map<PostEvaluator, ResultStore> postEvaluators;
+  private final Map<AllWordsEvaluator<?>, ResultStore<?>> wordEvaluators;
+  private final Map<PostEvaluator<?>, ResultStore<?>> postEvaluators;
 
-  public EvaluatorProcessor(Collection<AllWordsEvaluator> wordEvaluators, Collection<PostEvaluator> postEvaluators) {
+  public EvaluatorProcessor(Collection<AllWordsEvaluator<?>> wordEvaluators,
+                            Collection<PostEvaluator<?>> postEvaluators) {
     this.wordEvaluators = wordEvaluators.stream()
-      .collect(Collectors.toMap(Function.identity(), k -> new ResultStoreImpl()));
+      .collect(Collectors.toMap(Function.identity(), k -> new ResultStoreImpl<>()));
     this.postEvaluators = postEvaluators.stream()
-      .collect(Collectors.toMap(Function.identity(), k -> new ResultStoreImpl()));
+      .collect(Collectors.toMap(Function.identity(), k -> new ResultStoreImpl<>()));
   }
 
   public EvaluatorProcessor(EvaluatorInitializer evaluatorInitializer) {
     this(evaluatorInitializer.getAllWordsEvaluators(), evaluatorInitializer.getPostEvaluators());
   }
 
+  @SuppressWarnings({"rawtypes", "unchecked"})
   public void processAllWords(Collection<Word> words) {
-    wordEvaluators.forEach((evaluator, resultStore) -> evaluator.evaluate(words, resultStore));
+    wordEvaluators.forEach((evaluator, resultStore) -> evaluator.evaluate(words, (ResultStore) resultStore));
 
     ResultsProvider resultsProvider = new ResultsProvider(wordEvaluators);
-    postEvaluators.forEach((evaluator, resultStore) -> evaluator.evaluateAndSaveResults(resultsProvider, resultStore));
+    postEvaluators.forEach(
+        (evaluator, resultStore) -> evaluator.evaluateAndSaveResults(resultsProvider, (ResultStore) resultStore));
   }
 }
