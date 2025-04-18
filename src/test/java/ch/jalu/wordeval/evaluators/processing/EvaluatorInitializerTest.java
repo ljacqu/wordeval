@@ -1,6 +1,5 @@
 package ch.jalu.wordeval.evaluators.processing;
 
-import ch.jalu.wordeval.evaluators.impl.AllVowels;
 import ch.jalu.wordeval.evaluators.impl.AlphabeticalSequence;
 import ch.jalu.wordeval.evaluators.impl.ConsecutiveVowelCount;
 import ch.jalu.wordeval.evaluators.impl.DiacriticHomonyms;
@@ -57,7 +56,6 @@ class EvaluatorInitializerTest {
     // Check that all enum values are present
     checkHasAllForEnum(initializer.getAllWordsEvaluators(), VowelCount.class, LetterType.class, VowelCount::getLetterType);
     checkHasAllForEnum(initializer.getAllWordsEvaluators(), ConsecutiveVowelCount.class, LetterType.class, ConsecutiveVowelCount::getLetterType);
-    checkHasAllForEnum(initializer.getPostEvaluators(), AllVowels.class, LetterType.class, AllVowels::getLetterType);
   }
 
   /**

@@ -81,7 +81,7 @@ public class Palindromes implements WordEvaluator<WordWithKey> {
   }
 
   @Override
-  public List<ListMultimap<Object, Object>> getTopResults(int topScores, int maxLimit) {
+  public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
     List<WordWithKey> sortedResult = results.stream()
         .sorted(Comparator.comparing((WordWithKey wwk) -> wwk.getKey().length()).reversed())
         .toList();
@@ -98,6 +98,6 @@ public class Palindromes implements WordEvaluator<WordWithKey> {
       }
     }
 
-    return List.of(filteredResults);
+    return filteredResults;
   }
 }

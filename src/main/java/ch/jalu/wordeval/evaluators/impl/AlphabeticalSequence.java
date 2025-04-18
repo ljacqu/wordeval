@@ -4,6 +4,15 @@ import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
 import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
+import ch.jalu.wordeval.evaluators.result.WordWithScore;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Filters that checks if there is a group of letters in a word that is an
@@ -13,6 +22,8 @@ public class AlphabeticalSequence implements WordEvaluator<WordWithKey> {
 
   private static final int FORWARDS = -1;
   private static final int BACKWARDS = 1;
+
+  private final List<WordWithKey> results = new ArrayList<>();
 
   @Override
   public void evaluate(Word word, ResultStore<WordWithKey> resultStore) {
@@ -39,10 +50,32 @@ public class AlphabeticalSequence implements WordEvaluator<WordWithKey> {
         if (alphabeticalStreak > 2) {
           String alphabeticalSequence = text.substring(i - alphabeticalStreak, i);
           resultStore.addResult(new WordWithKey(word, alphabeticalSequence));
+          results.add(new WordWithKey(word, alphabeticalSequence));
         }
         alphabeticalStreak = 1;
       }
     }
   }
 
+  @Override
+  public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
+    List<WordWithKey> sortedResult = results.stream()
+        .sorted(Comparator.<WordWithKey>comparingInt(wordWithKey -> wordWithKey.getKey().length()).reversed())
+        .toList();
+
+    Set<Integer> uniqueValues = new HashSet<>();
+    ListMultimap<Object, Object> filteredResults = ArrayListMultimap.create();
+    for (WordWithKey wordWithKey : sortedResult) {
+      int score = wordWithKey.getKey().length();
+      if (uniqueValues.add(score) && uniqueValues.size() > topScores) {
+        break;
+      }
+      filteredResults.put(score, wordWithKey.getWord().getRaw() + " (" + wordWithKey.getKey() + ")");
+      if (filteredResults.size() >= maxLimit) {
+        break;
+      }
+    }
+
+    return filteredResults;
+  }
 }

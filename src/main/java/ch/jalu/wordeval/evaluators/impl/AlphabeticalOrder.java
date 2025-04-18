@@ -57,7 +57,7 @@ public class AlphabeticalOrder implements WordEvaluator<WordWithScore> {
   }
 
   @Override
-  public List<ListMultimap<Object, Object>> getTopResults(int topScores, int maxLimit) {
+  public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
     List<WordWithScore> sortedResult = results.stream()
         .sorted(Comparator.comparing(WordWithScore::getScore).reversed())
         .toList();
@@ -74,6 +74,6 @@ public class AlphabeticalOrder implements WordEvaluator<WordWithScore> {
       }
     }
 
-    return List.of(filteredResults);
+    return filteredResults;
   }
 }

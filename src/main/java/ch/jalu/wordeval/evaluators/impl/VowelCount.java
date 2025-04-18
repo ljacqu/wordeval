@@ -46,7 +46,7 @@ public class VowelCount implements WordEvaluator<WordWithKey> {
   }
 
   @Override
-  public List<ListMultimap<Object, Object>> getTopResults(int topScores, int maxLimit) {
+  public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
     // TODO: Should probably skip this as PostEvaluators cover the interesting stuff
     List<WordWithKey> sortedResult = results.stream()
         .sorted(Comparator.comparing((WordWithKey wwk) -> wwk.getKey().length()).reversed())
@@ -64,7 +64,7 @@ public class VowelCount implements WordEvaluator<WordWithKey> {
       }
     }
 
-    return List.of(filteredResults);
+    return filteredResults;
   }
 
   @Override

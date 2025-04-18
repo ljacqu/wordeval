@@ -4,10 +4,19 @@ import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.AllWordsEvaluator;
 import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.result.WordGroup;
+import ch.jalu.wordeval.evaluators.result.WordWithKey;
+import ch.jalu.wordeval.evaluators.result.WordWithScore;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -16,6 +25,8 @@ import java.util.stream.Collectors;
  * such as German "Lager" and "Regal".
  */
 public class Emordnilap implements AllWordsEvaluator<WordGroup> {
+
+  private final List<WordWithKey> results = new ArrayList<>();
 
   @Override
   public void evaluate(Collection<Word> words, ResultStore<WordGroup> resultStore) {
@@ -29,7 +40,30 @@ public class Emordnilap implements AllWordsEvaluator<WordGroup> {
       if (lowercase.compareTo(reversed) < 0 && reversedWord != null) {
         // TODO: Add smarter checks to avoid performing work, maybe can even stop once compareTo is < 0 ?
         resultStore.addResult(new WordGroup(entry.getValue(), reversedWord));
+        results.add(new WordWithKey(reversedWord, entry.getKey()));
       }
     }
+  }
+
+  @Override
+  public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
+    List<WordWithKey> sortedResult = results.stream()
+        .sorted(Comparator.<WordWithKey>comparingInt(wordWithKey -> wordWithKey.getKey().length()).reversed())
+        .toList();
+
+    Set<Integer> uniqueValues = new HashSet<>();
+    ListMultimap<Object, Object> filteredResults = ArrayListMultimap.create();
+    for (WordWithKey wordWithKey : sortedResult) {
+      int score = wordWithKey.getKey().length();
+      if (uniqueValues.add(score) && uniqueValues.size() > topScores) {
+        break;
+      }
+      filteredResults.put(score, wordWithKey.getWord().getRaw() + " (" + wordWithKey.getKey() + ")");
+      if (filteredResults.size() >= maxLimit) {
+        break;
+      }
+    }
+
+    return filteredResults;
   }
 }
