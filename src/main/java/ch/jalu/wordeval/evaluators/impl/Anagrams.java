@@ -2,8 +2,8 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.AllWordsEvaluator;
+import ch.jalu.wordeval.evaluators.export.EvaluatorExportUtil;
 import ch.jalu.wordeval.evaluators.result.WordGroupWithKey;
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
@@ -50,7 +50,7 @@ public class Anagrams implements AllWordsEvaluator {
         .toList();
 
     Set<Integer> uniqueValues = new HashSet<>();
-    ListMultimap<Object, Object> filteredResults = ArrayListMultimap.create();
+    ListMultimap<Object, Object> filteredResults = EvaluatorExportUtil.newListMultimap();
     for (WordGroupWithKey wordGroup : sortedResult) {
       int score = wordGroup.getWords().size();
       if (uniqueValues.add(score) && uniqueValues.size() > topScores) {
