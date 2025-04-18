@@ -2,10 +2,13 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
-import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.result.WordWithKeyAndScore;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
+import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,14 +21,17 @@ import java.util.stream.Collectors;
  * Finds segments in words that are repeated multiple times,
  * e.g. 3x "est" in af. "geestestoestand".
  */
-public class RepeatedSegment implements WordEvaluator<WordWithKeyAndScore> {
+public class RepeatedSegment implements WordEvaluator {
+
+  @Getter
+  private final List<WordWithKeyAndScore> results = new ArrayList<>();
 
   @Override
-  public void evaluate(Word wordObject, ResultStore<WordWithKeyAndScore> resultStore) {
+  public void evaluate(Word wordObject) {
     String word = wordObject.getLowercase();
     Map<String, Integer> results = new NgramGenerator(word).getResults();
     removeNgramSubsets(results);
-    results.forEach((ngram, count) -> resultStore.addResult(new WordWithKeyAndScore(wordObject, ngram, count)));
+    results.forEach((ngram, count) -> this.results.add(new WordWithKeyAndScore(wordObject, ngram, count)));
   }
 
   /**
@@ -62,6 +68,28 @@ public class RepeatedSegment implements WordEvaluator<WordWithKeyAndScore> {
       }
     }
     return ngrams;
+  }
+
+  @Override
+  public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
+    // todo: Sort better, considering the key length.
+    List<WordWithKeyAndScore> sortedResult = results.stream()
+        .sorted(Comparator.comparing(WordWithKeyAndScore::getScore).reversed())
+        .toList();
+
+    Set<Integer> uniqueValues = new HashSet<>();
+    ListMultimap<Object, Object> filteredResults = ArrayListMultimap.create();
+    for (WordWithKeyAndScore word : sortedResult) {
+      if (uniqueValues.add(word.getScore()) && uniqueValues.size() > topScores) {
+        break;
+      }
+      filteredResults.put(word.getScore(), word.getWord().getRaw() + " (" + word.getKey() + ")");
+      if (filteredResults.size() >= maxLimit) {
+        break;
+      }
+    }
+
+    return filteredResults;
   }
 
   /**
@@ -102,7 +130,7 @@ public class RepeatedSegment implements WordEvaluator<WordWithKeyAndScore> {
       int end = Math.min(word.length(), start + maxNgramSize);
       while (end - start >= 2) {
         String ngram = word.substring(start, end);
-        Integer count = nullToZero(ngramCount.get(ngram));
+        int count = nullToZero(ngramCount.get(ngram));
         ngramCount.put(ngram, ++count);
         --end;
       }

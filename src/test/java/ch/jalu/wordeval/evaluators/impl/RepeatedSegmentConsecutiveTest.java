@@ -1,7 +1,7 @@
 package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.TestWord;
-import ch.jalu.wordeval.evaluators.EvaluatorTestHelper;
+import ch.jalu.wordeval.evaluators.processing.AllWordsEvaluatorProvider;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.evaluators.result.WordWithKeyAndScore;
 import com.google.common.collect.ImmutableList;
@@ -17,24 +17,26 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 /**
  * Test for {@link RepeatedSegmentConsecutive}.
  */
-class RepeatedSegmentConsecutiveTest {
+class RepeatedSegmentConsecutiveTest extends AbstractEvaluatorTest {
 
-  private RepeatedSegmentConsecutive evaluator = new RepeatedSegmentConsecutive();
+  private final RepeatedSegmentConsecutive evaluator = new RepeatedSegmentConsecutive();
 
   @Test
   void shouldAddResults() {
     // given
-    ImmutableList<WordWithKeyAndScore> repeatedSegmentResult = createRepeatedSegmentResult();
+    AllWordsEvaluatorProvider allWordsEvaluatorProvider = createProviderWithRepeatedSegmentResult();
 
     // when
-    ImmutableList<WordWithKey> results = EvaluatorTestHelper.evaluatePostEvaluatorWithResults(evaluator, repeatedSegmentResult);
+    evaluator.evaluate(allWordsEvaluatorProvider);
 
     // then
-    Map<String, List<String>> wordsByKey = results.stream()
+    Map<String, List<String>> wordsByKey = evaluator.getResults().stream()
       .collect(Collectors.groupingBy(WordWithKey::getKey,
         Collectors.mapping(wwk -> wwk.getWord().getRaw(), Collectors.toList())));
     assertThat(wordsByKey, aMapWithSize(9));
@@ -49,9 +51,9 @@ class RepeatedSegmentConsecutiveTest {
     assertThat(wordsByKey.get("barbar"), containsInAnyOrder("barbarian", "barbarians"));
   }
 
-  private static ImmutableList<WordWithKeyAndScore> createRepeatedSegmentResult() {
+  private static AllWordsEvaluatorProvider createProviderWithRepeatedSegmentResult() {
     // Key and score are irrelevant to the post evaluator
-    return ImmutableList.<WordWithKeyAndScore>builder()
+    List<WordWithKeyAndScore> repeatedSegmentResults = ImmutableList.<WordWithKeyAndScore>builder()
       .add(new WordWithKeyAndScore(new TestWord("gelijkelijk"), "foo", 3)) // elijkelijk
       .add(new WordWithKeyAndScore(new TestWord("banana"), "foo", 3))      // anan, nana
       .add(new WordWithKeyAndScore(new TestWord("nothing"), "foo", 3))     // --
@@ -62,5 +64,9 @@ class RepeatedSegmentConsecutiveTest {
       .add(new WordWithKeyAndScore(new TestWord("barbarian"), "foo", 3))   // barbar
       .add(new WordWithKeyAndScore(new TestWord("barbarians"), "foo", 3))  // barbar
       .build();
+
+    RepeatedSegment repeatedSegment = mock(RepeatedSegment.class);
+    given(repeatedSegment.getResults()).willReturn(repeatedSegmentResults);
+    return new AllWordsEvaluatorProvider(List.of(repeatedSegment));
   }
 }

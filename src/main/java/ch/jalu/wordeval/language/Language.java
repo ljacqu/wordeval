@@ -2,11 +2,11 @@ package ch.jalu.wordeval.language;
 
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
@@ -43,7 +43,7 @@ public class Language {
   
   // --- Private members
   private Locale buildLocale() {
-    return new Locale(code);
+    return Locale.of(code);
   }
   
   /**
@@ -68,14 +68,14 @@ public class Language {
   }
 
   public List<String> getVowels() {
-    List<String> vowels = newArrayList(alphabet.getStandardVowels());
+    List<String> vowels = new ArrayList<>(alphabet.getDefaultVowels());
     vowels.removeAll(lettersToRemove);
     vowels.addAll(additionalVowels);
     return vowels;
   }
 
   public List<String> getConsonants() {
-    List<String> consonants = newArrayList(alphabet.getStandardConsonants());
+    List<String> consonants = new ArrayList<>(alphabet.getDefaultConsonants());
     consonants.removeAll(lettersToRemove);
     consonants.addAll(additionalConsonants);
     return consonants;
@@ -144,7 +144,7 @@ public class Language {
      * Sets the list of letters to remove from the standard vowel or consonant
      * list. This has no effect on the additional vowels and consonant list but
      * removes vowels or consonants from the default a-z list that is augmented
-     * with the additional letters. Typically if a letter is in this list, it
+     * with the additional letters. Typically, if a letter is in this list, it
      * should be in one of the "additional" lists.
      *
      * @param letters the letters to remove from default lists

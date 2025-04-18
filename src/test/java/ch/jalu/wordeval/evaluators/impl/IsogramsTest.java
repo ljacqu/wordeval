@@ -1,8 +1,9 @@
 package ch.jalu.wordeval.evaluators.impl;
 
-import ch.jalu.wordeval.evaluators.EvaluatorTestHelper;
+import ch.jalu.wordeval.dictionary.Word;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,17 +14,20 @@ import static org.hamcrest.Matchers.contains;
 /**
  * Test for {@link Isograms}.
  */
-class IsogramsTest {
+class IsogramsTest extends AbstractEvaluatorTest {
 
-  private Isograms evaluator = new Isograms();
+  private final Isograms isograms = new Isograms();
 
   @Test
   void shouldRecognizeIsograms() {
     // given
-    String[] words = { "halfduimspyker", "abcdefga", "abcdefgcijk", "jigsaw" };
+    List<Word> words = createWords("halfduimspyker", "abcdefga", "abcdefgcijk", "jigsaw");
 
     // when
-    Map<Double, Set<String>> results = EvaluatorTestHelper.evaluateAndGroupByScore(evaluator, words);
+    isograms.evaluate(words);
+
+    // then
+    Map<Double, Set<String>> results = groupByScore(isograms.getResults());
     assertThat(results, aMapWithSize(2));
     assertThat(results.get(6.0), contains("jigsaw"));
     assertThat(results.get(14.0), contains("halfduimspyker"));

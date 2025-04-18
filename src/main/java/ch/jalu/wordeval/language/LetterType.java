@@ -24,12 +24,4 @@ public enum LetterType {
     return lettersProvider.apply(language);
   }
 
-  /**
-   * Returns the lower-case name of the enum.
-   * @return The name of the letter type
-   */
-  public String getName() {
-    return this.toString().toLowerCase();
-  }
-
 }

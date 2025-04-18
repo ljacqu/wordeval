@@ -1,6 +1,12 @@
 package ch.jalu.wordeval.evaluators;
 
-import ch.jalu.wordeval.evaluators.result.EvaluationResult;
+import com.google.common.collect.ListMultimap;
 
-public sealed interface Evaluator<R extends EvaluationResult> permits AllWordsEvaluator, PostEvaluator {
+public sealed interface Evaluator permits AllWordsEvaluator, PostEvaluator {
+
+  ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit);
+
+  default String getId() {
+    return getClass().getSimpleName();
+  }
 }

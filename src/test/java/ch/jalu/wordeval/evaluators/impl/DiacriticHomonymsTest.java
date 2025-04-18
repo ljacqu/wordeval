@@ -2,7 +2,6 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.TestWord;
 import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.evaluators.EvaluatorTestHelper;
 import ch.jalu.wordeval.language.Alphabet;
 import org.junit.jupiter.api.Test;
 
@@ -18,9 +17,9 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 /**
  * Test for {@link DiacriticHomonyms}.
  */
-class DiacriticHomonymsTest {
+class DiacriticHomonymsTest extends AbstractEvaluatorTest {
 
-  private DiacriticHomonyms evaluator = new DiacriticHomonyms();
+  private final DiacriticHomonyms diacriticHomonyms = new DiacriticHomonyms();
 
   @Test
   void shouldFindDiacriticHomonyms() {
@@ -31,9 +30,10 @@ class DiacriticHomonymsTest {
       .collect(Collectors.toList());
 
     // when
-    Map<String, Set<String>> results = EvaluatorTestHelper.evaluateAndGroupWordsByKey(evaluator, words);
+    diacriticHomonyms.evaluate(words);
 
     // then
+    Map<String, Set<String>> results = groupResultsByKey(diacriticHomonyms.getResults());
     assertThat(results.keySet(), containsInAnyOrder("schon", "sur", "ca", "des", "la"));
     assertThat(results.get("sur"), containsInAnyOrder("sur", "sûr"));
     assertThat(results.get("ca"), containsInAnyOrder("ça", "çà"));

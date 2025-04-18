@@ -3,6 +3,7 @@ package ch.jalu.wordeval.language;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.Normalizer;
+import java.util.List;
 
 /**
  * The writing system.
@@ -12,14 +13,14 @@ public enum Alphabet {
   /** The Latin alphabet. */
   LATIN {
     @Override
-    public String[] getStandardVowels() {
-      return new String[]{"a", "e", "i", "o", "u", "y"};
+    public List<String> getDefaultVowels() {
+      return List.of("a", "e", "i", "o", "u", "y");
     }
 
     @Override
-    public String[] getStandardConsonants() {
-      return new String[]{
-          "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "z"};
+    public List<String> getDefaultConsonants() {
+      return List.of(
+          "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "z");
     }
 
     @Override
@@ -34,14 +35,14 @@ public enum Alphabet {
   /** The Cyrillic alphabet. */
   CYRILLIC {
     @Override
-    public String[] getStandardVowels() {
-      return new String[]{"а", "е", "ё", "є", "и", "і", "ї", "о", "у", "ы", "э", "ю", "я"};
+    public List<String> getDefaultVowels() {
+      return List.of("а", "е", "ё", "є", "и", "і", "ї", "о", "у", "ы", "э", "ю", "я");
     }
 
     @Override
-    public String[] getStandardConsonants() {
-      return new String[]{"б", "в", "г", "ґ", "д", "ђ", "ж", "з", "й", "ј", "к", "л", "љ", "м", "н", "њ", "п",
-          "р", "с", "т", "ћ", "ў", "ф", "х", "ц", "ч", "џ", "ш", "щ"};
+    public List<String> getDefaultConsonants() {
+      return List.of("б", "в", "г", "ґ", "д", "ђ", "ж", "з", "й", "ј", "к", "л", "љ", "м", "н", "њ", "п",
+          "р", "с", "т", "ћ", "ў", "ф", "х", "ц", "ч", "џ", "ш", "щ");
     }
 
     @Override
@@ -50,9 +51,9 @@ public enum Alphabet {
     }
   };
 
-  public abstract String[] getStandardVowels();
+  public abstract List<String> getDefaultVowels();
 
-  public abstract String[] getStandardConsonants();
+  public abstract List<String> getDefaultConsonants();
 
   /**
    * Removes all accents (diacritics) from a word's characters.

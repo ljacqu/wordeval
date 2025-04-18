@@ -1,8 +1,9 @@
 package ch.jalu.wordeval.evaluators.impl;
 
-import ch.jalu.wordeval.evaluators.EvaluatorTestHelper;
+import ch.jalu.wordeval.dictionary.Word;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,19 +15,20 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 /**
  * Test for {@link AlphabeticalSequence}.
  */
-class AlphabeticalSequenceTest {
+class AlphabeticalSequenceTest extends AbstractEvaluatorTest {
 
-  private AlphabeticalSequence evaluator = new AlphabeticalSequence();
+  private final AlphabeticalSequence alphabeticalSequence = new AlphabeticalSequence();
 
   @Test
   void shouldRecognizeWordsWithForwardsSequence() {
     // given
-    String[] words = { "student", "nemnogo", "hijk", "potato", "hijken", "funghi", "acdfgg" };
+    List<Word> words = createWords("student", "nemnogo", "hijk", "potato", "hijken", "funghi", "acdfgg");
 
     // when
-    Map<String, Set<String>> results = EvaluatorTestHelper.evaluateAndGroupByKey(evaluator, words);
+    alphabeticalSequence.evaluate(words);
 
     // then
+    Map<String, Set<String>> results = groupByKey(alphabeticalSequence.getResults());
     assertThat(results, aMapWithSize(4));
     assertThat(results.get("ghi"), contains("funghi"));
     assertThat(results.get("hijk"), containsInAnyOrder("hijk", "hijken"));
@@ -37,12 +39,13 @@ class AlphabeticalSequenceTest {
   @Test
   void shouldRecognizeWordsWithBackwardsSequence() {
     // given
-    String[] words = { "south", "fedex", "ajihaa", "japon", "sweet", "dcbaffftzyx", "gowkzsr" };
+    List<Word> words = createWords("south", "fedex", "ajihaa", "japon", "sweet", "dcbaffftzyx", "gowkzsr");
 
     // when
-    Map<String, Set<String>> results = EvaluatorTestHelper.evaluateAndGroupByKey(evaluator, words);
+    alphabeticalSequence.evaluate(words);
 
     // then
+    Map<String, Set<String>> results = groupByKey(alphabeticalSequence.getResults());
     assertThat(results, aMapWithSize(5));
     assertThat(results.get("fed"), contains("fedex"));
     assertThat(results.get("jih"), contains("ajihaa"));
