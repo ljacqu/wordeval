@@ -5,11 +5,10 @@ import ch.jalu.wordeval.evaluators.AllWordsEvaluator;
 import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.result.WordGroupWithKey;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
+import com.google.common.collect.SetMultimap;
 
 import java.util.Collection;
-import java.util.Set;
 
 /**
  * Groups words which only differ in diacritics which are not considered
@@ -20,15 +19,15 @@ public class DiacriticHomonyms implements AllWordsEvaluator<WordGroupWithKey> {
 
   @Override
   public void evaluate(Collection<Word> words, ResultStore<WordGroupWithKey> resultStore) {
-    Multimap<String, Word> wordsByNoAccentRep = words.stream()
+    SetMultimap<String, Word> wordsByNoAccentRep = words.stream()
       .collect(Multimaps.toMultimap(
         Word::getWithoutAccents,
         word -> word,
         HashMultimap::create));
 
-    wordsByNoAccentRep.asMap().forEach((wordRep, wordsInGroup) -> {
+    Multimaps.asMap(wordsByNoAccentRep).forEach((wordRep, wordsInGroup) -> {
       if (wordsInGroup.size() > 1) {
-        resultStore.addResult(new WordGroupWithKey((Set) wordsInGroup, wordRep));
+        resultStore.addResult(new WordGroupWithKey(wordsInGroup, wordRep));
       }
     });
   }
