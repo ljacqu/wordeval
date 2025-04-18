@@ -11,14 +11,7 @@ import java.util.Set;
  */
 abstract class ObjectStore<K, V> {
 
-  Map<K, V> entries;
-
-  /**
-   * Constructor.
-   */
-  ObjectStore() {
-    entries = new HashMap<>();
-  }
+  protected final Map<K, V> entries = new HashMap<>();
 
   /**
    * Adds all given objects to the store.

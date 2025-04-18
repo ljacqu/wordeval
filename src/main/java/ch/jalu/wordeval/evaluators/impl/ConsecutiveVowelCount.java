@@ -6,9 +6,14 @@ import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.result.WordWithScore;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LetterType;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -18,9 +23,10 @@ import java.util.Set;
  */
 public class ConsecutiveVowelCount implements WordEvaluator<WordWithScore> {
 
-  private Set<String> lettersToConsider;
+  private final Set<String> lettersToConsider;
   @Getter
-  private LetterType letterType;
+  private final LetterType letterType;
+  private final List<WordWithScore> results = new ArrayList<>();
 
   /**
    * Creates a new VowelCount evaluator instance.
@@ -41,11 +47,41 @@ public class ConsecutiveVowelCount implements WordEvaluator<WordWithScore> {
       if (i == word.length() || !lettersToConsider.contains(word.substring(i, i + 1))) {
         if (count > 1) {
           resultStore.addResult(new WordWithScore(wordObject, count));
+          results.add(new WordWithScore(wordObject, count));
         }
         count = 0;
       } else {
         ++count;
       }
     }
+  }
+
+  @Override
+  public List<ListMultimap<Object, Object>> getTopResults(int topScores, int maxLimit) {
+    List<WordWithScore> sortedResult = results.stream()
+        .sorted(Comparator.comparing(WordWithScore::getScore).reversed())
+        .toList();
+
+    Set<Double> uniqueValues = new HashSet<>();
+    ListMultimap<Object, Object> filteredResults = ArrayListMultimap.create();
+    for (WordWithScore wordWithScore : sortedResult) {
+      if (uniqueValues.add(wordWithScore.getScore()) && uniqueValues.size() > topScores) {
+        break;
+      }
+      filteredResults.put((int) wordWithScore.getScore(), wordWithScore.getWord().getRaw());
+      if (filteredResults.size() >= maxLimit) {
+        break;
+      }
+    }
+
+    return List.of(filteredResults);
+  }
+
+  @Override
+  public String getId() {
+    return switch (letterType) {
+      case VOWELS -> "ConsecutiveVowelCount";
+      case CONSONANTS -> "ConsecutiveConsonantCount";
+    };
   }
 }

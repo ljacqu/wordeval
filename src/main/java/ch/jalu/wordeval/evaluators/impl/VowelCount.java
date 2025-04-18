@@ -6,9 +6,15 @@ import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LetterType;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -16,6 +22,8 @@ import java.util.stream.Collectors;
  * separate vowels or consonants for further processing.
  */
 public class VowelCount implements WordEvaluator<WordWithKey> {
+
+  private final List<WordWithKey> results = new ArrayList<>();
 
   private final List<String> letters;
   @Getter
@@ -34,5 +42,36 @@ public class VowelCount implements WordEvaluator<WordWithKey> {
       .filter(wordWithoutAccents::contains)
       .collect(Collectors.joining());
     resultStore.addResult(new WordWithKey(word, letterProfile));
+    results.add(new WordWithKey(word, letterProfile));
+  }
+
+  @Override
+  public List<ListMultimap<Object, Object>> getTopResults(int topScores, int maxLimit) {
+    // TODO: Should probably skip this as PostEvaluators cover the interesting stuff
+    List<WordWithKey> sortedResult = results.stream()
+        .sorted(Comparator.comparing((WordWithKey wwk) -> wwk.getKey().length()).reversed())
+        .toList();
+
+    Set<String> uniqueValues = new HashSet<>();
+    ListMultimap<Object, Object> filteredResults = ArrayListMultimap.create();
+    for (WordWithKey WordWithKey : sortedResult) {
+      if (uniqueValues.add(WordWithKey.getKey()) && uniqueValues.size() > topScores) {
+        break;
+      }
+      filteredResults.put(WordWithKey.getKey(), WordWithKey.getWord().getRaw());
+      if (filteredResults.size() >= maxLimit) {
+        break;
+      }
+    }
+
+    return List.of(filteredResults);
+  }
+
+  @Override
+  public String getId() {
+    return switch (letterType) {
+      case VOWELS -> "VowelCount";
+      case CONSONANTS -> "ConsonantCount";
+    };
   }
 }

@@ -29,4 +29,12 @@ public class AllVowels implements PostEvaluator<WordWithKey> {
   }
 
   // TODO #50: Set export params to prefer short words with all vowels
+
+  @Override
+  public String getId() {
+    return switch (letterType) {
+      case VOWELS -> "AllVowels";
+      case CONSONANTS -> "AllConsonants";
+    };
+  }
 }

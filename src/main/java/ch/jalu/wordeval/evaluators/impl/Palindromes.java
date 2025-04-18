@@ -4,12 +4,22 @@ import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
 import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Finds palindromes or palindrome-parts inside a word, e.g. "awkwa" in
  * "awkward".
  */
 public class Palindromes implements WordEvaluator<WordWithKey> {
+
+  private final List<WordWithKey> results = new ArrayList<>();
 
   @Override
   public void evaluate(Word wordObject, ResultStore<WordWithKey> resultStore) {
@@ -18,6 +28,7 @@ public class Palindromes implements WordEvaluator<WordWithKey> {
       String palindrome = findPalindrome(word, i);
       if (palindrome != null) {
         resultStore.addResult(new WordWithKey(wordObject, palindrome));
+        results.add(new WordWithKey(wordObject, palindrome));
       }
     }
   }
@@ -69,5 +80,24 @@ public class Palindromes implements WordEvaluator<WordWithKey> {
     return null;
   }
 
+  @Override
+  public List<ListMultimap<Object, Object>> getTopResults(int topScores, int maxLimit) {
+    List<WordWithKey> sortedResult = results.stream()
+        .sorted(Comparator.comparing((WordWithKey wwk) -> wwk.getKey().length()).reversed())
+        .toList();
 
+    Set<String> uniqueValues = new HashSet<>();
+    ListMultimap<Object, Object> filteredResults = ArrayListMultimap.create();
+    for (WordWithKey WordWithKey : sortedResult) {
+      if (uniqueValues.add(WordWithKey.getKey()) && uniqueValues.size() > topScores) {
+        break;
+      }
+      filteredResults.put(WordWithKey.getKey(), WordWithKey.getWord().getRaw());
+      if (filteredResults.size() >= maxLimit) {
+        break;
+      }
+    }
+
+    return List.of(filteredResults);
+  }
 }

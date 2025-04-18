@@ -3,6 +3,7 @@ package ch.jalu.wordeval;
 import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.Word;
+import ch.jalu.wordeval.evaluators.export.ExportService;
 import ch.jalu.wordeval.evaluators.processing.EvaluatorInitializer;
 import ch.jalu.wordeval.evaluators.processing.EvaluatorProcessor;
 import ch.jalu.wordeval.language.Language;
@@ -34,7 +35,7 @@ public final class WordEvalMain {
    */
   public static void main(String[] args) {
     // All codes: Dictionary.getAllCodes()
-    Iterable<String> codes = Arrays.asList("af", "en-us", "fr");
+    Iterable<String> codes = Arrays.asList("eu");
 
     WordEvalMain main = new WordEvalMain();
     for (String code : codes) {
@@ -73,7 +74,8 @@ public final class WordEvalMain {
         "words", String.valueOf(allWords.size()));
     timeLogger.lap("processed dictionary");
 
-    // TODO ExportService.exportToFile(evaluators, "export/" + code + ".json", metaInfo);
+    ExportService exportService = new ExportService();
+    exportService.export(language, evaluatorProcessor.getAllEvaluators());
     timeLogger.lap("finished export");
     timeLogger.logWithOverallTime("Finished language '" + code + "'");
   }

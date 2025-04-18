@@ -33,4 +33,12 @@ public class SingleVowel implements PostEvaluator<WordWithScore> {
       .filter(e -> e.getKey().length() == min)
       .forEach(e -> resultStore.addResult(new WordWithScore(e.getWord(), e.getWord().getLowercase().length())));
   }
+
+  @Override
+  public String getId() {
+    return switch (letterType) {
+      case VOWELS -> "SingleVowel";
+      case CONSONANTS -> "SingleConsonant";
+    };
+  }
 }
