@@ -17,7 +17,7 @@ import java.util.Set;
  * Filters the words by length, with the intention to get the longest words of
  * the dictionary.
  */
-public class LongWords implements WordEvaluator<WordWithScore> {
+public class LongWords implements WordEvaluator {
 
   /** Ignore any words whose length is less than the minimum length. */
   private static final int MIN_LENGTH = 6;

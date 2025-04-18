@@ -20,7 +20,7 @@ import java.util.Set;
  * {@link Palindromes} evaluator, which also matches parts of a word (e.g.
  * "ette" in "better").
  */
-public class FullPalindromes implements PostEvaluator<WordWithScore> {
+public class FullPalindromes implements PostEvaluator {
 
   @Getter
   private final List<WordWithScore> results = new ArrayList<>();

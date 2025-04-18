@@ -18,7 +18,7 @@ import java.util.Set;
  * forwards or backwards. For example, in German "einst", each following letter
  * comes later in the alphabet.
  */
-public class AlphabeticalOrder implements WordEvaluator<WordWithScore> {
+public class AlphabeticalOrder implements WordEvaluator {
 
   private static final int FORWARDS = -1;
   private static final int BACKWARDS = 1;

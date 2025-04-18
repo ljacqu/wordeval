@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  * Finds words with repeating, consecutive sequences,
  * such as "elijk" in nl. "gelijkelijk".
  */
-public class RepeatedSegmentConsecutive implements PostEvaluator<WordWithKey> {
+public class RepeatedSegmentConsecutive implements PostEvaluator {
 
   private static final Pattern REPETITION_AT_START = Pattern.compile("^(.{2,})(\\1+)");
 

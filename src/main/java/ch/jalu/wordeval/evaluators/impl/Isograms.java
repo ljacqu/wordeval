@@ -16,7 +16,7 @@ import java.util.Set;
 /**
  * Finds isograms (words with all different letters).
  */
-public class Isograms implements WordEvaluator<WordWithScore> {
+public class Isograms implements WordEvaluator {
 
   @Getter
   private final List<WordWithScore> results = new ArrayList<>();

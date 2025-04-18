@@ -17,7 +17,7 @@ import java.util.Set;
  * Filters that checks if there is a group of letters in a word that is an
  * alphabetical sequence, e.g. "rstu" in German "Erstuntersuchung."
  */
-public class AlphabeticalSequence implements WordEvaluator<WordWithKey> {
+public class AlphabeticalSequence implements WordEvaluator {
 
   private static final int FORWARDS = -1;
   private static final int BACKWARDS = 1;

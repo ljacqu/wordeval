@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * Evaluator which collects all words by count of
  * separate vowels or consonants for further processing.
  */
-public class VowelCount implements WordEvaluator<WordWithKey> {
+public class VowelCount implements WordEvaluator {
 
   private final List<String> letters;
   @Getter

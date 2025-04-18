@@ -22,7 +22,7 @@ import java.util.function.Function;
 /**
  * Collects anagram groups (e.g. "acre", "care", "race").
  */
-public class Anagrams implements AllWordsEvaluator<WordGroupWithKey> {
+public class Anagrams implements AllWordsEvaluator {
 
   @Getter
   private final List<WordGroupWithKey> results = new ArrayList<>();

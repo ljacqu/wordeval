@@ -18,7 +18,7 @@ import java.util.Set;
  * Finds words wherein the same letter appears multiple times consecutively,
  * e.g. "lll" in German "Rollladen."
  */
-public class SameLetterConsecutive implements WordEvaluator<WordWithKey> {
+public class SameLetterConsecutive implements WordEvaluator {
 
   @Getter
   private final List<WordWithKey> results = new ArrayList<>();

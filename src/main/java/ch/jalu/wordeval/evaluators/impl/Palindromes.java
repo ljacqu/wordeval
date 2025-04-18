@@ -17,7 +17,7 @@ import java.util.Set;
  * Finds palindromes or palindrome-parts inside a word, e.g. "awkwa" in
  * "awkward".
  */
-public class Palindromes implements WordEvaluator<WordWithKey> {
+public class Palindromes implements WordEvaluator {
 
   @Getter
   private final List<WordWithKey> results = new ArrayList<>();

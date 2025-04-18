@@ -29,9 +29,9 @@ public class EvaluatorInitializer {
   private final Locale[] locale;
 
   @Getter
-  private final List<AllWordsEvaluator<?>> allWordsEvaluators = new ArrayList<>();
+  private final List<AllWordsEvaluator> allWordsEvaluators = new ArrayList<>();
   @Getter
-  private final List<PostEvaluator<?>> postEvaluators = new ArrayList<>();
+  private final List<PostEvaluator> postEvaluators = new ArrayList<>();
 
   /**
    * Constructor.
@@ -56,11 +56,11 @@ public class EvaluatorInitializer {
 
     reflections.getSubTypesOf(AllWordsEvaluator.class).stream()
       .filter(this::isInstantiableClass)
-      .forEach(clz -> createObjectsAndSaveToList(clz, (List) allWordsEvaluators));
+      .forEach(clz -> createObjectsAndSaveToList(clz, allWordsEvaluators));
 
     reflections.getSubTypesOf(PostEvaluator.class).stream()
       .filter(this::isInstantiableClass)
-      .forEach(clz -> createObjectsAndSaveToList(clz, (List) postEvaluators));
+      .forEach(clz -> createObjectsAndSaveToList(clz, postEvaluators));
   }
 
   private <T> void createObjectsAndSaveToList(Class<T> clazz, List<? super T> list) {

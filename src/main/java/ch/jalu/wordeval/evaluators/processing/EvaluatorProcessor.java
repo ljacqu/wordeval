@@ -14,11 +14,11 @@ import java.util.stream.Stream;
  */
 public class EvaluatorProcessor {
 
-  private final List<AllWordsEvaluator<?>> wordEvaluators;
-  private final List<PostEvaluator<?>> postEvaluators;
+  private final List<AllWordsEvaluator> wordEvaluators;
+  private final List<PostEvaluator> postEvaluators;
 
-  public EvaluatorProcessor(Collection<AllWordsEvaluator<?>> wordEvaluators,
-                            Collection<PostEvaluator<?>> postEvaluators) {
+  public EvaluatorProcessor(Collection<AllWordsEvaluator> wordEvaluators,
+                            Collection<PostEvaluator> postEvaluators) {
     this.wordEvaluators = List.copyOf(wordEvaluators);
     this.postEvaluators = List.copyOf(postEvaluators);
   }
@@ -34,7 +34,7 @@ public class EvaluatorProcessor {
     postEvaluators.forEach(evaluator -> evaluator.evaluate(allWordsEvaluatorProvider));
   }
 
-  public List<Evaluator<?>> getAllEvaluators() {
+  public List<Evaluator> getAllEvaluators() {
     return Stream.concat(wordEvaluators.stream(), postEvaluators.stream())
         .toList();
   }

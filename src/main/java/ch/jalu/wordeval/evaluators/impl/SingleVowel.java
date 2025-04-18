@@ -17,10 +17,10 @@ import java.util.Set;
 
 /**
  * Evaluator collecting words which only have one distinct vowel or consonant,
- * such as "abracadabra," which only uses the vowel 'a.' 
+ * such as "abracadabra," which only uses the vowel 'a'.
  */
 @AllArgsConstructor
-public class SingleVowel implements PostEvaluator<WordWithScore> {
+public class SingleVowel implements PostEvaluator {
 
   private final LetterType letterType;
   private final List<WordWithScore> results = new ArrayList<>();

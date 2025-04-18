@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * Finds segments in words that are repeated multiple times,
  * e.g. 3x "est" in af. "geestestoestand".
  */
-public class RepeatedSegment implements WordEvaluator<WordWithKeyAndScore> {
+public class RepeatedSegment implements WordEvaluator {
 
   @Getter
   private final List<WordWithKeyAndScore> results = new ArrayList<>();

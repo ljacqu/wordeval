@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * Finds words with all vowels that appear alphabetically, such as "arbeidsonrust".
  */
-public class AllVowelsAlphabetically implements PostEvaluator<WordGroupWithKey> {
+public class AllVowelsAlphabetically implements PostEvaluator {
 
   private final List<String> vowels;
   @Getter
@@ -33,7 +33,7 @@ public class AllVowelsAlphabetically implements PostEvaluator<WordGroupWithKey> 
 
   @Override
   public void evaluate(AllWordsEvaluatorProvider allWordsEvaluatorProvider) {
-    VowelCount vowelCount  =
+    VowelCount vowelCount =
         allWordsEvaluatorProvider.getEvaluator(VowelCount.class, vc -> vc.getLetterType() == LetterType.VOWELS);
 
     List<WordGroupWithKey> wordGroupsByKey = vowelCount.getResults().stream()

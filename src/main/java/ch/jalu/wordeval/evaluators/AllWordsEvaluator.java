@@ -1,11 +1,10 @@
 package ch.jalu.wordeval.evaluators;
 
 import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.evaluators.result.EvaluationResult;
 
 import java.util.Collection;
 
-public non-sealed interface AllWordsEvaluator<R extends EvaluationResult> extends Evaluator<R> {
+public non-sealed interface AllWordsEvaluator extends Evaluator {
 
   /**
    * Evaluates all words and saves the relevant results.

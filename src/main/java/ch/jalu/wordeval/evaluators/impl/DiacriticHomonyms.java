@@ -22,7 +22,7 @@ import java.util.Set;
  * distinct letters in the language, such as {des, dés, dès} in French or
  * {schon, schön} in German.
  */
-public class DiacriticHomonyms implements AllWordsEvaluator<WordGroupWithKey> {
+public class DiacriticHomonyms implements AllWordsEvaluator {
 
   @Getter
   private final List<WordGroupWithKey> results = new ArrayList<>();

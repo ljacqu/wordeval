@@ -20,7 +20,7 @@ import java.util.Set;
  * German "Angstschweiss". The same word can appear multiple times in the
  * results, e.g. "poignée" will count twice ("oi", "ée").
  */
-public class ConsecutiveVowelCount implements WordEvaluator<WordWithScore> {
+public class ConsecutiveVowelCount implements WordEvaluator {
 
   private final Set<String> lettersToConsider;
   @Getter

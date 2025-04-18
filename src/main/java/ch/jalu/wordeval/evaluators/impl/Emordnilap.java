@@ -2,7 +2,6 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.AllWordsEvaluator;
-import ch.jalu.wordeval.evaluators.result.WordGroup;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
  * Finds emordnilaps, words that produce another word when reversed,
  * such as German "Lager" and "Regal".
  */
-public class Emordnilap implements AllWordsEvaluator<WordGroup> {
+public class Emordnilap implements AllWordsEvaluator {
 
   @Getter
   private final List<WordWithKey> results = new ArrayList<>();

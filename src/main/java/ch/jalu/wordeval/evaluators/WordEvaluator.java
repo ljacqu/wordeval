@@ -8,7 +8,7 @@ import java.util.Collection;
 /**
  * Simple evaluator which produces an {@link EvaluationResult} object for each {@link Word} it is passed.
  */
-public interface WordEvaluator<R extends EvaluationResult> extends AllWordsEvaluator<R> {
+public interface WordEvaluator extends AllWordsEvaluator {
 
   @Override
   default void evaluate(Collection<Word> words) {

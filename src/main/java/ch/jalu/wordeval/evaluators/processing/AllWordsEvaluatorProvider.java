@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 @RequiredArgsConstructor
 public class AllWordsEvaluatorProvider {
 
-  private final Collection<AllWordsEvaluator<?>> allWordsEvaluator;
+  private final Collection<AllWordsEvaluator> allWordsEvaluator;
 
   /**
    * Returns the evaluator of the specified class. Throws an exception if no evaluator of the given type exists,
@@ -23,7 +23,7 @@ public class AllWordsEvaluatorProvider {
    * @param <E> the evaluator type
    * @return evaluator matching the type
    */
-  public <E extends AllWordsEvaluator<?>> E getEvaluator(Class<E> clz) {
+  public <E extends AllWordsEvaluator> E getEvaluator(Class<E> clz) {
     return findEvaluatorOfTypeMatching(clz, e -> true);
   }
 
@@ -36,12 +36,12 @@ public class AllWordsEvaluatorProvider {
    * @param <E> the evaluator type
    * @return matching evaluator
    */
-  public <E extends AllWordsEvaluator<?>> E getEvaluator(Class<E> clz, Predicate<E> predicate) {
+  public <E extends AllWordsEvaluator> E getEvaluator(Class<E> clz, Predicate<E> predicate) {
     return findEvaluatorOfTypeMatching(clz, predicate);
   }
 
-  private <E extends AllWordsEvaluator<?>> E findEvaluatorOfTypeMatching(Class<E> evaluatorClass,
-                                                                         Predicate<E> predicate) {
+  private <E extends AllWordsEvaluator> E findEvaluatorOfTypeMatching(Class<E> evaluatorClass,
+                                                                      Predicate<E> predicate) {
     List<E> matchingEvaluators = allWordsEvaluator.stream()
         .filter(evaluatorClass::isInstance)
         .map(evaluatorClass::cast)

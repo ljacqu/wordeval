@@ -17,7 +17,7 @@ import java.util.Set;
  * Finds words with multiple consecutive letter groups following each other,
  * e.g. <code>voorraaddrakoste</code> in Afrikaans (oo + rr + aa + dd = 4).
  */
-public class ConsecutiveLetterPairs implements WordEvaluator<WordWithScore> {
+public class ConsecutiveLetterPairs implements WordEvaluator {
 
   @Getter
   private final List<WordWithScore> results = new ArrayList<>();
