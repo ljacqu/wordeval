@@ -18,14 +18,14 @@ class LocaleAlphabeticalTest {
    * Note that a collator may even return a specific sort order for letters with
    * accents the language doesn't have. E.g. in Swedish, the order is that e
    * comes before ê, and ê comes before è.
-   * 
+   * <p>
    * It's fine to use the collators to work with words in a language according
    * to its rules, but it may be most sensible to use the NO_ACCENT word form
    * such that only the real, distinct letters are retained.
    */
   @Test
   void generalComparison() {
-    Collator collator = Collator.getInstance(new Locale("sv"));
+    Collator collator = Collator.getInstance(Locale.of("sv"));
 
     shouldCompareTo(collator, 1, "ê", "e");
     shouldCompareTo(collator, 1, "ê", "è");
@@ -37,7 +37,7 @@ class LocaleAlphabeticalTest {
     // Ch is a separate letter: H < Ch < I
     // CČ, RŘ, SŠ, ZŽ are seen as distinct letters following each other
     // All other accents (e.g. NŇ, UÚŮ) have same sorting order
-    Collator collator = Collator.getInstance(new Locale("cs"));
+    Collator collator = Collator.getInstance(Locale.of("cs"));
     String[] words = { "azerty", "ábc", "žal", "zzz", "děc", "ded", "déa",
         "uchor", "uhor", "uko", "eša", "ese", "cut", "čat", "ory", "ořa",
         "půe", "puf", "púb", "nob", "ňóa", "učar", "ucor", "vuse", "vuša" };
@@ -52,7 +52,7 @@ class LocaleAlphabeticalTest {
 
   @Test
   void deComparisonTest() {
-    Collator collator = Collator.getInstance(new Locale("de"));
+    Collator collator = Collator.getInstance(Locale.of("de"));
 
     shouldCompareTo(collator, -1, "ää", "az");
     shouldCompareTo(collator, -1, "öö", "zz");
@@ -62,7 +62,7 @@ class LocaleAlphabeticalTest {
 
   @Test
   void huComparisonTest() {
-    Collator collator = Collator.getInstance(new Locale("hu"));
+    Collator collator = Collator.getInstance(Locale.of("hu"));
 
     // D, Dz, Dzs; G, Gy; L, Ly; N, Ny; S, Sz; T, Ty; Z, Zs
     shouldCompareTo(collator, 1, "Gya", "Gza");
@@ -85,7 +85,7 @@ class LocaleAlphabeticalTest {
 
   @Test
   void nlComparisonTest() {
-    Collator collator = Collator.getInstance(new Locale("nl"));
+    Collator collator = Collator.getInstance(Locale.of("nl"));
 
     // The collator correctly uses the more modern sorting where ij is
     // treated "normally." Before, IJ was between X and Z.
@@ -99,7 +99,7 @@ class LocaleAlphabeticalTest {
 
   @Test
   void svComparisonTest() {
-    Collator collator = Collator.getInstance(new Locale("sv"));
+    Collator collator = Collator.getInstance(Locale.of("sv"));
 
     shouldCompareTo(collator, 1, "ää", "az");
     shouldCompareTo(collator, 1, "åa", "az");
@@ -108,7 +108,7 @@ class LocaleAlphabeticalTest {
 
   @Test
   void trComparisonTest() {
-    Collator collator = Collator.getInstance(new Locale("tr"));
+    Collator collator = Collator.getInstance(Locale.of("tr"));
 
     // Ensure that {g, ı, o, s} come before {ğ, i, ö, ş}, respectively
     shouldCompareTo(collator, -1, "gzz", "ğaa");

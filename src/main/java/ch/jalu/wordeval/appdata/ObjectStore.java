@@ -18,7 +18,8 @@ abstract class ObjectStore<K, V> {
    *
    * @param objects the objects to add
    */
-  public void addAll(V... objects) {
+  @SafeVarargs
+  public final void addAll(V... objects) {
     for (V object : objects) {
       add(object);
     }

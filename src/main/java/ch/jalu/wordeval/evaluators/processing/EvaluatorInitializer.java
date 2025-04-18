@@ -6,7 +6,7 @@ import ch.jalu.wordeval.language.Language;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.Scanners;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -52,7 +52,7 @@ public class EvaluatorInitializer {
    * Creates all possible evaluators from the evaluator package, {@link #EVALUATOR_PACKAGE}.
    */
   private void createAllEvaluators() {
-    Reflections reflections = new Reflections(EVALUATOR_PACKAGE, new SubTypesScanner(false));
+    Reflections reflections = new Reflections(EVALUATOR_PACKAGE, Scanners.SubTypes);
 
     reflections.getSubTypesOf(AllWordsEvaluator.class).stream()
       .filter(this::isInstantiableClass)
@@ -63,6 +63,7 @@ public class EvaluatorInitializer {
       .forEach(clz -> createObjectsAndSaveToList(clz, postEvaluators));
   }
 
+  @SuppressWarnings("unchecked")
   private <T> void createObjectsAndSaveToList(Class<T> clazz, List<? super T> list) {
     log.trace("Creating instances of class '{}'", clazz.getSimpleName());
     Constructor<T> constructor = (Constructor<T>) clazz.getDeclaredConstructors()[0];
@@ -74,7 +75,7 @@ public class EvaluatorInitializer {
     if (unresolvedDependencies.isEmpty()) {
       instancesList.add(newInstance(constructor, resolvedDependencies));
     } else {
-      Class<?> dependencyToResolve = unresolvedDependencies.remove(0);
+      Class<?> dependencyToResolve = unresolvedDependencies.removeFirst();
       Object[] resolvedDependencyValues = resolveDependency(dependencyToResolve);
       for (Object curDependency : resolvedDependencyValues) {
         // Copy lists so each call has its own copy
