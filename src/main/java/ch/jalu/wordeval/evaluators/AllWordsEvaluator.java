@@ -6,7 +6,7 @@ import ch.jalu.wordeval.evaluators.result.EvaluationResult;
 
 import java.util.Collection;
 
-public interface AllWordsEvaluator<R extends EvaluationResult> extends Evaluator<R> {
+public non-sealed interface AllWordsEvaluator<R extends EvaluationResult> extends Evaluator<R> {
 
   /**
    * Evaluates all words and saves the relevant results to the provided result store.

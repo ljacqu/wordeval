@@ -1,12 +1,13 @@
 package ch.jalu.wordeval;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.io.Files;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Utility class to rename the dictionaries from the Hunspell
@@ -17,7 +18,7 @@ import java.util.Map;
 public class DictionaryRenamer {
   
   private static final File DICT_DIRECTORY = new File("./dict");
-  private static final String[] USE_EXTENSIONS = { ".aff", ".dic", ".txt" };
+  private static final Set<String> USE_EXTENSIONS = Set.of("aff", "dic", "txt");
   private static final Map<String, String> REPLACEMENTS = initReplacements();
   
   private DictionaryRenamer() {
@@ -37,33 +38,22 @@ public class DictionaryRenamer {
       throw new IllegalStateException("Could not read files from dictionary " + DICT_DIRECTORY);
     }
     Arrays.stream(files)
-      .filter(file -> ArrayUtils.contains(USE_EXTENSIONS, getExtension(file)))
+      .filter(file -> USE_EXTENSIONS.contains(Files.getFileExtension(file.getName())))
       .forEach(file -> applyReplacement(file));
     
     log.info("End renaming files");
   }
   
-  private static String getExtension(File f) {
-    int lastIndex = f.getName().lastIndexOf('.');
-    return lastIndex > -1 ? f.getName().substring(lastIndex) : null;
-  }
-  
-  private static String getFileName(File f) {
-    int lastIndex = f.getName().lastIndexOf('.');    
-    return lastIndex > -1 
-        ? f.getName().substring(0, lastIndex)
-        : f.getName();
-  }
-  
   private static void applyReplacement(File f) {
-    String fileName = getFileName(f);
+    String fileName = Files.getNameWithoutExtension(f.getName()).replace("%20", " ");
+
     if (!REPLACEMENTS.containsKey(fileName)) {
       log.info("No replacement for '{}'", fileName);
       return;
     }
     
     String newName = fileName.replace(fileName, REPLACEMENTS.get(fileName))
-        + getExtension(f);
+        + "." + Files.getFileExtension(f.getName());
     File newFile = new File(DICT_DIRECTORY + File.separator + newName);
     if (newFile.exists() && !newFile.isDirectory()) {
       log.warn("Not renaming '{}' to '{}': file with such name already exists", fileName, newName);
@@ -74,7 +64,7 @@ public class DictionaryRenamer {
       } else {
         log.warn("Could not rename '{}' to '{}'", fileName, newName);
       }
-    }    
+    }
   }
   
   private static Map<String, String> initReplacements() {
@@ -91,6 +81,7 @@ public class DictionaryRenamer {
     .put("English (British)", "en-uk")
     .put("English (Canadian)", "en-ca")
     .put("Estonian", "et")
+    .put("Finnish", "fi")
     .put("French", "fr")
     .put("Galego", "gl")
     .put("German", "de")

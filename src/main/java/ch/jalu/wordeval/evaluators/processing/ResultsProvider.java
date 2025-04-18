@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
  */
 public class ResultsProvider {
 
-  private final Map<AllWordsEvaluator, ResultStore> evaluatorResults;
+  private final Map<AllWordsEvaluator<?>, ResultStore<?>> evaluatorResults;
 
   /**
    * Constructor.
    *
    * @param evaluatorResults the evaluator processor with the results
    */
-  ResultsProvider(Map<AllWordsEvaluator, ResultStore> evaluatorResults) {
+  ResultsProvider(Map<AllWordsEvaluator<?>, ResultStore<?>> evaluatorResults) {
     this.evaluatorResults = evaluatorResults;
   }
 
@@ -34,7 +34,7 @@ public class ResultsProvider {
    * @return the results of the evaluator of the provided class
    */
   public <R extends EvaluationResult, E extends AllWordsEvaluator<R>> ImmutableList<R> getResultsOfEvaluatorOfType(
-      Class<E> clz) {
+                                                                                                         Class<E> clz) {
     return getResultsOfEvaluatorOfType(clz, e -> true);
   }
 
@@ -48,13 +48,14 @@ public class ResultsProvider {
    * @return the results of the matching evaluator
    */
   public <R extends EvaluationResult, E extends AllWordsEvaluator<R>> ImmutableList<R> getResultsOfEvaluatorOfType(
-      Class<E> clz, Predicate<E> predicate) {
+                                                                                 Class<E> clz, Predicate<E> predicate) {
 
     E evaluator = findEvaluatorOfTypeMatching(clz, predicate);
-    return evaluatorResults.get(evaluator).getEntries();
+    return (ImmutableList<R>) evaluatorResults.get(evaluator).getEntries();
   }
 
-  private <E extends AllWordsEvaluator> E findEvaluatorOfTypeMatching(Class<E> evaluatorClass, Predicate<E> predicate) {
+  private <E extends AllWordsEvaluator<?>> E findEvaluatorOfTypeMatching(Class<E> evaluatorClass,
+                                                                         Predicate<E> predicate) {
     List<E> matchingEvaluators = evaluatorResults.keySet().stream()
       .filter(evaluatorClass::isInstance)
       .map(evaluatorClass::cast)
