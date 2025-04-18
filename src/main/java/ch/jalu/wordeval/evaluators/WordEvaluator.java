@@ -1,7 +1,6 @@
 package ch.jalu.wordeval.evaluators;
 
 import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.result.EvaluationResult;
 
 import java.util.Collection;
@@ -12,16 +11,15 @@ import java.util.Collection;
 public interface WordEvaluator<R extends EvaluationResult> extends AllWordsEvaluator<R> {
 
   @Override
-  default void evaluate(Collection<Word> words, ResultStore<R> resultStore) {
-    words.forEach(word -> evaluate(word, resultStore));
+  default void evaluate(Collection<Word> words) {
+    words.forEach(this::evaluate);
   }
 
   /**
-   * Evaluates the given word object and returns a result.
+   * Evaluates the given word object.
    *
    * @param word the word to process
-   * @param resultStore the result store to add results to
    */
-  void evaluate(Word word, ResultStore<R> resultStore);
+  void evaluate(Word word);
 
 }

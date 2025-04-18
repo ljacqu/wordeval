@@ -2,10 +2,10 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
-import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.result.WordWithScore;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -23,14 +23,14 @@ public class AlphabeticalOrder implements WordEvaluator<WordWithScore> {
   private static final int FORWARDS = -1;
   private static final int BACKWARDS = 1;
 
+  @Getter
   private final List<WordWithScore> results = new ArrayList<>();
 
   @Override
-  public void evaluate(Word word, ResultStore<WordWithScore> resultStore) {
+  public void evaluate(Word word) {
     // TODO #15: Make locale-aware instead
     String text = word.getWithoutAccentsWordCharsOnly();
     if (areLettersOrdered(text, FORWARDS) || areLettersOrdered(text, BACKWARDS)) {
-      resultStore.addResult(new WordWithScore(word, text.length()));
       results.add(new WordWithScore(word, text.length()));
     }
   }

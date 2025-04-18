@@ -2,10 +2,10 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
-import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.result.WordWithScore;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -22,13 +22,13 @@ public class LongWords implements WordEvaluator<WordWithScore> {
   /** Ignore any words whose length is less than the minimum length. */
   private static final int MIN_LENGTH = 6;
 
+  @Getter
   private final List<WordWithScore> results = new ArrayList<>();
 
   @Override
-  public void evaluate(Word word, ResultStore<WordWithScore> resultStore) {
+  public void evaluate(Word word) {
     int length = word.getLowercase().length();
     if (length >= MIN_LENGTH) {
-      resultStore.addResult(new WordWithScore(word, length));
       results.add(new WordWithScore(word, length));
     }
   }

@@ -2,13 +2,12 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.PostEvaluator;
-import ch.jalu.wordeval.evaluators.processing.ResultStore;
-import ch.jalu.wordeval.evaluators.processing.ResultsProvider;
+import ch.jalu.wordeval.evaluators.processing.AllWordsEvaluatorProvider;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.evaluators.result.WordWithScore;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ListMultimap;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -23,18 +22,18 @@ import java.util.Set;
  */
 public class FullPalindromes implements PostEvaluator<WordWithScore> {
 
+  @Getter
   private final List<WordWithScore> results = new ArrayList<>();
 
   @Override
-  public void evaluateAndSaveResults(ResultsProvider resultsProvider, ResultStore<WordWithScore> resultStore) {
-    ImmutableList<WordWithKey> palindromeResults =
-      resultsProvider.getResultsOfEvaluatorOfType(Palindromes.class);
+  public void evaluate(AllWordsEvaluatorProvider allWordsEvaluatorProvider) {
+    List<WordWithKey> palindromeResults =
+        allWordsEvaluatorProvider.getEvaluator(Palindromes.class).getResults();
 
     for (WordWithKey entry : palindromeResults) {
       Word word = entry.getWord();
       int wordLength = word.getWithoutAccentsWordCharsOnly().length();
       if (wordLength == entry.getKey().length()) {
-        resultStore.addResult(new WordWithScore(word, wordLength));
         results.add(new WordWithScore(word, wordLength));
       }
     }

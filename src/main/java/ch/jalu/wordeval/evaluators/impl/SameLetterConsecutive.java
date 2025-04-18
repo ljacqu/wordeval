@@ -2,10 +2,10 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
-import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -20,10 +20,11 @@ import java.util.Set;
  */
 public class SameLetterConsecutive implements WordEvaluator<WordWithKey> {
 
+  @Getter
   private final List<WordWithKey> results = new ArrayList<>();
 
   @Override
-  public void evaluate(Word wordObject, ResultStore<WordWithKey> resultStore) {
+  public void evaluate(Word wordObject) {
     String word = wordObject.getWithoutAccents();
     int counter = 0;
     char lastChar = '\0';
@@ -32,7 +33,6 @@ public class SameLetterConsecutive implements WordEvaluator<WordWithKey> {
         ++counter;
       } else {
         if (counter > 1) {
-          resultStore.addResult(new WordWithKey(wordObject, StringUtils.repeat(lastChar, counter)));
           results.add(new WordWithKey(wordObject, StringUtils.repeat(lastChar, counter)));
         }
         lastChar = i < word.length() ? word.charAt(i) : '\0';

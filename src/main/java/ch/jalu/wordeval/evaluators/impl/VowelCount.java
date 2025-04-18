@@ -2,7 +2,6 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
-import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LetterType;
@@ -23,11 +22,11 @@ import java.util.stream.Collectors;
  */
 public class VowelCount implements WordEvaluator<WordWithKey> {
 
-  private final List<WordWithKey> results = new ArrayList<>();
-
   private final List<String> letters;
   @Getter
   private final LetterType letterType;
+  @Getter
+  private final List<WordWithKey> results = new ArrayList<>();
 
   public VowelCount(Language language, LetterType letterType) {
     this.letters = letterType.getLetters(language);
@@ -35,13 +34,12 @@ public class VowelCount implements WordEvaluator<WordWithKey> {
   }
 
   @Override
-  public void evaluate(Word word, ResultStore<WordWithKey> resultStore) {
+  public void evaluate(Word word) {
     // TODO #64: Iterate over the letters of the word instead
     String wordWithoutAccents = word.getWithoutAccents();
     String letterProfile = letters.stream()
       .filter(wordWithoutAccents::contains)
       .collect(Collectors.joining());
-    resultStore.addResult(new WordWithKey(word, letterProfile));
     results.add(new WordWithKey(word, letterProfile));
   }
 

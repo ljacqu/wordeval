@@ -1,7 +1,6 @@
 package ch.jalu.wordeval.evaluators;
 
-import ch.jalu.wordeval.evaluators.processing.ResultStore;
-import ch.jalu.wordeval.evaluators.processing.ResultsProvider;
+import ch.jalu.wordeval.evaluators.processing.AllWordsEvaluatorProvider;
 import ch.jalu.wordeval.evaluators.result.EvaluationResult;
 
 /**
@@ -9,6 +8,6 @@ import ch.jalu.wordeval.evaluators.result.EvaluationResult;
  */
 public non-sealed interface PostEvaluator<R extends EvaluationResult> extends Evaluator<R> {
 
-  void evaluateAndSaveResults(ResultsProvider resultsProvider, ResultStore<R> resultStore);
+  void evaluate(AllWordsEvaluatorProvider allWordsEvaluatorProvider);
 
 }

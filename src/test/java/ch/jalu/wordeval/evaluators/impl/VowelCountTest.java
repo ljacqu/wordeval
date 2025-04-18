@@ -1,12 +1,13 @@
 package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.TestUtil;
-import ch.jalu.wordeval.evaluators.EvaluatorTestHelper;
+import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LetterType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,7 +20,7 @@ import static org.hamcrest.Matchers.hasSize;
 /**
  * Test for {@link VowelCount}.
  */
-class VowelCountTest {
+class VowelCountTest extends AbstractEvaluatorTest {
 
   private VowelCount vowelEvaluator;
   private VowelCount consonantEvaluator;
@@ -36,13 +37,16 @@ class VowelCountTest {
     // given
     // vowels: aeio, eio, eu, e, a, aou, aio, aeu, e
     // consonants: s, ghnst, flt, gt, cdgmrs, t, c, -, flt
-    String[] words = { "assosiasie", "something", "flute", "geeet", "madagascar", "tatotute", "cocacoci", "eau", "fleet" };
+    List<Word> words = createWords(
+        "assosiasie", "something", "flute", "geeet", "madagascar", "tatotute", "cocacoci", "eau", "fleet");
 
     // when
-    Map<String, Set<String>> vowelResults = EvaluatorTestHelper.evaluateAndGroupByKey(vowelEvaluator, words);
-    Map<String, Set<String>> consonantResults = EvaluatorTestHelper.evaluateAndGroupByKey(consonantEvaluator, words);
+    vowelEvaluator.evaluate(words);
+    consonantEvaluator.evaluate(words);
 
     // then
+    Map<String, Set<String>> vowelResults = groupByKey(vowelEvaluator.getResults());
+    Map<String, Set<String>> consonantResults = groupByKey(consonantEvaluator.getResults());
     assertThat(vowelResults, aMapWithSize(8));
     assertThat(vowelResults.get("a"), contains("madagascar"));
     assertThat(vowelResults.get("e"), containsInAnyOrder("geeet", "fleet"));

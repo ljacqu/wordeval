@@ -1,13 +1,11 @@
 package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.evaluators.PostEvaluator;
-import ch.jalu.wordeval.evaluators.processing.ResultStore;
-import ch.jalu.wordeval.evaluators.processing.ResultsProvider;
+import ch.jalu.wordeval.evaluators.processing.AllWordsEvaluatorProvider;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.evaluators.result.WordWithScore;
 import ch.jalu.wordeval.language.LetterType;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ListMultimap;
 import lombok.AllArgsConstructor;
 
@@ -28,22 +26,21 @@ public class SingleVowel implements PostEvaluator<WordWithScore> {
   private final List<WordWithScore> results = new ArrayList<>();
 
   @Override
-  public void evaluateAndSaveResults(ResultsProvider resultsProvider, ResultStore<WordWithScore> resultStore) {
-    ImmutableList<WordWithKey> results =
-      resultsProvider.getResultsOfEvaluatorOfType(VowelCount.class, vc -> vc.getLetterType() == letterType);
+  public void evaluate(AllWordsEvaluatorProvider allWordsEvaluatorProvider) {
+    VowelCount vowelCountEvaluator = allWordsEvaluatorProvider.getEvaluator(VowelCount.class,
+        vowelCount -> vowelCount.getLetterType() == letterType);
 
-    int min = results.stream()
-      .mapToInt(e -> e.getKey().length())
-      .filter(len -> len > 0)
-      .min()
-      .orElseThrow(() -> new IllegalStateException("Could not get minimum - no words with letter type?"));
+    List<WordWithKey> vowelCountResults = vowelCountEvaluator.getResults();
 
-    results.stream()
-      .filter(e -> e.getKey().length() == min)
-      .forEach(e -> {
-        resultStore.addResult(new WordWithScore(e.getWord(), e.getWord().getLowercase().length()));
-        this.results.add(new WordWithScore(e.getWord(), e.getWord().getLowercase().length()));
-      });
+    int min = vowelCountResults.stream()
+        .mapToInt(e -> e.getKey().length())
+        .filter(len -> len > 0)
+        .min()
+        .orElseThrow(() -> new IllegalStateException("Could not get minimum - no words with letter type?"));
+
+    vowelCountResults.stream()
+        .filter(e -> e.getKey().length() == min)
+        .forEach(e -> this.results.add(new WordWithScore(e.getWord(), e.getWord().getLowercase().length())));
   }
 
   @Override

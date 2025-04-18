@@ -1,46 +1,49 @@
 package ch.jalu.wordeval.evaluators.impl;
 
-import ch.jalu.wordeval.evaluators.EvaluatorTestHelper;
+import ch.jalu.wordeval.dictionary.Word;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.aMapWithSize;
+import static org.hamcrest.Matchers.contains;
 
 /**
  * Test for {@link Emordnilap}.
  */
-class EmordnilapTest {
+class EmordnilapTest extends AbstractEvaluatorTest {
 
-  private Emordnilap emordnilap = new Emordnilap();
+  private final Emordnilap emordnilap = new Emordnilap();
 
   @Test
   void shouldFindBackwardsPairs() {
     // given
-    String[] words = new String[]{ "but", "parts", "potato", "strap", "tub", "working" };
+    List<Word> words = createWords("but", "parts", "potato", "strap", "tub", "working");
 
     // when
-    List<Set<String>> results = EvaluatorTestHelper.evaluateAndUnwrapWordGroups(emordnilap, words);
+    emordnilap.evaluate(words);
 
     // then
-    assertThat(results, hasSize(2));
-    assertThat(results.get(0), containsInAnyOrder("but", "tub"));
-    assertThat(results.get(1), containsInAnyOrder("parts", "strap"));
+    Map<String, Set<String>> results = groupByKey(emordnilap.getResults());
+    assertThat(results, aMapWithSize(2));
+    assertThat(results.get("but"), contains("tub"));
+    assertThat(results.get("parts"), contains("strap"));
   }
 
   @Test
   void shouldNotAddPalindromes() {
     // given
-    String[] words = new String[]{"net", "otto", "Redder", "redder", "ten"};
+    List<Word> words = createWords("net", "otto", "Redder", "redder", "ten");
 
     // when
-    List<Set<String>> results = EvaluatorTestHelper.evaluateAndUnwrapWordGroups(emordnilap, words);
+    emordnilap.evaluate(words);
 
     // then
-    assertThat(results, hasSize(1));
-    assertThat(results.get(0), containsInAnyOrder("net", "ten"));
+    Map<String, Set<String>> results = groupByKey(emordnilap.getResults());
+    assertThat(results, aMapWithSize(1));
+    assertThat(results.get("net"), contains("ten"));
   }
 }

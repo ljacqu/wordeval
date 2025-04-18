@@ -2,11 +2,10 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
-import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
-import ch.jalu.wordeval.evaluators.result.WordWithScore;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -23,16 +22,17 @@ public class AlphabeticalSequence implements WordEvaluator<WordWithKey> {
   private static final int FORWARDS = -1;
   private static final int BACKWARDS = 1;
 
+  @Getter
   private final List<WordWithKey> results = new ArrayList<>();
 
   @Override
-  public void evaluate(Word word, ResultStore<WordWithKey> resultStore) {
+  public void evaluate(Word word) {
     // TODO #15: Make locale-aware instead
-    findAlphabeticalSequences(word, resultStore, FORWARDS);
-    findAlphabeticalSequences(word, resultStore, BACKWARDS);
+    findAlphabeticalSequences(word, FORWARDS);
+    findAlphabeticalSequences(word, BACKWARDS);
   }
 
-  private void findAlphabeticalSequences(Word word, ResultStore<WordWithKey> resultStore, int searchDirection) {
+  private void findAlphabeticalSequences(Word word, int searchDirection) {
     String text = word.getWithoutAccentsWordCharsOnly();
     int alphabeticalStreak = 1;
     String previousChar = String.valueOf(text.charAt(0));
@@ -49,7 +49,6 @@ public class AlphabeticalSequence implements WordEvaluator<WordWithKey> {
       if (!isCharInSequence || i == text.length()) {
         if (alphabeticalStreak > 2) {
           String alphabeticalSequence = text.substring(i - alphabeticalStreak, i);
-          resultStore.addResult(new WordWithKey(word, alphabeticalSequence));
           results.add(new WordWithKey(word, alphabeticalSequence));
         }
         alphabeticalStreak = 1;

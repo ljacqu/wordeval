@@ -1,8 +1,9 @@
 package ch.jalu.wordeval.evaluators.impl;
 
-import ch.jalu.wordeval.evaluators.EvaluatorTestHelper;
+import ch.jalu.wordeval.dictionary.Word;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,20 +15,22 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 /**
  * Test for {@link RepeatedSegment}.
  */
-class RepeatedSegmentTest {
+class RepeatedSegmentTest extends AbstractEvaluatorTest {
 
-  private RepeatedSegment evaluator = new RepeatedSegment();
+  private final RepeatedSegment repeatedSegment = new RepeatedSegment();
 
   @Test
   void shouldFindMatches() {
     // given
     // 3x est; 2x an; 2x ssi, 2x iss; 2x an, 2x na; -; 2x er; 2x bar
-    String[] words = {"geestestoestand", "banane", "mississippi", "ananas", "something", "derber", "barbar"};
+    List<Word> words = createWords(
+        "geestestoestand", "banane", "mississippi", "ananas", "something", "derber", "barbar");
 
     // when
-    Map<String, Set<String>> results = EvaluatorTestHelper.evaluateAndFlattenKeyAndScore(evaluator, words);
+    repeatedSegment.evaluate(words);
 
     // then
+    Map<String, Set<String>> results = flattenKeyAndScore(repeatedSegment.getResults());
     assertThat(results, aMapWithSize(7));
     assertThat(results.get("3,est"), contains("geestestoestand"));
     assertThat(results.get("2,an"), containsInAnyOrder("banane", "ananas"));
@@ -37,5 +40,4 @@ class RepeatedSegmentTest {
     assertThat(results.get("2,er"), contains("derber"));
     assertThat(results.get("2,bar"), contains("barbar"));
   }
-
 }

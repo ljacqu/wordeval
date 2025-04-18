@@ -2,13 +2,11 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.PostEvaluator;
-import ch.jalu.wordeval.evaluators.processing.ResultStore;
-import ch.jalu.wordeval.evaluators.processing.ResultsProvider;
+import ch.jalu.wordeval.evaluators.processing.AllWordsEvaluatorProvider;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
-import ch.jalu.wordeval.evaluators.result.WordWithKeyAndScore;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ListMultimap;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -28,16 +26,16 @@ public class RepeatedSegmentConsecutive implements PostEvaluator<WordWithKey> {
 
   private static final Pattern REPETITION_AT_START = Pattern.compile("^(.{2,})(\\1+)");
 
+  @Getter
   private final List<WordWithKey> results = new ArrayList<>();
 
   @Override
-  public void evaluateAndSaveResults(ResultsProvider resultsProvider, ResultStore<WordWithKey> resultStore) {
-    ImmutableList<WordWithKeyAndScore> repeatedSegmentResults =
-      resultsProvider.getResultsOfEvaluatorOfType(RepeatedSegment.class);
-    repeatedSegmentResults.forEach(result -> processWord(result.getWord(), resultStore));
+  public void evaluate(AllWordsEvaluatorProvider allWordsEvaluatorProvider) {
+    allWordsEvaluatorProvider.getEvaluator(RepeatedSegment.class).getResults()
+        .forEach(result -> processWord(result.getWord()));
   }
 
-  private void processWord(Word wordObject, ResultStore<WordWithKey> resultStore) {
+  private void processWord(Word wordObject) {
     String word = wordObject.getLowercase();
     Map<String, String> results = new HashMap<>();
     for (int i = 0; i < word.length() - 2; ++i) {
@@ -48,7 +46,6 @@ public class RepeatedSegmentConsecutive implements PostEvaluator<WordWithKey> {
         addResult(results, segment, repetition);
       }
     }
-    results.values().forEach(v -> resultStore.addResult(new WordWithKey(wordObject, v)));
     results.values().forEach(v -> this.results.add(new WordWithKey(wordObject, v)));
   }
 

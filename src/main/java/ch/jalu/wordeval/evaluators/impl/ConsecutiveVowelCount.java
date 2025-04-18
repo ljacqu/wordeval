@@ -2,7 +2,6 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
-import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.result.WordWithScore;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LetterType;
@@ -26,6 +25,7 @@ public class ConsecutiveVowelCount implements WordEvaluator<WordWithScore> {
   private final Set<String> lettersToConsider;
   @Getter
   private final LetterType letterType;
+  @Getter
   private final List<WordWithScore> results = new ArrayList<>();
 
   /**
@@ -40,13 +40,12 @@ public class ConsecutiveVowelCount implements WordEvaluator<WordWithScore> {
   }
 
   @Override
-  public void evaluate(Word wordObject, ResultStore<WordWithScore> resultStore) {
+  public void evaluate(Word wordObject) {
     String word = wordObject.getWithoutAccents();
     int count = 0;
     for (int i = 0; i <= word.length(); ++i) {
       if (i == word.length() || !lettersToConsider.contains(word.substring(i, i + 1))) {
         if (count > 1) {
-          resultStore.addResult(new WordWithScore(wordObject, count));
           results.add(new WordWithScore(wordObject, count));
         }
         count = 0;

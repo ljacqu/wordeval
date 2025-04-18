@@ -2,13 +2,13 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.AllWordsEvaluator;
-import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.result.WordGroupWithKey;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.SetMultimap;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,16 +24,16 @@ import java.util.function.Function;
  */
 public class Anagrams implements AllWordsEvaluator<WordGroupWithKey> {
 
+  @Getter
   private final List<WordGroupWithKey> results = new ArrayList<>();
 
   @Override
-  public void evaluate(Collection<Word> words, ResultStore<WordGroupWithKey> resultStore) {
+  public void evaluate(Collection<Word> words) {
     SetMultimap<String, Word> wordsBySortedChars = words.stream()
       .collect(Multimaps.toMultimap(this::sortLettersAlphabetically, Function.identity(), HashMultimap::create));
 
     Multimaps.asMap(wordsBySortedChars).forEach((sequence, groupedWords) -> {
       if (groupedWords.size() > 1) {
-        resultStore.addResult(new WordGroupWithKey(groupedWords, sequence));
         results.add(new WordGroupWithKey(groupedWords, sequence));
       }
     });

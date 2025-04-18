@@ -2,10 +2,10 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
-import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -19,15 +19,15 @@ import java.util.Set;
  */
 public class Palindromes implements WordEvaluator<WordWithKey> {
 
+  @Getter
   private final List<WordWithKey> results = new ArrayList<>();
 
   @Override
-  public void evaluate(Word wordObject, ResultStore<WordWithKey> resultStore) {
+  public void evaluate(Word wordObject) {
     String word = wordObject.getWithoutAccentsWordCharsOnly();
     for (int i = 1; i < word.length() - 1; ++i) {
       String palindrome = findPalindrome(word, i);
       if (palindrome != null) {
-        resultStore.addResult(new WordWithKey(wordObject, palindrome));
         results.add(new WordWithKey(wordObject, palindrome));
       }
     }

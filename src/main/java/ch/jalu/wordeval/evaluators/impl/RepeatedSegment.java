@@ -2,12 +2,10 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
-import ch.jalu.wordeval.evaluators.processing.ResultStore;
-import ch.jalu.wordeval.evaluators.result.WordGroupWithKey;
 import ch.jalu.wordeval.evaluators.result.WordWithKeyAndScore;
-import ch.jalu.wordeval.evaluators.result.WordWithScore;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -25,14 +23,14 @@ import java.util.stream.Collectors;
  */
 public class RepeatedSegment implements WordEvaluator<WordWithKeyAndScore> {
 
+  @Getter
   private final List<WordWithKeyAndScore> results = new ArrayList<>();
 
   @Override
-  public void evaluate(Word wordObject, ResultStore<WordWithKeyAndScore> resultStore) {
+  public void evaluate(Word wordObject) {
     String word = wordObject.getLowercase();
     Map<String, Integer> results = new NgramGenerator(word).getResults();
     removeNgramSubsets(results);
-    results.forEach((ngram, count) -> resultStore.addResult(new WordWithKeyAndScore(wordObject, ngram, count)));
     results.forEach((ngram, count) -> this.results.add(new WordWithKeyAndScore(wordObject, ngram, count)));
   }
 

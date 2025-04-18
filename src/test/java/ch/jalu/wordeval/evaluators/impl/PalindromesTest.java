@@ -1,8 +1,9 @@
 package ch.jalu.wordeval.evaluators.impl;
 
-import ch.jalu.wordeval.evaluators.EvaluatorTestHelper;
+import ch.jalu.wordeval.dictionary.Word;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,21 +15,22 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 /**
  * Test for {@link Palindromes}.
  */
-class PalindromesTest {
+class PalindromesTest extends AbstractEvaluatorTest {
 
-  private Palindromes evaluator = new Palindromes();
+  private final Palindromes palindromes = new Palindromes();
 
   @Test
   void shouldRecognizePalindromes() {
     // given
     // otto, bagab, -, awkwa, bab/ili, bab, -
-    String[] words = { "trottoir", "ebagabo", "palindrome", "awkward",
-        "probability", "probable", "o" };
+    List<Word> words = createWords("trottoir", "ebagabo", "palindrome", "awkward",
+        "probability", "probable", "o");
 
     // when
-    Map<String, Set<String>> results = EvaluatorTestHelper.evaluateAndGroupByKey(evaluator, words);
+    palindromes.evaluate(words);
 
     // then
+    Map<String, Set<String>> results = groupByKey(palindromes.getResults());
     assertThat(results, aMapWithSize(5));
     assertThat(results.get("bab"), containsInAnyOrder("probability", "probable"));
     assertThat(results.get("ili"), contains("probability"));
@@ -40,12 +42,13 @@ class PalindromesTest {
   @Test
   void shouldNotAddSimplePairs() {
     // given
-    String[] words = { "gaaf", "aardvaark", "letter", "boot", "bleed" };
+    List<Word> words = createWords("gaaf", "aardvaark", "letter", "boot", "bleed");
 
     // when
-    Map<String, Set<String>> results = EvaluatorTestHelper.evaluateAndGroupByKey(evaluator, words);
+    palindromes.evaluate(words);
 
     // then
+    Map<String, Set<String>> results = groupByKey(palindromes.getResults());
     assertThat(results, aMapWithSize(1));
     assertThat(results.get("ette"), contains("letter"));
   }

@@ -1,8 +1,9 @@
 package ch.jalu.wordeval.evaluators.impl;
 
-import ch.jalu.wordeval.evaluators.EvaluatorTestHelper;
+import ch.jalu.wordeval.dictionary.Word;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,20 +15,21 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 /**
  * Test for {@link SameLetterConsecutive}.
  */
-class SameLetterConsecutiveTest {
+class SameLetterConsecutiveTest extends AbstractEvaluatorTest {
 
-  private SameLetterConsecutive evaluator = new SameLetterConsecutive();
+  private final SameLetterConsecutive sameLetterConsecutive = new SameLetterConsecutive();
 
   @Test
   void shouldRecognizeConsecutiveLetters() {
     // given
     // ll, fff, eee, -, fff, ll, ll
-    String[] words = { "hello", "schifffahrt", "geeet", "window", "töfffahrer", "schnell", "llama" };
+    List<Word> words = createWords("hello", "schifffahrt", "geeet", "window", "töfffahrer", "schnell", "llama");
 
     // when
-    Map<String, Set<String>> results = EvaluatorTestHelper.evaluateAndGroupByKey(evaluator, words);
+    sameLetterConsecutive.evaluate(words);
 
     // then
+    Map<String, Set<String>> results = groupByKey(sameLetterConsecutive.getResults());
     assertThat(results, aMapWithSize(3));
     assertThat(results.get("ll"), containsInAnyOrder("hello", "schnell", "llama"));
     assertThat(results.get("fff"), containsInAnyOrder("schifffahrt", "töfffahrer"));
@@ -38,12 +40,13 @@ class SameLetterConsecutiveTest {
   void shouldRecognizeSeparateOccurrences() {
     // given
     // {sss,bb}, {ss,pp}, {aa,ss}, {ooo,ee,oo}
-    String[] words = { "Massstabbrecher", "Reisstopp", "aabesso", "oooeemoo" };
+    List<Word> words = createWords("Massstabbrecher", "Reisstopp", "aabesso", "oooeemoo");
 
     // when
-    Map<String, Set<String>> results = EvaluatorTestHelper.evaluateAndGroupByKey(evaluator, words);
+    sameLetterConsecutive.evaluate(words);
 
     // then
+    Map<String, Set<String>> results = groupByKey(sameLetterConsecutive.getResults());
     assertThat(results, aMapWithSize(8));
     assertThat(results.get("aa"), containsInAnyOrder("aabesso"));
     assertThat(results.get("bb"), containsInAnyOrder("Massstabbrecher"));
@@ -59,12 +62,13 @@ class SameLetterConsecutiveTest {
   void shouldProcessCyrillicWords() {
     // given
     // нн, -, дд, нн, -
-    String[] words = { "избранные", "величайший", "поддержки", "старинного", "независимая" };
+    List<Word> words = createWords("избранные", "величайший", "поддержки", "старинного", "независимая");
 
     // when
-    Map<String, Set<String>> results = EvaluatorTestHelper.evaluateAndGroupByKey(evaluator, words);
+    sameLetterConsecutive.evaluate(words);
 
     // then
+    Map<String, Set<String>> results = groupByKey(sameLetterConsecutive.getResults());
     assertThat(results, aMapWithSize(2));
     assertThat(results.get("дд"), contains("поддержки"));
     assertThat(results.get("нн"), containsInAnyOrder("избранные", "старинного"));

@@ -2,11 +2,10 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
-import ch.jalu.wordeval.evaluators.processing.ResultStore;
-import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.evaluators.result.WordWithScore;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -20,10 +19,11 @@ import java.util.Set;
  */
 public class ConsecutiveLetterPairs implements WordEvaluator<WordWithScore> {
 
+  @Getter
   private final List<WordWithScore> results = new ArrayList<>();
 
   @Override
-  public void evaluate(Word wordObject, ResultStore<WordWithScore> resultStore) {
+  public void evaluate(Word wordObject) {
     String word = wordObject.getWithoutAccents();
 
     int letterCounter = 0;
@@ -39,7 +39,6 @@ public class ConsecutiveLetterPairs implements WordEvaluator<WordWithScore> {
       }
       if (letterCounter <= 1 || i == word.length()) {
         if (pairCounter > 1) {
-          resultStore.addResult(new WordWithScore(wordObject, pairCounter));
           results.add(new WordWithScore(wordObject, pairCounter));
         }
         pairCounter = 0;

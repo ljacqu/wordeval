@@ -43,7 +43,7 @@ class EvaluatorInitializerTest {
     EvaluatorInitializer initializer = new EvaluatorInitializer(language);
 
     // then
-    assertThat(initializer.getEvaluatorsCount(), equalTo(22));
+    assertThat(initializer.getEvaluatorsCount(), equalTo(20));
 
     // Test presence for a sample of evaluators
     assertThat(initializer.getAllWordsEvaluators(), hasItem(instanceOf(AlphabeticalSequence.class)));

@@ -2,10 +2,10 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
-import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.result.WordWithScore;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -18,10 +18,11 @@ import java.util.Set;
  */
 public class Isograms implements WordEvaluator<WordWithScore> {
 
+  @Getter
   private final List<WordWithScore> results = new ArrayList<>();
 
   @Override
-  public void evaluate(Word wordObject, ResultStore<WordWithScore> resultStore) {
+  public void evaluate(Word wordObject) {
     String word = wordObject.getWithoutAccentsWordCharsOnly();
     Set<Character> charList = new HashSet<>();
     for (int i = 0; i < word.length(); ++i) {
@@ -31,7 +32,6 @@ public class Isograms implements WordEvaluator<WordWithScore> {
         return;
       }
     }
-    resultStore.addResult(new WordWithScore(wordObject, word.length()));
     results.add(new WordWithScore(wordObject, word.length()));
   }
 

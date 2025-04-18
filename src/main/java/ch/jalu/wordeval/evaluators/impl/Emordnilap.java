@@ -2,12 +2,11 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.AllWordsEvaluator;
-import ch.jalu.wordeval.evaluators.processing.ResultStore;
 import ch.jalu.wordeval.evaluators.result.WordGroup;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
-import ch.jalu.wordeval.evaluators.result.WordWithScore;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -26,10 +25,11 @@ import java.util.stream.Collectors;
  */
 public class Emordnilap implements AllWordsEvaluator<WordGroup> {
 
+  @Getter
   private final List<WordWithKey> results = new ArrayList<>();
 
   @Override
-  public void evaluate(Collection<Word> words, ResultStore<WordGroup> resultStore) {
+  public void evaluate(Collection<Word> words) {
     TreeMap<String, Word> wordsByLowercase = words.stream()
       .collect(Collectors.toMap(Word::getLowercase, word -> word, (a, b) -> b, TreeMap::new));
 
@@ -39,7 +39,6 @@ public class Emordnilap implements AllWordsEvaluator<WordGroup> {
       Word reversedWord = wordsByLowercase.get(reversed);
       if (lowercase.compareTo(reversed) < 0 && reversedWord != null) {
         // TODO: Add smarter checks to avoid performing work, maybe can even stop once compareTo is < 0 ?
-        resultStore.addResult(new WordGroup(entry.getValue(), reversedWord));
         results.add(new WordWithKey(reversedWord, entry.getKey()));
       }
     }

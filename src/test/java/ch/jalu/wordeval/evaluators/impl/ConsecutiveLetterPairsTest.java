@@ -1,8 +1,9 @@
 package ch.jalu.wordeval.evaluators.impl;
 
-import ch.jalu.wordeval.evaluators.EvaluatorTestHelper;
+import ch.jalu.wordeval.dictionary.Word;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,21 +15,22 @@ import static org.hamcrest.Matchers.hasSize;
 /**
  * Test for {@link ConsecutiveLetterPairs}.
  */
-class ConsecutiveLetterPairsTest {
+class ConsecutiveLetterPairsTest extends AbstractEvaluatorTest {
 
-  private ConsecutiveLetterPairs evaluator = new ConsecutiveLetterPairs();
+  private final ConsecutiveLetterPairs consecutiveLetterPairs = new ConsecutiveLetterPairs();
 
   @Test
   void shouldRecognizeLetterPairs() {
     // given
     // 2, 0, 0, 3, 2, 2, 2, 4, 2
-    String[] words = { "aallorr", "potato", "klokken", "maaiill", "oppaan",
-        "reennag", "baaggage", "voorraaddra", "reell" };
+    List<Word> words = createWords("aallorr", "potato", "klokken", "maaiill", "oppaan",
+        "reennag", "baaggage", "voorraaddra", "reell");
 
     // when
-    Map<Double, Set<String>> results = EvaluatorTestHelper.evaluateAndGroupByScore(evaluator, words);
+    consecutiveLetterPairs.evaluate(words);
 
     // then
+    Map<Double, Set<String>> results = groupByScore(consecutiveLetterPairs.getResults());
     assertThat(results.keySet(), hasSize(3));
     assertThat(results.get(2.0), containsInAnyOrder("aallorr", "oppaan", "reennag", "baaggage", "reell"));
     assertThat(results.get(3.0), contains("maaiill"));
@@ -39,12 +41,13 @@ class ConsecutiveLetterPairsTest {
   void shouldRecognizeSeparatePairs() {
     // given
     // 2, {2,3}, 0
-    String[] words = { "massaage", "aabbcdefgghhiij", "something" };
+    List<Word> words = createWords("massaage", "aabbcdefgghhiij", "something");
 
     // when
-    Map<Double, Set<String>> results = EvaluatorTestHelper.evaluateAndGroupByScore(evaluator, words);
+    consecutiveLetterPairs.evaluate(words);
 
     // then
+    Map<Double, Set<String>> results = groupByScore(consecutiveLetterPairs.getResults());
     assertThat(results.keySet(), hasSize(2));
     assertThat(results.get(2.0), containsInAnyOrder("massaage", "aabbcdefgghhiij"));
     assertThat(results.get(3.0), containsInAnyOrder("aabbcdefgghhiij"));
@@ -58,17 +61,16 @@ class ConsecutiveLetterPairsTest {
   void shouldRecognizeTriplesOrMore() {
     // given
     // 2, 0, 3, 4, 0
-    String[] words = { "laaaii", "kayak", "poolooeeerr", "aabbbccdddef",
-        "walking" };
+    List<Word> words = createWords("laaaii", "kayak", "poolooeeerr", "aabbbccdddef", "walking");
 
     // when
-    Map<Double, Set<String>> results = EvaluatorTestHelper.evaluateAndGroupByScore(evaluator, words);
+    consecutiveLetterPairs.evaluate(words);
 
     // then
+    Map<Double, Set<String>> results = groupByScore(consecutiveLetterPairs.getResults());
     assertThat(results.keySet(), hasSize(3));
     assertThat(results.get(2.0), contains("laaaii"));
     assertThat(results.get(3.0), contains("poolooeeerr"));
     assertThat(results.get(4.0), contains("aabbbccdddef"));
   }
-
 }
