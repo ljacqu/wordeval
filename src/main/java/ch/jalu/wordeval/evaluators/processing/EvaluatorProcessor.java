@@ -34,8 +34,7 @@ public class EvaluatorProcessor {
     postEvaluators.forEach(evaluator -> evaluator.evaluate(allWordsEvaluatorProvider));
   }
 
-  public List<Evaluator> getAllEvaluators() {
-    return Stream.concat(wordEvaluators.stream(), postEvaluators.stream())
-        .toList();
+  public Stream<Evaluator> streamThroughAllEvaluators() {
+    return Stream.concat(wordEvaluators.stream(), postEvaluators.stream());
   }
 }

@@ -12,8 +12,8 @@ import ch.jalu.wordeval.util.TimeLogger;
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.log4j.Log4j2;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,7 +35,7 @@ public final class WordEvalMain {
    */
   public static void main(String[] args) {
     // All codes: Dictionary.getAllCodes()
-    Iterable<String> codes = Arrays.asList("eu");
+    List<String> codes = List.of("eu", "en-us", "fr");
 
     WordEvalMain main = new WordEvalMain();
     for (String code : codes) {
@@ -75,7 +75,7 @@ public final class WordEvalMain {
     timeLogger.lap("processed dictionary");
 
     ExportService exportService = new ExportService();
-    exportService.export(language, evaluatorProcessor.getAllEvaluators());
+    exportService.export(language, evaluatorProcessor.streamThroughAllEvaluators());
     timeLogger.lap("finished export");
     timeLogger.logWithOverallTime("Finished language '" + code + "'");
   }
