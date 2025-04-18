@@ -2,12 +2,12 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.PostEvaluator;
+import ch.jalu.wordeval.evaluators.export.EvaluatorExportUtil;
 import ch.jalu.wordeval.evaluators.processing.AllWordsEvaluatorProvider;
 import ch.jalu.wordeval.evaluators.result.WordGroupWithKey;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LetterType;
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import lombok.Getter;
 
@@ -37,6 +37,7 @@ public class AllVowelsAlphabetically implements PostEvaluator {
         allWordsEvaluatorProvider.getEvaluator(VowelCount.class, vc -> vc.getLetterType() == LetterType.VOWELS);
 
     List<WordGroupWithKey> wordGroupsByKey = vowelCount.getResults().stream()
+        .filter(entry -> !entry.getKey().isEmpty())
         .filter(entry -> hasVowelsAlphabetically(entry.getWord().getWithoutAccents()))
         .collect(Collectors.groupingBy(WordWithKey::getKey,
             Collectors.mapping(WordWithKey::getWord, Collectors.toSet())))
@@ -66,8 +67,7 @@ public class AllVowelsAlphabetically implements PostEvaluator {
 
   @Override
   public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
-    Comparator<WordGroupWithKey> comparator = Comparator.comparingInt((WordGroupWithKey group) -> group.getWords().size())
-        .thenComparing(group -> group.getKey().length())
+    Comparator<WordGroupWithKey> comparator = Comparator.comparingInt((WordGroupWithKey group) -> group.getKey().length())
         .reversed(); // todo: unit test
 
     List<WordGroupWithKey> sortedResult = results.stream()
@@ -75,16 +75,16 @@ public class AllVowelsAlphabetically implements PostEvaluator {
         .toList();
 
     Set<Integer> uniqueValues = new HashSet<>();
-    ListMultimap<Object, Object> filteredResults = ArrayListMultimap.create();
+    ListMultimap<Object, Object> filteredResults = EvaluatorExportUtil.newListMultimap();
     for (WordGroupWithKey wordGroup : sortedResult) {
-      int score = wordGroup.getWords().size();
+      int score = wordGroup.getKey().length();
       if (uniqueValues.add(score) && uniqueValues.size() > topScores) {
         break;
       }
       List<String> wordList = wordGroup.getWords().stream()
           .map(Word::getRaw)
           .toList();
-      filteredResults.put(score, wordList);
+      filteredResults.put(wordGroup.getKey(), wordList);
       if (filteredResults.size() >= maxLimit) {
         break;
       }
