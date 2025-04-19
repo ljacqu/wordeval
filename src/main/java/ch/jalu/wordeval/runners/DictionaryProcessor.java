@@ -20,12 +20,15 @@ public final class DictionaryProcessor {
   }
 
   public static List<Word> readAllWords(Dictionary dictionary) {
+    return processAllWords(dictionary, DataUtils.readAllLines(dictionary.getFile()));
+  }
+
+  public static List<Word> processAllWords(Dictionary dictionary, List<String> lines) {
     final Sanitizer sanitizer = dictionary.buildSanitizer();
     final Language language = dictionary.getLanguage();
     final WordFactory wordFactory = new WordFactory(language);
 
-    return DataUtils.readAllLines(dictionary.getFile())
-        .stream()
+    return lines.stream()
         .map(sanitizer::isolateWord)
         .filter(StringUtils::isNotEmpty)
         .map(wordFactory::createWordObject)

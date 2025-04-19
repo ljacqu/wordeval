@@ -3,6 +3,7 @@ package ch.jalu.wordeval.dictionary.sanitizer;
 import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.runners.DictionaryProcessor;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -20,13 +21,19 @@ import static org.hamcrest.Matchers.not;
  */
 class ItSanitizerTest extends AbstractSanitizerTest {
 
+  private static Dictionary itDictionary;
+
+  @BeforeAll
+  static void initData() {
+    itDictionary = createDictionary("it");
+  }
+
   @Test
   void shouldSanitizeWords() {
-    // given
-    Dictionary dictionary = createDictionaryIfPossible("it");
+    assumeDictionaryFileExists(itDictionary);
 
-    // when
-    Set<String> words = DictionaryProcessor.readAllWords(dictionary).stream()
+    // given / when
+    Set<String> words = DictionaryProcessor.readAllWords(itDictionary).stream()
         .map(Word::getRaw)
         .collect(Collectors.toSet());
 
@@ -37,5 +44,37 @@ class ItSanitizerTest extends AbstractSanitizerTest {
         .toList();
     assertThat(wordsWithCopyright, contains("copyright")); // There are some copyright easter eggs. Make sure we only keep "copyright" itself
     assertThat(words, not(hasItem("ziiiziiizxxivziiizmmxi")));
+  }
+
+  @Test
+  void shouldSanitize() {
+    // given
+    List<String> lines = getLines();
+
+    // when
+    List<String> words = DictionaryProcessor.processAllWords(itDictionary, lines).stream()
+        .map(Word::getRaw)
+        .toList();
+
+    // then
+    assertThat(words, contains("ash", "cat", "emu", "frog-fish-ferret", "gator", "joker"));
+  }
+
+  private static List<String> getLines() {
+    return List.of(
+        "420",
+        "/ Header comment",
+        "/ should be ignored",
+        "ash/APC",
+        "cat",
+        "ziiiziiizxxivziiizmmxi",
+        "XIX",
+        "emu/XIX",
+        "frog-fish-ferret/PP3 po:an",
+        "CopyrightSomeFunLineHere",
+        "gator/ee",
+        "CopyrightOtherFunLine",
+        "joker/e"
+    );
   }
 }

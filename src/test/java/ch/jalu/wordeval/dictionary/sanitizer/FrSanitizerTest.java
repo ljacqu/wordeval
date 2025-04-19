@@ -1,46 +1,34 @@
 package ch.jalu.wordeval.dictionary.sanitizer;
 
-import ch.jalu.wordeval.TestUtil;
-import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.runners.DictionaryProcessor;
-import com.google.common.collect.Sets;
-import lombok.extern.log4j.Log4j2;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static ch.jalu.wordeval.TestUtil.assumeThat;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasItems;
 
 /**
  * Test for {@link FrSanitizer}.
  */
-@Log4j2
-class FrSanitizerTest {
+class FrSanitizerTest extends AbstractSanitizerTest {
 
   private static Dictionary frDictionary;
-  
+
   @BeforeAll
   static void initData() {
-    frDictionary = new AppData().getDictionary("fr");
+    frDictionary = createDictionary("fr");
   }
 
   @Test
   void shouldFindTheGivenWords() {
-    if (!TestUtil.doesDictionaryFileExist(frDictionary)) {
-      log.warn("Skipping Fr sanitizer test because dictionary doesn't exist");
-      assumeThat(true, equalTo(false));
-    }
+    assumeDictionaryFileExists(frDictionary);
 
     // given / when
     Set<String> words = DictionaryProcessor.readAllWords(frDictionary).stream()
@@ -58,24 +46,41 @@ class FrSanitizerTest {
     assertThat(words, hasNoneItems("-"));
   }
 
-  private static Matcher<Set<String>> hasNoneItems(String... entries) {
-    return new TypeSafeMatcher<>() {
+  @Test
+  void shouldSanitize() {
+    // given
+    List<String> lines = getLines();
 
-      @Override
-      protected boolean matchesSafely(Set<String> item) {
-        return Sets.intersection(item, Set.of(entries)).isEmpty();
-      }
+    // when
+    List<String> words = DictionaryProcessor.processAllWords(frDictionary, lines).stream()
+        .map(Word::getRaw)
+        .toList();
 
-      @Override
-      public void describeTo(Description description) {
-        description.appendText("Set without any of: " + Arrays.toString(entries));
-      }
+    // then
+    assertThat(words, contains("able", "bin", "cat", "dog", "emu", "frog-fish-ferret", "gator", "joker"));
+  }
 
-      @Override
-      protected void describeMismatchSafely(Set<String> item, Description mismatchDescription) {
-        String foundEntries = String.join(", ", Sets.intersection(item, Set.of(entries)));
-        mismatchDescription.appendText("Set with items: " + foundEntries);
-      }
-    };
+  private static List<String> getLines() {
+    return List.of(
+        "able/APC",
+        "bin/44P po:test",
+        "cat",
+        "dog po:an",
+        "XIXe",
+        "- po:ponc po:sign",
+        "emu/XIX",
+        "frog-fish-ferret/PP3 po:an",
+        "pfft",
+        "grrr",
+        "XXXIIes",
+        "gator/ee",
+        "H₆Pl₉",
+        "iffᵉ",
+        "joker/e",
+        "Δt",
+        "some",
+        "thing",
+        "else"
+    );
   }
 }
