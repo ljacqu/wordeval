@@ -1,6 +1,6 @@
-package ch.jalu.wordeval.dictionary;
+package ch.jalu.wordeval.dictionary.sanitizer;
 
-import ch.jalu.wordeval.dictionary.sanitizer.Sanitizer;
+import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.language.Language;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -9,8 +9,9 @@ import java.util.Arrays;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContaining;
-import static org.hamcrest.Matchers.emptyString;
+import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -54,9 +55,9 @@ class SanitizerTest {
     for (int i = 0; i < words.length; ++i) {
       String result = sanitizer.isolateWord(words[i]);
       if (shouldBeSkipped[i]) {
-        assertThat(result, emptyString());
+        assertThat(result, nullValue());
       } else {
-        assertThat(result, not(emptyString()));
+        assertThat(result, not(emptyOrNullString()));
       }
     }
   }
@@ -66,7 +67,7 @@ class SanitizerTest {
     String[] words = { "9th", "asdf1", "3.1415926", "to4st" };
     
     Arrays.stream(words)
-      .forEach(word -> assertThat(sanitizer.isolateWord(word), emptyString()));
+      .forEach(word -> assertThat(sanitizer.isolateWord(word), nullValue()));
   }
 
 }

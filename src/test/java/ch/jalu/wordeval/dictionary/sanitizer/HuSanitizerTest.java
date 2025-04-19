@@ -1,8 +1,9 @@
-package ch.jalu.wordeval.dictionary;
+package ch.jalu.wordeval.dictionary.sanitizer;
 
 import ch.jalu.wordeval.TestUtil;
 import ch.jalu.wordeval.appdata.AppData;
-import ch.jalu.wordeval.dictionary.sanitizer.HuSanitizer;
+import ch.jalu.wordeval.dictionary.Dictionary;
+import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.runners.DictionaryProcessor;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeAll;
