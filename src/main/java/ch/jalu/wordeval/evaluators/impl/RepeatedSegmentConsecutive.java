@@ -5,6 +5,7 @@ import ch.jalu.wordeval.evaluators.PostEvaluator;
 import ch.jalu.wordeval.evaluators.export.EvaluatorExportUtil;
 import ch.jalu.wordeval.evaluators.processing.AllWordsEvaluatorProvider;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
+import ch.jalu.wordeval.util.StreamUtils;
 import com.google.common.collect.ListMultimap;
 import lombok.Getter;
 
@@ -31,7 +32,8 @@ public class RepeatedSegmentConsecutive implements PostEvaluator {
 
   @Override
   public void evaluate(AllWordsEvaluatorProvider allWordsEvaluatorProvider) {
-    allWordsEvaluatorProvider.getEvaluator(RepeatedSegment.class).getResults()
+    allWordsEvaluatorProvider.getEvaluator(RepeatedSegment.class).getResults().stream()
+        .filter(StreamUtils.distinctByKey(entry -> entry.getWord().getLowercase()))
         .forEach(result -> processWord(result.getWord()));
   }
 
