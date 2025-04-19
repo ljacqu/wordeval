@@ -43,6 +43,11 @@ public class DiacriticHomonyms implements AllWordsEvaluator {
   }
 
   @Override
+  public String getId() {
+    return "group.homonymsByDiacritic";
+  }
+
+  @Override
   public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
     Comparator<WordGroupWithKey> comparator = Comparator.comparingInt((WordGroupWithKey group) -> group.getWords().size())
         .thenComparing(group -> group.getKey().length())

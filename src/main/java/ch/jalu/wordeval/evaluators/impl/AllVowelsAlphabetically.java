@@ -37,7 +37,7 @@ public class AllVowelsAlphabetically implements PostEvaluator {
         allWordsEvaluatorProvider.getEvaluator(VowelCount.class, vc -> vc.getLetterType() == LetterType.VOWELS);
 
     List<WordGroupWithKey> wordGroupsByKey = vowelCount.getResults().stream()
-        .filter(entry -> !entry.getKey().isEmpty())
+        .filter(entry -> entry.getKey().length() > 1)
         .filter(entry -> hasVowelsAlphabetically(entry.getWord().getWithoutAccents()))
         .collect(Collectors.groupingBy(WordWithKey::getKey,
             Collectors.mapping(WordWithKey::getWord, Collectors.toSet())))
@@ -91,5 +91,10 @@ public class AllVowelsAlphabetically implements PostEvaluator {
     }
 
     return filteredResults;
+  }
+
+  @Override
+  public String getId() {
+    return "vowels.alphabetical";
   }
 }

@@ -67,8 +67,8 @@ public class SingleVowel implements PostEvaluator {
   @Override
   public String getId() {
     return switch (letterType) {
-      case VOWELS -> "SingleVowel";
-      case CONSONANTS -> "SingleConsonant";
+      case VOWELS -> "vowels.single";
+      case CONSONANTS -> "consonants.single";
     };
   }
 }

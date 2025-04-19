@@ -44,6 +44,11 @@ public class Emordnilap implements AllWordsEvaluator {
   }
 
   @Override
+  public String getId() {
+    return "group.emordnilap";
+  }
+
+  @Override
   public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
     List<WordWithKey> sortedResult = results.stream()
         .sorted(Comparator.<WordWithKey>comparingInt(wordWithKey -> wordWithKey.getKey().length()).reversed())

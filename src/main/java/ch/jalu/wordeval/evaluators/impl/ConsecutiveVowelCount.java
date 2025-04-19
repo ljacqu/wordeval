@@ -79,8 +79,8 @@ public class ConsecutiveVowelCount implements WordEvaluator {
   @Override
   public String getId() {
     return switch (letterType) {
-      case VOWELS -> "ConsecutiveVowelCount";
-      case CONSONANTS -> "ConsecutiveConsonantCount";
+      case VOWELS -> "vowels.consecutiveCount";
+      case CONSONANTS -> "consonants.consecutiveCount";
     };
   }
 }

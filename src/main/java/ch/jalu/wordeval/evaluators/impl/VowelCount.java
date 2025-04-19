@@ -68,8 +68,8 @@ public class VowelCount implements WordEvaluator {
   @Override
   public String getId() {
     return switch (letterType) {
-      case VOWELS -> "VowelCount";
-      case CONSONANTS -> "ConsonantCount";
+      case VOWELS -> "vowels.count";
+      case CONSONANTS -> "consonants.count";
     };
   }
 }

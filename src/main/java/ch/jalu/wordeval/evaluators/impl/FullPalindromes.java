@@ -40,6 +40,11 @@ public class FullPalindromes implements PostEvaluator {
   }
 
   @Override
+  public String getId() {
+    return "palindromes.full";
+  }
+
+  @Override
   public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
     List<WordWithScore> sortedResult = results.stream()
         .sorted(Comparator.comparing(WordWithScore::getScore).reversed())

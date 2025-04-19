@@ -71,6 +71,11 @@ public class RepeatedSegmentConsecutive implements PostEvaluator {
     return filteredResults;
   }
 
+  @Override
+  public String getId() {
+    return "repeatedSegment.consecutive";
+  }
+
   private static void addResult(Map<String, String> results, String segment, String repetition) {
     String storedRepetition = results.get(segment);
     if (storedRepetition == null || storedRepetition.length() < repetition.length()) {
