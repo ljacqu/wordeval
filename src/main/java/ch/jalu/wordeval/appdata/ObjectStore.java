@@ -47,7 +47,8 @@ abstract class ObjectStore<K, V> {
   public V get(K key) {
     V value = entries.get(key);
     if (value == null) {
-      throw new IllegalStateException("No language has been stored for key '" + key + "'");
+      throw new IllegalStateException(
+          "No entry has been stored for key '" + key + "' (" + getClass().getSimpleName() + ")");
     }
     return value;
   }
