@@ -6,6 +6,7 @@ import ch.jalu.wordeval.language.Alphabet;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,5 +39,23 @@ class DiacriticHomonymsTest extends AbstractEvaluatorTest {
     assertThat(results.get("sur"), containsInAnyOrder("sur", "sûr"));
     assertThat(results.get("ca"), containsInAnyOrder("ça", "çà"));
     assertThat(results.get("schon"), containsInAnyOrder("schon", "schön"));
+  }
+
+  @Test
+  void shouldSkipCapitalizedDuplicate() {
+    // given
+    List<Word> words = Stream.of("stone", "Stone", "bbbb", "Kühl", "kühl", "Kuhl")
+        .map(TestWord::new)
+        .peek(w -> w.setLowercase(w.getRaw().toLowerCase(Locale.ROOT)))
+        .peek(w -> w.setWithoutAccents(Alphabet.LATIN.removeAccents(w.getLowercase())))
+        .collect(Collectors.toList());
+
+    // when
+    diacriticHomonyms.evaluate(words);
+
+    // then
+    Map<String, Set<String>> results = groupResultsByKey(diacriticHomonyms.getResults());
+    assertThat(results.keySet(), containsInAnyOrder("kuhl"));
+    assertThat(results.get("kuhl"), containsInAnyOrder("kühl", "Kuhl"));
   }
 }

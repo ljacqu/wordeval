@@ -4,6 +4,7 @@ import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.AllWordsEvaluator;
 import ch.jalu.wordeval.evaluators.export.EvaluatorExportUtil;
 import ch.jalu.wordeval.evaluators.result.WordGroupWithKey;
+import ch.jalu.wordeval.util.StreamUtils;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
@@ -18,6 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Collects anagram groups (e.g. "acre", "care", "race").
@@ -34,7 +36,13 @@ public class Anagrams implements AllWordsEvaluator {
 
     Multimaps.asMap(wordsBySortedChars).forEach((sequence, groupedWords) -> {
       if (groupedWords.size() > 1) {
-        results.add(new WordGroupWithKey(groupedWords, sequence));
+        // Note: IntelliJ claims the .sorted call has no effect, but it ensures that lowercase words will be processed
+        // before their uppercase counterparts.
+        Set<Word> uniqueWords = groupedWords.stream()
+            .sorted(Comparator.comparing(w -> Character.isUpperCase(w.getRaw().charAt(0))))
+            .filter(StreamUtils.distinctByKey(Word::getLowercase))
+            .collect(Collectors.toSet());
+        results.add(new WordGroupWithKey(uniqueWords, sequence));
       }
     });
   }

@@ -4,6 +4,7 @@ import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.AllWordsEvaluator;
 import ch.jalu.wordeval.evaluators.export.EvaluatorExportUtil;
 import ch.jalu.wordeval.evaluators.result.WordGroupWithKey;
+import ch.jalu.wordeval.util.StreamUtils;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
@@ -30,10 +31,12 @@ public class DiacriticHomonyms implements AllWordsEvaluator {
   @Override
   public void evaluate(Collection<Word> words) {
     SetMultimap<String, Word> wordsByNoAccentRep = words.stream()
-      .collect(Multimaps.toMultimap(
-        Word::getWithoutAccents,
-        word -> word,
-        HashMultimap::create));
+        .sorted(Comparator.comparing(w -> Character.isUpperCase(w.getRaw().charAt(0))))
+        .filter(StreamUtils.distinctByKey(Word::getLowercase))
+        .collect(Multimaps.toMultimap(
+            Word::getWithoutAccents,
+            word -> word,
+            HashMultimap::create));
 
     Multimaps.asMap(wordsByNoAccentRep).forEach((wordRep, wordsInGroup) -> {
       if (wordsInGroup.size() > 1) {
