@@ -1,13 +1,14 @@
 package ch.jalu.wordeval.language;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.ToString;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
@@ -24,29 +25,22 @@ public class Language {
   private final String code;
   private final String name;
   private final Alphabet alphabet;
-  @Getter(AccessLevel.PACKAGE) // Use #getVowels
-  private final List<String> additionalVowels;
-  @Getter(AccessLevel.PACKAGE) // Use #getConsonants
-  private final List<String> additionalConsonants;
-  @Getter(AccessLevel.PRIVATE)
-  private final List<String> lettersToRemove;
+  private final List<String> vowels;
+  private final List<String> consonants;
 
   @Getter(lazy = true)
   private final Locale locale = buildLocale();
   @Getter(lazy = true)
   private final String charsToPreserve = computeCharsToPreserve();
   
-  private Language(String code, String name, Alphabet alphabet, List<String> additionalVowels,
-                   List<String> additionalConsonants, List<String> lettersToRemove) {
+  private Language(String code, String name, Alphabet alphabet, List<String> vowels, List<String> consonants) {
     this.code = code;
     this.name = name;
     this.alphabet = alphabet;
-    this.additionalVowels = additionalVowels;
-    this.additionalConsonants = additionalConsonants;
-    this.lettersToRemove = lettersToRemove;
+    this.vowels = vowels;
+    this.consonants = consonants;
   }
 
-  
   // --- Private members
   private Locale buildLocale() {
     return Locale.of(code);
@@ -59,32 +53,14 @@ public class Language {
    * @return the list of characters that are distinct letters
    */
   private String computeCharsToPreserve() {
-    StringBuilder sb = new StringBuilder();
-    for (String letter : getAdditionalConsonants()) {
-      if (letter.length() == 1 && letter.charAt(0) > ASCII_MAX_INDEX) {
-        sb.append(letter);
-      }
-    }
-    for (String letter : getAdditionalVowels()) {
-      if (letter.length() == 1 && letter.charAt(0) > ASCII_MAX_INDEX) {
-        sb.append(letter.charAt(0));
-      }
-    }
-    return sb.toString();
-  }
+    Set<String> standardLetters =
+        Stream.concat(alphabet.getDefaultVowels().stream(), alphabet.getDefaultConsonants().stream())
+            .collect(Collectors.toUnmodifiableSet());
 
-  public List<String> getVowels() {
-    List<String> vowels = new ArrayList<>(alphabet.getDefaultVowels());
-    vowels.removeAll(lettersToRemove);
-    vowels.addAll(additionalVowels);
-    return vowels;
-  }
-
-  public List<String> getConsonants() {
-    List<String> consonants = new ArrayList<>(alphabet.getDefaultConsonants());
-    consonants.removeAll(lettersToRemove);
-    consonants.addAll(additionalConsonants);
-    return consonants;
+    return Stream.concat(vowels.stream(), consonants.stream())
+        .filter(letter -> !standardLetters.contains(letter))
+        .filter(letter -> letter.length() == 1 && letter.charAt(0) > ASCII_MAX_INDEX)
+        .collect(Collectors.joining());
   }
 
   // --- Builder
@@ -108,14 +84,29 @@ public class Language {
     }
 
     public Language build() {
-      return new Language(code, name, alphabet,
-        asListNullSafe(additionalVowels),
-        asListNullSafe(additionalConsonants),
-        asListNullSafe(lettersToRemove));
+      return new Language(code, name, alphabet, buildVowels(), buildConsonants());
     }
 
-    private static List<String> asListNullSafe(String[] elements) {
-      return elements == null ? Collections.emptyList() : asList(elements);
+    private List<String> buildVowels() {
+      List<String> vowels = new ArrayList<>(alphabet.getDefaultVowels());
+      if (lettersToRemove != null) {
+        vowels.removeAll(asList(lettersToRemove));
+      }
+      if (additionalVowels != null) {
+        vowels.addAll(asList(additionalVowels));
+      }
+      return vowels;
+    }
+
+    private List<String> buildConsonants() {
+      List<String> consonants = new ArrayList<>(alphabet.getDefaultConsonants());
+      if (lettersToRemove != null) {
+        consonants.removeAll(asList(lettersToRemove));
+      }
+      if (additionalConsonants != null) {
+        consonants.addAll(asList(additionalConsonants));
+      }
+      return consonants;
     }
 
     /**
