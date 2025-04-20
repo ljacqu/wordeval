@@ -2,8 +2,9 @@ package ch.jalu.wordeval.wordgraph;
 
 import ch.jalu.wordeval.DataUtils;
 import com.google.gson.reflect.TypeToken;
-import org.jgrapht.UndirectedGraph;
-import org.jgrapht.alg.DijkstraShortestPath;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
 
@@ -57,7 +58,7 @@ public final class WordGraphService {
    * @param vertex the vertex to analyze
    * @return the neighbors of the vertex in the given graph
    */
-  public static <V, E> Set<V> getNeighbors(UndirectedGraph<V, E> graph, V vertex) {
+  public static <V, E> Set<V> getNeighbors(Graph<V, E> graph, V vertex) {
     if (!graph.containsVertex(vertex)) {
       return new HashSet<>();
     }
@@ -75,7 +76,7 @@ public final class WordGraphService {
    * @param vertex the vertex whose neighbor should be returned
    * @return the neighbor of the given vertex
    */
-  private static <V, E> V getNeighbor(UndirectedGraph<V, E> graph, E edge, V vertex) {
+  private static <V, E> V getNeighbor(Graph<V, E> graph, E edge, V vertex) {
     V source = graph.getEdgeSource(edge);
     return source.equals(vertex) ? graph.getEdgeTarget(edge) : source;
   }
@@ -90,19 +91,21 @@ public final class WordGraphService {
    * @param target the target vertex (end)
    * @return the shortest path from source to target
    */
-  public static <V, E> LinkedHashSet<V> getShortestPath(UndirectedGraph<V, E> graph, V source, V target) {
+  public static <V, E> LinkedHashSet<V> getShortestPath(Graph<V, E> graph, V source, V target) {
     if (!graph.containsVertex(source) || !graph.containsVertex(target)) {
       return new LinkedHashSet<>();
     }
 
     // TODO #67: Is there a better algorithm for an undirected graph?
-    final List<E> edges = DijkstraShortestPath.findPathBetween(graph, source, target);
-    LinkedHashSet<V> vertices = new LinkedHashSet<>();
-    vertices.add(source);
-    V lastVertex = source;
+    GraphPath<V, E> path = DijkstraShortestPath.findPathBetween(graph, source, target);
+    final List<E> edges = path == null ? null : path.getEdgeList();
     if (edges == null || pathHasDisabledEdge(graph, edges)) {
       return new LinkedHashSet<>();
     }
+
+    LinkedHashSet<V> vertices = new LinkedHashSet<>();
+    vertices.add(source);
+    V lastVertex = source;
     for (E edge : edges) {
       V newVertex = getNeighbor(graph, edge, lastVertex);
       vertices.add(newVertex);
@@ -155,14 +158,12 @@ public final class WordGraphService {
    * @param edges the list of vertices (the path) to verify
    * @return {@code true} if an edge has infinite weight, {@code false} otherwise
    */
-  public static <V, E> boolean pathHasDisabledEdge(UndirectedGraph<V, E> graph, Collection<E> edges) {
+  public static <V, E> boolean pathHasDisabledEdge(Graph<V, E> graph, Collection<E> edges) {
     return edges.stream()
-      .filter(edge -> Double.isInfinite(graph.getEdgeWeight(edge)))
-      .findAny()
-      .isPresent();
+      .anyMatch(edge -> Double.isInfinite(graph.getEdgeWeight(edge)));
   }
   
-  private static <V, E> Map<V, List<V>> convertEdgesToConnectionsMap(UndirectedGraph<V, E> graph) {
+  private static <V, E> Map<V, List<V>> convertEdgesToConnectionsMap(Graph<V, E> graph) {
     Map<V, List<V>> connections = new HashMap<>();
     for (E edge : graph.edgeSet()) {
       V source = graph.getEdgeSource(edge);

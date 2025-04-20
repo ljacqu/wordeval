@@ -1,12 +1,13 @@
 package ch.jalu.wordeval.wordgraph;
 
 import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.dictionary.DictionaryProcessor;
+import ch.jalu.wordeval.dictionary.Word;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
+import org.jgrapht.graph.SimpleWeightedGraph;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +27,7 @@ public class GraphBuilder {
   
   @Getter
   private SimpleGraph<String, DefaultWeightedEdge> graph;
-  
+
   /**
    * Builds a new ConnectionsBuilder object and computes the
    * connections for the given dictionary.
@@ -56,7 +57,7 @@ public class GraphBuilder {
   }
 
   private void constructGraph(List<String> words) {
-    graph = new SimpleGraph<>(DefaultWeightedEdge.class);
+    graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
     for (int i = 0; i < words.size(); ++i) {
       final String leftWord = words.get(i);
       graph.addVertex(leftWord);
