@@ -3,6 +3,8 @@ package ch.jalu.wordeval.appdata;
 import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
 
+import java.util.stream.Stream;
+
 import static ch.jalu.wordeval.language.Language.builder;
 
 /**
@@ -24,7 +26,7 @@ final class LanguageData {
   public static final Language DE = builder("de", "German", Alphabet.LATIN).build();
   public static final Language EN = builder("en", "English", Alphabet.LATIN)
       // TODO #66: how to deal with Y being consonant and vowel in English?
-      .additionalConsonants("y")
+      //.additionalConsonants("y")
       .build();
   public static final Language ES = builder("es", "Spanish", Alphabet.LATIN)
       .additionalConsonants("ñ")
@@ -80,29 +82,13 @@ final class LanguageData {
   }
 
   public static Language getOrNull(String code) {
-    return switch (code) {
-      case "af" -> AF;
-      case "bg" -> BG;
-      case "cs" -> CS;
-      case "da" -> DA;
-      case "de" -> DE;
-      case "en" -> EN;
-      case "es" -> ES;
-      case "eu" -> EU;
-      case "fi" -> FI;
-      case "fr" -> FR;
-      case "hu" -> HU;
-      case "it" -> IT;
-      case "nb" -> NB;
-      case "nl" -> NL;
-      case "nn" -> NN;
-      case "pl" -> PL;
-      case "pt" -> PT;
-      case "ru" -> RU;
-      case "sr-cyrl" -> SR_CYRL;
-      case "sr-latn" -> SR_LATN;
-      case "tr" -> TR;
-      default -> null;
-    };
+    return streamThroughAll()
+        .filter(lang -> code.equals(lang.getCode()))
+        .findFirst().orElse(null);
+  }
+
+  public static Stream<Language> streamThroughAll() {
+    return Stream.of(AF, BG, CS, DA, DE, EN, ES, EU, FI, FR, HU, IT,
+        NB, NL, NN, PL, PT, RU, SR_CYRL, SR_LATN, TR);
   }
 }

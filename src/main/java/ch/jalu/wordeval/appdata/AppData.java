@@ -1,6 +1,7 @@
 package ch.jalu.wordeval.appdata;
 
 import ch.jalu.wordeval.dictionary.Dictionary;
+import ch.jalu.wordeval.language.Language;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -10,6 +11,13 @@ import java.util.List;
  */
 @Component
 public class AppData {
+
+  AppData() {
+  }
+
+  public Language getLanguage(String code) {
+    return LanguageData.getOrThrow(code);
+  }
 
   public Dictionary getDictionary(String code) {
     return DictionaryData.getOrThrow(code);

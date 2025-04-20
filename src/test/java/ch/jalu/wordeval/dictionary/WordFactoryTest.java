@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.stream.Stream;
 
@@ -18,7 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * Test for {@link WordFactory}.
  */
+@SpringBootTest(classes = AppData.class)
 class WordFactoryTest {
+
+  @Autowired
+  private AppData appData;
 
   @Test
   void shouldKeepAdditionalLetters() {
@@ -92,8 +98,9 @@ class WordFactoryTest {
 
   @ParameterizedTest
   @MethodSource("getWordLanguagePairs")
-  void shouldBuildWordFormsAsExpected(String word, Language language, Word expectedWord) {
+  void shouldBuildWordFormsAsExpected(String word, String languageCode, Word expectedWord) {
     // given
+    Language language = appData.getLanguage(languageCode);
     WordFactory wordFactory = new WordFactory(language);
 
     // when
@@ -107,23 +114,16 @@ class WordFactoryTest {
   }
 
   static Stream<Arguments> getWordLanguagePairs() {
-    AppData appData = new AppData();
-    Language da = appData.getDictionary("da").getLanguage();
-    Language es = appData.getDictionary("es").getLanguage();
-    Language fr = appData.getDictionary("fr").getLanguage();
-    Language nb = appData.getDictionary("nb").getLanguage();
-    Language tr = appData.getDictionary("tr").getLanguage();
-
     return Stream.of(
-        Arguments.of("Loftshøjgård", da,
+        Arguments.of("Loftshøjgård", "da",
             createWord("Loftshøjgård", "loftshøjgård", "loftshøjgård", "loftshøjgård")),
-        Arguments.of("cartagüeño", es,
+        Arguments.of("cartagüeño", "es",
             createWord("cartagüeño", "cartagüeño", "cartagueño", "cartagueño")),
-        Arguments.of("d'être", fr,
+        Arguments.of("d'être", "fr",
             createWord("d'être", "d'être", "d'etre", "detre")),
-        Arguments.of("armégevær", nb,
+        Arguments.of("armégevær", "nb",
             createWord("armégevær", "armégevær", "armegevær", "armegevær")),
-        Arguments.of("İnanç'la", tr,
+        Arguments.of("İnanç'la", "tr",
             createWord("İnanç'la", "inanç'la", "inanç'la", "inançla"))
     );
   }

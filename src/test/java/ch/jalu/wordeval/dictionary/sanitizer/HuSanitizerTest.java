@@ -1,9 +1,9 @@
 package ch.jalu.wordeval.dictionary.sanitizer;
 
 import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.dictionary.DictionaryProcessor;
-import org.junit.jupiter.api.BeforeAll;
+import ch.jalu.wordeval.dictionary.Word;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
@@ -17,11 +17,11 @@ import static org.hamcrest.Matchers.hasItems;
  */
 class HuSanitizerTest extends AbstractSanitizerTest {
 
-  private static Dictionary huDictionary;
+  private Dictionary huDictionary;
 
-  @BeforeAll
-  static void initData() {
-    huDictionary = createDictionary("hu");
+  @BeforeEach
+  void initDictionary() {
+    huDictionary = getDictionary("hu");
   }
 
   @Test

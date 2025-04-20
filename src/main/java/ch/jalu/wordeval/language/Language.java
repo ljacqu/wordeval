@@ -1,5 +1,6 @@
 package ch.jalu.wordeval.language;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -23,8 +24,11 @@ public class Language {
   private final String code;
   private final String name;
   private final Alphabet alphabet;
+  @Getter(AccessLevel.PACKAGE) // Use #getVowels
   private final List<String> additionalVowels;
+  @Getter(AccessLevel.PACKAGE) // Use #getConsonants
   private final List<String> additionalConsonants;
+  @Getter(AccessLevel.PRIVATE)
   private final List<String> lettersToRemove;
 
   @Getter(lazy = true)

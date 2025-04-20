@@ -25,12 +25,12 @@ public class DictionaryEntriesPrinter extends SpringContainedRunner {
 
   @Override
   public void run(String... args) {
-    String language = "de-de";
+    String code = "de-de";
 
-    Dictionary dictionary = appData.getDictionary(language);
+    Dictionary dictionary = appData.getDictionary(code);
 
     WordEntries words = DictionaryProcessor.processWordsForDebug(dictionary);
-    System.out.println("Language: " + language);
+    System.out.println("Language: " + code);
     if (SHOW_INCLUDED_WORDS) {
       int[] skipAndLimit = calculateSkipAndLimitValues();
       words.includedLines().stream()
@@ -41,7 +41,7 @@ public class DictionaryEntriesPrinter extends SpringContainedRunner {
 
     if (SHOW_SKIPPED_WORDS) {
       System.out.println();
-      System.out.println("Skipped lines (" + language + ")");
+      System.out.println("Skipped lines (" + code + ")");
       words.skippedLines().forEach(System.out::println);
     }
   }
