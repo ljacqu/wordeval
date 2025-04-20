@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Profile;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.Map;
  */
 @Slf4j
 @SpringBootApplication
+@Profile("wordeval")
 public class WordEvalMain implements CommandLineRunner {
 
   @Autowired
@@ -36,7 +38,9 @@ public class WordEvalMain implements CommandLineRunner {
    * @param args .
    */
   public static void main(String[] args) {
-    SpringApplication.run(WordEvalMain.class, args);
+    SpringApplication app = new SpringApplication(WordEvalMain.class);
+    app.setAdditionalProfiles("wordeval");
+    app.run(args);
   }
 
   @Override

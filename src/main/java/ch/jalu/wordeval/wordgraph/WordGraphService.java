@@ -6,6 +6,8 @@ import org.jgrapht.UndirectedGraph;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -21,9 +23,11 @@ import java.util.stream.Collectors;
 /**
  * Service for word graphs.
  */
-public final class WordGraphService {
-  
-  private static DataUtils dataUtils = new DataUtils();
+@Service
+public class WordGraphService {
+
+  @Autowired
+  private DataUtils dataUtils;
   
   private WordGraphService() {
   }
@@ -33,7 +37,7 @@ public final class WordGraphService {
    * @param filename the filename to write the graph to
    * @param graph the graph to store
    */
-  public static void exportConnections(String filename, SimpleGraph<String, DefaultWeightedEdge> graph) {
+  public void exportConnections(String filename, SimpleGraph<String, DefaultWeightedEdge> graph) {
     Map<String, List<String>> connections = convertEdgesToConnectionsMap(graph);
     dataUtils.writeToFile(filename, dataUtils.toJson(connections));
   }
@@ -43,9 +47,9 @@ public final class WordGraphService {
    * @param filename the filename to read the data from
    * @return the stored graph
    */
-  public static SimpleGraph<String, DefaultWeightedEdge> importConnections(String filename) {
+  public SimpleGraph<String, DefaultWeightedEdge> importConnections(String filename) {
     Type type = new TypeToken<Map<String, List<String>>>(){}.getType();
-    Map<String, List<String>> connections = dataUtils.fromJson(DataUtils.readFile(filename), type);
+    Map<String, List<String>> connections = dataUtils.fromJson(dataUtils.readFile(filename), type);
     return convertConnectionsMapToGraph(connections);
   }
   
@@ -90,7 +94,7 @@ public final class WordGraphService {
    * @param target the target vertex (end)
    * @return the shortest path from source to target
    */
-  public static <V, E> LinkedHashSet<V> getShortestPath(UndirectedGraph<V, E> graph, V source, V target) {
+  public <V, E> LinkedHashSet<V> getShortestPath(UndirectedGraph<V, E> graph, V source, V target) {
     if (!graph.containsVertex(source) || !graph.containsVertex(target)) {
       return new LinkedHashSet<>();
     }
@@ -121,7 +125,7 @@ public final class WordGraphService {
    * @param vertex the vertex to disable
    * @return {@code true} if the vertex exists, {@code false} otherwise
    */
-  public static <V, E> boolean disableVertexEdges(SimpleGraph<V, E> graph, V vertex) {
+  public <V, E> boolean disableVertexEdges(SimpleGraph<V, E> graph, V vertex) {
     return setWeightForAllEdges(graph, vertex, Double.POSITIVE_INFINITY);
   }
   
@@ -133,11 +137,11 @@ public final class WordGraphService {
    * @param vertex the vertex to enable
    * @return {@code true} if the vertex exists, {@code false} otherwise
    */
-  public static <V, E> boolean enableVertexEdges(SimpleGraph<V, E> graph, V vertex) {
+  public <V, E> boolean enableVertexEdges(SimpleGraph<V, E> graph, V vertex) {
     return setWeightForAllEdges(graph, vertex, 1);
   }
   
-  private static <V, E> boolean setWeightForAllEdges(SimpleGraph<V, E> graph, V vertex, double weight) {
+  private <V, E> boolean setWeightForAllEdges(SimpleGraph<V, E> graph, V vertex, double weight) {
     if (!graph.containsVertex(vertex)) {
       return false;
     }
@@ -155,7 +159,7 @@ public final class WordGraphService {
    * @param edges the list of vertices (the path) to verify
    * @return {@code true} if an edge has infinite weight, {@code false} otherwise
    */
-  public static <V, E> boolean pathHasDisabledEdge(UndirectedGraph<V, E> graph, Collection<E> edges) {
+  public <V, E> boolean pathHasDisabledEdge(UndirectedGraph<V, E> graph, Collection<E> edges) {
     return edges.stream()
       .filter(edge -> Double.isInfinite(graph.getEdgeWeight(edge)))
       .findAny()

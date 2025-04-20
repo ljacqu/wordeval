@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.util.List;
 /**
  * Wrapper for interaction with the file system and JSON operations.
  */
+@Component
 @NoArgsConstructor
 public class DataUtils {
   
@@ -70,7 +72,7 @@ public class DataUtils {
    * @param filename the name of the file to read
    * @return the contents of the file
    */
-  public static String readFile(String filename) {
+  public String readFile(String filename) {
     try {
       return Files.readString(Paths.get(filename));
     } catch (IOException e) {
