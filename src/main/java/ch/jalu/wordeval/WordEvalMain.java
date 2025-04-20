@@ -2,15 +2,15 @@ package ch.jalu.wordeval;
 
 import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.dictionary.Dictionary;
+import ch.jalu.wordeval.dictionary.DictionaryProcessor;
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.export.ExportService;
 import ch.jalu.wordeval.evaluators.processing.EvaluatorInitializer;
 import ch.jalu.wordeval.evaluators.processing.EvaluatorProcessor;
 import ch.jalu.wordeval.language.Language;
-import ch.jalu.wordeval.dictionary.DictionaryProcessor;
 import ch.jalu.wordeval.util.TimeLogger;
 import com.google.common.collect.ImmutableMap;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * Entry point of the <i>wordeval</i> application: generates JSON export of the evaluator results.
  */
-@Log4j2
+@Slf4j
 public final class WordEvalMain {
 
   private final AppData appData;

@@ -2,7 +2,7 @@ package ch.jalu.wordeval;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.Arrays;
@@ -14,7 +14,7 @@ import java.util.Set;
  * repository at https://github.com/titoBouzout/Dictionaries
  * to the language code of the dictionary, as used in <i>wordeval</i>.
  */
-@Log4j2
+@Slf4j
 public class DictionaryRenamer {
   
   private static final File DICT_DIRECTORY = new File("./dict");

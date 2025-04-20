@@ -4,7 +4,7 @@ import ch.jalu.wordeval.evaluators.AllWordsEvaluator;
 import ch.jalu.wordeval.evaluators.PostEvaluator;
 import ch.jalu.wordeval.language.Language;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
@@ -20,7 +20,7 @@ import static com.google.common.collect.Lists.newArrayList;
 /**
  * Service for initializing all available evaluators.
  */
-@Log4j2
+@Slf4j
 public class EvaluatorInitializer {
 
   private static final String EVALUATOR_PACKAGE = "ch.jalu.wordeval.evaluators";

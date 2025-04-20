@@ -1,10 +1,10 @@
 package ch.jalu.wordeval.wordgraph;
 
 import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.dictionary.DictionaryProcessor;
+import ch.jalu.wordeval.dictionary.Word;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
 
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * Finds which words have a Damerau-Levenshtein distance of 1 and saves these
  * connections, forming a graph over the dictionary words.
  */
-@Log4j2
+@Slf4j
 public class GraphBuilder {
   
   /** 

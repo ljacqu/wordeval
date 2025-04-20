@@ -4,7 +4,7 @@ import ch.jalu.wordeval.DataUtils;
 import ch.jalu.wordeval.ReflectionTestUtil;
 import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.dictionary.sanitizer.Sanitizer;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Method;
@@ -16,7 +16,7 @@ import java.util.Scanner;
  * Prints the words of a dictionary which were skipped because they were
  * recognized as a Roman numeral.
  */
-@Log4j2
+@Slf4j
 public final class SkippedRomanNumerals {
 
   private SkippedRomanNumerals() {
