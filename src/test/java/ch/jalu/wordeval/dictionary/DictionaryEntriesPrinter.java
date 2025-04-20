@@ -1,23 +1,29 @@
 package ch.jalu.wordeval.dictionary;
 
 import ch.jalu.wordeval.appdata.AppData;
-import ch.jalu.wordeval.runners.DictionaryProcessor;
-import ch.jalu.wordeval.runners.DictionaryProcessor.WordEntries;
+import ch.jalu.wordeval.dictionary.DictionaryProcessor.WordEntries;
 
-public class DictionaryDebug {
+/**
+ * Prints the lines of the dictionary (configurable below) as to inspect which
+ * lines are removed or considered.
+ */
+public final class DictionaryEntriesPrinter {
 
   private static final boolean SHOW_INCLUDED_WORDS = true;
   private static final boolean SHOW_SKIPPED_WORDS = false;
   // Calculates pages of 2000 entries. Set to 0 to skip.
   private static final int INCLUDED_WORDS_PAGE = 1;
 
+  private DictionaryEntriesPrinter() {
+  }
+
   public static void main(String... args) {
-    String language = "fr";
+    String language = "de-de";
 
     AppData appData = new AppData();
     Dictionary dictionary = appData.getDictionary(language);
 
-    WordEntries words = DictionaryProcessor.getSkippedLines(dictionary);
+    WordEntries words = DictionaryProcessor.processWordsForDebug(dictionary);
     System.out.println("Language: " + language);
     if (SHOW_INCLUDED_WORDS) {
       int[] skipAndLimit = calculateSkipAndLimitValues();

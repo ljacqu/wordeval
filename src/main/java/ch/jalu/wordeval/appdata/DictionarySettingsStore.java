@@ -25,7 +25,7 @@ class DictionarySettingsStore extends ObjectStore<String, Dictionary> {
       newDictionary("af").delimiters('/').skipSequences(".", "µ", "Ð", "ø").build(),
       newDictionary("bg").delimiters('/').build(),
       newDictionary("da").delimiters('/').build(),
-      newDictionary("de-de").delimiters('/', '#').build(),
+      newDictionary("de-de").delimiters('/', '#').skipSequences("°").build(),
       newDictionary("en-us").delimiters('/').build(),
       newDictionary("en-test").delimiters('/').build(),
       // TODO #62: Some Basque entries have _ but most parts seem to be present alone
@@ -33,7 +33,7 @@ class DictionarySettingsStore extends ObjectStore<String, Dictionary> {
       newDictionary("eu").delimiters('/').skipSequences(".", "+", "_").build(),
       newDictionary("fr").sanitizerCreator(FrSanitizer::new)
           .delimiters('/', '\t')
-          .skipSequences(".", "&", "µ", "₂", "₃", "₄", "₅","₆","₇","₈","₉","ᵈ","ᵉ","ᵍ","ˡ","ᵐ","ʳ","ˢ")
+          .skipSequences(".", "&", "µ", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉", "ᵈ", "ᵉ", "ᵍ", "ˡ", "ᵐ", "ʳ", "ˢ")
           .build(),
       newDictionary("hu").sanitizerCreator(HuSanitizer::new).delimiters('/', '\t').skipSequences(".", "+", "±", "ø", "ʻ", "’", "­").build(),
       newDictionary("it").sanitizerCreator(ItSanitizer::new).delimiters('/').build(),

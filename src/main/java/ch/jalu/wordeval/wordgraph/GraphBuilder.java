@@ -2,7 +2,7 @@ package ch.jalu.wordeval.wordgraph;
 
 import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.runners.DictionaryProcessor;
+import ch.jalu.wordeval.dictionary.DictionaryProcessor;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.jgrapht.graph.DefaultWeightedEdge;

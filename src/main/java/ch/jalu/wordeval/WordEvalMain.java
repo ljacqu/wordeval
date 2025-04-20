@@ -7,7 +7,7 @@ import ch.jalu.wordeval.evaluators.export.ExportService;
 import ch.jalu.wordeval.evaluators.processing.EvaluatorInitializer;
 import ch.jalu.wordeval.evaluators.processing.EvaluatorProcessor;
 import ch.jalu.wordeval.language.Language;
-import ch.jalu.wordeval.runners.DictionaryProcessor;
+import ch.jalu.wordeval.dictionary.DictionaryProcessor;
 import ch.jalu.wordeval.util.TimeLogger;
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.log4j.Log4j2;

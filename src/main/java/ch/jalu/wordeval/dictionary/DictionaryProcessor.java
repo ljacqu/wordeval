@@ -1,9 +1,6 @@
-package ch.jalu.wordeval.runners;
+package ch.jalu.wordeval.dictionary;
 
 import ch.jalu.wordeval.DataUtils;
-import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.dictionary.WordFactory;
 import ch.jalu.wordeval.dictionary.sanitizer.Sanitizer;
 import ch.jalu.wordeval.language.Language;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +16,12 @@ public final class DictionaryProcessor {
   private DictionaryProcessor() {
   }
 
+  /**
+   * Reads all words from the dictionary's file and sanitizes them.
+   *
+   * @param dictionary the dictionary to load
+   * @return all words of the dictionary
+   */
   public static List<Word> readAllWords(Dictionary dictionary) {
     return processAllWords(dictionary, DataUtils.readAllLines(dictionary.getFile()));
   }
@@ -35,7 +38,7 @@ public final class DictionaryProcessor {
         .toList();
   }
 
-  public static WordEntries getSkippedLines(Dictionary dictionary) {
+  public static WordEntries processWordsForDebug(Dictionary dictionary) {
     final Sanitizer sanitizer = dictionary.buildSanitizer();
     List<String> skippedLines = new ArrayList<>();
     List<String> includedLines = new ArrayList<>();

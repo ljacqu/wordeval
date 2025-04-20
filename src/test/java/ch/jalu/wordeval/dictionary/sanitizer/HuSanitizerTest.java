@@ -2,7 +2,7 @@ package ch.jalu.wordeval.dictionary.sanitizer;
 
 import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.runners.DictionaryProcessor;
+import ch.jalu.wordeval.dictionary.DictionaryProcessor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

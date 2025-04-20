@@ -1,14 +1,11 @@
-package ch.jalu.wordeval.helpertask;
+package ch.jalu.wordeval.dictionary;
 
 import ch.jalu.wordeval.appdata.AppData;
-import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
-import ch.jalu.wordeval.runners.DictionaryProcessor;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -18,13 +15,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Utility task to verify how well a dictionary is being sanitized.
+ * Utility task to verify how well a dictionary is being sanitized based on the characters of the words
+ * that were loaded.
  */
-public class DictionarySanitationTest {
+public final class DictionarySanitationCharChecker {
 
   private static final AppData appData = new AppData();
 
-  private DictionarySanitationTest() {
+  private DictionarySanitationCharChecker() {
   }
 
   public static void main(String... args) {
@@ -56,9 +54,12 @@ public class DictionarySanitationTest {
   }
   
   private static char[] createStringOfAllowedChars(Language language) {
-    List<String> additions = language.getAlphabet() == Alphabet.CYRILLIC
-      ? Arrays.asList("ь", "ъ")
-      : Collections.emptyList();
+    List<String> additions = new ArrayList<>();
+    if (language.getAlphabet() == Alphabet.CYRILLIC) {
+      additions.addAll(List.of("ь", "ъ"));
+    } else if ("de".equals(language.getCode())) {
+      additions.add("ß");
+    }
 
     String allowedChars = Stream.of(additions, language.getVowels(), language.getConsonants())
       .flatMap(Collection::stream)
