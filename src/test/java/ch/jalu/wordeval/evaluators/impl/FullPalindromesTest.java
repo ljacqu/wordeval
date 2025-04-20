@@ -1,7 +1,7 @@
 package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.TestWord;
-import ch.jalu.wordeval.evaluators.processing.AllWordsEvaluatorProvider;
+import ch.jalu.wordeval.evaluators.processing.EvaluatorCollection;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimaps;
@@ -29,10 +29,10 @@ class FullPalindromesTest extends AbstractEvaluatorTest {
   @Test
   void shouldFindFullPalindromes() {
     // given
-    AllWordsEvaluatorProvider evaluatorProvider = createProviderWithPalindromesResult();
+    EvaluatorCollection evaluatorCollection = createCollectionWithPalindromesResult();
 
     // when
-    fullPalindromes.evaluate(evaluatorProvider);
+    fullPalindromes.evaluate(evaluatorCollection);
 
     // then
     Map<Double, Set<String>> wordsByScore = groupByScore(fullPalindromes.getResults());
@@ -41,7 +41,7 @@ class FullPalindromesTest extends AbstractEvaluatorTest {
     assertThat(wordsByScore.get(10.0), containsInAnyOrder("lagerregal"));
   }
 
-  private static AllWordsEvaluatorProvider createProviderWithPalindromesResult() {
+  private static EvaluatorCollection createCollectionWithPalindromesResult() {
     SetMultimap<String, String> result = HashMultimap.create();
     result.putAll("atta", Set.of("attack", "attacked", "battalion"));
     result.putAll("ette", Set.of("better", "letter"));
@@ -58,6 +58,6 @@ class FullPalindromesTest extends AbstractEvaluatorTest {
 
     Palindromes palindromesEvaluator = mock(Palindromes.class);
     given(palindromesEvaluator.getResults()).willReturn(wordsWithKey);
-    return new AllWordsEvaluatorProvider(List.of(palindromesEvaluator));
+    return EvaluatorCollection.forSingleWordsEvaluator(palindromesEvaluator);
   }
 }

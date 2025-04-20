@@ -4,8 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Type;
@@ -16,39 +17,16 @@ import java.util.List;
 /**
  * Wrapper for interaction with the file system and JSON operations.
  */
+@Component
 @NoArgsConstructor
 public class DataUtils {
   
   @Getter
-  private String root = "";
-  
-  @Getter
-  private boolean usePrettyPrint = false;
+  @Setter
+  private boolean jsonPrettyPrint;
   
   @Getter(lazy = true)
   private final Gson gson = createGson();
-  
-  /**
-   * Initializes an instance and sets whether to use JSON Pretty Print or not.
-   *
-   * @param usePrettyPrint JSON pretty print setting
-   */
-  public DataUtils(boolean usePrettyPrint) {
-    this.usePrettyPrint = usePrettyPrint;
-  }
-  
-  /**
-   * Sets the root path (the path to append to file references).
-   *
-   * @param root the root to append to file paths
-   */
-  public void setRoot(String root) {
-    if (!root.isEmpty() && !root.endsWith("/") && !root.endsWith(File.separator)) {
-      this.root = root + File.separator;
-    } else {
-      this.root = root; 
-    }
-  }
   
   /**
    * Writes the content to the given file.
@@ -58,7 +36,7 @@ public class DataUtils {
    */
   public void writeToFile(String filename, String content) {
     try {
-      Files.write(Paths.get(root + filename), content.getBytes());
+      Files.write(Paths.get(filename), content.getBytes());
     } catch (IOException e) {
       throw new UncheckedIOException("Could not write to file '" + filename + "'", e);
     }
@@ -70,7 +48,7 @@ public class DataUtils {
    * @param filename the name of the file to read
    * @return the contents of the file
    */
-  public static String readFile(String filename) {
+  public String readFile(String filename) {
     try {
       return Files.readString(Paths.get(filename));
     } catch (IOException e) {
@@ -84,7 +62,7 @@ public class DataUtils {
    * @param filename the name of the file to read
    * @return the file's contents by line
    */
-  public static List<String> readAllLines(String filename) {
+  public List<String> readAllLines(String filename) {
     try {
       return Files.readAllLines(Paths.get(filename));
     } catch (IOException e) {
@@ -115,7 +93,7 @@ public class DataUtils {
   }
   
   private Gson createGson() {
-    if (usePrettyPrint) {
+    if (jsonPrettyPrint) {
       return new GsonBuilder().setPrettyPrinting().create();
     }
     return new Gson();

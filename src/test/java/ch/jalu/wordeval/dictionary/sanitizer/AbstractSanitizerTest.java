@@ -2,11 +2,15 @@ package ch.jalu.wordeval.dictionary.sanitizer;
 
 import ch.jalu.wordeval.TestUtil;
 import ch.jalu.wordeval.appdata.AppData;
+import ch.jalu.wordeval.config.BaseConfiguration;
 import ch.jalu.wordeval.dictionary.Dictionary;
+import ch.jalu.wordeval.dictionary.DictionaryService;
 import com.google.common.collect.Sets;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -16,7 +20,14 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 /**
  * Common type for dictionary sanitizer tests.
  */
+@SpringJUnitConfig(classes = BaseConfiguration.class)
 abstract class AbstractSanitizerTest {
+
+  @Autowired
+  private AppData appData;
+
+  @Autowired
+  protected DictionaryService dictionaryService;
 
   /**
    * Gets the dictionary with the given code. Throws an exception if it does not exist.
@@ -24,8 +35,8 @@ abstract class AbstractSanitizerTest {
    * @param code the language code to look up
    * @return the specified dictionary
    */
-  protected static Dictionary createDictionary(String code) {
-    return new AppData().getDictionary(code);
+  protected Dictionary getDictionary(String code) {
+    return appData.getDictionary(code);
   }
 
   /**

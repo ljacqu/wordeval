@@ -1,6 +1,6 @@
 package ch.jalu.wordeval.util;
 
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 /**
  * Logs messages with the elapsed time in seconds since the last message.

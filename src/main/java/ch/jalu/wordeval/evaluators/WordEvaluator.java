@@ -1,12 +1,11 @@
 package ch.jalu.wordeval.evaluators;
 
 import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.evaluators.result.EvaluationResult;
 
 import java.util.Collection;
 
 /**
- * Simple evaluator which produces an {@link EvaluationResult} object for each {@link Word} it is passed.
+ * Simple evaluator which evaluates words individually.
  */
 public interface WordEvaluator extends AllWordsEvaluator {
 
@@ -16,7 +15,7 @@ public interface WordEvaluator extends AllWordsEvaluator {
   }
 
   /**
-   * Evaluates the given word object.
+   * Processes the given word.
    *
    * @param word the word to process
    */

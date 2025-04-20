@@ -1,30 +1,39 @@
 package ch.jalu.wordeval.dictionary;
 
 import ch.jalu.wordeval.appdata.AppData;
-import ch.jalu.wordeval.dictionary.DictionaryProcessor.WordEntries;
+import ch.jalu.wordeval.config.SpringContainedRunner;
+import ch.jalu.wordeval.dictionary.DictionaryService.WordEntries;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Prints the lines of the dictionary (configurable below) as to inspect which
  * lines are removed or considered.
  */
-public final class DictionaryEntriesPrinter {
+public class DictionaryEntriesPrinter extends SpringContainedRunner {
 
   private static final boolean SHOW_INCLUDED_WORDS = true;
   private static final boolean SHOW_SKIPPED_WORDS = false;
   // Calculates pages of 2000 entries. Set to 0 to skip.
   private static final int INCLUDED_WORDS_PAGE = 1;
 
-  private DictionaryEntriesPrinter() {
-  }
+  @Autowired
+  private AppData appData;
+
+  @Autowired
+  private DictionaryService dictionaryService;
 
   public static void main(String... args) {
-    String language = "de-de";
+    runApplication(DictionaryEntriesPrinter.class, args);
+  }
 
-    AppData appData = new AppData();
-    Dictionary dictionary = appData.getDictionary(language);
+  @Override
+  public void run(String... args) {
+    String code = "de-de";
 
-    WordEntries words = DictionaryProcessor.processWordsForDebug(dictionary);
-    System.out.println("Language: " + language);
+    Dictionary dictionary = appData.getDictionary(code);
+
+    WordEntries words = dictionaryService.processWordsForDebug(dictionary);
+    System.out.println("Language: " + code);
     if (SHOW_INCLUDED_WORDS) {
       int[] skipAndLimit = calculateSkipAndLimitValues();
       words.includedLines().stream()
@@ -35,7 +44,7 @@ public final class DictionaryEntriesPrinter {
 
     if (SHOW_SKIPPED_WORDS) {
       System.out.println();
-      System.out.println("Skipped lines (" + language + ")");
+      System.out.println("Skipped lines (" + code + ")");
       words.skippedLines().forEach(System.out::println);
     }
   }

@@ -1,19 +1,16 @@
 package ch.jalu.wordeval.language;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static ch.jalu.wordeval.TestUtil.newLanguage;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 
 
@@ -27,19 +24,19 @@ class LanguageTest {
     Language lang = newLanguage("zxx").build();
 
     assertThat(lang.getCode(), equalTo("zxx"));
-    assertThat(lang.getAdditionalConsonants(), empty());
-    assertThat(lang.getAdditionalVowels(), empty());
+    assertThat(lang.getConsonants(), equalTo(Alphabet.LATIN.getDefaultConsonants()));
+    assertThat(lang.getVowels(), equalTo(Alphabet.LATIN.getDefaultVowels()));
   }
 
   @Test
-  void shouldNotHaveLettersToPreserveIfNonApplicable() {
+  void shouldIncludeAdditionalVowelsAndConsonants() {
     Language lang = newLanguage("zxx")
         .additionalVowels("ij")
         .additionalConsonants("cs", "ny")
         .build();
 
-    assertThat(lang.getAdditionalVowels(), hasSize(1));
-    assertThat(lang.getAdditionalConsonants(), hasSize(2));
+    assertThat(lang.getVowels(), contains("a", "e", "i", "o", "u", "y", "ij"));
+    assertThat(lang.getConsonants(), hasItems("f", "g", "h", "w", "x", "z", "cs", "ny")); // just check some samples
   }
   
   @Test
@@ -48,7 +45,7 @@ class LanguageTest {
       .additionalConsonants("cs", "þ", "y")
       .additionalVowels("w", "eu", "ø", "öy").build();
 
-    assertThat(toCharList(lang.getCharsToPreserve()), containsInAnyOrder('þ', 'ø'));
+    assertThat(lang.getCharsToPreserve(), equalTo("øþ"));
   }
 
   @Test
@@ -92,11 +89,7 @@ class LanguageTest {
       .additionalConsonants("tt", "ff", "gg")
       .additionalVowels("ii", "w", "øu").build();
 
-    assertThat(toCharList(lang1.getCharsToPreserve()), empty());
-    assertThat(toCharList(lang2.getCharsToPreserve()), empty());
-  }
-
-  private static List<Character> toCharList(String s) {
-    return Arrays.asList(ArrayUtils.toObject(s.toCharArray()));
+    assertThat(lang1.getCharsToPreserve(), emptyString());
+    assertThat(lang2.getCharsToPreserve(), emptyString());
   }
 }

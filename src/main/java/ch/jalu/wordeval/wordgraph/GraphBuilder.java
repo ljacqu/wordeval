@@ -1,22 +1,18 @@
 package ch.jalu.wordeval.wordgraph;
 
-import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.dictionary.DictionaryProcessor;
-import ch.jalu.wordeval.dictionary.Word;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Finds which words have a Damerau-Levenshtein distance of 1 and saves these
  * connections, forming a graph over the dictionary words.
  */
-@Log4j2
+@Slf4j
 public class GraphBuilder {
   
   /** 
@@ -27,16 +23,6 @@ public class GraphBuilder {
   
   @Getter
   private SimpleGraph<String, DefaultWeightedEdge> graph;
-
-  /**
-   * Builds a new ConnectionsBuilder object and computes the
-   * connections for the given dictionary.
-   *
-   * @param dictionary the dictionary
-   */
-  public GraphBuilder(Dictionary dictionary) {
-    this(getDictionaryWords(dictionary));
-  }
   
   /**
    * Builds a new ConnectionsBuilder object and computes the
@@ -46,14 +32,6 @@ public class GraphBuilder {
    */
   public GraphBuilder(List<String> words) {
     constructGraph(words);
-  }
-  
-  private static List<String> getDictionaryWords(Dictionary dictionary) {
-    return DictionaryProcessor.readAllWords(dictionary).stream()
-      .map(Word::getRaw)
-      .distinct()
-      .sorted()
-      .collect(Collectors.toList());
   }
 
   private void constructGraph(List<String> words) {
@@ -76,5 +54,4 @@ public class GraphBuilder {
     }
     log.info("Processed total {} words", words.size());
   }
-
 }

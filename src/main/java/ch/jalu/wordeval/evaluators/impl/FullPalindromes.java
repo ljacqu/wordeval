@@ -3,7 +3,7 @@ package ch.jalu.wordeval.evaluators.impl;
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.PostEvaluator;
 import ch.jalu.wordeval.evaluators.export.EvaluatorExportUtil;
-import ch.jalu.wordeval.evaluators.processing.AllWordsEvaluatorProvider;
+import ch.jalu.wordeval.evaluators.processing.EvaluatorCollection;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.evaluators.result.WordWithScore;
 import com.google.common.collect.ListMultimap;
@@ -26,14 +26,13 @@ public class FullPalindromes implements PostEvaluator {
   private final List<WordWithScore> results = new ArrayList<>();
 
   @Override
-  public void evaluate(AllWordsEvaluatorProvider allWordsEvaluatorProvider) {
-    List<WordWithKey> palindromeResults =
-        allWordsEvaluatorProvider.getEvaluator(Palindromes.class).getResults();
+  public void evaluate(EvaluatorCollection evaluators) {
+    List<WordWithKey> palindromeResults = evaluators.getWordEvaluatorOrThrow(Palindromes.class).getResults();
 
     for (WordWithKey entry : palindromeResults) {
-      Word word = entry.getWord();
+      Word word = entry.word();
       int wordLength = word.getWithoutAccentsWordCharsOnly().length();
-      if (wordLength == entry.getKey().length()) {
+      if (wordLength == entry.key().length()) {
         results.add(new WordWithScore(word, wordLength));
       }
     }
@@ -47,16 +46,16 @@ public class FullPalindromes implements PostEvaluator {
   @Override
   public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
     List<WordWithScore> sortedResult = results.stream()
-        .sorted(Comparator.comparing(WordWithScore::getScore).reversed())
+        .sorted(Comparator.comparing(WordWithScore::score).reversed())
         .toList();
 
     Set<Double> uniqueValues = new HashSet<>();
     ListMultimap<Object, Object> filteredResults = EvaluatorExportUtil.newListMultimap();
     for (WordWithScore wordWithScore : sortedResult) {
-      if (uniqueValues.add(wordWithScore.getScore()) && uniqueValues.size() > topScores) {
+      if (uniqueValues.add(wordWithScore.score()) && uniqueValues.size() > topScores) {
         break;
       }
-      filteredResults.put((int) wordWithScore.getScore(), wordWithScore.getWord().getRaw());
+      filteredResults.put((int) wordWithScore.score(), wordWithScore.word().getRaw());
       if (filteredResults.size() >= maxLimit) {
         break;
       }

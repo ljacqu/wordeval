@@ -1,10 +1,14 @@
 package ch.jalu.wordeval.dictionary;
 
+import ch.jalu.wordeval.TestUtil;
 import ch.jalu.wordeval.appdata.AppData;
+import ch.jalu.wordeval.config.SpringContainedRunner;
 import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -18,14 +22,20 @@ import java.util.stream.Stream;
  * Utility task to verify how well a dictionary is being sanitized based on the characters of the words
  * that were loaded.
  */
-public final class DictionarySanitationCharChecker {
+public class DictionarySanitationCharChecker extends SpringContainedRunner {
 
-  private static final AppData appData = new AppData();
+  @Autowired
+  private AppData appData;
 
-  private DictionarySanitationCharChecker() {
+  @Autowired
+  private DictionaryService dictionaryService;
+
+  public static void main(String[] args) {
+    runApplication(DictionarySanitationCharChecker.class, args);
   }
 
-  public static void main(String... args) {
+  @Override
+  public void run(String... args) {
     Scanner sc = new Scanner(System.in);
     System.out.println("Enter dictionary code to verify (or empty for all):");
     String dictCode = sc.nextLine();
@@ -36,7 +46,14 @@ public final class DictionarySanitationCharChecker {
         : Collections.singletonList(appData.getDictionary(dictCode.trim()));
     
     for (Dictionary dictionary : dictionaries) {
-      Set<String> badWords = findBadWords(dictionary);
+      if (!TestUtil.doesDictionaryFileExist(dictionary)) {
+        System.out.println("Skipping '" + dictionary.getIdentifier() + "': file does not exist");
+        continue;
+      }
+
+      String allowedChars = createStringOfAllowedChars(dictionary.getLanguage());
+      System.out.println("Checking '" + dictionary.getIdentifier() + "' (" + allowedChars + ")");
+      Set<String> badWords = findBadWords(dictionary, allowedChars.toCharArray());
       if (!badWords.isEmpty()) {
         System.err.println(dictionary.getIdentifier() + ": " + badWords);
       } else {
@@ -45,15 +62,14 @@ public final class DictionarySanitationCharChecker {
     }
   }
 
-  private static Set<String> findBadWords(Dictionary dictionary) {
-    char[] allowedChars = createStringOfAllowedChars(dictionary.getLanguage());
-    return DictionaryProcessor.readAllWords(dictionary).stream()
+  private Set<String> findBadWords(Dictionary dictionary, char[] allowedChars) {
+    return dictionaryService.readAllWords(dictionary).stream()
       .map(Word::getWithoutAccentsWordCharsOnly)
       .filter(word -> !StringUtils.containsOnly(word, allowedChars))
       .collect(Collectors.toSet());
   }
   
-  private static char[] createStringOfAllowedChars(Language language) {
+  private static String createStringOfAllowedChars(Language language) {
     List<String> additions = new ArrayList<>();
     if (language.getAlphabet() == Alphabet.CYRILLIC) {
       additions.addAll(List.of("ь", "ъ"));
@@ -61,11 +77,12 @@ public final class DictionarySanitationCharChecker {
       additions.add("ß");
     }
 
-    String allowedChars = Stream.of(additions, language.getVowels(), language.getConsonants())
+    Collator collator = Collator.getInstance(language.getLocale());
+    return Stream.of(additions, language.getVowels(), language.getConsonants())
       .flatMap(Collection::stream)
       .filter(letter -> letter.length() == 1)
       .distinct()
+      .sorted(collator::compare)
       .collect(Collectors.joining());
-    return allowedChars.toCharArray();
   }
 }

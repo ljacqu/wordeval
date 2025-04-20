@@ -1,16 +1,18 @@
 package ch.jalu.wordeval;
 
 import ch.jalu.wordeval.appdata.AppData;
+import ch.jalu.wordeval.config.SpringContainedRunner;
 import ch.jalu.wordeval.dictionary.Dictionary;
+import ch.jalu.wordeval.dictionary.DictionaryService;
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.export.ExportService;
-import ch.jalu.wordeval.evaluators.processing.EvaluatorInitializer;
-import ch.jalu.wordeval.evaluators.processing.EvaluatorProcessor;
+import ch.jalu.wordeval.evaluators.processing.EvaluatorCollection;
+import ch.jalu.wordeval.evaluators.processing.EvaluatorService;
 import ch.jalu.wordeval.language.Language;
-import ch.jalu.wordeval.dictionary.DictionaryProcessor;
 import ch.jalu.wordeval.util.TimeLogger;
 import com.google.common.collect.ImmutableMap;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,14 +21,20 @@ import java.util.Map;
 /**
  * Entry point of the <i>wordeval</i> application: generates JSON export of the evaluator results.
  */
-@Log4j2
-public final class WordEvalMain {
+@Slf4j
+public class WordEvalMain extends SpringContainedRunner {
 
-  private final AppData appData;
+  @Autowired
+  private AppData appData;
 
-  private WordEvalMain() {
-    appData = new AppData();
-  }
+  @Autowired
+  private DictionaryService dictionaryService;
+
+  @Autowired
+  private EvaluatorService evaluatorService;
+
+  @Autowired
+  private ExportService exportService;
 
   /**
    * Entry point method.
@@ -34,12 +42,15 @@ public final class WordEvalMain {
    * @param args .
    */
   public static void main(String[] args) {
-    // All codes: Dictionary.getAllCodes()
+    runApplication(WordEvalMain.class, args);
+  }
+
+  @Override
+  public void run(String... args) {
     List<String> codes = List.of("eu", "en-us", "fr");
 
-    WordEvalMain main = new WordEvalMain();
     for (String code : codes) {
-      main.exportLanguage(code);
+      exportLanguage(code);
     }
   }
 
@@ -57,14 +68,13 @@ public final class WordEvalMain {
     Language language = dictionary.getLanguage();
     timeLogger.lap("Looked up dictionary");
 
-    EvaluatorInitializer initializer = new EvaluatorInitializer(language);
-    timeLogger.lap("Instantiated evaluators. Total: " + initializer.getEvaluatorsCount());
+    EvaluatorCollection evaluators = evaluatorService.createAllEvaluators(language);
+    timeLogger.lap("Instantiated evaluators. Total: " + evaluators.size());
 
-    Collection<Word> allWords = DictionaryProcessor.readAllWords(dictionary);
+    Collection<Word> allWords = dictionaryService.readAllWords(dictionary);
     timeLogger.lap("Loaded all words: total " + allWords.size() + " words");
 
-    EvaluatorProcessor evaluatorProcessor = new EvaluatorProcessor(initializer);
-    evaluatorProcessor.processAllWords(allWords);
+    evaluatorService.processAllWords(evaluators, allWords);
     timeLogger.lap("Ran all words through all evaluators");
 
     Map<String, String> metaInfo = ImmutableMap.of(
@@ -74,8 +84,7 @@ public final class WordEvalMain {
         "words", String.valueOf(allWords.size()));
     timeLogger.lap("processed dictionary");
 
-    ExportService exportService = new ExportService();
-    exportService.export(language, evaluatorProcessor.streamThroughAllEvaluators());
+    exportService.export(language, evaluators.streamThroughAllEvaluators());
     timeLogger.lap("finished export");
     timeLogger.logWithOverallTime("Finished language '" + code + "'");
   }

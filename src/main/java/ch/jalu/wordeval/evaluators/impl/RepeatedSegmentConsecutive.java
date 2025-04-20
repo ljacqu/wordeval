@@ -3,7 +3,7 @@ package ch.jalu.wordeval.evaluators.impl;
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.PostEvaluator;
 import ch.jalu.wordeval.evaluators.export.EvaluatorExportUtil;
-import ch.jalu.wordeval.evaluators.processing.AllWordsEvaluatorProvider;
+import ch.jalu.wordeval.evaluators.processing.EvaluatorCollection;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.util.StreamUtils;
 import com.google.common.collect.ListMultimap;
@@ -31,10 +31,10 @@ public class RepeatedSegmentConsecutive implements PostEvaluator {
   private final List<WordWithKey> results = new ArrayList<>();
 
   @Override
-  public void evaluate(AllWordsEvaluatorProvider allWordsEvaluatorProvider) {
-    allWordsEvaluatorProvider.getEvaluator(RepeatedSegment.class).getResults().stream()
-        .filter(StreamUtils.distinctByKey(entry -> entry.getWord().getLowercase()))
-        .forEach(result -> processWord(result.getWord()));
+  public void evaluate(EvaluatorCollection evaluators) {
+    evaluators.getWordEvaluatorOrThrow(RepeatedSegment.class).getResults().stream()
+        .filter(StreamUtils.distinctByKey(entry -> entry.word().getLowercase()))
+        .forEach(result -> processWord(result.word()));
   }
 
   private void processWord(Word wordObject) {
@@ -54,17 +54,17 @@ public class RepeatedSegmentConsecutive implements PostEvaluator {
   @Override
   public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
     List<WordWithKey> sortedResult = results.stream()
-        .sorted(Comparator.<WordWithKey>comparingInt(wordWithKey -> wordWithKey.getKey().length()).reversed())
+        .sorted(Comparator.<WordWithKey>comparingInt(wordWithKey -> wordWithKey.key().length()).reversed())
         .toList();
 
     Set<Integer> uniqueValues = new HashSet<>();
     ListMultimap<Object, Object> filteredResults = EvaluatorExportUtil.newListMultimap();
     for (WordWithKey wordWithKey : sortedResult) {
-      int score = wordWithKey.getKey().length();
+      int score = wordWithKey.key().length();
       if (uniqueValues.add(score) && uniqueValues.size() > topScores) {
         break;
       }
-      filteredResults.put(score, wordWithKey.getWord().getRaw() + " (" + wordWithKey.getKey() + ")");
+      filteredResults.put(score, wordWithKey.word().getRaw() + " (" + wordWithKey.key() + ")");
       if (filteredResults.size() >= maxLimit) {
         break;
       }

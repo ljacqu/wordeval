@@ -2,8 +2,7 @@ package ch.jalu.wordeval.dictionary.sanitizer;
 
 import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.dictionary.DictionaryProcessor;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -21,11 +20,11 @@ import static org.hamcrest.Matchers.not;
  */
 class ItSanitizerTest extends AbstractSanitizerTest {
 
-  private static Dictionary itDictionary;
+  private Dictionary itDictionary;
 
-  @BeforeAll
-  static void initData() {
-    itDictionary = createDictionary("it");
+  @BeforeEach
+  void initDictionary() {
+    itDictionary = getDictionary("it");
   }
 
   @Test
@@ -33,7 +32,7 @@ class ItSanitizerTest extends AbstractSanitizerTest {
     assumeDictionaryFileExists(itDictionary);
 
     // given / when
-    Set<String> words = DictionaryProcessor.readAllWords(itDictionary).stream()
+    Set<String> words = dictionaryService.readAllWords(itDictionary).stream()
         .map(Word::getRaw)
         .collect(Collectors.toSet());
 
@@ -52,7 +51,7 @@ class ItSanitizerTest extends AbstractSanitizerTest {
     List<String> lines = getLines();
 
     // when
-    List<String> words = DictionaryProcessor.processAllWords(itDictionary, lines).stream()
+    List<String> words = dictionaryService.processAllWords(itDictionary, lines).stream()
         .map(Word::getRaw)
         .toList();
 

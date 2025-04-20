@@ -2,10 +2,12 @@ package ch.jalu.wordeval.evaluators.export;
 
 import ch.jalu.wordeval.evaluators.Evaluator;
 import ch.jalu.wordeval.language.Language;
+import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.stream.Stream;
 
+@Service
 public class ExportService {
 
   public void export(Language language, Stream<Evaluator> evaluators) {

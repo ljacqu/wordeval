@@ -59,17 +59,17 @@ public class AlphabeticalSequence implements WordEvaluator {
   @Override
   public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
     List<WordWithKey> sortedResult = results.stream()
-        .sorted(Comparator.<WordWithKey>comparingInt(wordWithKey -> wordWithKey.getKey().length()).reversed())
+        .sorted(Comparator.<WordWithKey>comparingInt(wordWithKey -> wordWithKey.key().length()).reversed())
         .toList();
 
     Set<Integer> uniqueValues = new HashSet<>();
     ListMultimap<Object, Object> filteredResults = EvaluatorExportUtil.newListMultimap();
     for (WordWithKey wordWithKey : sortedResult) {
-      int score = wordWithKey.getKey().length();
+      int score = wordWithKey.key().length();
       if (uniqueValues.add(score) && uniqueValues.size() > topScores) {
         break;
       }
-      filteredResults.put(score, wordWithKey.getWord().getRaw() + " (" + wordWithKey.getKey() + ")");
+      filteredResults.put(score, wordWithKey.word().getRaw() + " (" + wordWithKey.key() + ")");
       if (filteredResults.size() >= maxLimit) {
         break;
       }

@@ -1,7 +1,7 @@
 package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.TestWord;
-import ch.jalu.wordeval.evaluators.processing.AllWordsEvaluatorProvider;
+import ch.jalu.wordeval.evaluators.processing.EvaluatorCollection;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LetterType;
@@ -32,10 +32,10 @@ class AllVowelsAlphabeticallyTest extends AbstractEvaluatorTest {
     // given
     Language lang = newLanguage("zxx").build();
     AllVowelsAlphabetically allVowelsAlphabetically = new AllVowelsAlphabetically(lang);
-    AllWordsEvaluatorProvider allWordsEvaluatorProvider = createProviderWithVowelCountResults();
+    EvaluatorCollection evaluatorCollection = createCollectionWithVowelCountResults();
 
     // when
-    allVowelsAlphabetically.evaluate(allWordsEvaluatorProvider);
+    allVowelsAlphabetically.evaluate(evaluatorCollection);
 
     // then
     Map<String, Set<String>> results = groupResultsByKey(allVowelsAlphabetically.getResults());
@@ -44,7 +44,7 @@ class AllVowelsAlphabeticallyTest extends AbstractEvaluatorTest {
     assertThat(results.get("aei"), contains("aei"));
   }
 
-  private static AllWordsEvaluatorProvider createProviderWithVowelCountResults() {
+  private static EvaluatorCollection createCollectionWithVowelCountResults() {
     Multimap<String, String> results = HashMultimap.create();
     results.put("aeiou", "arbeidsonrust");
     results.put("aei", "aei");
@@ -60,6 +60,6 @@ class AllVowelsAlphabeticallyTest extends AbstractEvaluatorTest {
     VowelCount vowelCount = mock(VowelCount.class);
     given(vowelCount.getResults()).willReturn(vowelCountResults);
     given(vowelCount.getLetterType()).willReturn(LetterType.VOWELS);
-    return new AllWordsEvaluatorProvider(List.of(vowelCount));
+    return EvaluatorCollection.forSingleWordsEvaluator(vowelCount);
   }
 }

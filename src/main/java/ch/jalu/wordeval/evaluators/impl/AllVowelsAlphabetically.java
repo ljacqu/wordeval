@@ -3,7 +3,7 @@ package ch.jalu.wordeval.evaluators.impl;
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.PostEvaluator;
 import ch.jalu.wordeval.evaluators.export.EvaluatorExportUtil;
-import ch.jalu.wordeval.evaluators.processing.AllWordsEvaluatorProvider;
+import ch.jalu.wordeval.evaluators.processing.EvaluatorCollection;
 import ch.jalu.wordeval.evaluators.result.WordGroupWithKey;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.language.Language;
@@ -32,15 +32,15 @@ public class AllVowelsAlphabetically implements PostEvaluator {
   }
 
   @Override
-  public void evaluate(AllWordsEvaluatorProvider allWordsEvaluatorProvider) {
-    VowelCount vowelCount =
-        allWordsEvaluatorProvider.getEvaluator(VowelCount.class, vc -> vc.getLetterType() == LetterType.VOWELS);
+  public void evaluate(EvaluatorCollection evaluators) {
+    VowelCount vowelCount = evaluators.getWordEvaluatorOrThrow(VowelCount.class,
+        vc -> vc.getLetterType() == LetterType.VOWELS);
 
     List<WordGroupWithKey> wordGroupsByKey = vowelCount.getResults().stream()
-        .filter(entry -> entry.getKey().length() > 1)
-        .filter(entry -> hasVowelsAlphabetically(entry.getWord().getWithoutAccents()))
-        .collect(Collectors.groupingBy(WordWithKey::getKey,
-            Collectors.mapping(WordWithKey::getWord, Collectors.toSet())))
+        .filter(entry -> entry.key().length() > 1)
+        .filter(entry -> hasVowelsAlphabetically(entry.word().getWithoutAccents()))
+        .collect(Collectors.groupingBy(WordWithKey::key,
+            Collectors.mapping(WordWithKey::word, Collectors.toSet())))
         .entrySet().stream()
         .map(e -> new WordGroupWithKey(e.getValue(), e.getKey()))
         .toList();
@@ -67,7 +67,7 @@ public class AllVowelsAlphabetically implements PostEvaluator {
 
   @Override
   public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
-    Comparator<WordGroupWithKey> comparator = Comparator.comparingInt((WordGroupWithKey group) -> group.getKey().length())
+    Comparator<WordGroupWithKey> comparator = Comparator.comparingInt((WordGroupWithKey group) -> group.key().length())
         .reversed(); // todo: unit test
 
     List<WordGroupWithKey> sortedResult = results.stream()
@@ -77,14 +77,14 @@ public class AllVowelsAlphabetically implements PostEvaluator {
     Set<Integer> uniqueValues = new HashSet<>();
     ListMultimap<Object, Object> filteredResults = EvaluatorExportUtil.newListMultimap();
     for (WordGroupWithKey wordGroup : sortedResult) {
-      int score = wordGroup.getKey().length();
+      int score = wordGroup.key().length();
       if (uniqueValues.add(score) && uniqueValues.size() > topScores) {
         break;
       }
-      List<String> wordList = wordGroup.getWords().stream()
+      List<String> wordList = wordGroup.words().stream()
           .map(Word::getRaw)
           .toList();
-      filteredResults.put(wordGroup.getKey(), wordList);
+      filteredResults.put(wordGroup.key(), wordList);
       if (filteredResults.size() >= maxLimit) {
         break;
       }

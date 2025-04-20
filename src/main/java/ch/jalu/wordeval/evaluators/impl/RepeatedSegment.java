@@ -74,16 +74,16 @@ public class RepeatedSegment implements WordEvaluator {
   public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
     // todo: Sort better, considering the key length.
     List<WordWithKeyAndScore> sortedResult = results.stream()
-        .sorted(Comparator.comparing(WordWithKeyAndScore::getScore).reversed())
+        .sorted(Comparator.comparing(WordWithKeyAndScore::score).reversed())
         .toList();
 
     Set<Integer> uniqueValues = new HashSet<>();
     ListMultimap<Object, Object> filteredResults = EvaluatorExportUtil.newListMultimap();
     for (WordWithKeyAndScore word : sortedResult) {
-      if (uniqueValues.add(word.getScore()) && uniqueValues.size() > topScores) {
+      if (uniqueValues.add(word.score()) && uniqueValues.size() > topScores) {
         break;
       }
-      filteredResults.put(word.getScore(), word.getWord().getRaw() + " (" + word.getKey() + ")");
+      filteredResults.put(word.score(), word.word().getRaw() + " (" + word.key() + ")");
       if (filteredResults.size() >= maxLimit) {
         break;
       }

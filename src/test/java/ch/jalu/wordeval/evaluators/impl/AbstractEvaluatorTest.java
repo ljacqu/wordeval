@@ -2,7 +2,6 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.TestWord;
 import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.evaluators.result.WordGroup;
 import ch.jalu.wordeval.evaluators.result.WordGroupWithKey;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.evaluators.result.WordWithKeyAndScore;
@@ -27,34 +26,28 @@ abstract class AbstractEvaluatorTest {
 
   protected static Map<String, Set<String>> groupResultsByKey(List<WordGroupWithKey> results) {
     return results.stream()
-        .collect(Collectors.toMap(WordGroupWithKey::getKey, group -> unwrapWords(group.getWords())));
+        .collect(Collectors.toMap(WordGroupWithKey::key, group -> unwrapWords(group.words())));
   }
 
   protected static Map<Double, Set<String>> groupByScore(List<WordWithScore> wordsWithScores) {
-    return wordsWithScores.stream().collect(Collectors.groupingBy(WordWithScore::getScore))
+    return wordsWithScores.stream().collect(Collectors.groupingBy(WordWithScore::score))
         .entrySet().stream()
         .collect(Collectors.toMap(Map.Entry::getKey,
-            e -> unwrapWords(e.getValue(), WordWithScore::getWord)));
-  }
-
-  protected static List<Set<String>> unwrapWordGroups(List<WordGroup> results) {
-    return results.stream()
-        .map(wordGroup -> unwrapWords(wordGroup.getWords()))
-        .collect(Collectors.toList());
+            e -> unwrapWords(e.getValue(), WordWithScore::word)));
   }
 
   protected static Map<String, Set<String>> groupByKey(List<WordWithKey> results) {
     return results.stream()
-        .collect(Collectors.groupingBy(WordWithKey::getKey))
+        .collect(Collectors.groupingBy(WordWithKey::key))
         .entrySet().stream()
         .collect(Collectors.toMap(Map.Entry::getKey,
-            e -> unwrapWords(e.getValue(), WordWithKey::getWord)));
+            e -> unwrapWords(e.getValue(), WordWithKey::word)));
   }
 
   protected static Map<String, Set<String>> flattenKeyAndScore(List<WordWithKeyAndScore> results) {
     return results.stream()
-        .collect(Collectors.groupingBy(wwks -> wwks.getScore() + "," + wwks.getKey())).entrySet().stream()
-        .collect(Collectors.toMap(Map.Entry::getKey, e -> unwrapWords(e.getValue(), WordWithKeyAndScore::getWord)));
+        .collect(Collectors.groupingBy(wwks -> wwks.score() + "," + wwks.key())).entrySet().stream()
+        .collect(Collectors.toMap(Map.Entry::getKey, e -> unwrapWords(e.getValue(), WordWithKeyAndScore::word)));
   }
 
   private static Set<String> unwrapWords(Collection<Word> words) {
