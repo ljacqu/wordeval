@@ -91,7 +91,7 @@ class WordFactoryTest {
   }
 
   @ParameterizedTest
-  @MethodSource("getLetterLanguagePairs")
+  @MethodSource("getWordLanguagePairs")
   void shouldBuildWordFormsAsExpected(String word, Language language, Word expectedWord) {
     // given
     WordFactory wordFactory = new WordFactory(language);
@@ -106,7 +106,7 @@ class WordFactoryTest {
     assertThat(actualWord.getWithoutAccentsWordCharsOnly(), equalTo(expectedWord.getWithoutAccentsWordCharsOnly()));
   }
 
-  static Stream<Arguments> getLetterLanguagePairs() {
+  static Stream<Arguments> getWordLanguagePairs() {
     AppData appData = new AppData();
     Language da = appData.getDictionary("da").getLanguage();
     Language es = appData.getDictionary("es").getLanguage();
