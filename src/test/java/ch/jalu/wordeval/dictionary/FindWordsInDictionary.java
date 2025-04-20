@@ -19,6 +19,9 @@ public class FindWordsInDictionary extends SpringContainedRunner {
   @Autowired
   private AppData appData;
 
+  @Autowired
+  private DictionaryService dictionaryService;
+
   public static void main(String... args) {
     runApplication(FindWordsInDictionary.class, args);
   }
@@ -39,8 +42,8 @@ public class FindWordsInDictionary extends SpringContainedRunner {
     }
   }
 
-  private static void findWordsInDict(Dictionary dictionary, Set<String> wordsToFind) {
-    Set<String> actualWords = DictionaryProcessor.readAllWords(dictionary).stream()
+  private void findWordsInDict(Dictionary dictionary, Set<String> wordsToFind) {
+    Set<String> actualWords = dictionaryService.readAllWords(dictionary).stream()
       .map(Word::getLowercase)
       .collect(Collectors.toSet());
 

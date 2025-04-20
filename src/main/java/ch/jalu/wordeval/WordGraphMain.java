@@ -2,6 +2,9 @@ package ch.jalu.wordeval;
 
 import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.config.SpringContainedRunner;
+import ch.jalu.wordeval.dictionary.Dictionary;
+import ch.jalu.wordeval.dictionary.DictionaryService;
+import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.wordgraph.GraphBuilder;
 import ch.jalu.wordeval.wordgraph.WordGraphService;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -28,6 +31,9 @@ public class WordGraphMain extends SpringContainedRunner {
   private AppData appData;
 
   @Autowired
+  private DictionaryService dictionaryService;
+
+  @Autowired
   private WordGraphService wordGraphService;
   
   /**
@@ -49,7 +55,12 @@ public class WordGraphMain extends SpringContainedRunner {
       if (exportFilename.isPresent()) {
         graph = wordGraphService.importConnections(exportFilename.get());
       } else {
-        GraphBuilder builder = new GraphBuilder(appData.getDictionary(dictionaryCode));
+        Dictionary dictionary = appData.getDictionary(dictionaryCode);
+        List<String> allWords = dictionaryService.readAllWords(dictionary).stream()
+            .map(Word::getLowercase)
+            .distinct()
+            .toList();
+        GraphBuilder builder = new GraphBuilder(allWords);
         processExportChoice(scanner, dictionaryCode, builder);
         graph = builder.getGraph();
       }

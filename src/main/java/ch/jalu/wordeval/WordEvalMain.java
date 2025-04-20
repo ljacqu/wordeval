@@ -3,7 +3,7 @@ package ch.jalu.wordeval;
 import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.config.SpringContainedRunner;
 import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.dictionary.DictionaryProcessor;
+import ch.jalu.wordeval.dictionary.DictionaryService;
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.export.ExportService;
 import ch.jalu.wordeval.evaluators.processing.EvaluatorCollection;
@@ -27,6 +27,9 @@ public class WordEvalMain extends SpringContainedRunner {
 
   @Autowired
   private AppData appData;
+
+  @Autowired
+  private DictionaryService dictionaryService;
 
   @Autowired
   private EvaluatorInitializer evaluatorInitializer;
@@ -72,7 +75,7 @@ public class WordEvalMain extends SpringContainedRunner {
     EvaluatorCollection evaluators = evaluatorInitializer.createAllEvaluators(language);
     timeLogger.lap("Instantiated evaluators. Total: " + evaluators.size());
 
-    Collection<Word> allWords = DictionaryProcessor.readAllWords(dictionary);
+    Collection<Word> allWords = dictionaryService.readAllWords(dictionary);
     timeLogger.lap("Loaded all words: total " + allWords.size() + " words");
 
     evaluatorProcessor.processAllWords(evaluators, allWords);

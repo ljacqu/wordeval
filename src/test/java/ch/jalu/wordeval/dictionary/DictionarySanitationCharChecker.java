@@ -27,6 +27,9 @@ public class DictionarySanitationCharChecker extends SpringContainedRunner {
   @Autowired
   private AppData appData;
 
+  @Autowired
+  private DictionaryService dictionaryService;
+
   public static void main(String[] args) {
     runApplication(DictionarySanitationCharChecker.class, args);
   }
@@ -59,8 +62,8 @@ public class DictionarySanitationCharChecker extends SpringContainedRunner {
     }
   }
 
-  private static Set<String> findBadWords(Dictionary dictionary, char[] allowedChars) {
-    return DictionaryProcessor.readAllWords(dictionary).stream()
+  private Set<String> findBadWords(Dictionary dictionary, char[] allowedChars) {
+    return dictionaryService.readAllWords(dictionary).stream()
       .map(Word::getWithoutAccentsWordCharsOnly)
       .filter(word -> !StringUtils.containsOnly(word, allowedChars))
       .collect(Collectors.toSet());

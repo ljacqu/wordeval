@@ -4,16 +4,22 @@ import ch.jalu.wordeval.DataUtils;
 import ch.jalu.wordeval.dictionary.sanitizer.Sanitizer;
 import ch.jalu.wordeval.language.Language;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Processes a dictionary.
+ * Service for processing dictionaries.
  */
-public final class DictionaryProcessor {
+@Service
+public class DictionaryService {
 
-  private DictionaryProcessor() {
+  @Autowired
+  private DataUtils dataUtils;
+
+  DictionaryService() {
   }
 
   /**
@@ -22,11 +28,11 @@ public final class DictionaryProcessor {
    * @param dictionary the dictionary to load
    * @return all words of the dictionary
    */
-  public static List<Word> readAllWords(Dictionary dictionary) {
-    return processAllWords(dictionary, DataUtils.readAllLines(dictionary.getFile()));
+  public List<Word> readAllWords(Dictionary dictionary) {
+    return processAllWords(dictionary, dataUtils.readAllLines(dictionary.getFile()));
   }
 
-  public static List<Word> processAllWords(Dictionary dictionary, List<String> lines) {
+  public List<Word> processAllWords(Dictionary dictionary, List<String> lines) {
     final Sanitizer sanitizer = dictionary.buildSanitizer();
     final Language language = dictionary.getLanguage();
     final WordFactory wordFactory = new WordFactory(language);
@@ -38,12 +44,12 @@ public final class DictionaryProcessor {
         .toList();
   }
 
-  public static WordEntries processWordsForDebug(Dictionary dictionary) {
+  public WordEntries processWordsForDebug(Dictionary dictionary) {
     final Sanitizer sanitizer = dictionary.buildSanitizer();
     List<String> skippedLines = new ArrayList<>();
     List<String> includedLines = new ArrayList<>();
 
-    DataUtils.readAllLines(dictionary.getFile()).forEach(line -> {
+    dataUtils.readAllLines(dictionary.getFile()).forEach(line -> {
       String isolatedWord = sanitizer.isolateWord(line);
       if (StringUtils.isEmpty(isolatedWord)) {
         skippedLines.add(line);

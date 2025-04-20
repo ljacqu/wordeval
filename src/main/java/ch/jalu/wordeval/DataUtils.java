@@ -62,8 +62,7 @@ public class DataUtils {
    * @param filename the name of the file to read
    * @return the file's contents by line
    */
-  // todo: should not be static
-  public static List<String> readAllLines(String filename) {
+  public List<String> readAllLines(String filename) {
     try {
       return Files.readAllLines(Paths.get(filename));
     } catch (IOException e) {

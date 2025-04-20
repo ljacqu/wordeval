@@ -1,7 +1,6 @@
 package ch.jalu.wordeval.dictionary.sanitizer;
 
 import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.dictionary.DictionaryProcessor;
 import ch.jalu.wordeval.dictionary.Word;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +28,7 @@ class HuSanitizerTest extends AbstractSanitizerTest {
     assumeDictionaryFileExists(huDictionary);
 
     // given / when
-    Set<String> words = DictionaryProcessor.readAllWords(huDictionary).stream()
+    Set<String> words = dictionaryService.readAllWords(huDictionary).stream()
       .map(Word::getRaw)
       .collect(Collectors.toSet());
 

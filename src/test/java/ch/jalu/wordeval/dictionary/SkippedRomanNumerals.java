@@ -24,6 +24,9 @@ public class SkippedRomanNumerals extends SpringContainedRunner {
   @Autowired
   private AppData appData;
 
+  @Autowired
+  private DataUtils dataUtils;
+
   public static void main(String... args) {
     runApplication(SkippedRomanNumerals.class, args);
   }
@@ -41,9 +44,9 @@ public class SkippedRomanNumerals extends SpringContainedRunner {
     String fileName = dict.getFile();
     Sanitizer sanitizer = dict.buildSanitizer();
     Method lineToWord = ReflectionTestUtil.getMethod(Sanitizer.class, "removeDelimiters", String.class);
-    
+
     List<String> skippedNumerals = new ArrayList<>();
-    for (String line : DataUtils.readAllLines(fileName)) {
+    for (String line : dataUtils.readAllLines(fileName)) {
       String sanitizerResult = sanitizer.isolateWord(line);
       if (StringUtils.isEmpty(sanitizerResult)) {
         String word = (String) ReflectionTestUtil.invokeMethod(lineToWord, sanitizer, line);
@@ -52,7 +55,7 @@ public class SkippedRomanNumerals extends SpringContainedRunner {
         }
       }
     }
-    
+
     log.info("Skipped words for '{}':\n- {}", dictionaryCode, String.join("\n- ", skippedNumerals));
   }
 }

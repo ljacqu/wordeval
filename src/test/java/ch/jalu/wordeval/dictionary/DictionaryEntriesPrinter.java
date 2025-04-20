@@ -2,7 +2,7 @@ package ch.jalu.wordeval.dictionary;
 
 import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.config.SpringContainedRunner;
-import ch.jalu.wordeval.dictionary.DictionaryProcessor.WordEntries;
+import ch.jalu.wordeval.dictionary.DictionaryService.WordEntries;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -19,6 +19,9 @@ public class DictionaryEntriesPrinter extends SpringContainedRunner {
   @Autowired
   private AppData appData;
 
+  @Autowired
+  private DictionaryService dictionaryService;
+
   public static void main(String... args) {
     runApplication(DictionaryEntriesPrinter.class, args);
   }
@@ -29,7 +32,7 @@ public class DictionaryEntriesPrinter extends SpringContainedRunner {
 
     Dictionary dictionary = appData.getDictionary(code);
 
-    WordEntries words = DictionaryProcessor.processWordsForDebug(dictionary);
+    WordEntries words = dictionaryService.processWordsForDebug(dictionary);
     System.out.println("Language: " + code);
     if (SHOW_INCLUDED_WORDS) {
       int[] skipAndLimit = calculateSkipAndLimitValues();
