@@ -9,6 +9,8 @@ import static ch.jalu.wordeval.language.Language.builder;
 
 /**
  * Stores all {@link Language} objects.
+ *
+ * @see AppData
  */
 final class LanguageData {
 

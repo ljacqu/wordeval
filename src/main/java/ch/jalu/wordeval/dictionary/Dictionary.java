@@ -13,6 +13,8 @@ import static com.google.common.base.MoreObjects.firstNonNull;
 /**
  * Dictionary. Stores the {@link #file location} as well as various parameters
  * on its format so that its entries can be read correctly.
+ * <p>
+ * Dictionaries are defined in {@link ch.jalu.wordeval.appdata.DictionaryData}.
  */
 @Getter
 @ToString(of = "identifier")

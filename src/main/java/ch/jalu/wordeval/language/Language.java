@@ -15,6 +15,8 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Class with language-specific details, independent of any dictionary format.
+ * <p>
+ * Languages are defined in {@link ch.jalu.wordeval.appdata.LanguageData}.
  */
 @Getter
 @ToString(of = "code")
