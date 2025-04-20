@@ -1,38 +1,49 @@
 package ch.jalu.wordeval.evaluators.processing;
 
+import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.AllWordsEvaluator;
 import ch.jalu.wordeval.evaluators.PostEvaluator;
 import ch.jalu.wordeval.language.Language;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 
 import static com.google.common.collect.Lists.newArrayList;
 
 /**
- * Service for initializing all available evaluators.
+ * Service for evaluators.
  */
 @Slf4j
-@Component
-public class EvaluatorInitializer {
+@Service
+public class EvaluatorService {
 
-  private static final String EVALUATOR_PACKAGE = "ch.jalu.wordeval.evaluators";
-
+  private static final String EVALUATOR_PACKAGE = "ch.jalu.wordeval.evaluators.impl";
   private final Reflections reflections;
 
   /**
    * Constructor.
    */
-  public EvaluatorInitializer() {
+  EvaluatorService() {
     this.reflections = new Reflections(EVALUATOR_PACKAGE, Scanners.SubTypes);
+  }
+
+  /**
+   * Processes all words with the given evaluators.
+   *
+   * @param evaluators the evaluators
+   * @param words the words the evaluators should process
+   */
+  public void processAllWords(EvaluatorCollection evaluators, Collection<Word> words) {
+    evaluators.allWordsEvaluators().forEach(evaluator -> evaluator.evaluate(words));
+    evaluators.postEvaluators().forEach(evaluator -> evaluator.evaluate(evaluators));
   }
 
   /**
@@ -61,11 +72,9 @@ public class EvaluatorInitializer {
   private static final class ObjectCreator {
 
     private final Language[] languageArray;
-    private final Locale[] localeArray;
 
     ObjectCreator(Language language) {
       this.languageArray = new Language[]{ language };
-      this.localeArray = new Locale[]{ language.getLocale() };
     }
 
     @SuppressWarnings("unchecked")
@@ -97,8 +106,6 @@ public class EvaluatorInitializer {
         return languageArray;
       } else if (clz.isEnum()) {
         return clz.getEnumConstants();
-      } else if (Locale.class == clz) {
-        return localeArray;
       }
       throw new IllegalStateException("Unknown what value to provide for '" + clz + "'");
     }

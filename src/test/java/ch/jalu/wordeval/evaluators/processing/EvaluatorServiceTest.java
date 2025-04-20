@@ -1,5 +1,9 @@
 package ch.jalu.wordeval.evaluators.processing;
 
+import ch.jalu.wordeval.dictionary.TestWord;
+import ch.jalu.wordeval.dictionary.Word;
+import ch.jalu.wordeval.evaluators.AllWordsEvaluator;
+import ch.jalu.wordeval.evaluators.PostEvaluator;
 import ch.jalu.wordeval.evaluators.impl.AlphabeticalSequence;
 import ch.jalu.wordeval.evaluators.impl.ConsecutiveVowelCount;
 import ch.jalu.wordeval.evaluators.impl.DiacriticHomonyms;
@@ -12,7 +16,9 @@ import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LetterType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -27,13 +33,13 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.mockito.Mockito.mock;
 
 /**
- * Test for {@link EvaluatorInitializer}.
+ * Test for {@link EvaluatorService}.
  */
 @ExtendWith(MockitoExtension.class)
-class EvaluatorInitializerTest {
+class EvaluatorServiceTest {
 
   @InjectMocks
-  private EvaluatorInitializer evaluatorInitializer;
+  private EvaluatorService evaluatorService;
 
   @Test
   void shouldInstantiateAllEvaluators() {
@@ -41,7 +47,7 @@ class EvaluatorInitializerTest {
     Language language = mock(Language.class);
 
     // when
-    EvaluatorCollection initializer = evaluatorInitializer.createAllEvaluators(language);
+    EvaluatorCollection initializer = evaluatorService.createAllEvaluators(language);
 
     // then
     assertThat(initializer.size(), equalTo(20));
@@ -58,6 +64,29 @@ class EvaluatorInitializerTest {
     checkHasAllForEnum(initializer.allWordsEvaluators(), VowelCount.class, LetterType.class, VowelCount::getLetterType);
     checkHasAllForEnum(initializer.allWordsEvaluators(), ConsecutiveVowelCount.class, LetterType.class, ConsecutiveVowelCount::getLetterType);
     checkHasAllForEnum(initializer.postEvaluators(), SingleVowel.class, LetterType.class, SingleVowel::getLetterType);
+  }
+
+  @Test
+  void shouldProcessAllWords() {
+    // given
+    AllWordsEvaluator evaluator1 = mock(AllWordsEvaluator.class);
+    AllWordsEvaluator evaluator2 = mock(AllWordsEvaluator.class);
+    PostEvaluator evaluator3 = mock(PostEvaluator.class);
+    PostEvaluator evaluator4 = mock(PostEvaluator.class);
+    EvaluatorCollection evaluators = new EvaluatorCollection(
+        List.of(evaluator1, evaluator2), List.of(evaluator3, evaluator4));
+    List<Word> words = List.of(new TestWord("apple"), new TestWord("banana"));
+
+    // when
+    evaluatorService.processAllWords(evaluators, words);
+
+    // then
+    InOrder inOrder = Mockito.inOrder(evaluator1, evaluator2, evaluator3, evaluator4);
+    inOrder.verify(evaluator1).evaluate(words);
+    inOrder.verify(evaluator2).evaluate(words);
+    inOrder.verify(evaluator3).evaluate(evaluators);
+    inOrder.verify(evaluator4).evaluate(evaluators);
+    inOrder.verifyNoMoreInteractions();
   }
 
   /**
@@ -79,5 +108,4 @@ class EvaluatorInitializerTest {
       .collect(Collectors.toList());
     assertThat(foundEnumValues, containsInAnyOrder(enumClass.getEnumConstants()));
   }
-
 }

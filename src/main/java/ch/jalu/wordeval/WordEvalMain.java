@@ -7,8 +7,7 @@ import ch.jalu.wordeval.dictionary.DictionaryService;
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.export.ExportService;
 import ch.jalu.wordeval.evaluators.processing.EvaluatorCollection;
-import ch.jalu.wordeval.evaluators.processing.EvaluatorInitializer;
-import ch.jalu.wordeval.evaluators.processing.EvaluatorProcessor;
+import ch.jalu.wordeval.evaluators.processing.EvaluatorService;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.util.TimeLogger;
 import com.google.common.collect.ImmutableMap;
@@ -32,10 +31,7 @@ public class WordEvalMain extends SpringContainedRunner {
   private DictionaryService dictionaryService;
 
   @Autowired
-  private EvaluatorInitializer evaluatorInitializer;
-
-  @Autowired
-  private EvaluatorProcessor evaluatorProcessor;
+  private EvaluatorService evaluatorService;
 
   @Autowired
   private ExportService exportService;
@@ -72,13 +68,13 @@ public class WordEvalMain extends SpringContainedRunner {
     Language language = dictionary.getLanguage();
     timeLogger.lap("Looked up dictionary");
 
-    EvaluatorCollection evaluators = evaluatorInitializer.createAllEvaluators(language);
+    EvaluatorCollection evaluators = evaluatorService.createAllEvaluators(language);
     timeLogger.lap("Instantiated evaluators. Total: " + evaluators.size());
 
     Collection<Word> allWords = dictionaryService.readAllWords(dictionary);
     timeLogger.lap("Loaded all words: total " + allWords.size() + " words");
 
-    evaluatorProcessor.processAllWords(evaluators, allWords);
+    evaluatorService.processAllWords(evaluators, allWords);
     timeLogger.lap("Ran all words through all evaluators");
 
     Map<String, String> metaInfo = ImmutableMap.of(
