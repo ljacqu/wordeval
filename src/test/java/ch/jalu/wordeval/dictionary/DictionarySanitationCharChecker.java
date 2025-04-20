@@ -2,9 +2,11 @@ package ch.jalu.wordeval.dictionary;
 
 import ch.jalu.wordeval.TestUtil;
 import ch.jalu.wordeval.appdata.AppData;
+import ch.jalu.wordeval.config.SpringContainedRunner;
 import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -20,14 +22,17 @@ import java.util.stream.Stream;
  * Utility task to verify how well a dictionary is being sanitized based on the characters of the words
  * that were loaded.
  */
-public final class DictionarySanitationCharChecker {
+public class DictionarySanitationCharChecker extends SpringContainedRunner {
 
-  private static final AppData appData = new AppData();
+  @Autowired
+  private AppData appData;
 
-  private DictionarySanitationCharChecker() {
+  public static void main(String[] args) {
+    runApplication(DictionarySanitationCharChecker.class, args);
   }
 
-  public static void main(String... args) {
+  @Override
+  public void run(String... args) {
     Scanner sc = new Scanner(System.in);
     System.out.println("Enter dictionary code to verify (or empty for all):");
     String dictCode = sc.nextLine();

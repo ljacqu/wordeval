@@ -1,26 +1,32 @@
 package ch.jalu.wordeval.dictionary;
 
 import ch.jalu.wordeval.appdata.AppData;
+import ch.jalu.wordeval.config.SpringContainedRunner;
 import ch.jalu.wordeval.dictionary.DictionaryProcessor.WordEntries;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Prints the lines of the dictionary (configurable below) as to inspect which
  * lines are removed or considered.
  */
-public final class DictionaryEntriesPrinter {
+public class DictionaryEntriesPrinter extends SpringContainedRunner {
 
   private static final boolean SHOW_INCLUDED_WORDS = true;
   private static final boolean SHOW_SKIPPED_WORDS = false;
   // Calculates pages of 2000 entries. Set to 0 to skip.
   private static final int INCLUDED_WORDS_PAGE = 1;
 
-  private DictionaryEntriesPrinter() {
-  }
+  @Autowired
+  private AppData appData;
 
   public static void main(String... args) {
+    runApplication(DictionaryEntriesPrinter.class, args);
+  }
+
+  @Override
+  public void run(String... args) {
     String language = "de-de";
 
-    AppData appData = new AppData();
     Dictionary dictionary = appData.getDictionary(language);
 
     WordEntries words = DictionaryProcessor.processWordsForDebug(dictionary);

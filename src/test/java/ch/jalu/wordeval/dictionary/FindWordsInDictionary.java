@@ -1,7 +1,9 @@
 package ch.jalu.wordeval.dictionary;
 
 import ch.jalu.wordeval.appdata.AppData;
+import ch.jalu.wordeval.config.SpringContainedRunner;
 import com.google.common.collect.Sets;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.Scanner;
@@ -12,25 +14,29 @@ import java.util.stream.Collectors;
  * Utility task to verify if a certain word appears in a given dictionary.
  * (Useful to make sure a custom sanitizer is not too strict.)
  */
-public final class FindWordsInDictionary {
+public class FindWordsInDictionary extends SpringContainedRunner {
 
-  private FindWordsInDictionary() {
-  }
+  @Autowired
+  private AppData appData;
 
   public static void main(String... args) {
-    Scanner scanner = new Scanner(System.in);
-    System.out.println("Enter language code of dictionary:");
-    String code = scanner.nextLine();
-    AppData appData = new AppData();
-    Dictionary dictionary = appData.getDictionary(code);
+    runApplication(FindWordsInDictionary.class, args);
+  }
 
-    System.out.println("Enter words to find (comma-separated)");
-    String line = scanner.nextLine();
-    scanner.close();
+  public void run(String[] args) {
+    try (Scanner scanner = new Scanner(System.in)) {
+      System.out.println("Enter language code of dictionary:");
+      String code = scanner.nextLine();
+      Dictionary dictionary = appData.getDictionary(code);
 
-    Set<String> wordsToFind = Arrays.stream(line.split(","))
-        .map(String::trim).collect(Collectors.toSet());
-    findWordsInDict(dictionary, wordsToFind);
+      System.out.println("Enter words to find (comma-separated)");
+      String line = scanner.nextLine();
+      scanner.close();
+
+      Set<String> wordsToFind = Arrays.stream(line.split(","))
+          .map(String::trim).collect(Collectors.toSet());
+      findWordsInDict(dictionary, wordsToFind);
+    }
   }
 
   private static void findWordsInDict(Dictionary dictionary, Set<String> wordsToFind) {

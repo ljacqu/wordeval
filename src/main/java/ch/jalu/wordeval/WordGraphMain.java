@@ -1,15 +1,12 @@
 package ch.jalu.wordeval;
 
 import ch.jalu.wordeval.appdata.AppData;
+import ch.jalu.wordeval.config.SpringContainedRunner;
 import ch.jalu.wordeval.wordgraph.GraphBuilder;
 import ch.jalu.wordeval.wordgraph.WordGraphService;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Profile;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -22,9 +19,7 @@ import java.util.Set;
 /**
  * Entry point for the word graph feature of <i>wordeval</i>.
  */
-@Profile("wordgraph")
-@SpringBootApplication
-public class WordGraphMain implements CommandLineRunner {
+public class WordGraphMain extends SpringContainedRunner {
   
   /** Directory for graph exports. */
   private static final String GRAPH_EXPORT_DIRECTORY = "export/graph/";
@@ -35,17 +30,13 @@ public class WordGraphMain implements CommandLineRunner {
   @Autowired
   private WordGraphService wordGraphService;
   
-  private WordGraphMain() {
-  }
-  
   /**
    * Main function.
+   *
    * @param args .
    */
   public static void main(String[] args) {
-    SpringApplication app = new SpringApplication(WordGraphMain.class);
-    app.setAdditionalProfiles("wordgraph");
-    app.run(args);
+    runApplication(WordGraphMain.class);
   }
 
   @Override

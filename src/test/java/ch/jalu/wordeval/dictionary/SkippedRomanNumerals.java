@@ -3,9 +3,11 @@ package ch.jalu.wordeval.dictionary;
 import ch.jalu.wordeval.DataUtils;
 import ch.jalu.wordeval.ReflectionTestUtil;
 import ch.jalu.wordeval.appdata.AppData;
+import ch.jalu.wordeval.config.SpringContainedRunner;
 import ch.jalu.wordeval.dictionary.sanitizer.Sanitizer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -17,12 +19,16 @@ import java.util.Scanner;
  * recognized as a Roman numeral.
  */
 @Slf4j
-public final class SkippedRomanNumerals {
+public class SkippedRomanNumerals extends SpringContainedRunner {
 
-  private SkippedRomanNumerals() {
-  }
+  @Autowired
+  private AppData appData;
 
   public static void main(String... args) {
+    runApplication(SkippedRomanNumerals.class, args);
+  }
+
+  public void run(String[] args) {
     Scanner sc = new Scanner(System.in);
     System.out.println("Enter dictionary code:");
     String code = sc.nextLine();
@@ -30,8 +36,7 @@ public final class SkippedRomanNumerals {
     findRomanNumeralSkips(code);
   }
 
-  public static void findRomanNumeralSkips(String dictionaryCode) {
-    AppData appData = new AppData();
+  public void findRomanNumeralSkips(String dictionaryCode) {
     Dictionary dict = appData.getDictionary(dictionaryCode);
     String fileName = dict.getFile();
     Sanitizer sanitizer = dict.buildSanitizer();

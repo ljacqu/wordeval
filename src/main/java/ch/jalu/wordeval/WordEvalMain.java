@@ -1,22 +1,19 @@
 package ch.jalu.wordeval;
 
 import ch.jalu.wordeval.appdata.AppData;
+import ch.jalu.wordeval.config.SpringContainedRunner;
 import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.DictionaryProcessor;
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.export.ExportService;
-import ch.jalu.wordeval.evaluators.processing.EvaluatorInitializer;
 import ch.jalu.wordeval.evaluators.processing.EvaluatorCollection;
+import ch.jalu.wordeval.evaluators.processing.EvaluatorInitializer;
 import ch.jalu.wordeval.evaluators.processing.EvaluatorProcessor;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.util.TimeLogger;
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Profile;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,9 +23,7 @@ import java.util.Map;
  * Entry point of the <i>wordeval</i> application: generates JSON export of the evaluator results.
  */
 @Slf4j
-@SpringBootApplication
-@Profile("wordeval")
-public class WordEvalMain implements CommandLineRunner {
+public class WordEvalMain extends SpringContainedRunner {
 
   @Autowired
   private AppData appData;
@@ -48,9 +43,7 @@ public class WordEvalMain implements CommandLineRunner {
    * @param args .
    */
   public static void main(String[] args) {
-    SpringApplication app = new SpringApplication(WordEvalMain.class);
-    app.setAdditionalProfiles("wordeval");
-    app.run(args);
+    runApplication(WordEvalMain.class, args);
   }
 
   @Override
