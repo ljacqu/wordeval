@@ -1,27 +1,21 @@
 package ch.jalu.wordeval.appdata;
 
 import ch.jalu.wordeval.dictionary.Dictionary;
+import org.springframework.stereotype.Component;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Application data holder.
  */
+@Component
 public class AppData {
 
-  private final DictionarySettingsStore dictionaryStore;
-  private final LanguageStore languageStore;
-
-  public AppData() {
-    this.languageStore = new LanguageStore();
-    this.dictionaryStore = new DictionarySettingsStore(languageStore);
-  }
-
   public Dictionary getDictionary(String code) {
-    return dictionaryStore.get(code);
+    return DictionaryData.getOrThrow(code);
   }
 
-  public Collection<Dictionary> getAllDictionaries() {
-    return dictionaryStore.entries.values();
+  public List<Dictionary> getAllDictionaries() {
+    return DictionaryData.streamThroughAll().toList();
   }
 }

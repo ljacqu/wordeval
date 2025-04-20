@@ -11,6 +11,10 @@ import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.util.TimeLogger;
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.Collection;
 import java.util.List;
@@ -20,13 +24,11 @@ import java.util.Map;
  * Entry point of the <i>wordeval</i> application: generates JSON export of the evaluator results.
  */
 @Slf4j
-public final class WordEvalMain {
+@SpringBootApplication
+public class WordEvalMain implements CommandLineRunner {
 
-  private final AppData appData;
-
-  private WordEvalMain() {
-    appData = new AppData();
-  }
+  @Autowired
+  private AppData appData;
 
   /**
    * Entry point method.
@@ -34,12 +36,15 @@ public final class WordEvalMain {
    * @param args .
    */
   public static void main(String[] args) {
-    // All codes: Dictionary.getAllCodes()
+    SpringApplication.run(WordEvalMain.class, args);
+  }
+
+  @Override
+  public void run(String... args) {
     List<String> codes = List.of("eu", "en-us", "fr");
 
-    WordEvalMain main = new WordEvalMain();
     for (String code : codes) {
-      main.exportLanguage(code);
+      exportLanguage(code);
     }
   }
 
