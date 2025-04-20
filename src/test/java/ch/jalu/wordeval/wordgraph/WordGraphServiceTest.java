@@ -3,7 +3,7 @@ package ch.jalu.wordeval.wordgraph;
 import ch.jalu.wordeval.DataUtils;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
-import org.jgrapht.graph.builder.UndirectedGraphBuilder;
+import org.jgrapht.graph.SimpleWeightedGraph;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -105,12 +105,12 @@ class WordGraphServiceTest {
     assertThat(wordGraphService.disableVertexEdges(graph, "non-existent"), equalTo(Boolean.FALSE));
     assertThat(wordGraphService.enableVertexEdges(graph, "non-existent"), equalTo(Boolean.FALSE));
   }
-  
+
   @Test
   void shouldNotReturnShortestPathForDisabledEdge() {
     SimpleGraph<String, DefaultWeightedEdge> simpleGraph = 
-        new UndirectedGraphBuilder<String, DefaultWeightedEdge, SimpleGraph<String, DefaultWeightedEdge>>(
-            new SimpleGraph<>(DefaultWeightedEdge.class))
+        new org.jgrapht.graph.builder.GraphBuilder<String, DefaultWeightedEdge, SimpleGraph<String, DefaultWeightedEdge>>(
+            new SimpleWeightedGraph<>(DefaultWeightedEdge.class))
       .addVertices("v1", "v2", "v3", "v4")
       .addEdgeChain("v1", "v2", "v3", "v4")
       .build();

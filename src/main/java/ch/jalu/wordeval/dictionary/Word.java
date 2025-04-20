@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Word with all its word form types.
@@ -13,6 +14,7 @@ import lombok.Setter;
 @Setter(AccessLevel.PACKAGE)
 @EqualsAndHashCode(of = "raw")
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
+@ToString(of = "raw")
 public class Word {
 
   /**

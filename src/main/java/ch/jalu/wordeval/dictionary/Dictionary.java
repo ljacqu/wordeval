@@ -3,6 +3,7 @@ package ch.jalu.wordeval.dictionary;
 import ch.jalu.wordeval.dictionary.sanitizer.Sanitizer;
 import ch.jalu.wordeval.language.Language;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -14,6 +15,7 @@ import static com.google.common.base.MoreObjects.firstNonNull;
  * on its format so that its entries can be read correctly.
  */
 @Getter
+@ToString(of = "identifier")
 public class Dictionary {
 
   /**

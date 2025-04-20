@@ -8,6 +8,7 @@ import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LetterType;
 import com.google.common.collect.ListMultimap;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -20,6 +21,7 @@ import java.util.Set;
  * German "Angstschweiss". The same word can appear multiple times in the
  * results, e.g. "poignée" will count twice ("oi", "ée").
  */
+@ToString(of = "letterType")
 public class ConsecutiveVowelCount implements WordEvaluator {
 
   private final Set<String> lettersToConsider;

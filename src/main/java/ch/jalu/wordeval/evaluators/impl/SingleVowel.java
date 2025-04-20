@@ -9,6 +9,7 @@ import ch.jalu.wordeval.language.LetterType;
 import com.google.common.collect.ListMultimap;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -21,6 +22,7 @@ import java.util.Set;
  * such as "abracadabra," which only uses the vowel 'a'.
  */
 @AllArgsConstructor
+@ToString(of = "letterType")
 public class SingleVowel implements PostEvaluator {
 
   @Getter

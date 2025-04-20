@@ -3,15 +3,9 @@ package ch.jalu.wordeval;
 import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
-import org.hamcrest.Matcher;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * Utility methods for the tests.
@@ -50,9 +44,5 @@ public final class TestUtil {
    */
   public static Language.Builder newLanguage(String code, Alphabet alphabet) {
     return Language.builder(code, "", alphabet);
-  }
-
-  public static <T> void assumeThat(T item, Matcher<? super T> matcher) {
-    assumeTrue(matcher.matches(item));
   }
 }
