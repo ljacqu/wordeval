@@ -3,7 +3,7 @@ package ch.jalu.wordeval.evaluators.impl;
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.PostEvaluator;
 import ch.jalu.wordeval.evaluators.export.EvaluatorExportUtil;
-import ch.jalu.wordeval.evaluators.processing.AllWordsEvaluatorProvider;
+import ch.jalu.wordeval.evaluators.processing.EvaluatorCollection;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.evaluators.result.WordWithScore;
 import com.google.common.collect.ListMultimap;
@@ -26,9 +26,8 @@ public class FullPalindromes implements PostEvaluator {
   private final List<WordWithScore> results = new ArrayList<>();
 
   @Override
-  public void evaluate(AllWordsEvaluatorProvider allWordsEvaluatorProvider) {
-    List<WordWithKey> palindromeResults =
-        allWordsEvaluatorProvider.getEvaluator(Palindromes.class).getResults();
+  public void evaluate(EvaluatorCollection evaluators) {
+    List<WordWithKey> palindromeResults = evaluators.getWordEvaluatorOrThrow(Palindromes.class).getResults();
 
     for (WordWithKey entry : palindromeResults) {
       Word word = entry.getWord();

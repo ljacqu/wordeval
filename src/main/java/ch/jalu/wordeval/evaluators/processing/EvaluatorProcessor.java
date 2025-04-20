@@ -1,40 +1,18 @@
 package ch.jalu.wordeval.evaluators.processing;
 
 import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.evaluators.AllWordsEvaluator;
-import ch.jalu.wordeval.evaluators.Evaluator;
-import ch.jalu.wordeval.evaluators.PostEvaluator;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Manages evaluators and triggers their evaluation process.
  */
+@Component
 public class EvaluatorProcessor {
 
-  private final List<AllWordsEvaluator> wordEvaluators;
-  private final List<PostEvaluator> postEvaluators;
-
-  public EvaluatorProcessor(Collection<AllWordsEvaluator> wordEvaluators,
-                            Collection<PostEvaluator> postEvaluators) {
-    this.wordEvaluators = List.copyOf(wordEvaluators);
-    this.postEvaluators = List.copyOf(postEvaluators);
-  }
-
-  public EvaluatorProcessor(EvaluatorInitializer evaluatorInitializer) {
-    this(evaluatorInitializer.getAllWordsEvaluators(), evaluatorInitializer.getPostEvaluators());
-  }
-
-  public void processAllWords(Collection<Word> words) {
-    wordEvaluators.forEach(evaluator -> evaluator.evaluate(words));
-
-    AllWordsEvaluatorProvider allWordsEvaluatorProvider = new AllWordsEvaluatorProvider(wordEvaluators);
-    postEvaluators.forEach(evaluator -> evaluator.evaluate(allWordsEvaluatorProvider));
-  }
-
-  public Stream<Evaluator> streamThroughAllEvaluators() {
-    return Stream.concat(wordEvaluators.stream(), postEvaluators.stream());
+  public void processAllWords(EvaluatorCollection evaluators, Collection<Word> words) {
+    evaluators.allWordsEvaluators().forEach(evaluator -> evaluator.evaluate(words));
+    evaluators.postEvaluators().forEach(evaluator -> evaluator.evaluate(evaluators));
   }
 }

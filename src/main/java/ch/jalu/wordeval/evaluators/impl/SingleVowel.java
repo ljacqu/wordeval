@@ -2,12 +2,13 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.evaluators.PostEvaluator;
 import ch.jalu.wordeval.evaluators.export.EvaluatorExportUtil;
-import ch.jalu.wordeval.evaluators.processing.AllWordsEvaluatorProvider;
+import ch.jalu.wordeval.evaluators.processing.EvaluatorCollection;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.evaluators.result.WordWithScore;
 import ch.jalu.wordeval.language.LetterType;
 import com.google.common.collect.ListMultimap;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -22,12 +23,13 @@ import java.util.Set;
 @AllArgsConstructor
 public class SingleVowel implements PostEvaluator {
 
+  @Getter
   private final LetterType letterType;
   private final List<WordWithScore> results = new ArrayList<>();
 
   @Override
-  public void evaluate(AllWordsEvaluatorProvider allWordsEvaluatorProvider) {
-    VowelCount vowelCountEvaluator = allWordsEvaluatorProvider.getEvaluator(VowelCount.class,
+  public void evaluate(EvaluatorCollection evaluators) {
+    VowelCount vowelCountEvaluator = evaluators.getWordEvaluatorOrThrow(VowelCount.class,
         vowelCount -> vowelCount.getLetterType() == letterType);
 
     List<WordWithKey> vowelCountResults = vowelCountEvaluator.getResults();

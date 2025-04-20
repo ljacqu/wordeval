@@ -3,7 +3,7 @@ package ch.jalu.wordeval.evaluators.impl;
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.PostEvaluator;
 import ch.jalu.wordeval.evaluators.export.EvaluatorExportUtil;
-import ch.jalu.wordeval.evaluators.processing.AllWordsEvaluatorProvider;
+import ch.jalu.wordeval.evaluators.processing.EvaluatorCollection;
 import ch.jalu.wordeval.evaluators.result.WordGroupWithKey;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.language.Language;
@@ -32,9 +32,9 @@ public class AllVowelsAlphabetically implements PostEvaluator {
   }
 
   @Override
-  public void evaluate(AllWordsEvaluatorProvider allWordsEvaluatorProvider) {
-    VowelCount vowelCount =
-        allWordsEvaluatorProvider.getEvaluator(VowelCount.class, vc -> vc.getLetterType() == LetterType.VOWELS);
+  public void evaluate(EvaluatorCollection evaluators) {
+    VowelCount vowelCount = evaluators.getWordEvaluatorOrThrow(VowelCount.class,
+        vc -> vc.getLetterType() == LetterType.VOWELS);
 
     List<WordGroupWithKey> wordGroupsByKey = vowelCount.getResults().stream()
         .filter(entry -> entry.getKey().length() > 1)

@@ -6,6 +6,7 @@ import ch.jalu.wordeval.dictionary.DictionaryProcessor;
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.export.ExportService;
 import ch.jalu.wordeval.evaluators.processing.EvaluatorInitializer;
+import ch.jalu.wordeval.evaluators.processing.EvaluatorCollection;
 import ch.jalu.wordeval.evaluators.processing.EvaluatorProcessor;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.util.TimeLogger;
@@ -31,6 +32,15 @@ public class WordEvalMain implements CommandLineRunner {
 
   @Autowired
   private AppData appData;
+
+  @Autowired
+  private EvaluatorInitializer evaluatorInitializer;
+
+  @Autowired
+  private EvaluatorProcessor evaluatorProcessor;
+
+  @Autowired
+  private ExportService exportService;
 
   /**
    * Entry point method.
@@ -66,14 +76,13 @@ public class WordEvalMain implements CommandLineRunner {
     Language language = dictionary.getLanguage();
     timeLogger.lap("Looked up dictionary");
 
-    EvaluatorInitializer initializer = new EvaluatorInitializer(language);
-    timeLogger.lap("Instantiated evaluators. Total: " + initializer.getEvaluatorsCount());
+    EvaluatorCollection evaluators = evaluatorInitializer.createAllEvaluators(language);
+    timeLogger.lap("Instantiated evaluators. Total: " + evaluators.size());
 
     Collection<Word> allWords = DictionaryProcessor.readAllWords(dictionary);
     timeLogger.lap("Loaded all words: total " + allWords.size() + " words");
 
-    EvaluatorProcessor evaluatorProcessor = new EvaluatorProcessor(initializer);
-    evaluatorProcessor.processAllWords(allWords);
+    evaluatorProcessor.processAllWords(evaluators, allWords);
     timeLogger.lap("Ran all words through all evaluators");
 
     Map<String, String> metaInfo = ImmutableMap.of(
@@ -83,8 +92,7 @@ public class WordEvalMain implements CommandLineRunner {
         "words", String.valueOf(allWords.size()));
     timeLogger.lap("processed dictionary");
 
-    ExportService exportService = new ExportService();
-    exportService.export(language, evaluatorProcessor.streamThroughAllEvaluators());
+    exportService.export(language, evaluators.streamThroughAllEvaluators());
     timeLogger.lap("finished export");
     timeLogger.logWithOverallTime("Finished language '" + code + "'");
   }

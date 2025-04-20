@@ -8,54 +8,56 @@ import ch.jalu.wordeval.evaluators.impl.LongWords;
 import ch.jalu.wordeval.evaluators.impl.RepeatedSegmentConsecutive;
 import ch.jalu.wordeval.evaluators.impl.SingleVowel;
 import ch.jalu.wordeval.evaluators.impl.VowelCount;
-import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LetterType;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 /**
  * Test for {@link EvaluatorInitializer}.
  */
+@ExtendWith(MockitoExtension.class)
 class EvaluatorInitializerTest {
+
+  @InjectMocks
+  private EvaluatorInitializer evaluatorInitializer;
 
   @Test
   void shouldInstantiateAllEvaluators() {
     // given
     Language language = mock(Language.class);
-    given(language.getAlphabet()).willReturn(Alphabet.LATIN);
-    given(language.getAdditionalVowels()).willReturn(emptyList());
-    given(language.getAdditionalConsonants()).willReturn(emptyList());
 
     // when
-    EvaluatorInitializer initializer = new EvaluatorInitializer(language);
+    EvaluatorCollection initializer = evaluatorInitializer.createAllEvaluators(language);
 
     // then
-    assertThat(initializer.getEvaluatorsCount(), equalTo(20));
+    assertThat(initializer.size(), equalTo(20));
 
     // Test presence for a sample of evaluators
-    assertThat(initializer.getAllWordsEvaluators(), hasItem(instanceOf(AlphabeticalSequence.class)));
-    assertThat(initializer.getAllWordsEvaluators(), hasItem(instanceOf(DiacriticHomonyms.class)));
-    assertThat(initializer.getAllWordsEvaluators(), hasItem(instanceOf(LongWords.class)));
-    assertThat(initializer.getPostEvaluators(), hasItem(instanceOf(RepeatedSegmentConsecutive.class)));
-    assertThat(initializer.getPostEvaluators(), hasItem(instanceOf(SingleVowel.class)));
-    assertThat(initializer.getPostEvaluators(), hasItem(instanceOf(FullPalindromes.class)));
+    assertThat(initializer.allWordsEvaluators(), hasItem(instanceOf(AlphabeticalSequence.class)));
+    assertThat(initializer.allWordsEvaluators(), hasItem(instanceOf(DiacriticHomonyms.class)));
+    assertThat(initializer.allWordsEvaluators(), hasItem(instanceOf(LongWords.class)));
+    assertThat(initializer.postEvaluators(), hasItem(instanceOf(RepeatedSegmentConsecutive.class)));
+    assertThat(initializer.postEvaluators(), hasItem(instanceOf(SingleVowel.class)));
+    assertThat(initializer.postEvaluators(), hasItem(instanceOf(FullPalindromes.class)));
 
     // Check that all enum values are present
-    checkHasAllForEnum(initializer.getAllWordsEvaluators(), VowelCount.class, LetterType.class, VowelCount::getLetterType);
-    checkHasAllForEnum(initializer.getAllWordsEvaluators(), ConsecutiveVowelCount.class, LetterType.class, ConsecutiveVowelCount::getLetterType);
+    checkHasAllForEnum(initializer.allWordsEvaluators(), VowelCount.class, LetterType.class, VowelCount::getLetterType);
+    checkHasAllForEnum(initializer.allWordsEvaluators(), ConsecutiveVowelCount.class, LetterType.class, ConsecutiveVowelCount::getLetterType);
+    checkHasAllForEnum(initializer.postEvaluators(), SingleVowel.class, LetterType.class, SingleVowel::getLetterType);
   }
 
   /**

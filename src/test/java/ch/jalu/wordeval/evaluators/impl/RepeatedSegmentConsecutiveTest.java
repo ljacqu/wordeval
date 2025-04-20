@@ -1,7 +1,7 @@
 package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.TestWord;
-import ch.jalu.wordeval.evaluators.processing.AllWordsEvaluatorProvider;
+import ch.jalu.wordeval.evaluators.processing.EvaluatorCollection;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.evaluators.result.WordWithKeyAndScore;
 import com.google.common.collect.ImmutableList;
@@ -30,10 +30,10 @@ class RepeatedSegmentConsecutiveTest extends AbstractEvaluatorTest {
   @Test
   void shouldAddResults() {
     // given
-    AllWordsEvaluatorProvider allWordsEvaluatorProvider = createProviderWithRepeatedSegmentResult();
+    EvaluatorCollection evaluatorCollection = createCollectionWithRepeatedSegmentResult();
 
     // when
-    evaluator.evaluate(allWordsEvaluatorProvider);
+    evaluator.evaluate(evaluatorCollection);
 
     // then
     Map<String, List<String>> wordsByKey = evaluator.getResults().stream()
@@ -51,7 +51,7 @@ class RepeatedSegmentConsecutiveTest extends AbstractEvaluatorTest {
     assertThat(wordsByKey.get("barbar"), containsInAnyOrder("barbarian", "barbarians"));
   }
 
-  private static AllWordsEvaluatorProvider createProviderWithRepeatedSegmentResult() {
+  private static EvaluatorCollection createCollectionWithRepeatedSegmentResult() {
     // Key and score are irrelevant to the post evaluator
     List<WordWithKeyAndScore> repeatedSegmentResults = ImmutableList.<WordWithKeyAndScore>builder()
       .add(new WordWithKeyAndScore(new TestWord("gelijkelijk"), "foo", 3)) // elijkelijk
@@ -67,6 +67,6 @@ class RepeatedSegmentConsecutiveTest extends AbstractEvaluatorTest {
 
     RepeatedSegment repeatedSegment = mock(RepeatedSegment.class);
     given(repeatedSegment.getResults()).willReturn(repeatedSegmentResults);
-    return new AllWordsEvaluatorProvider(List.of(repeatedSegment));
+    return EvaluatorCollection.forSingleWordsEvaluator(repeatedSegment);
   }
 }
