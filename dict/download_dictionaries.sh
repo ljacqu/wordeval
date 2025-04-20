@@ -8,7 +8,6 @@ curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Germa
 curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/English%20(American).dic" # en
 curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Basque.dic"               # eu
 curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Spanish.dic"              # es
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Finnish.dic"              # fi
 curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/French.dic"               # fr
 curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Hungarian.dic"            # hu
 curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Italian.dic"              # it

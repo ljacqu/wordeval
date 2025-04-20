@@ -2,8 +2,8 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
+import ch.jalu.wordeval.evaluators.export.EvaluatorExportUtil;
 import ch.jalu.wordeval.evaluators.result.WordWithKeyAndScore;
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import lombok.Getter;
 
@@ -78,7 +78,7 @@ public class RepeatedSegment implements WordEvaluator {
         .toList();
 
     Set<Integer> uniqueValues = new HashSet<>();
-    ListMultimap<Object, Object> filteredResults = ArrayListMultimap.create();
+    ListMultimap<Object, Object> filteredResults = EvaluatorExportUtil.newListMultimap();
     for (WordWithKeyAndScore word : sortedResult) {
       if (uniqueValues.add(word.getScore()) && uniqueValues.size() > topScores) {
         break;

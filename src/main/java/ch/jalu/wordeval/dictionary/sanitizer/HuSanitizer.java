@@ -22,7 +22,7 @@ public class HuSanitizer extends Sanitizer {
   }
 
   @Override
-  protected String customSanitize(String word) {
+  protected String sanitize(String word) {
     if (StringUtils.isEmpty(word)) {
       return "";
     }

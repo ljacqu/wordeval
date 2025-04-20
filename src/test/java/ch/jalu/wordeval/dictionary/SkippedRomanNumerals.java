@@ -1,12 +1,11 @@
-package ch.jalu.wordeval.helpertask;
+package ch.jalu.wordeval.dictionary;
 
 import ch.jalu.wordeval.DataUtils;
 import ch.jalu.wordeval.ReflectionTestUtil;
 import ch.jalu.wordeval.appdata.AppData;
-import ch.jalu.wordeval.dictionary.DictionaryUtils;
-import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.sanitizer.Sanitizer;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -18,7 +17,10 @@ import java.util.Scanner;
  * recognized as a Roman numeral.
  */
 @Log4j2
-public class UtilSkippedRomanNumerals {
+public final class SkippedRomanNumerals {
+
+  private SkippedRomanNumerals() {
+  }
 
   public static void main(String... args) {
     Scanner sc = new Scanner(System.in);
@@ -31,18 +33,14 @@ public class UtilSkippedRomanNumerals {
   public static void findRomanNumeralSkips(String dictionaryCode) {
     AppData appData = new AppData();
     Dictionary dict = appData.getDictionary(dictionaryCode);
-    String fileName = (String) ReflectionTestUtil.getField(Dictionary.class, dict, "file");
-    Sanitizer sanitizer = (Sanitizer) ReflectionTestUtil.getField(Dictionary.class, dict, "sanitizer");
-    if (sanitizer.getClass() != Sanitizer.class) {
-      log.info("Custom sanitizer of type '{}' detected for language '{}'", 
-          sanitizer.getClass().getSimpleName(), dictionaryCode);
-    }
+    String fileName = dict.getFile();
+    Sanitizer sanitizer = dict.buildSanitizer();
     Method lineToWord = ReflectionTestUtil.getMethod(Sanitizer.class, "removeDelimiters", String.class);
     
     List<String> skippedNumerals = new ArrayList<>();
     for (String line : DataUtils.readAllLines(fileName)) {
       String sanitizerResult = sanitizer.isolateWord(line);
-      if (sanitizerResult.isEmpty()) {
+      if (StringUtils.isEmpty(sanitizerResult)) {
         String word = (String) ReflectionTestUtil.invokeMethod(lineToWord, sanitizer, line);
         if (DictionaryUtils.isRomanNumeral(word)) {
           skippedNumerals.add(word);
@@ -52,5 +50,4 @@ public class UtilSkippedRomanNumerals {
     
     log.info("Skipped words for '{}':\n- {}", dictionaryCode, String.join("\n- ", skippedNumerals));
   }
-
 }

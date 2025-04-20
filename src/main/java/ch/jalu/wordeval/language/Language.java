@@ -1,6 +1,7 @@
 package ch.jalu.wordeval.language;
 
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +15,7 @@ import static java.util.Objects.requireNonNull;
  * Class with language-specific details, independent of any dictionary format.
  */
 @Getter
+@ToString(of = "code")
 public class Language {
 
   private static final int ASCII_MAX_INDEX = 127;

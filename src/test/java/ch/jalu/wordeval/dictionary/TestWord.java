@@ -16,7 +16,7 @@ public class TestWord extends Word {
   // Override setters to make them public instead of package-private
 
   @Override
-  void setLowercase(String lowercase) {
+  public void setLowercase(String lowercase) {
     super.setLowercase(lowercase);
   }
 
@@ -26,7 +26,7 @@ public class TestWord extends Word {
   }
 
   @Override
-  void setWithoutAccentsWordCharsOnly(String withoutAccentsWordCharsOnly) {
+  public void setWithoutAccentsWordCharsOnly(String withoutAccentsWordCharsOnly) {
     super.setWithoutAccentsWordCharsOnly(withoutAccentsWordCharsOnly);
   }
 }

@@ -1,40 +1,32 @@
-package ch.jalu.wordeval.dictionary;
+package ch.jalu.wordeval.dictionary.sanitizer;
 
-import ch.jalu.wordeval.TestUtil;
-import ch.jalu.wordeval.appdata.AppData;
-import ch.jalu.wordeval.dictionary.sanitizer.HuSanitizer;
-import ch.jalu.wordeval.runners.DictionaryProcessor;
-import lombok.extern.log4j.Log4j2;
+import ch.jalu.wordeval.dictionary.Dictionary;
+import ch.jalu.wordeval.dictionary.Word;
+import ch.jalu.wordeval.dictionary.DictionaryProcessor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static ch.jalu.wordeval.TestUtil.assumeThat;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
 
 /**
  * Test for the {@link HuSanitizer Hungarian dictionary} (which has custom sanitation).
  */
-@Log4j2
-class HuSanitizerTest {
+class HuSanitizerTest extends AbstractSanitizerTest {
 
   private static Dictionary huDictionary;
-  
+
   @BeforeAll
   static void initData() {
-    huDictionary = new AppData().getDictionary("hu");
+    huDictionary = createDictionary("hu");
   }
 
   @Test
   void shouldFindTheGivenWords() {
-    if (!TestUtil.doesDictionaryFileExist(huDictionary)) {
-      log.warn("Skipping Hu sanitizer test because dictionary doesn't exist");
-      assumeThat(true, equalTo(false));
-    }
+    assumeDictionaryFileExists(huDictionary);
 
     // given / when
     Set<String> words = DictionaryProcessor.readAllWords(huDictionary).stream()

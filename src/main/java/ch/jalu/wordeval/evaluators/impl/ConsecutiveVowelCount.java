@@ -2,12 +2,13 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
+import ch.jalu.wordeval.evaluators.export.EvaluatorExportUtil;
 import ch.jalu.wordeval.evaluators.result.WordWithScore;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LetterType;
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -20,6 +21,7 @@ import java.util.Set;
  * German "Angstschweiss". The same word can appear multiple times in the
  * results, e.g. "poignée" will count twice ("oi", "ée").
  */
+@ToString(of = "letterType")
 public class ConsecutiveVowelCount implements WordEvaluator {
 
   private final Set<String> lettersToConsider;
@@ -62,7 +64,7 @@ public class ConsecutiveVowelCount implements WordEvaluator {
         .toList();
 
     Set<Double> uniqueValues = new HashSet<>();
-    ListMultimap<Object, Object> filteredResults = ArrayListMultimap.create();
+    ListMultimap<Object, Object> filteredResults = EvaluatorExportUtil.newListMultimap();
     for (WordWithScore wordWithScore : sortedResult) {
       if (uniqueValues.add(wordWithScore.getScore()) && uniqueValues.size() > topScores) {
         break;
@@ -79,8 +81,8 @@ public class ConsecutiveVowelCount implements WordEvaluator {
   @Override
   public String getId() {
     return switch (letterType) {
-      case VOWELS -> "ConsecutiveVowelCount";
-      case CONSONANTS -> "ConsecutiveConsonantCount";
+      case VOWELS -> "vowels.consecutiveCount";
+      case CONSONANTS -> "consonants.consecutiveCount";
     };
   }
 }

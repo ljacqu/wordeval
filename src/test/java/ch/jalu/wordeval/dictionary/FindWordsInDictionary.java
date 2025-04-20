@@ -1,9 +1,6 @@
-package ch.jalu.wordeval.helpertask;
+package ch.jalu.wordeval.dictionary;
 
 import ch.jalu.wordeval.appdata.AppData;
-import ch.jalu.wordeval.dictionary.Dictionary;
-import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.runners.DictionaryProcessor;
 import com.google.common.collect.Sets;
 
 import java.util.Arrays;
@@ -15,9 +12,10 @@ import java.util.stream.Collectors;
  * Utility task to verify if a certain word appears in a given dictionary.
  * (Useful to make sure a custom sanitizer is not too strict.)
  */
-public class FindWordsInDictionary {
+public final class FindWordsInDictionary {
 
-  private FindWordsInDictionary() { }
+  private FindWordsInDictionary() {
+  }
 
   public static void main(String... args) {
     Scanner scanner = new Scanner(System.in);

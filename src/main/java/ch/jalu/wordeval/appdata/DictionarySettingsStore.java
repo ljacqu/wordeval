@@ -3,6 +3,7 @@ package ch.jalu.wordeval.appdata;
 import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.sanitizer.FrSanitizer;
 import ch.jalu.wordeval.dictionary.sanitizer.HuSanitizer;
+import ch.jalu.wordeval.dictionary.sanitizer.ItSanitizer;
 import ch.jalu.wordeval.language.Language;
 
 /**
@@ -24,18 +25,18 @@ class DictionarySettingsStore extends ObjectStore<String, Dictionary> {
       newDictionary("af").delimiters('/').skipSequences(".", "µ", "Ð", "ø").build(),
       newDictionary("bg").delimiters('/').build(),
       newDictionary("da").delimiters('/').build(),
-      newDictionary("de").delimiters('/').build(),
-      newDictionary("de-at").delimiters('/').build(),
-      newDictionary("de-ch").delimiters('/').build(),
-      newDictionary("de-de").delimiters('/').build(),
+      newDictionary("de-de").delimiters('/', '#').skipSequences("°").build(),
       newDictionary("en-us").delimiters('/').build(),
       newDictionary("en-test").delimiters('/').build(),
       // TODO #62: Some Basque entries have _ but most parts seem to be present alone
       newDictionary("es").delimiters('/').build(),
       newDictionary("eu").delimiters('/').skipSequences(".", "+", "_").build(),
-      newDictionary("fr").sanitizerCreator(FrSanitizer::new).delimiters('/', '\t').skipSequences(".", "&", "µ").build(),
+      newDictionary("fr").sanitizerCreator(FrSanitizer::new)
+          .delimiters('/', '\t')
+          .skipSequences(".", "&", "µ", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉", "ᵈ", "ᵉ", "ᵍ", "ˡ", "ᵐ", "ʳ", "ˢ")
+          .build(),
       newDictionary("hu").sanitizerCreator(HuSanitizer::new).delimiters('/', '\t').skipSequences(".", "+", "±", "ø", "ʻ", "’", "­").build(),
-      newDictionary("it").delimiters('/').build(),
+      newDictionary("it").sanitizerCreator(ItSanitizer::new).delimiters('/').build(),
       newDictionary("nb").delimiters('/').build(),
       // TODO: The nl dictionary uses the digraph symbol 'ĳ' instead of 'i'+'j'
       newDictionary("nl").delimiters('/').build(),

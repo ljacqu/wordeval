@@ -18,7 +18,8 @@ public final class DictionaryUtils {
   }
   
   /**
-   * Checks whether the given word is a Roman numeral.
+   * Returns whether the given word is a Roman numeral.
+   *
    * @param word the word to process
    * @return true if the word is a valid Roman numeral, false otherwise
    */

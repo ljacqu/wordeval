@@ -2,8 +2,9 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.AllWordsEvaluator;
+import ch.jalu.wordeval.evaluators.export.EvaluatorExportUtil;
 import ch.jalu.wordeval.evaluators.result.WordGroupWithKey;
-import com.google.common.collect.ArrayListMultimap;
+import ch.jalu.wordeval.util.StreamUtils;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
@@ -30,16 +31,23 @@ public class DiacriticHomonyms implements AllWordsEvaluator {
   @Override
   public void evaluate(Collection<Word> words) {
     SetMultimap<String, Word> wordsByNoAccentRep = words.stream()
-      .collect(Multimaps.toMultimap(
-        Word::getWithoutAccents,
-        word -> word,
-        HashMultimap::create));
+        .sorted(Comparator.comparing(w -> Character.isUpperCase(w.getRaw().charAt(0))))
+        .filter(StreamUtils.distinctByKey(Word::getLowercase))
+        .collect(Multimaps.toMultimap(
+            Word::getWithoutAccents,
+            word -> word,
+            HashMultimap::create));
 
     Multimaps.asMap(wordsByNoAccentRep).forEach((wordRep, wordsInGroup) -> {
       if (wordsInGroup.size() > 1) {
         results.add(new WordGroupWithKey(wordsInGroup, wordRep));
       }
     });
+  }
+
+  @Override
+  public String getId() {
+    return "group.homonymsByDiacritic";
   }
 
   @Override
@@ -53,7 +61,7 @@ public class DiacriticHomonyms implements AllWordsEvaluator {
         .toList();
 
     Set<Integer> uniqueValues = new HashSet<>();
-    ListMultimap<Object, Object> filteredResults = ArrayListMultimap.create();
+    ListMultimap<Object, Object> filteredResults = EvaluatorExportUtil.newListMultimap();
     for (WordGroupWithKey wordGroup : sortedResult) {
       int score = wordGroup.getWords().size();
       if (uniqueValues.add(score) && uniqueValues.size() > topScores) {

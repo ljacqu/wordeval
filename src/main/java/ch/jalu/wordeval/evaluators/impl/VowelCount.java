@@ -2,12 +2,13 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.WordEvaluator;
+import ch.jalu.wordeval.evaluators.export.EvaluatorExportUtil;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LetterType;
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
  * Evaluator which collects all words by count of
  * separate vowels or consonants for further processing.
  */
+@ToString(of = "letterType")
 public class VowelCount implements WordEvaluator {
 
   private final List<String> letters;
@@ -51,7 +53,7 @@ public class VowelCount implements WordEvaluator {
         .toList();
 
     Set<String> uniqueValues = new HashSet<>();
-    ListMultimap<Object, Object> filteredResults = ArrayListMultimap.create();
+    ListMultimap<Object, Object> filteredResults = EvaluatorExportUtil.newListMultimap();
     for (WordWithKey WordWithKey : sortedResult) {
       if (uniqueValues.add(WordWithKey.getKey()) && uniqueValues.size() > topScores) {
         break;
@@ -68,8 +70,8 @@ public class VowelCount implements WordEvaluator {
   @Override
   public String getId() {
     return switch (letterType) {
-      case VOWELS -> "VowelCount";
-      case CONSONANTS -> "ConsonantCount";
+      case VOWELS -> "vowels.count";
+      case CONSONANTS -> "consonants.count";
     };
   }
 }

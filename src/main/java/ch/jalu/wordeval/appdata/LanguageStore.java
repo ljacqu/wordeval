@@ -45,7 +45,9 @@ class LanguageStore extends ObjectStore<String, Language> {
       builder("fi", "Finnish", Alphabet.LATIN)
         .additionalVowels("ä", "ö")
         .build(),
-      builder("fr", "French", Alphabet.LATIN).build(),
+      builder("fr", "French", Alphabet.LATIN)
+          .additionalVowels("æ", "œ")
+          .build(),
       builder("hu", "Hungarian", Alphabet.LATIN)
         .additionalConsonants("cs", "dz", "dzs", "gy", "ly", "ny", "sz", "ty", "zs")
         .additionalVowels("á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű")

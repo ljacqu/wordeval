@@ -2,10 +2,10 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.PostEvaluator;
+import ch.jalu.wordeval.evaluators.export.EvaluatorExportUtil;
 import ch.jalu.wordeval.evaluators.processing.AllWordsEvaluatorProvider;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
 import ch.jalu.wordeval.evaluators.result.WordWithScore;
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import lombok.Getter;
 
@@ -40,13 +40,18 @@ public class FullPalindromes implements PostEvaluator {
   }
 
   @Override
+  public String getId() {
+    return "palindromes.full";
+  }
+
+  @Override
   public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
     List<WordWithScore> sortedResult = results.stream()
         .sorted(Comparator.comparing(WordWithScore::getScore).reversed())
         .toList();
 
     Set<Double> uniqueValues = new HashSet<>();
-    ListMultimap<Object, Object> filteredResults = ArrayListMultimap.create();
+    ListMultimap<Object, Object> filteredResults = EvaluatorExportUtil.newListMultimap();
     for (WordWithScore wordWithScore : sortedResult) {
       if (uniqueValues.add(wordWithScore.getScore()) && uniqueValues.size() > topScores) {
         break;

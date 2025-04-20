@@ -2,9 +2,10 @@ package ch.jalu.wordeval.evaluators.impl;
 
 import ch.jalu.wordeval.dictionary.Word;
 import ch.jalu.wordeval.evaluators.PostEvaluator;
+import ch.jalu.wordeval.evaluators.export.EvaluatorExportUtil;
 import ch.jalu.wordeval.evaluators.processing.AllWordsEvaluatorProvider;
 import ch.jalu.wordeval.evaluators.result.WordWithKey;
-import com.google.common.collect.ArrayListMultimap;
+import ch.jalu.wordeval.util.StreamUtils;
 import com.google.common.collect.ListMultimap;
 import lombok.Getter;
 
@@ -31,7 +32,8 @@ public class RepeatedSegmentConsecutive implements PostEvaluator {
 
   @Override
   public void evaluate(AllWordsEvaluatorProvider allWordsEvaluatorProvider) {
-    allWordsEvaluatorProvider.getEvaluator(RepeatedSegment.class).getResults()
+    allWordsEvaluatorProvider.getEvaluator(RepeatedSegment.class).getResults().stream()
+        .filter(StreamUtils.distinctByKey(entry -> entry.getWord().getLowercase()))
         .forEach(result -> processWord(result.getWord()));
   }
 
@@ -56,7 +58,7 @@ public class RepeatedSegmentConsecutive implements PostEvaluator {
         .toList();
 
     Set<Integer> uniqueValues = new HashSet<>();
-    ListMultimap<Object, Object> filteredResults = ArrayListMultimap.create();
+    ListMultimap<Object, Object> filteredResults = EvaluatorExportUtil.newListMultimap();
     for (WordWithKey wordWithKey : sortedResult) {
       int score = wordWithKey.getKey().length();
       if (uniqueValues.add(score) && uniqueValues.size() > topScores) {
@@ -69,6 +71,11 @@ public class RepeatedSegmentConsecutive implements PostEvaluator {
     }
 
     return filteredResults;
+  }
+
+  @Override
+  public String getId() {
+    return "repeatedSegment.consecutive";
   }
 
   private static void addResult(Map<String, String> results, String segment, String repetition) {

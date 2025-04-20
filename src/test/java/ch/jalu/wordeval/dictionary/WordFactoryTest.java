@@ -1,7 +1,13 @@
 package ch.jalu.wordeval.dictionary;
 
+import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.language.Language;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static ch.jalu.wordeval.TestUtil.newLanguage;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -84,4 +90,50 @@ class WordFactoryTest {
     assertThrows(IllegalArgumentException.class, () -> builder.createWordObject(""));
   }
 
+  @ParameterizedTest
+  @MethodSource("getWordLanguagePairs")
+  void shouldBuildWordFormsAsExpected(String word, Language language, Word expectedWord) {
+    // given
+    WordFactory wordFactory = new WordFactory(language);
+
+    // when
+    Word actualWord = wordFactory.createWordObject(word);
+
+    // then
+    assertThat(actualWord.getRaw(), equalTo(expectedWord.getRaw()));
+    assertThat(actualWord.getLowercase(), equalTo(expectedWord.getLowercase()));
+    assertThat(actualWord.getWithoutAccents(), equalTo(expectedWord.getWithoutAccents()));
+    assertThat(actualWord.getWithoutAccentsWordCharsOnly(), equalTo(expectedWord.getWithoutAccentsWordCharsOnly()));
+  }
+
+  static Stream<Arguments> getWordLanguagePairs() {
+    AppData appData = new AppData();
+    Language da = appData.getDictionary("da").getLanguage();
+    Language es = appData.getDictionary("es").getLanguage();
+    Language fr = appData.getDictionary("fr").getLanguage();
+    Language nb = appData.getDictionary("nb").getLanguage();
+    Language tr = appData.getDictionary("tr").getLanguage();
+
+    return Stream.of(
+        Arguments.of("Loftshøjgård", da,
+            createWord("Loftshøjgård", "loftshøjgård", "loftshøjgård", "loftshøjgård")),
+        Arguments.of("cartagüeño", es,
+            createWord("cartagüeño", "cartagüeño", "cartagueño", "cartagueño")),
+        Arguments.of("d'être", fr,
+            createWord("d'être", "d'être", "d'etre", "detre")),
+        Arguments.of("armégevær", nb,
+            createWord("armégevær", "armégevær", "armegevær", "armegevær")),
+        Arguments.of("İnanç'la", tr,
+            createWord("İnanç'la", "inanç'la", "inanç'la", "inançla"))
+    );
+  }
+
+  private static Word createWord(String raw, String lower, String noAccents, String noAccentsWordCharsOnly) {
+    Word word = new Word();
+    word.setRaw(raw);
+    word.setLowercase(lower);
+    word.setWithoutAccents(noAccents);
+    word.setWithoutAccentsWordCharsOnly(noAccentsWordCharsOnly);
+    return word;
+  }
 }
