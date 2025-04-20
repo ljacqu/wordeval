@@ -47,16 +47,16 @@ public class VowelCount implements WordEvaluator {
   public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
     // TODO: Should probably skip this as PostEvaluators cover the interesting stuff
     List<WordWithKey> sortedResult = results.stream()
-        .sorted(Comparator.comparing((WordWithKey wwk) -> wwk.getKey().length()).reversed())
+        .sorted(Comparator.comparing((WordWithKey wwk) -> wwk.key().length()).reversed())
         .toList();
 
     Set<String> uniqueValues = new HashSet<>();
     ListMultimap<Object, Object> filteredResults = EvaluatorExportUtil.newListMultimap();
     for (WordWithKey WordWithKey : sortedResult) {
-      if (uniqueValues.add(WordWithKey.getKey()) && uniqueValues.size() > topScores) {
+      if (uniqueValues.add(WordWithKey.key()) && uniqueValues.size() > topScores) {
         break;
       }
-      filteredResults.put(WordWithKey.getKey(), WordWithKey.getWord().getRaw());
+      filteredResults.put(WordWithKey.key(), WordWithKey.word().getRaw());
       if (filteredResults.size() >= maxLimit) {
         break;
       }

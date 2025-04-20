@@ -35,29 +35,29 @@ public class SingleVowel implements PostEvaluator {
     List<WordWithKey> vowelCountResults = vowelCountEvaluator.getResults();
 
     int min = vowelCountResults.stream()
-        .mapToInt(e -> e.getKey().length())
+        .mapToInt(e -> e.key().length())
         .filter(len -> len > 0)
         .min()
         .orElseThrow(() -> new IllegalStateException("Could not get minimum - no words with letter type?"));
 
     vowelCountResults.stream()
-        .filter(e -> e.getKey().length() == min)
-        .forEach(e -> this.results.add(new WordWithScore(e.getWord(), e.getWord().getLowercase().length())));
+        .filter(e -> e.key().length() == min)
+        .forEach(e -> this.results.add(new WordWithScore(e.word(), e.word().getLowercase().length())));
   }
 
   @Override
   public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
     List<WordWithScore> sortedResult = results.stream()
-        .sorted(Comparator.comparing(WordWithScore::getScore).reversed())
+        .sorted(Comparator.comparing(WordWithScore::score).reversed())
         .toList();
 
     Set<Double> uniqueValues = new HashSet<>();
     ListMultimap<Object, Object> filteredResults = EvaluatorExportUtil.newListMultimap();
     for (WordWithScore wordWithScore : sortedResult) {
-      if (uniqueValues.add(wordWithScore.getScore()) && uniqueValues.size() > topScores) {
+      if (uniqueValues.add(wordWithScore.score()) && uniqueValues.size() > topScores) {
         break;
       }
-      filteredResults.put((int) wordWithScore.getScore(), wordWithScore.getWord().getRaw());
+      filteredResults.put((int) wordWithScore.score(), wordWithScore.word().getRaw());
       if (filteredResults.size() >= maxLimit) {
         break;
       }

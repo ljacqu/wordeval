@@ -37,10 +37,10 @@ public class AllVowelsAlphabetically implements PostEvaluator {
         vc -> vc.getLetterType() == LetterType.VOWELS);
 
     List<WordGroupWithKey> wordGroupsByKey = vowelCount.getResults().stream()
-        .filter(entry -> entry.getKey().length() > 1)
-        .filter(entry -> hasVowelsAlphabetically(entry.getWord().getWithoutAccents()))
-        .collect(Collectors.groupingBy(WordWithKey::getKey,
-            Collectors.mapping(WordWithKey::getWord, Collectors.toSet())))
+        .filter(entry -> entry.key().length() > 1)
+        .filter(entry -> hasVowelsAlphabetically(entry.word().getWithoutAccents()))
+        .collect(Collectors.groupingBy(WordWithKey::key,
+            Collectors.mapping(WordWithKey::word, Collectors.toSet())))
         .entrySet().stream()
         .map(e -> new WordGroupWithKey(e.getValue(), e.getKey()))
         .toList();
@@ -67,7 +67,7 @@ public class AllVowelsAlphabetically implements PostEvaluator {
 
   @Override
   public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
-    Comparator<WordGroupWithKey> comparator = Comparator.comparingInt((WordGroupWithKey group) -> group.getKey().length())
+    Comparator<WordGroupWithKey> comparator = Comparator.comparingInt((WordGroupWithKey group) -> group.key().length())
         .reversed(); // todo: unit test
 
     List<WordGroupWithKey> sortedResult = results.stream()
@@ -77,14 +77,14 @@ public class AllVowelsAlphabetically implements PostEvaluator {
     Set<Integer> uniqueValues = new HashSet<>();
     ListMultimap<Object, Object> filteredResults = EvaluatorExportUtil.newListMultimap();
     for (WordGroupWithKey wordGroup : sortedResult) {
-      int score = wordGroup.getKey().length();
+      int score = wordGroup.key().length();
       if (uniqueValues.add(score) && uniqueValues.size() > topScores) {
         break;
       }
-      List<String> wordList = wordGroup.getWords().stream()
+      List<String> wordList = wordGroup.words().stream()
           .map(Word::getRaw)
           .toList();
-      filteredResults.put(wordGroup.getKey(), wordList);
+      filteredResults.put(wordGroup.key(), wordList);
       if (filteredResults.size() >= maxLimit) {
         break;
       }

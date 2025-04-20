@@ -37,8 +37,8 @@ class RepeatedSegmentConsecutiveTest extends AbstractEvaluatorTest {
 
     // then
     Map<String, List<String>> wordsByKey = evaluator.getResults().stream()
-      .collect(Collectors.groupingBy(WordWithKey::getKey,
-        Collectors.mapping(wwk -> wwk.getWord().getRaw(), Collectors.toList())));
+      .collect(Collectors.groupingBy(WordWithKey::key,
+        Collectors.mapping(wwk -> wwk.word().getRaw(), Collectors.toList())));
     assertThat(wordsByKey, aMapWithSize(9));
     assertThat(wordsByKey.get("elijkelijk"), contains("gelijkelijk"));
     assertThat(wordsByKey.get("anan"), contains("banana"));

@@ -51,16 +51,16 @@ public class ConsecutiveLetterPairs implements WordEvaluator {
   @Override
   public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
     List<WordWithScore> sortedResult = results.stream()
-        .sorted(Comparator.comparing(WordWithScore::getScore).reversed())
+        .sorted(Comparator.comparing(WordWithScore::score).reversed())
         .toList();
 
     Set<Double> uniqueValues = new HashSet<>();
     ListMultimap<Object, Object> filteredResults = EvaluatorExportUtil.newListMultimap();
     for (WordWithScore wordWithScore : sortedResult) {
-      if (uniqueValues.add(wordWithScore.getScore()) && uniqueValues.size() > topScores) {
+      if (uniqueValues.add(wordWithScore.score()) && uniqueValues.size() > topScores) {
         break;
       }
-      filteredResults.put((int) wordWithScore.getScore(), wordWithScore.getWord().getRaw());
+      filteredResults.put((int) wordWithScore.score(), wordWithScore.word().getRaw());
       if (filteredResults.size() >= maxLimit) {
         break;
       }

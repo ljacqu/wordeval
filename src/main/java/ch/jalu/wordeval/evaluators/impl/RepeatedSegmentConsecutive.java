@@ -33,8 +33,8 @@ public class RepeatedSegmentConsecutive implements PostEvaluator {
   @Override
   public void evaluate(EvaluatorCollection evaluators) {
     evaluators.getWordEvaluatorOrThrow(RepeatedSegment.class).getResults().stream()
-        .filter(StreamUtils.distinctByKey(entry -> entry.getWord().getLowercase()))
-        .forEach(result -> processWord(result.getWord()));
+        .filter(StreamUtils.distinctByKey(entry -> entry.word().getLowercase()))
+        .forEach(result -> processWord(result.word()));
   }
 
   private void processWord(Word wordObject) {
@@ -54,17 +54,17 @@ public class RepeatedSegmentConsecutive implements PostEvaluator {
   @Override
   public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
     List<WordWithKey> sortedResult = results.stream()
-        .sorted(Comparator.<WordWithKey>comparingInt(wordWithKey -> wordWithKey.getKey().length()).reversed())
+        .sorted(Comparator.<WordWithKey>comparingInt(wordWithKey -> wordWithKey.key().length()).reversed())
         .toList();
 
     Set<Integer> uniqueValues = new HashSet<>();
     ListMultimap<Object, Object> filteredResults = EvaluatorExportUtil.newListMultimap();
     for (WordWithKey wordWithKey : sortedResult) {
-      int score = wordWithKey.getKey().length();
+      int score = wordWithKey.key().length();
       if (uniqueValues.add(score) && uniqueValues.size() > topScores) {
         break;
       }
-      filteredResults.put(score, wordWithKey.getWord().getRaw() + " (" + wordWithKey.getKey() + ")");
+      filteredResults.put(score, wordWithKey.word().getRaw() + " (" + wordWithKey.key() + ")");
       if (filteredResults.size() >= maxLimit) {
         break;
       }

@@ -52,8 +52,8 @@ public class DiacriticHomonyms implements AllWordsEvaluator {
 
   @Override
   public ListMultimap<Object, Object> getTopResults(int topScores, int maxLimit) {
-    Comparator<WordGroupWithKey> comparator = Comparator.comparingInt((WordGroupWithKey group) -> group.getWords().size())
-        .thenComparing(group -> group.getKey().length())
+    Comparator<WordGroupWithKey> comparator = Comparator.comparingInt((WordGroupWithKey group) -> group.words().size())
+        .thenComparing(group -> group.key().length())
         .reversed(); // todo: unit test
 
     List<WordGroupWithKey> sortedResult = results.stream()
@@ -63,11 +63,11 @@ public class DiacriticHomonyms implements AllWordsEvaluator {
     Set<Integer> uniqueValues = new HashSet<>();
     ListMultimap<Object, Object> filteredResults = EvaluatorExportUtil.newListMultimap();
     for (WordGroupWithKey wordGroup : sortedResult) {
-      int score = wordGroup.getWords().size();
+      int score = wordGroup.words().size();
       if (uniqueValues.add(score) && uniqueValues.size() > topScores) {
         break;
       }
-      List<String> wordList = wordGroup.getWords().stream()
+      List<String> wordList = wordGroup.words().stream()
           .map(Word::getRaw)
           .toList();
       filteredResults.put(score, wordList);
