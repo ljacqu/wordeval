@@ -8,6 +8,7 @@ import ch.jalu.wordeval.language.Language;
 import ch.jalu.wordeval.language.LetterType;
 import com.google.common.collect.ListMultimap;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
  * Evaluator which collects all words by count of
  * separate vowels or consonants for further processing.
  */
+@ToString(of = "letterType")
 public class VowelCount implements WordEvaluator {
 
   private final List<String> letters;
