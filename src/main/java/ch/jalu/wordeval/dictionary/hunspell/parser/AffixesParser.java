@@ -2,6 +2,7 @@ package ch.jalu.wordeval.dictionary.hunspell.parser;
 
 import ch.jalu.wordeval.dictionary.hunspell.AffixFlagType;
 import ch.jalu.wordeval.dictionary.hunspell.AffixType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -12,8 +13,11 @@ import java.util.stream.Stream;
 /**
  * Hunspell .aff parser.
  */
+@Slf4j
 @Component
 public class AffixesParser {
+
+    // useful documentation: https://linux.die.net/man/4/hunspell
 
     // TODO: twofold suffix stripping is a thing  (e.g. `SFX X 0 able/Y .`)
     // https://www.systutorials.com/docs/linux/man/4-hunspell/
@@ -38,27 +42,47 @@ public class AffixesParser {
             Matcher ruleMatcher = AFFIX_RULE_PATTERN.matcher(line);
 
             if (headerMatcher.matches()) {
-                ParsedAffixClass affixClass = new ParsedAffixClass();
-                affixClass.type = AffixType.fromString(headerMatcher.group(1));
-                affixClass.flag = headerMatcher.group(2);
-                affixClass.crossProduct = headerMatcher.group(3).equalsIgnoreCase("Y");
+                ParsedAffixClass affixClass = mapAffixClass(headerMatcher);
                 result.addAffixClass(affixClass);
             } else if (ruleMatcher.matches()) {
-                String strip = ruleMatcher.group(2).equals("0") ? "" : ruleMatcher.group(2);
-                String affix = ruleMatcher.group(3).equals("0") ? "" : ruleMatcher.group(3);
-                String condition = ruleMatcher.group(4);
-                result.addRuleToCurrentClass(new ParsedAffixClass.Rule(strip, affix, condition));
-            } else if (StringUtils.startsWithAny(line,
-                "REP ", "MAP ", "TRY ", "WORDCHARS ", "ICONV ", "OCONV ", "KEY ", "BREAK ")) {
-                // ignore
+                ParsedAffixClass.Rule rule = mapAffixRule(ruleMatcher);
+                result.addRuleToCurrentClass(rule);
             } else if (line.startsWith("FLAG ")) {
                 result.setFlagType(AffixFlagType.fromAffixFileString(line.substring("FLAG ".length())));
             } else {
-                // todo: logging
-                System.out.println("Unknown line: " + line);
+                handleUnknownLine(line);
             }
         });
 
         return result;
+    }
+
+    private static ParsedAffixClass mapAffixClass(Matcher headerMatcher) {
+        ParsedAffixClass affixClass = new ParsedAffixClass();
+        affixClass.type = AffixType.fromString(headerMatcher.group(1));
+        affixClass.flag = headerMatcher.group(2);
+        affixClass.crossProduct = headerMatcher.group(3).equalsIgnoreCase("Y");
+        return affixClass;
+    }
+
+    private static ParsedAffixClass.Rule mapAffixRule(Matcher ruleMatcher) {
+        String strip = ruleMatcher.group(2).equals("0") ? "" : ruleMatcher.group(2);
+        String affix = ruleMatcher.group(3).equals("0") ? "" : ruleMatcher.group(3);
+        String condition = ruleMatcher.group(4);
+        return new ParsedAffixClass.Rule(strip, affix, condition);
+    }
+
+    private void handleUnknownLine(String line) {
+        if (StringUtils.startsWithAny(line, "REP ", "MAP ", "TRY ", "WORDCHARS ", "ICONV ",
+            "OCONV ", "KEY ", "BREAK ", "CHECKSHARPS", "NOSUGGEST ")) {
+            // Nothing to do: command is not relevant for this application
+            return;
+        } else if (line.startsWith("SET ")) {
+            if (!line.startsWith("SET UTF-8")) {
+                log.warn("Found unexpected encoding directive: {}", line);
+            }
+        } else {
+            log.info("Unknown line: {}", line);
+        }
     }
 }

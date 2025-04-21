@@ -46,4 +46,11 @@ class RegexConditionTest {
     assertThat(condition.matches("board"), equalTo(false));
     assertThat(condition.matches("I"), equalTo(false));
   }
+
+  @Test
+  void shouldReturnPatternText() {
+    // given / when / then
+    assertThat(new RegexCondition("d[ab]", AffixType.PFX).getPatternText(), equalTo("^d[ab]"));
+    assertThat(new RegexCondition("es?", AffixType.SFX).getPatternText(), equalTo("es?$"));
+  }
 }

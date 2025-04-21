@@ -45,6 +45,19 @@ public final class SingleCharCondition {
     return null;
   }
 
+  private static String constructPatternText(Set<Character> characters, boolean negate) {
+    StringBuilder sb = new StringBuilder();
+    sb.append('[');
+    if (negate) {
+      sb.append('^');
+    }
+    characters.stream()
+        .sorted()
+        .forEach(sb::append);
+    sb.append(']');
+    return sb.toString();
+  }
+
   @ToString
   @RequiredArgsConstructor
   private static final class EndsWith implements AffixCondition {
@@ -56,6 +69,11 @@ public final class SingleCharCondition {
     public boolean matches(String word) {
       char lastChar = getLastChar(word);
       return characters.contains(lastChar) != negate;
+    }
+
+    @Override
+    public String getPatternText() {
+      return constructPatternText(characters, negate);
     }
   }
 
@@ -70,6 +88,11 @@ public final class SingleCharCondition {
     public boolean matches(String word) {
       char firstChar = word.charAt(0);
       return characters.contains(firstChar) != negate;
+    }
+
+    @Override
+    public String getPatternText() {
+      return constructPatternText(characters, negate);
     }
   }
 }

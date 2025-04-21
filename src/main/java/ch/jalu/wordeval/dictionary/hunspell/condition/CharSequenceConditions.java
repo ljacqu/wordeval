@@ -51,6 +51,11 @@ public final class CharSequenceConditions {
     public boolean matches(String word) {
       return word.charAt(0) == expectedChar;
     }
+
+    @Override
+    public String getPatternText() {
+      return String.valueOf(expectedChar);
+    }
   }
 
   @ToString
@@ -62,6 +67,11 @@ public final class CharSequenceConditions {
     @Override
     public boolean matches(String word) {
       return getLastChar(word) == expectedChar;
+    }
+
+    @Override
+    public String getPatternText() {
+      return String.valueOf(expectedChar);
     }
   }
 
@@ -75,6 +85,11 @@ public final class CharSequenceConditions {
     public boolean matches(String word) {
       return word.startsWith(sequence);
     }
+
+    @Override
+    public String getPatternText() {
+      return sequence;
+    }
   }
 
   @ToString
@@ -86,6 +101,11 @@ public final class CharSequenceConditions {
     @Override
     public boolean matches(String word) {
       return word.endsWith(sequence);
+    }
+
+    @Override
+    public String getPatternText() {
+      return sequence;
     }
   }
 }

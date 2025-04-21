@@ -84,4 +84,13 @@ class CharSequenceConditionsTest {
     assertNull(CharSequenceConditions.createConditionIfApplicable(".", AffixType.SFX));
     assertNull(CharSequenceConditions.createConditionIfApplicable("[^a]", AffixType.SFX));
   }
+
+  @Test
+  void shouldReturnPatternText() {
+    // given / when / then
+    assertThat(CharSequenceConditions.createConditionIfApplicable("y", AffixType.PFX).getPatternText(), equalTo("y"));
+    assertThat(CharSequenceConditions.createConditionIfApplicable("e", AffixType.SFX).getPatternText(), equalTo("e"));
+    assertThat(CharSequenceConditions.createConditionIfApplicable("ya", AffixType.PFX).getPatternText(), equalTo("ya"));
+    assertThat(CharSequenceConditions.createConditionIfApplicable("en", AffixType.SFX).getPatternText(), equalTo("en"));
+  }
 }

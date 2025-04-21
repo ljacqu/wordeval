@@ -31,4 +31,9 @@ public class RegexCondition implements AffixCondition {
     }
     return Pattern.compile(adjustedPattern);
   }
+
+  @Override
+  public String getPatternText() {
+    return pattern.pattern();
+  }
 }

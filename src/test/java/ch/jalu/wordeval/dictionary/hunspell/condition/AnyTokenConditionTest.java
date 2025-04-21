@@ -17,4 +17,10 @@ class AnyTokenConditionTest {
     assertThat(AnyTokenCondition.INSTANCE.matches("a"), equalTo(true));
     assertThat(AnyTokenCondition.INSTANCE.matches("Third"), equalTo(true));
   }
+
+  @Test
+  void shouldReturnPatternText() {
+    // given / when / then
+    assertThat(AnyTokenCondition.INSTANCE.getPatternText(), equalTo("."));
+  }
 }

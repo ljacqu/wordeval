@@ -13,4 +13,14 @@ public interface AffixCondition {
    */
   boolean matches(String word);
 
+  /**
+   * Returns a text of the pattern the condition checks. This is for debugging/visualization and
+   * is not parseable or consistent among all implementations! The string returned by this method
+   * does not necessarily correspond to the condition in the .aff file it originated from, nor is
+   * it guaranteed to be in a valid format for an .aff file.
+   *
+   * @return text showing the pattern of this condition
+   */
+  String getPatternText();
+
 }

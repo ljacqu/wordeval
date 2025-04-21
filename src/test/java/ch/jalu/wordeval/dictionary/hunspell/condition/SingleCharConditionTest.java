@@ -86,4 +86,13 @@ class SingleCharConditionTest {
     assertNull(SingleCharCondition.createConditionIfApplicable(".", AffixType.SFX));
     assertNull(SingleCharCondition.createConditionIfApplicable("[a-z]", AffixType.SFX));
   }
+
+  @Test
+  void shouldReturnPatternText() {
+    // given / when / then
+    assertThat(SingleCharCondition.createConditionIfApplicable("[ab]", AffixType.PFX).getPatternText(), equalTo("[ab]"));
+    assertThat(SingleCharCondition.createConditionIfApplicable("[def]", AffixType.SFX).getPatternText(), equalTo("[def]"));
+    assertThat(SingleCharCondition.createConditionIfApplicable("[^abc]", AffixType.PFX).getPatternText(), equalTo("[^abc]"));
+    assertThat(SingleCharCondition.createConditionIfApplicable("[^de]", AffixType.SFX).getPatternText(), equalTo("[^de]"));
+  }
 }

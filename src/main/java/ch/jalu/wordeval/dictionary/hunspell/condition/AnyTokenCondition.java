@@ -15,4 +15,9 @@ public final class AnyTokenCondition implements AffixCondition {
   public boolean matches(String word) {
     return true;
   }
+
+  @Override
+  public String getPatternText() {
+    return ".";
+  }
 }
