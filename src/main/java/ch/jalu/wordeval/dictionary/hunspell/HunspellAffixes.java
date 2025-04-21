@@ -14,14 +14,15 @@ import java.util.stream.Stream;
 public class HunspellAffixes {
 
   private AffixFlagType flagType;
-  private Map<String, AffixRule> affixRulesByName;
+  private Map<String, AffixClass> affixClassesByFlag;
 
-  public Stream<AffixRule.AffixRuleEntry> streamThroughMatchingEntries(String word, String affixFlag) {
-    AffixRule rule = affixRulesByName.get(affixFlag);
-    if (rule == null) {
+  public Stream<AffixClass.AffixRule> streamThroughMatchingRules(String word, String affixFlag) {
+    AffixClass affixClass = affixClassesByFlag.get(affixFlag);
+    if (affixClass == null) {
       // todo: log this?
       return Stream.empty();
     }
-    return rule.streamThroughMatchingEntries(word);
+    return affixClass.getRules().stream()
+        .filter(rule -> rule.matches(word));
   }
 }

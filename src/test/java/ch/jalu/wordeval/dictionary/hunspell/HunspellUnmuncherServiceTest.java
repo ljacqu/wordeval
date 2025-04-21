@@ -32,7 +32,7 @@ class HunspellUnmuncherServiceTest {
     // when
     List<String> createWords = unmunchWord("create/KNV", affixesDef);
     List<String> ablateWords = unmunchWord("ablate/NV", affixesDef);
-    List<String> hWords = unmunchWord("h/NV", affixesDef);
+    List<String> hWords = unmunchWord("h/NV po:let", affixesDef);
 
     // then
     assertThat(createWords, containsInAnyOrder("create", "procreate", "creative", "creation"));
@@ -73,21 +73,21 @@ class HunspellUnmuncherServiceTest {
       SFX N   0     en         [^ey]
    */
   private HunspellAffixes createSampleEnglishDefinitions() {
-    AffixRule k = new AffixRule(AffixType.PFX, "K", true);
-    k.getRules().add(new AffixRule.PrefixRuleEntry(AnyTokenCondition.INSTANCE, "", "pro"));
+    AffixClass k = new AffixClass(AffixType.PFX, "K", true);
+    k.getRules().add(new AffixClass.PrefixRule("", "pro", AnyTokenCondition.INSTANCE));
 
-    AffixRule v = new AffixRule(AffixType.SFX, "V", false);
-    v.getRules().add(new AffixRule.SuffixRuleEntry(newSuffixCondition("e"), "e", "ive"));
-    v.getRules().add(new AffixRule.SuffixRuleEntry(newSuffixCondition("[^e]"), "", "ive"));
+    AffixClass v = new AffixClass(AffixType.SFX, "V", false);
+    v.getRules().add(new AffixClass.SuffixRule("e", "ive", newSuffixCondition("e")));
+    v.getRules().add(new AffixClass.SuffixRule("", "ive", newSuffixCondition("[^e]")));
 
-    AffixRule n = new AffixRule(AffixType.SFX, "N", false);
-    n.getRules().add(new AffixRule.SuffixRuleEntry(newSuffixCondition("e"), "e", "ion"));
-    n.getRules().add(new AffixRule.SuffixRuleEntry(newSuffixCondition("y"), "y", "ication"));
-    n.getRules().add(new AffixRule.SuffixRuleEntry(newSuffixCondition("[^ey]"), "", "en"));
+    AffixClass n = new AffixClass(AffixType.SFX, "N", false);
+    n.getRules().add(new AffixClass.SuffixRule("e", "ion", newSuffixCondition("e")));
+    n.getRules().add(new AffixClass.SuffixRule("y", "ication", newSuffixCondition("y")));
+    n.getRules().add(new AffixClass.SuffixRule("", "en", newSuffixCondition("[^ey]")));
 
     HunspellAffixes affixes = new HunspellAffixes();
     affixes.setFlagType(AffixFlagType.SINGLE);
-    affixes.setAffixRulesByName(Map.of("K", k, "V", v, "N", n));
+    affixes.setAffixClassesByFlag(Map.of("K", k, "V", v, "N", n));
     return affixes;
   }
 

@@ -6,7 +6,7 @@ import ch.jalu.wordeval.dictionary.hunspell.condition.CharSequenceConditions;
 import ch.jalu.wordeval.dictionary.hunspell.condition.RegexCondition;
 import ch.jalu.wordeval.dictionary.hunspell.condition.SingleCharCondition;
 import ch.jalu.wordeval.dictionary.hunspell.parser.ParsedAffixes;
-import ch.jalu.wordeval.dictionary.hunspell.parser.ParsedRule;
+import ch.jalu.wordeval.dictionary.hunspell.parser.ParsedAffixClass;
 import org.jheaps.annotations.VisibleForTesting;
 import org.springframework.stereotype.Component;
 
@@ -25,34 +25,44 @@ public class ParserToModelConverter {
 
   public HunspellAffixes convert(ParsedAffixes parsedAffixes) {
     AffixFlagType flagType = firstNonNull(parsedAffixes.getFlagType(), AffixFlagType.SINGLE);
-    Map<String, AffixRule> rulesByName = convertRules(parsedAffixes.getRules());
+    Map<String, AffixClass> rulesByName = convertAffixClasses(parsedAffixes.getAffixClasses());
 
     HunspellAffixes affixesDefinition = new HunspellAffixes();
     affixesDefinition.setFlagType(flagType);
-    affixesDefinition.setAffixRulesByName(rulesByName);
+    affixesDefinition.setAffixClassesByFlag(rulesByName);
     return affixesDefinition;
   }
 
-  private Map<String, AffixRule> convertRules(List<ParsedRule> rules) {
-    return rules.stream()
-        .map(this::convertRule)
-        .collect(Collectors.toMap(AffixRule::getFlag, Function.identity()));
+  private Map<String, AffixClass> convertAffixClasses(List<ParsedAffixClass> classes) {
+    return classes.stream()
+        .map(this::convertAffixClass)
+        .collect(Collectors.toMap(AffixClass::getFlag, Function.identity()));
   }
 
-  private AffixRule convertRule(ParsedRule rule) {
-    AffixRule affixRule = new AffixRule();
-    affixRule.setType(rule.type);
-    affixRule.setFlag(rule.flag);
-    affixRule.setCrossProduct(rule.crossProduct);
+  private AffixClass convertAffixClass(ParsedAffixClass parsedClass) {
+    AffixClass affixClass = new AffixClass();
+    affixClass.setType(parsedClass.type);
+    affixClass.setFlag(parsedClass.flag);
+    affixClass.setCrossProduct(parsedClass.crossProduct);
 
-    for (ParsedRule.RuleEntry ruleEntry : rule.rules) {
-      AffixCondition condition = convertCondition(ruleEntry.condition, rule.type);
-      AffixRule.AffixRuleEntry affixRuleEntry = rule.type == AffixType.PFX
-          ? new AffixRule.PrefixRuleEntry(condition, ruleEntry.strip, ruleEntry.append)
-          : new AffixRule.SuffixRuleEntry(condition, ruleEntry.strip, ruleEntry.append);
-      affixRule.getRules().add(affixRuleEntry);
-    }
-    return affixRule;
+    Function<ParsedAffixClass.Rule, AffixClass.AffixRule> ruleConverterFn = parsedClass.type == AffixType.PFX
+        ? this::convertPrefixRule
+        : this::convertSuffixRule;
+    List<AffixClass.AffixRule> convertedRules = parsedClass.rules.stream()
+        .map(ruleConverterFn)
+        .toList();
+    affixClass.getRules().addAll(convertedRules);
+    return affixClass;
+  }
+
+  private AffixClass.PrefixRule convertPrefixRule(ParsedAffixClass.Rule parsedRule) {
+    AffixCondition condition = convertCondition(parsedRule.condition(), AffixType.PFX);
+    return new AffixClass.PrefixRule(parsedRule.strip(), parsedRule.affix(), condition);
+  }
+
+  private AffixClass.SuffixRule convertSuffixRule(ParsedAffixClass.Rule parsedRule) {
+    AffixCondition condition = convertCondition(parsedRule.condition(), AffixType.SFX);
+    return new AffixClass.SuffixRule(parsedRule.strip(), parsedRule.affix(), condition);
   }
 
   @VisibleForTesting

@@ -17,6 +17,7 @@ class AffixFlagTypeTest {
   @Test
   void shouldMapFromText() {
     // given / when / then
+    assertThat(AffixFlagType.fromAffixFileString("UTF-8"), equalTo(AffixFlagType.SINGLE));
     assertThat(AffixFlagType.fromAffixFileString("long"), equalTo(AffixFlagType.LONG));
     assertThat(AffixFlagType.fromAffixFileString("num"), equalTo(AffixFlagType.NUMBER));
   }

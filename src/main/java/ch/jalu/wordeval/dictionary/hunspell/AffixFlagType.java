@@ -24,6 +24,7 @@ public enum AffixFlagType {
    */
   public static AffixFlagType fromAffixFileString(String str) {
     return switch (str) {
+      case "UTF-8" -> SINGLE;
       case "long" -> LONG;
       case "num" -> NUMBER;
       default -> throw new IllegalArgumentException("Unknown affix flag type: " + str);

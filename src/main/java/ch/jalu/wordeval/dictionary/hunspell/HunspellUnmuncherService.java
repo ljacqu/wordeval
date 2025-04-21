@@ -16,29 +16,31 @@ public class HunspellUnmuncherService {
    * Processes the given dictionary lines and expands them based on the specified affix rules.
    *
    * @param lines the lines of the dictionary file (including affix information)
-   * @param affixes the dictionary's affix rules
+   * @param affixDefinition the dictionary's affix definitions
    * @return all words isolated and expanded
    */
-  public Stream<String> unmunch(Stream<String> lines, HunspellAffixes affixes) {
-    return lines.flatMap(line -> unmunch(line, affixes));
+  public Stream<String> unmunch(Stream<String> lines, HunspellAffixes affixDefinition) {
+    return lines.flatMap(line -> unmunch(line, affixDefinition));
   }
 
   private Stream<String> unmunch(String line, HunspellAffixes affixDefinition) {
     int indexOfSlash = line.indexOf('/');
-    if (indexOfSlash < 0) {
+    if (indexOfSlash <= 0) {
+      // We don't support empty strings as base
       return Stream.of(line);
     }
 
     String base = line.substring(0, indexOfSlash);
-    String affixList = StringUtils.substringBefore(line.substring(indexOfSlash + 1), " ");
-    List<String> affixes = affixDefinition.getFlagType().split(affixList);
+    String affixFlagList = StringUtils.substringBefore(line.substring(indexOfSlash + 1), " ");
+    List<String> affixFlags = affixDefinition.getFlagType().split(affixFlagList);
 
-    return applySuitableAffixes(base, affixes, affixDefinition);
+    return applySuitableAffixRules(base, affixFlags, affixDefinition);
   }
 
-  private Stream<String> applySuitableAffixes(String baseWord, List<String> affixes, HunspellAffixes affixDefinition) {
+  private Stream<String> applySuitableAffixRules(String baseWord, List<String> affixes,
+                                                 HunspellAffixes affixDefinition) {
     Stream<String> expandedWords = affixes.stream()
-        .flatMap(affixFlag -> affixDefinition.streamThroughMatchingEntries(baseWord, affixFlag))
+        .flatMap(affixFlag -> affixDefinition.streamThroughMatchingRules(baseWord, affixFlag))
         .map(afxRule -> afxRule.applyRule(baseWord));
 
     return Stream.concat(Stream.of(baseWord), expandedWords);

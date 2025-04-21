@@ -17,20 +17,20 @@ public class ParsedAffixes {
   @Getter
   @Setter
   private AffixFlagType flagType;
-  private final List<ParsedRule> rules = new ArrayList<>();
-  private ParsedRule currentRule;
+  private final List<ParsedAffixClass> classes = new ArrayList<>();
+  private ParsedAffixClass currentClass;
 
-  public void addRule(ParsedRule rule) {
-    rules.add(rule);
-    currentRule = rule;
+  public void addAffixClass(ParsedAffixClass affixClass) {
+    classes.add(affixClass);
+    currentClass = affixClass;
   }
 
-  public void addEntryToCurrentRule(ParsedRule.RuleEntry entry) {
-    currentRule.rules.add(entry);
+  public void addRuleToCurrentClass(ParsedAffixClass.Rule rule) {
+    currentClass.rules.add(rule);
   }
 
-  public List<ParsedRule> getRules() {
+  public List<ParsedAffixClass> getAffixClasses() {
     // Return an immutable list so we don't accidentally add a rule manually, since it needs to happen via #addRule
-    return List.copyOf(rules);
+    return List.copyOf(classes);
   }
 }
