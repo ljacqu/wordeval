@@ -8,6 +8,9 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Parse result of an .aff file.
+ */
 @ToString
 public class ParsedAffixes {
 
