@@ -29,6 +29,7 @@ public class ParserToModelConverter {
 
     HunspellAffixes affixesDefinition = new HunspellAffixes();
     affixesDefinition.setFlagType(flagType);
+    affixesDefinition.setNeedAffixFlag(parsedAffixes.getNeedAffixFlag());
     affixesDefinition.setAffixClassesByFlag(rulesByName);
     return affixesDefinition;
   }
@@ -57,12 +58,14 @@ public class ParserToModelConverter {
 
   private AffixClass.PrefixRule convertPrefixRule(ParsedAffixClass.Rule parsedRule) {
     AffixCondition condition = convertCondition(parsedRule.condition(), AffixType.PFX);
-    return new AffixClass.PrefixRule(parsedRule.strip(), parsedRule.affix(), condition);
+    return new AffixClass.PrefixRule(parsedRule.strip(), parsedRule.affix(),
+        parsedRule.continuationClasses(), condition);
   }
 
   private AffixClass.SuffixRule convertSuffixRule(ParsedAffixClass.Rule parsedRule) {
     AffixCondition condition = convertCondition(parsedRule.condition(), AffixType.SFX);
-    return new AffixClass.SuffixRule(parsedRule.strip(), parsedRule.affix(), condition);
+    return new AffixClass.SuffixRule(parsedRule.strip(), parsedRule.affix(),
+        parsedRule.continuationClasses(), condition);
   }
 
   @VisibleForTesting

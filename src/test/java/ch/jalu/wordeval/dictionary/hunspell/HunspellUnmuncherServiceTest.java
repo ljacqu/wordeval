@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 
 /**
@@ -54,6 +56,58 @@ class HunspellUnmuncherServiceTest {
     assertThat(pastaWords, containsInAnyOrder("pasta"));
   }
 
+  @Test
+  void shouldNotReturnBaseWordIfHasNeedAffixFlag() {
+    // given
+    AffixClass affixClass = new AffixClass(AffixType.PFX, "14", false);
+    affixClass.getRules().add(new AffixClass.PrefixRule("", "pro", emptyList(), AnyTokenCondition.INSTANCE));
+    HunspellAffixes affixesDef = new HunspellAffixes();
+    affixesDef.setFlagType(AffixFlagType.NUMBER);
+    affixesDef.setNeedAffixFlag("53");
+    affixesDef.setAffixClassesByFlag(Map.of("14", affixClass));
+
+    // when
+    List<String> result = unmunchWord("trude/14,53", affixesDef);
+
+    // then
+    assertThat(result, contains("protrude"));
+  }
+
+    /*
+      PFX P Y 1
+      PFX P   0 un . [prefix_un]+
+
+      SFX S Y 1
+      SFX S   0 s . +PL
+
+      SFX Q Y 1
+      SFX Q   0 s . +3SGV
+
+      SFX R Y 1
+      SFX R   0 able/PS . +DER_V_ADJ_ABLE
+   */
+  @Test
+  void shouldFollowContinuationClasses() {
+    // given
+    AffixClass pfxP = new AffixClass(AffixType.PFX, "P", true);
+    pfxP.getRules().add(new AffixClass.PrefixRule("", "un", emptyList(), AnyTokenCondition.INSTANCE));
+    AffixClass pfxS = new AffixClass(AffixType.SFX, "S", true);
+    pfxS.getRules().add(new AffixClass.SuffixRule("", "s", emptyList(), AnyTokenCondition.INSTANCE));
+    AffixClass pfxR = new AffixClass(AffixType.SFX, "R", true);
+    pfxR.getRules().add(new AffixClass.SuffixRule("", "able", List.of("P", "S"), AnyTokenCondition.INSTANCE));
+
+    HunspellAffixes affixesDef = new HunspellAffixes();
+    affixesDef.setFlagType(AffixFlagType.SINGLE);
+    affixesDef.setAffixClassesByFlag(Map.of("P", pfxP, "S", pfxS, "R", pfxR));
+
+    // when
+    List<String> thinkWords = unmunchWord("drink/R", affixesDef);
+
+    // then
+    // TODO: According to the docs, undrinkables should also be produced
+    assertThat(thinkWords, containsInAnyOrder("drink", "drinkable", "drinkables", "undrinkable"));
+  }
+
   private List<String> unmunchWord(String word, HunspellAffixes affixesDefinition) {
     return unmuncherService.unmunch(Stream.of(word), affixesDefinition)
         .toList();
@@ -74,16 +128,16 @@ class HunspellUnmuncherServiceTest {
    */
   private HunspellAffixes createSampleEnglishDefinitions() {
     AffixClass k = new AffixClass(AffixType.PFX, "K", true);
-    k.getRules().add(new AffixClass.PrefixRule("", "pro", AnyTokenCondition.INSTANCE));
+    k.getRules().add(new AffixClass.PrefixRule("", "pro", emptyList(), AnyTokenCondition.INSTANCE));
 
     AffixClass v = new AffixClass(AffixType.SFX, "V", false);
-    v.getRules().add(new AffixClass.SuffixRule("e", "ive", newSuffixCondition("e")));
-    v.getRules().add(new AffixClass.SuffixRule("", "ive", newSuffixCondition("[^e]")));
+    v.getRules().add(new AffixClass.SuffixRule("e", "ive", emptyList(), newSuffixCondition("e")));
+    v.getRules().add(new AffixClass.SuffixRule("", "ive", emptyList(), newSuffixCondition("[^e]")));
 
     AffixClass n = new AffixClass(AffixType.SFX, "N", false);
-    n.getRules().add(new AffixClass.SuffixRule("e", "ion", newSuffixCondition("e")));
-    n.getRules().add(new AffixClass.SuffixRule("y", "ication", newSuffixCondition("y")));
-    n.getRules().add(new AffixClass.SuffixRule("", "en", newSuffixCondition("[^ey]")));
+    n.getRules().add(new AffixClass.SuffixRule("e", "ion", emptyList(), newSuffixCondition("e")));
+    n.getRules().add(new AffixClass.SuffixRule("y", "ication", emptyList(), newSuffixCondition("y")));
+    n.getRules().add(new AffixClass.SuffixRule("", "en", emptyList(), newSuffixCondition("[^ey]")));
 
     HunspellAffixes affixes = new HunspellAffixes();
     affixes.setFlagType(AffixFlagType.SINGLE);

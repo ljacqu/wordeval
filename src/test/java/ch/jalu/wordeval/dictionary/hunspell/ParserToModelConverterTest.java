@@ -17,6 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.nullValue;
 
 /**
  * Test for {@link ParserToModelConverter}.
@@ -44,6 +45,7 @@ class ParserToModelConverterTest {
 
     // then
     assertThat(affixesDefinition.getFlagType(), equalTo(AffixFlagType.SINGLE));
+    assertThat(affixesDefinition.getNeedAffixFlag(), nullValue());
     assertThat(affixesDefinition.getAffixClassesByFlag().keySet(), contains("N"));
     AffixClass affixClass = affixesDefinition.getAffixClassesByFlag().get("N");
     assertThat(affixClass.getType(), equalTo(AffixType.SFX));
@@ -68,6 +70,7 @@ class ParserToModelConverterTest {
 
     ParsedAffixes parsedAffixes = new ParsedAffixes();
     parsedAffixes.setFlagType(AffixFlagType.LONG);
+    parsedAffixes.setNeedAffixFlag("{}");
     parsedAffixes.addAffixClass(parsedClass);
     parsedAffixes.addRuleToCurrentClass(new ParsedAffixClass.Rule("b", "m", "ba"));
     parsedAffixes.addRuleToCurrentClass(new ParsedAffixClass.Rule("p", "n", "p[^a]"));
@@ -77,6 +80,7 @@ class ParserToModelConverterTest {
 
     // then
     assertThat(affixesDefinition.getFlagType(), equalTo(AffixFlagType.LONG));
+    assertThat(affixesDefinition.getNeedAffixFlag(), equalTo("{}"));
     assertThat(affixesDefinition.getAffixClassesByFlag().keySet(), contains("P2"));
     AffixClass affixClass = affixesDefinition.getAffixClassesByFlag().get("P2");
     assertThat(affixClass.getType(), equalTo(AffixType.PFX));

@@ -16,7 +16,12 @@ public class ParsedAffixes {
 
   @Getter
   @Setter
-  private AffixFlagType flagType;
+  private AffixFlagType flagType = AffixFlagType.SINGLE;
+
+  @Getter
+  @Setter
+  private String needAffixFlag;
+
   private final List<ParsedAffixClass> classes = new ArrayList<>();
   private ParsedAffixClass currentClass;
 

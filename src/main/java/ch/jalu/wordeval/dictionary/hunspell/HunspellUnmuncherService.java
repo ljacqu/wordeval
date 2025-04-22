@@ -3,6 +3,7 @@ package ch.jalu.wordeval.dictionary.hunspell;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -30,19 +31,65 @@ public class HunspellUnmuncherService {
       return Stream.of(line);
     }
 
-    String base = line.substring(0, indexOfSlash);
+    String baseWord = line.substring(0, indexOfSlash);
     String affixFlagList = StringUtils.substringBefore(line.substring(indexOfSlash + 1), " ");
     List<String> affixFlags = affixDefinition.getFlagType().split(affixFlagList);
 
-    return applySuitableAffixRules(base, affixFlags, affixDefinition);
+    List<String> results = new ArrayList<>();
+    boolean includeBaseWord = affixDefinition.getNeedAffixFlag() == null
+        || !affixFlags.contains(affixDefinition.getNeedAffixFlag());
+    if (includeBaseWord) {
+      results.add(baseWord);
+    }
+
+    for (String affixFlag : affixFlags) {
+      applyAffixRule(baseWord, affixFlag, results, affixDefinition);
+    }
+    return results.stream();
   }
 
-  private Stream<String> applySuitableAffixRules(String baseWord, List<String> affixes,
-                                                 HunspellAffixes affixDefinition) {
-    Stream<String> expandedWords = affixes.stream()
-        .flatMap(affixFlag -> affixDefinition.streamThroughMatchingRules(baseWord, affixFlag))
-        .map(afxRule -> afxRule.applyRule(baseWord));
+  // TODO: crossproduct flag is not considered.
 
-    return Stream.concat(Stream.of(baseWord), expandedWords);
+  private void applyAffixRule(String baseWord, String affixFlag,
+                              List<String> results, HunspellAffixes affixDefinition) {
+    List<AffixClass.AffixRule> rules = affixDefinition.streamThroughMatchingRules(baseWord, affixFlag).toList();
+    for (AffixClass.AffixRule rule : rules) {
+      String newWord = rule.applyRule(baseWord);
+      results.add(newWord);
+      for (String continuationClass : rule.getContinuationClasses()) {
+        applyAffixRule(newWord, continuationClass, results, affixDefinition);
+      }
+    }
+  }
+
+  // TODO: clean up
+  // ChatGPT's opinion is to call this with (…, true, true) in the beginning, but this produces even fewer forms
+  // than what the documentation suggests...
+  private void applyAffixRule(String baseWord, String affixFlag,
+                              List<String> results, HunspellAffixes affixDefinition,
+                              boolean allowPrefixes, boolean allowSuffixes) {
+    List<AffixClass.AffixRule> rules = affixDefinition.streamThroughMatchingRules(baseWord, affixFlag).toList();
+
+    for (AffixClass.AffixRule rule : rules) {
+      boolean isPrefix = rule.getType() == AffixType.PFX;
+      boolean isSuffix = rule.getType() == AffixType.SFX;
+
+      // Only apply if allowed in this stage
+      if ((isPrefix && !allowPrefixes) || (isSuffix && !allowSuffixes)) {
+        continue;
+      }
+
+      String newWord = rule.applyRule(baseWord);
+      results.add(newWord);
+
+      // Prefix before suffix: pass allowPrefixes = false when doing suffix pass
+      for (String continuationClass : rule.getContinuationClasses()) {
+        applyAffixRule(newWord, continuationClass, results, affixDefinition,
+            // Once we've applied a prefix, only allow suffixes afterward
+            isPrefix ? false : allowPrefixes,
+            isSuffix ? false : allowSuffixes
+        );
+      }
+    }
   }
 }

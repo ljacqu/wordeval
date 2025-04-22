@@ -4,6 +4,7 @@ import ch.jalu.wordeval.dictionary.hunspell.AffixType;
 import lombok.ToString;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @ToString
@@ -15,6 +16,10 @@ public class ParsedAffixClass {
   public boolean crossProduct;
   public final List<Rule> rules = new ArrayList<>();
 
-  public record Rule(String strip, String affix, String condition) {
+  public record Rule(String strip, String affix, List<String> continuationClasses, String condition) {
+
+    public Rule(String strip, String affix, String condition) {
+      this(strip, affix, Collections.emptyList(), condition);
+    }
   }
 }

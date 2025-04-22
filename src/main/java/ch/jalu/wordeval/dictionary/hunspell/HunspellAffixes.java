@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 public class HunspellAffixes {
 
   private AffixFlagType flagType;
+  private String needAffixFlag;
   private Map<String, AffixClass> affixClassesByFlag;
 
   public Stream<AffixClass.AffixRule> streamThroughMatchingRules(String word, String affixFlag) {

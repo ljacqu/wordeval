@@ -25,49 +25,63 @@ public class AffixClass {
   private boolean crossProduct;
   private final List<AffixRule> rules = new ArrayList<>();
 
-  public interface AffixRule {
+  @Getter
+  @RequiredArgsConstructor
+  public abstract static class AffixRule {
 
-    boolean matches(String word);
+    protected final String strip;
+    private final List<String> continuationClasses;
+    private final AffixCondition condition;
 
-    String applyRule(String word);
+    public boolean matches(String word) {
+      return condition.matches(word);
+    }
+
+    public abstract String applyRule(String word);
+
+    public abstract AffixType getType();
 
   }
 
   @Getter
-  @RequiredArgsConstructor
-  public static class SuffixRule implements AffixRule {
+  public static class SuffixRule extends AffixRule {
 
-    private final String strip;
     private final String suffix;
-    private final AffixCondition condition;
 
-    @Override
-    public boolean matches(String word) {
-      return condition.matches(word);
+    public SuffixRule(String strip, String suffix, List<String> continuationClasses, AffixCondition condition) {
+      super(strip, continuationClasses, condition);
+      this.suffix = suffix;
     }
 
     @Override
     public String applyRule(String word) {
       return StringUtils.removeEnd(word, strip) + suffix;
     }
+
+    @Override
+    public AffixType getType() {
+      return AffixType.SFX;
+    }
   }
 
   @Getter
-  @RequiredArgsConstructor
-  public static class PrefixRule implements AffixRule {
+  public static class PrefixRule extends AffixRule {
 
-    private final String strip;
     private final String prefix;
-    private final AffixCondition condition;
 
-    @Override
-    public boolean matches(String word) {
-      return condition.matches(word);
+    public PrefixRule(String strip, String prefix, List<String> continuationClasses, AffixCondition condition) {
+      super(strip, continuationClasses, condition);
+      this.prefix = prefix;
     }
 
     @Override
     public String applyRule(String word) {
       return prefix + StringUtils.removeStart(word, strip);
+    }
+
+    @Override
+    public AffixType getType() {
+      return AffixType.PFX;
     }
   }
 }
