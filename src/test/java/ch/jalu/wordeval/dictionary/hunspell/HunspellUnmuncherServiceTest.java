@@ -37,7 +37,7 @@ class HunspellUnmuncherServiceTest {
     List<String> hWords = unmunchWord("h/NV po:let", affixesDef);
 
     // then
-    assertThat(createWords, containsInAnyOrder("create", "procreate", "creative", "creation"));
+    assertThat(createWords, containsInAnyOrder("create", "procreate", "creative", "creation", "procreation", "procreative"));
     assertThat(ablateWords, containsInAnyOrder("ablate", "ablative", "ablation"));
     assertThat(hWords, containsInAnyOrder("h", "hive", "hen"));
   }
@@ -91,21 +91,51 @@ class HunspellUnmuncherServiceTest {
     // given
     AffixClass pfxP = new AffixClass(AffixType.PFX, "P", true);
     pfxP.getRules().add(new AffixClass.PrefixRule("", "un", emptyList(), AnyTokenCondition.INSTANCE));
-    AffixClass pfxS = new AffixClass(AffixType.SFX, "S", true);
-    pfxS.getRules().add(new AffixClass.SuffixRule("", "s", emptyList(), AnyTokenCondition.INSTANCE));
-    AffixClass pfxR = new AffixClass(AffixType.SFX, "R", true);
-    pfxR.getRules().add(new AffixClass.SuffixRule("", "able", List.of("P", "S"), AnyTokenCondition.INSTANCE));
+    AffixClass sfxS = new AffixClass(AffixType.SFX, "S", true);
+    sfxS.getRules().add(new AffixClass.SuffixRule("", "s", emptyList(), AnyTokenCondition.INSTANCE));
+    AffixClass sfxR = new AffixClass(AffixType.SFX, "R", true);
+    sfxR.getRules().add(new AffixClass.SuffixRule("", "able", List.of("P", "S"), AnyTokenCondition.INSTANCE));
 
     HunspellAffixes affixesDef = new HunspellAffixes();
     affixesDef.setFlagType(AffixFlagType.SINGLE);
-    affixesDef.setAffixClassesByFlag(Map.of("P", pfxP, "S", pfxS, "R", pfxR));
+    affixesDef.setAffixClassesByFlag(Map.of("P", pfxP, "S", sfxS, "R", sfxR));
 
     // when
     List<String> thinkWords = unmunchWord("drink/R", affixesDef);
 
     // then
-    // TODO: According to the docs, undrinkables should also be produced
-    assertThat(thinkWords, containsInAnyOrder("drink", "drinkable", "drinkables", "undrinkable"));
+    assertThat(thinkWords, containsInAnyOrder("drink", "drinkable", "drinkables", "undrinkable", "undrinkables"));
+  }
+
+  /*
+    PFX A Y 1
+    PFX A 0 re .
+
+    SFX B Y 1
+    SFX B 0 ed .
+
+    SFX C Y 1
+    SFX C 0 ing .
+   */
+  @Test
+  void shouldApplyAffixesInCombination() {
+    // given
+    AffixClass pfxA = new AffixClass(AffixType.PFX, "A", true);
+    pfxA.getRules().add(new AffixClass.PrefixRule("", "re", emptyList(), AnyTokenCondition.INSTANCE));
+    AffixClass sfxB = new AffixClass(AffixType.SFX, "B", true);
+    sfxB.getRules().add(new AffixClass.SuffixRule("", "ed", emptyList(), AnyTokenCondition.INSTANCE));
+    AffixClass sfxC = new AffixClass(AffixType.SFX, "C", true);
+    sfxC.getRules().add(new AffixClass.SuffixRule("", "ing", emptyList(), AnyTokenCondition.INSTANCE));
+
+    HunspellAffixes affixesDef = new HunspellAffixes();
+    affixesDef.setFlagType(AffixFlagType.SINGLE);
+    affixesDef.setAffixClassesByFlag(Map.of("A", pfxA, "B", sfxB, "C", sfxC));
+
+    // when
+    List<String> words = unmunchWord("play/ABC", affixesDef);
+
+    // then
+    assertThat(words, containsInAnyOrder("play", "replay", "played", "playing", "replayed", "replaying"));
   }
 
   private List<String> unmunchWord(String word, HunspellAffixes affixesDefinition) {

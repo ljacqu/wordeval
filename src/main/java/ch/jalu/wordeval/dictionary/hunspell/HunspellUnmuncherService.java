@@ -1,5 +1,6 @@
 package ch.jalu.wordeval.dictionary.hunspell;
 
+import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -42,54 +43,38 @@ public class HunspellUnmuncherService {
       results.add(baseWord);
     }
 
-    for (String affixFlag : affixFlags) {
-      applyAffixRule(baseWord, affixFlag, results, affixDefinition);
-    }
+    populateWithAffixes(baseWord, affixFlags, results, affixDefinition);
     return results.stream();
   }
 
   // TODO: crossproduct flag is not considered.
 
-  private void applyAffixRule(String baseWord, String affixFlag,
-                              List<String> results, HunspellAffixes affixDefinition) {
-    List<AffixClass.AffixRule> rules = affixDefinition.streamThroughMatchingRules(baseWord, affixFlag).toList();
-    for (AffixClass.AffixRule rule : rules) {
-      String newWord = rule.applyRule(baseWord);
-      results.add(newWord);
-      for (String continuationClass : rule.getContinuationClasses()) {
-        applyAffixRule(newWord, continuationClass, results, affixDefinition);
-      }
-    }
-  }
 
-  // TODO: clean up
-  // ChatGPT's opinion is to call this with (…, true, true) in the beginning, but this produces even fewer forms
-  // than what the documentation suggests...
-  private void applyAffixRule(String baseWord, String affixFlag,
-                              List<String> results, HunspellAffixes affixDefinition,
-                              boolean allowPrefixes, boolean allowSuffixes) {
-    List<AffixClass.AffixRule> rules = affixDefinition.streamThroughMatchingRules(baseWord, affixFlag).toList();
+  private void populateWithAffixes(String baseWord, List<String> affixFlags, List<String> results,
+                                   HunspellAffixes affixDefinition) {
+    affixFlags.stream()
+        .flatMap(affixFlag -> affixDefinition.streamThroughMatchingRules(baseWord, affixFlag))
+        .forEach(affixRule -> {
+          String wordWithAffix = affixRule.applyRule(baseWord);
+          results.add(wordWithAffix);
 
-    for (AffixClass.AffixRule rule : rules) {
-      boolean isPrefix = rule.getType() == AffixType.PFX;
-      boolean isSuffix = rule.getType() == AffixType.SFX;
 
-      // Only apply if allowed in this stage
-      if ((isPrefix && !allowPrefixes) || (isSuffix && !allowSuffixes)) {
-        continue;
-      }
+          if (!affixRule.getContinuationClasses().isEmpty()) {
+            populateWithAffixes(wordWithAffix, affixRule.getContinuationClasses(), results, affixDefinition);
+          }
 
-      String newWord = rule.applyRule(baseWord);
-      results.add(newWord);
+          if (affixRule.getType() == AffixType.PFX) {
+            affixFlags.stream()
+                .flatMap(affixFlag -> affixDefinition.streamThroughMatchingRules(wordWithAffix, affixFlag))
+                .filter(rule -> rule.getType() == AffixType.SFX)
+                .forEach(suffixRule -> {
+                  String suffixedResult = suffixRule.applyRule(wordWithAffix);
+                  Preconditions.checkArgument(suffixRule.getContinuationClasses().isEmpty(),
+                      "Unexpected continuation classes on suffix rule");
+                  results.add(suffixedResult);
+                });
 
-      // Prefix before suffix: pass allowPrefixes = false when doing suffix pass
-      for (String continuationClass : rule.getContinuationClasses()) {
-        applyAffixRule(newWord, continuationClass, results, affixDefinition,
-            // Once we've applied a prefix, only allow suffixes afterward
-            isPrefix ? false : allowPrefixes,
-            isSuffix ? false : allowSuffixes
-        );
-      }
-    }
+          }
+        });
   }
 }
