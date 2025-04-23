@@ -1,9 +1,9 @@
 package ch.jalu.wordeval.dictionary.hunspell;
 
+import com.google.common.collect.ListMultimap;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Map;
 import java.util.stream.Stream;
 
 /**
@@ -15,15 +15,10 @@ public class HunspellAffixes {
 
   private AffixFlagType flagType;
   private String needAffixFlag;
-  private Map<String, AffixClass> affixClassesByFlag;
+  private ListMultimap<String, AffixRule> affixRulesByFlag;
 
-  public Stream<AffixClass.AffixRule> streamThroughMatchingRules(String word, String affixFlag) {
-    AffixClass affixClass = affixClassesByFlag.get(affixFlag);
-    if (affixClass == null) {
-      // todo: log this?
-      return Stream.empty();
-    }
-    return affixClass.getRules().stream()
+  public Stream<AffixRule> streamThroughMatchingRules(String word, String affixFlag) {
+    return affixRulesByFlag.get(affixFlag).stream()
         .filter(rule -> rule.matches(word));
   }
 }

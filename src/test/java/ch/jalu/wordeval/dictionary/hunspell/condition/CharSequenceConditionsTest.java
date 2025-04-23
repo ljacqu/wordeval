@@ -59,6 +59,7 @@ class CharSequenceConditionsTest {
     assertThat(condition.matches("antsy"), equalTo(false));
     assertThat(condition.matches("banana"), equalTo(false));
     assertThat(condition.matches("Antilles"), equalTo(false));
+    assertThat(condition.matches("a"), equalTo(false));
   }
 
   @Test
@@ -74,6 +75,7 @@ class CharSequenceConditionsTest {
     assertThat(condition.matches("ash"), equalTo(true));
     assertThat(condition.matches("ashes"), equalTo(false));
     assertThat(condition.matches("plane"), equalTo(false));
+    assertThat(condition.matches("a"), equalTo(false));
   }
 
   @Test

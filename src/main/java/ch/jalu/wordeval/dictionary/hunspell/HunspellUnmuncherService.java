@@ -47,15 +47,15 @@ public class HunspellUnmuncherService {
     return results.stream();
   }
 
-  // TODO: crossproduct flag is not considered.
-
-
   private void populateWithAffixes(String baseWord, List<String> affixFlags, List<String> results,
                                    HunspellAffixes affixDefinition) {
     affixFlags.stream()
         .flatMap(affixFlag -> affixDefinition.streamThroughMatchingRules(baseWord, affixFlag))
         .forEach(affixRule -> {
           String wordWithAffix = affixRule.applyRule(baseWord);
+          if (wordWithAffix == null) {
+            return;
+          }
           results.add(wordWithAffix);
 
 
@@ -63,12 +63,15 @@ public class HunspellUnmuncherService {
             populateWithAffixes(wordWithAffix, affixRule.getContinuationClasses(), results, affixDefinition);
           }
 
-          if (affixRule.getType() == AffixType.PFX) {
+          if (affixRule.getType() == AffixType.PFX && affixRule.isCrossProduct()) {
             affixFlags.stream()
                 .flatMap(affixFlag -> affixDefinition.streamThroughMatchingRules(wordWithAffix, affixFlag))
-                .filter(rule -> rule.getType() == AffixType.SFX)
+                .filter(rule -> rule.getType() == AffixType.SFX && rule.isCrossProduct())
                 .forEach(suffixRule -> {
                   String suffixedResult = suffixRule.applyRule(wordWithAffix);
+                  if (suffixedResult == null) {
+                    return;
+                  }
                   Preconditions.checkArgument(suffixRule.getContinuationClasses().isEmpty(),
                       "Unexpected continuation classes on suffix rule");
                   results.add(suffixedResult);

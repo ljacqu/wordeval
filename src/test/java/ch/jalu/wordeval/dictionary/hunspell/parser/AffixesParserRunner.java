@@ -1,9 +1,10 @@
 package ch.jalu.wordeval.dictionary.hunspell.parser;
 
 import ch.jalu.wordeval.config.SpringContainedRunner;
-import ch.jalu.wordeval.dictionary.hunspell.AffixClass;
+import ch.jalu.wordeval.dictionary.hunspell.AffixRule;
 import ch.jalu.wordeval.dictionary.hunspell.HunspellAffixes;
 import ch.jalu.wordeval.dictionary.hunspell.ParserToModelConverter;
+import com.google.common.collect.Multimaps;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,6 +13,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
@@ -39,8 +41,9 @@ public class AffixesParserRunner extends SpringContainedRunner {
       Path affFile = Paths.get("dict/" + code + ".aff");
       HunspellAffixes affixes = loadAndParseAffixes(affFile);
 
-      System.out.println("Processed " + affixes.getAffixClassesByFlag().size() + " affix classes");
-      affixes.getAffixClassesByFlag().values().forEach(this::printAffixClass);
+      System.out.println("Processed " + affixes.getAffixRulesByFlag().keySet().size() + " affix classes");
+      Multimaps.asMap(affixes.getAffixRulesByFlag())
+          .forEach(this::printAffixClass);
     }
   }
 
@@ -55,25 +58,25 @@ public class AffixesParserRunner extends SpringContainedRunner {
     return converter.convert(parsedAffixes);
   }
 
-  private void printAffixClass(AffixClass affixClass) {
-    System.out.println(affixClass.getType() + " " + affixClass.getFlag());
+  private void printAffixClass(String flag, List<AffixRule> rules) {
+    System.out.println(rules.getFirst().getType() + " " + flag);
     int cnt = 0;
-    for (AffixClass.AffixRule rule : affixClass.getRules()) {
-      if (rule instanceof AffixClass.SuffixRule sfx) {
+    for (AffixRule rule : rules) {
+      if (rule instanceof AffixRule.SuffixRule sfx) {
         System.out.println(" "
             + StringUtils.defaultIfEmpty(sfx.getStrip(), "0")
-            + " " + StringUtils.defaultIfEmpty(sfx.getSuffix(), "0")
+            + " " + StringUtils.defaultIfEmpty(sfx.getAffix(), "0")
             + " " + sfx.getCondition().getPatternText());
-      } else if (rule instanceof AffixClass.PrefixRule pfx) {
+      } else if (rule instanceof AffixRule.PrefixRule pfx) {
         System.out.println(" "
             + StringUtils.defaultIfEmpty(pfx.getStrip(), "0")
-            + " " + StringUtils.defaultIfEmpty(pfx.getPrefix(), "0")
+            + " " + StringUtils.defaultIfEmpty(pfx.getAffix(), "0")
             + " " + pfx.getCondition().getPatternText());
       } else {
         throw new IllegalStateException("Unknown rule class: " + rule.getClass().getSimpleName());
       }
       if (++cnt > 5) {
-        int rest = affixClass.getRules().size() - cnt;
+        int rest = rules.size() - cnt;
         if (rest > 0) {
           System.out.println(" ... " + rest + " more");
         }

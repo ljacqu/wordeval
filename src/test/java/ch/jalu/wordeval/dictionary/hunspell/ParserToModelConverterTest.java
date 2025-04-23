@@ -3,6 +3,7 @@ package ch.jalu.wordeval.dictionary.hunspell;
 import ch.jalu.wordeval.dictionary.hunspell.condition.AffixCondition;
 import ch.jalu.wordeval.dictionary.hunspell.parser.ParsedAffixClass;
 import ch.jalu.wordeval.dictionary.hunspell.parser.ParsedAffixes;
+import com.google.common.collect.Iterables;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.nullValue;
@@ -46,18 +48,15 @@ class ParserToModelConverterTest {
     // then
     assertThat(affixesDefinition.getFlagType(), equalTo(AffixFlagType.SINGLE));
     assertThat(affixesDefinition.getNeedAffixFlag(), nullValue());
-    assertThat(affixesDefinition.getAffixClassesByFlag().keySet(), contains("N"));
-    AffixClass affixClass = affixesDefinition.getAffixClassesByFlag().get("N");
-    assertThat(affixClass.getType(), equalTo(AffixType.SFX));
-    assertThat(affixClass.getFlag(), equalTo("N"));
-    assertThat(affixClass.isCrossProduct(), equalTo(true));
+    assertThat(affixesDefinition.getAffixRulesByFlag().keySet(), contains("N"));
 
-    assertThat(affixClass.getRules(), hasSize(1));
-    AffixClass.SuffixRule rule = (AffixClass.SuffixRule) affixClass.getRules().getFirst();
-    assertThat(rule.getStrip(), equalTo("s"));
-    assertThat(rule.getSuffix(), equalTo("d"));
-    assertThat(rule.getCondition().matches("benches"), equalTo(true));
-    assertThat(rule.applyRule("benches"), equalTo("benched"));
+    AffixRule affixRule = Iterables.getOnlyElement(affixesDefinition.getAffixRulesByFlag().get("N"));
+    assertThat(affixRule.getType(), equalTo(AffixType.SFX));
+    assertThat(affixRule.getStrip(), equalTo("s"));
+    assertThat(affixRule.getAffix(), equalTo("d"));
+    assertThat(affixRule.isCrossProduct(), equalTo(true));
+    assertThat(affixRule.getCondition().matches("benches"), equalTo(true));
+    assertThat(affixRule.applyRule("benches"), equalTo("benched"));
   }
 
   @Test
@@ -81,22 +80,26 @@ class ParserToModelConverterTest {
     // then
     assertThat(affixesDefinition.getFlagType(), equalTo(AffixFlagType.LONG));
     assertThat(affixesDefinition.getNeedAffixFlag(), equalTo("{}"));
-    assertThat(affixesDefinition.getAffixClassesByFlag().keySet(), contains("P2"));
-    AffixClass affixClass = affixesDefinition.getAffixClassesByFlag().get("P2");
-    assertThat(affixClass.getType(), equalTo(AffixType.PFX));
-    assertThat(affixClass.isCrossProduct(), equalTo(false));
+    assertThat(affixesDefinition.getAffixRulesByFlag().keySet(), contains("P2"));
 
-    assertThat(affixClass.getRules(), hasSize(2));
+    List<AffixRule> p2Rules = affixesDefinition.getAffixRulesByFlag().get("P2");
+    p2Rules.forEach(rule -> {
+      assertThat(rule.getType(), equalTo(AffixType.PFX));
+      assertThat(rule.getContinuationClasses(), empty());
+      assertThat(rule.isCrossProduct(), equalTo(false));
+    });
+
+    assertThat(p2Rules, hasSize(2));
     // First rule: b m ba
-    AffixClass.PrefixRule rule1 = (AffixClass.PrefixRule) affixClass.getRules().get(0);
+    AffixRule.PrefixRule rule1 = (AffixRule.PrefixRule) p2Rules.get(0);
     assertThat(rule1.getStrip(), equalTo("b"));
-    assertThat(rule1.getPrefix(), equalTo("m"));
+    assertThat(rule1.getAffix(), equalTo("m"));
     assertThat(rule1.getCondition().matches("bake"), equalTo(true));
     assertThat(rule1.applyRule("bake"), equalTo("make"));
     // Second rule: p n p[^a]
-    AffixClass.PrefixRule rule2 = (AffixClass.PrefixRule) affixClass.getRules().get(1);
+    AffixRule.PrefixRule rule2 = (AffixRule.PrefixRule) p2Rules.get(1);
     assertThat(rule2.getStrip(), equalTo("p"));
-    assertThat(rule2.getPrefix(), equalTo("n"));
+    assertThat(rule2.getAffix(), equalTo("n"));
     assertThat(rule2.getCondition().matches("pun"), equalTo(true));
     assertThat(rule2.applyRule("pun"), equalTo("nun"));
   }
