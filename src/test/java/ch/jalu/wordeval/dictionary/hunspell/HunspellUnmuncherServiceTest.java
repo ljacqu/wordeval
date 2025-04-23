@@ -17,6 +17,8 @@ import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Test for {@link HunspellUnmuncherService}.
@@ -55,6 +57,35 @@ class HunspellUnmuncherServiceTest {
     // then
     assertThat(applesWords, containsInAnyOrder("apple"));
     assertThat(pastaWords, containsInAnyOrder("pasta"));
+  }
+
+  /* Slashes can be escaped in Hunspell, but there's no point in supporting this in this project. */
+  @Test
+  void shouldThrowForWordWithBackslash() {
+    // given
+    HunspellAffixes affixesDef = createSampleEnglishDefinitions();
+
+    // when
+    IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        () -> unmunchWord("km\\/h", affixesDef));
+
+    // then
+    assertThat(ex.getMessage(), equalTo("km\\/h"));
+  }
+
+  @Test
+  void shouldParseAffixesUntilWhitespace() {
+    // given
+    HunspellAffixes affixes = createSampleEnglishDefinitions();
+    affixes.setFlagType(AffixFlagType.SINGLE);
+
+    // when
+    List<String> result1 = unmunchWord("duck/K VN", affixes);
+    List<String> result2 = unmunchWord("duck/K\tVN test", affixes);
+
+    // then
+    assertThat(result1, containsInAnyOrder("duck", "produck"));
+    assertThat(result2, containsInAnyOrder("duck", "produck"));
   }
 
   @Test

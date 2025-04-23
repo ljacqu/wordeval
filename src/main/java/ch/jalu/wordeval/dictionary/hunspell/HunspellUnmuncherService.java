@@ -1,7 +1,6 @@
 package ch.jalu.wordeval.dictionary.hunspell;
 
 import com.google.common.base.Preconditions;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,10 +30,13 @@ public class HunspellUnmuncherService {
       // We don't support empty strings as base
       return Stream.of(line);
     }
+    // Slashes can be escaped with a backslash apparently (nl.dic), but this currently goes beyond the desired scope,
+    // since a word with a slash won't be interesting to wordeval anyway. So it's the job of a sanitizer to skip these
+    // words before they're passed to this class.
+    Preconditions.checkArgument(line.indexOf('\\') < 0, line);
 
     String baseWord = line.substring(0, indexOfSlash);
-    String affixFlagList = StringUtils.substringBefore(line.substring(indexOfSlash + 1), " ");
-    List<String> affixFlags = affixDefinition.getFlagType().split(affixFlagList);
+    List<String> affixFlags = returnAffixFlags(line.substring(indexOfSlash + 1), affixDefinition.getFlagType());
 
     List<String> results = new ArrayList<>();
     boolean includeBaseWord = affixDefinition.getNeedAffixFlag() == null
@@ -45,6 +47,27 @@ public class HunspellUnmuncherService {
 
     populateWithAffixes(baseWord, affixFlags, results, affixDefinition);
     return results.stream();
+  }
+
+  /**
+   * Returns the affix flags indicated in the "meta part" of the line, i.e. the section after the slash separating
+   * the word.
+   *
+   * @param metaPart the part with the affixes
+   * @param flagType flag type to parse the list with
+   * @return all affix flags in the given meta part
+   */
+  private List<String> returnAffixFlags(String metaPart, AffixFlagType flagType) {
+    int indexFirstWhitespace = -1;
+    for (int i = 0; i < metaPart.length(); ++i) {
+      if (Character.isWhitespace(metaPart.charAt(i))) {
+        indexFirstWhitespace = i;
+        break;
+      }
+    }
+
+    String affixList = indexFirstWhitespace >= 0 ? metaPart.substring(0, indexFirstWhitespace) : metaPart;
+    return flagType.split(affixList);
   }
 
   private void populateWithAffixes(String baseWord, List<String> affixFlags, List<String> results,
