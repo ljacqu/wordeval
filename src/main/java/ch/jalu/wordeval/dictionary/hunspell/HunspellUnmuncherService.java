@@ -3,8 +3,8 @@ package ch.jalu.wordeval.dictionary.hunspell;
 import com.google.common.base.Preconditions;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -36,17 +36,14 @@ public class HunspellUnmuncherService {
     Preconditions.checkArgument(line.indexOf('\\') < 0, line);
 
     String baseWord = line.substring(0, indexOfSlash);
-    List<String> affixFlags = returnAffixFlags(line.substring(indexOfSlash + 1), affixDefinition.getFlagType());
+    List<String> affixFlags = extractAffixFlags(line.substring(indexOfSlash + 1), affixDefinition.getFlagType());
 
-    List<String> results = new ArrayList<>();
     boolean includeBaseWord = affixDefinition.getNeedAffixFlag() == null
         || !affixFlags.contains(affixDefinition.getNeedAffixFlag());
     if (includeBaseWord) {
-      results.add(baseWord);
+      return Stream.concat(Stream.of(baseWord), streamThroughAllAffixes(baseWord, affixFlags, affixDefinition));
     }
-
-    populateWithAffixes(baseWord, affixFlags, results, affixDefinition);
-    return results.stream();
+    return streamThroughAllAffixes(baseWord, affixFlags, affixDefinition);
   }
 
   /**
@@ -57,7 +54,7 @@ public class HunspellUnmuncherService {
    * @param flagType flag type to parse the list with
    * @return all affix flags in the given meta part
    */
-  private List<String> returnAffixFlags(String metaPart, AffixFlagType flagType) {
+  private List<String> extractAffixFlags(String metaPart, AffixFlagType flagType) {
     int indexFirstWhitespace = -1;
     for (int i = 0; i < metaPart.length(); ++i) {
       if (Character.isWhitespace(metaPart.charAt(i))) {
@@ -70,37 +67,44 @@ public class HunspellUnmuncherService {
     return flagType.split(affixList);
   }
 
-  private void populateWithAffixes(String baseWord, List<String> affixFlags, List<String> results,
-                                   HunspellAffixes affixDefinition) {
-    affixFlags.stream()
+  private Stream<String> streamThroughAllAffixes(String baseWord, List<String> affixFlags,
+                                                 HunspellAffixes affixDefinition) {
+    return affixFlags.stream()
         .flatMap(affixFlag -> affixDefinition.streamThroughMatchingRules(baseWord, affixFlag))
-        .forEach(affixRule -> {
+        .flatMap(affixRule -> {
           String wordWithAffix = affixRule.applyRule(baseWord);
           if (wordWithAffix == null) {
-            return;
-          }
-          results.add(wordWithAffix);
-
-
-          if (!affixRule.getContinuationClasses().isEmpty()) {
-            populateWithAffixes(wordWithAffix, affixRule.getContinuationClasses(), results, affixDefinition);
+            return Stream.empty();
           }
 
-          if (affixRule.getType() == AffixType.PFX && affixRule.isCrossProduct()) {
-            affixFlags.stream()
-                .flatMap(affixFlag -> affixDefinition.streamThroughMatchingRules(wordWithAffix, affixFlag))
-                .filter(rule -> rule.getType() == AffixType.SFX && rule.isCrossProduct())
-                .forEach(suffixRule -> {
-                  String suffixedResult = suffixRule.applyRule(wordWithAffix);
-                  if (suffixedResult == null) {
-                    return;
-                  }
-                  Preconditions.checkArgument(suffixRule.getContinuationClasses().isEmpty(),
-                      "Unexpected continuation classes on suffix rule");
-                  results.add(suffixedResult);
-                });
-
+          boolean hasContinuationClasses = !affixRule.getContinuationClasses().isEmpty();
+          boolean isCrossProductPrefix = affixRule.getType() == AffixType.PFX && affixRule.isCrossProduct();
+          if (hasContinuationClasses && isCrossProductPrefix) {
+            return Stream.of(
+                    Stream.of(wordWithAffix),
+                    streamThroughAllAffixes(wordWithAffix, affixRule.getContinuationClasses(), affixDefinition),
+                    addSuffixes(wordWithAffix, affixFlags, affixDefinition))
+                .flatMap(Function.identity());
+          } else if (hasContinuationClasses) {
+            return Stream.concat(
+                    Stream.of(wordWithAffix),
+                    streamThroughAllAffixes(wordWithAffix, affixRule.getContinuationClasses(), affixDefinition));
+          } else if (isCrossProductPrefix) {
+            return Stream.concat(
+                    Stream.of(wordWithAffix),
+                    addSuffixes(wordWithAffix, affixFlags, affixDefinition));
+          } else {
+            return Stream.of(wordWithAffix);
           }
         });
+  }
+
+  private static Stream<String> addSuffixes(String word,
+                                            List<String> affixFlags,
+                                            HunspellAffixes affixDefinition) {
+    return affixFlags.stream()
+        .flatMap(affixFlag -> affixDefinition.getAffixRulesByFlag().get(affixFlag).stream())
+        .filter(rule -> rule.getType() == AffixType.SFX && rule.isCrossProduct() && rule.matches(word))
+        .map(rule -> rule.applyRule(word));
   }
 }

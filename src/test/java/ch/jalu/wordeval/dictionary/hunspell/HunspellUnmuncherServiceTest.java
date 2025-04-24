@@ -189,11 +189,6 @@ class HunspellUnmuncherServiceTest {
     assertThat(words, containsInAnyOrder("play", "replay", "played", "playing", "replayed", "replaying"));
   }
 
-  private List<String> unmunchWord(String word, HunspellAffixes affixesDefinition) {
-    return unmuncherService.unmunch(Stream.of(word), affixesDefinition)
-        .toList();
-  }
-
   /*
     SFX E Y 211
     SFX E 0 mi [ts]o
@@ -237,6 +232,27 @@ class HunspellUnmuncherServiceTest {
     // SFX Y not applied with PFX J, i.e. no *riperdutamente or *riperdutissimamente
     assertThat(words, containsInAnyOrder("perduto", "perdutomi", "perdutoti", "perdutissimo", "perdutissima", "perdutamente", "perdutissimamente",
         "riperduto", "riperdutomi", "riperdutoti", "riperdutissimo", "riperdutissima"));
+  }
+
+  @Test
+  void shouldHandleWordWithSpace() {
+    // given
+    HunspellAffixes affixDefinition = createSampleEnglishDefinitions();
+
+    // when
+    List<String> words1 = unmunchWord("Puerto Rico", affixDefinition);
+    List<String> words2 = unmunchWord("Puerto Rico/K", affixDefinition);
+    List<String> words3 = unmunchWord("Puerto Rico/K Now some other text", affixDefinition);
+
+    // then
+    assertThat(words1, contains("Puerto Rico"));
+    assertThat(words2, containsInAnyOrder("Puerto Rico", "proPuerto Rico"));
+    assertThat(words3, containsInAnyOrder("Puerto Rico", "proPuerto Rico"));
+  }
+
+  private List<String> unmunchWord(String word, HunspellAffixes affixesDefinition) {
+    return unmuncherService.unmunch(Stream.of(word), affixesDefinition)
+        .toList();
   }
 
   /*
