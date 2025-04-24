@@ -5,6 +5,8 @@ bin/
 dict/*.aff
 dict/*.dic
 dict/*.txt
+hunspell-test/
+!hunspell-test/gitkeep
 export/*.json
 export/graph/*.json
 target/
