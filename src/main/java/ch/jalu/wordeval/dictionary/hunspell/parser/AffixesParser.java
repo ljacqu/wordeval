@@ -48,6 +48,8 @@ public class AffixesParser {
         result.setFlagType(AffixFlagType.fromAffixFileString(line.substring("FLAG ".length())));
       } else if (line.startsWith("NEEDAFFIX ")) {
         result.setNeedAffixFlag(line.substring("NEEDAFFIX ".length()));
+      } else if (line.startsWith("FORBIDDENWORD ")) {
+        result.setForbiddenWordClass(line.substring("FORBIDDENWORD ".length()));
       } else {
         handleUnknownLine(line);
       }

@@ -48,6 +48,7 @@ class ParserToModelConverterTest {
     // then
     assertThat(affixesDefinition.getFlagType(), equalTo(AffixFlagType.SINGLE));
     assertThat(affixesDefinition.getNeedAffixFlag(), nullValue());
+    assertThat(affixesDefinition.getForbiddenWordClass(), nullValue());
     assertThat(affixesDefinition.getAffixRulesByFlag().keySet(), contains("N"));
 
     AffixRule affixRule = Iterables.getOnlyElement(affixesDefinition.getAffixRulesByFlag().get("N"));
@@ -70,6 +71,7 @@ class ParserToModelConverterTest {
     ParsedAffixes parsedAffixes = new ParsedAffixes();
     parsedAffixes.setFlagType(AffixFlagType.LONG);
     parsedAffixes.setNeedAffixFlag("{}");
+    parsedAffixes.setForbiddenWordClass("Ft");
     parsedAffixes.addAffixClass(parsedClass);
     parsedAffixes.addRuleToCurrentClass(new ParsedAffixClass.Rule("b", "m", "ba"));
     parsedAffixes.addRuleToCurrentClass(new ParsedAffixClass.Rule("p", "n", "p[^a]"));
@@ -80,6 +82,7 @@ class ParserToModelConverterTest {
     // then
     assertThat(affixesDefinition.getFlagType(), equalTo(AffixFlagType.LONG));
     assertThat(affixesDefinition.getNeedAffixFlag(), equalTo("{}"));
+    assertThat(affixesDefinition.getForbiddenWordClass(), equalTo("Ft"));
     assertThat(affixesDefinition.getAffixRulesByFlag().keySet(), contains("P2"));
 
     List<AffixRule> p2Rules = affixesDefinition.getAffixRulesByFlag().get("P2");

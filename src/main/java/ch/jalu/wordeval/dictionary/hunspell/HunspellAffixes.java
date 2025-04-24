@@ -15,6 +15,7 @@ public class HunspellAffixes {
 
   private AffixFlagType flagType;
   private String needAffixFlag;
+  private String forbiddenWordClass;
   private ListMultimap<String, AffixRule> affixRulesByFlag;
 
   public Stream<AffixRule> streamThroughMatchingRules(String word, String affixFlag) {

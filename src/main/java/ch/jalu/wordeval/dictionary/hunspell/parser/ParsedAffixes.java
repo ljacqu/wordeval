@@ -22,6 +22,10 @@ public class ParsedAffixes {
   @Setter
   private String needAffixFlag;
 
+  @Getter
+  @Setter
+  private String forbiddenWordClass;
+
   private final List<ParsedAffixClass> classes = new ArrayList<>();
   private ParsedAffixClass currentClass;
 

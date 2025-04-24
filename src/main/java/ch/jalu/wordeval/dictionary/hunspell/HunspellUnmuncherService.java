@@ -38,6 +38,11 @@ public class HunspellUnmuncherService {
     String baseWord = line.substring(0, indexOfSlash);
     List<String> affixFlags = extractAffixFlags(line.substring(indexOfSlash + 1), affixDefinition.getFlagType());
 
+    if (affixDefinition.getForbiddenWordClass() != null
+        && affixFlags.contains(affixDefinition.getForbiddenWordClass())) {
+      return Stream.empty();
+    }
+
     boolean includeBaseWord = affixDefinition.getNeedAffixFlag() == null
         || !affixFlags.contains(affixDefinition.getNeedAffixFlag());
     if (includeBaseWord) {

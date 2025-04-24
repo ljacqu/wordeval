@@ -250,6 +250,19 @@ class HunspellUnmuncherServiceTest {
     assertThat(words3, containsInAnyOrder("Puerto Rico", "proPuerto Rico"));
   }
 
+  @Test
+  void shouldSkipWordsWithForbiddenWordClass() {
+    // given
+    HunspellAffixes affixDefinition = createSampleEnglishDefinitions();
+    affixDefinition.setForbiddenWordClass("W");
+
+    // when
+    List<String> result = unmuncherService.unmunch(Stream.of("suport/W", "support/V"), affixDefinition).toList();
+
+    // then
+    assertThat(result, containsInAnyOrder("support", "supportive"));
+  }
+
   private List<String> unmunchWord(String word, HunspellAffixes affixesDefinition) {
     return unmuncherService.unmunch(Stream.of(word), affixesDefinition)
         .toList();
