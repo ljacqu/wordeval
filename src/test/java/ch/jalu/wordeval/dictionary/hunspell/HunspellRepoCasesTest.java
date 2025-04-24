@@ -70,9 +70,16 @@ public class HunspellRepoCasesTest {
       return StandardCharsets.ISO_8859_1;
     }
 
-    return Files.readAllLines(affFile).stream().anyMatch(l -> l.startsWith("SET UTF-8"))
-        ? StandardCharsets.UTF_8
-        : StandardCharsets.ISO_8859_1;
+    for (String line : Files.readAllLines(affFile)) {
+      if (line.equals("SET UTF-8")) {
+        return StandardCharsets.UTF_8;
+      } else if (line.equals("SET ISO-8859-1")) {
+        return StandardCharsets.ISO_8859_1;
+      } else if (line.equals("SET ISO-8859-15")) {
+        return Charset.forName("ISO-8859-15");
+      }
+    }
+    return StandardCharsets.ISO_8859_1;
   }
 
   static Stream<Arguments> getTestCases() throws IOException {
