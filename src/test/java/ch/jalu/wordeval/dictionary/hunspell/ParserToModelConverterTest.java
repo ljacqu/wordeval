@@ -48,6 +48,7 @@ class ParserToModelConverterTest {
     // then
     assertThat(affixesDefinition.getFlagType(), equalTo(AffixFlagType.SINGLE));
     assertThat(affixesDefinition.getNeedAffixFlag(), nullValue());
+    assertThat(affixesDefinition.getForbiddenWordClass(), nullValue());
     assertThat(affixesDefinition.getAffixRulesByFlag().keySet(), contains("N"));
 
     AffixRule affixRule = Iterables.getOnlyElement(affixesDefinition.getAffixRulesByFlag().get("N"));
@@ -70,6 +71,7 @@ class ParserToModelConverterTest {
     ParsedAffixes parsedAffixes = new ParsedAffixes();
     parsedAffixes.setFlagType(AffixFlagType.LONG);
     parsedAffixes.setNeedAffixFlag("{}");
+    parsedAffixes.setForbiddenWordClass("Ft");
     parsedAffixes.addAffixClass(parsedClass);
     parsedAffixes.addRuleToCurrentClass(new ParsedAffixClass.Rule("b", "m", "ba"));
     parsedAffixes.addRuleToCurrentClass(new ParsedAffixClass.Rule("p", "n", "p[^a]"));
@@ -80,6 +82,7 @@ class ParserToModelConverterTest {
     // then
     assertThat(affixesDefinition.getFlagType(), equalTo(AffixFlagType.LONG));
     assertThat(affixesDefinition.getNeedAffixFlag(), equalTo("{}"));
+    assertThat(affixesDefinition.getForbiddenWordClass(), equalTo("Ft"));
     assertThat(affixesDefinition.getAffixRulesByFlag().keySet(), contains("P2"));
 
     List<AffixRule> p2Rules = affixesDefinition.getAffixRulesByFlag().get("P2");
@@ -106,7 +109,7 @@ class ParserToModelConverterTest {
 
   @ParameterizedTest(name = "{1}: {0}")
   @MethodSource("getPatternConversionCases")
-  void shouldConvertPattern_pfx_singleChar(String pattern, AffixType affixType, String expectedPatternClassName,
+  void shouldConvertPatternToCondition(String pattern, AffixType affixType, String expectedPatternClassName,
                                            String expectedPassingValue, String expectedFailingValue) {
     // given / when
     AffixCondition result = converter.convertCondition(pattern, affixType);
@@ -117,6 +120,39 @@ class ParserToModelConverterTest {
       assertThat(result.matches(expectedFailingValue), equalTo(false));
     }
     assertThat(result.getClass().getSimpleName(), equalTo(expectedPatternClassName));
+  }
+
+  @Test
+  void shouldConvertPrefixAndAffixWithSameName() {
+    // given
+    ParsedAffixes parsedAffixes = new ParsedAffixes();
+    ParsedAffixClass parsedPrefix = new ParsedAffixClass();
+    parsedPrefix.type = AffixType.PFX;
+    parsedPrefix.flag = "A";
+    parsedPrefix.crossProduct = true;
+    parsedAffixes.addAffixClass(parsedPrefix);
+    parsedAffixes.addRuleToCurrentClass(new ParsedAffixClass.Rule("", "re", "."));
+    ParsedAffixClass parsedSuffix = new ParsedAffixClass();
+    parsedSuffix.type = AffixType.SFX;
+    parsedSuffix.flag = "A";
+    parsedPrefix.crossProduct = true;
+    parsedAffixes.addAffixClass(parsedSuffix);
+    parsedAffixes.addRuleToCurrentClass(new ParsedAffixClass.Rule("", "ed", "[^e]"));
+    parsedAffixes.addRuleToCurrentClass(new ParsedAffixClass.Rule("", "d", "e"));
+
+    // when
+    HunspellAffixes result = converter.convert(parsedAffixes);
+
+    // then
+    assertThat(result.getAffixRulesByFlag().size(), equalTo(3));
+    List<AffixRule> rules = result.getAffixRulesByFlag().get("A");
+    assertThat(rules, hasSize(3));
+    assertThat(rules.get(0).getType(), equalTo(AffixType.PFX));
+    assertThat(rules.get(0).getAffix(), equalTo("re"));
+    assertThat(rules.get(1).getType(), equalTo(AffixType.SFX));
+    assertThat(rules.get(1).getAffix(), equalTo("ed"));
+    assertThat(rules.get(2).getType(), equalTo(AffixType.SFX));
+    assertThat(rules.get(2).getAffix(), equalTo("d"));
   }
 
   static List<Arguments> getPatternConversionCases() {

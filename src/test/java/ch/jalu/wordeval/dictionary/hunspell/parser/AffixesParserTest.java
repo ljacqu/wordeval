@@ -11,6 +11,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.nullValue;
 
 /**
  * Test for {@link AffixesParser}.
@@ -39,6 +40,9 @@ class AffixesParserTest {
 
     // then
     assertThat(result.getFlagType(), equalTo(AffixFlagType.SINGLE));
+    assertThat(result.getNeedAffixFlag(), nullValue());
+    assertThat(result.getForbiddenWordClass(), nullValue());
+
     assertThat(result.getAffixClasses(), hasSize(2));
 
     ParsedAffixClass prefixClass = result.getAffixClasses().stream().filter(rule -> "X".equals(rule.flag)).findFirst().orElseThrow();
@@ -131,5 +135,75 @@ class AffixesParserTest {
     assertThat(classR.rules.get(0).affix(), equalTo("able"));
     assertThat(classR.rules.get(0).continuationClasses(), contains("P", "S"));
     assertThat(classR.rules.get(0).condition(), equalTo("."));
+  }
+
+  @Test
+  void shouldParseForbiddenWordAndNeedAffixClasses() {
+    // given
+    List<String> lines = List.of(
+        "SET UTF-8",
+        "FLAG num",
+        "FORBIDDENWORD 36",
+        "NEEDAFFIX 53",
+        "",
+        "PFX 12 Y 1",
+        "PFX 12   0 un .");
+
+    // when
+    ParsedAffixes result = parser.parseAffFile(lines.stream());
+
+    // then
+    assertThat(result.getNeedAffixFlag(), equalTo("53"));
+    assertThat(result.getForbiddenWordClass(), equalTo("36"));
+
+    assertThat(result.getAffixClasses(), hasSize(1));
+    ParsedAffixClass unPfx = result.getAffixClasses().get(0);
+    assertThat(unPfx.flag, equalTo("12"));
+    assertThat(unPfx.rules, hasSize(1));
+    assertThat(unPfx.rules.get(0).strip(), equalTo(""));
+    assertThat(unPfx.rules.get(0).affix(), equalTo("un"));
+    assertThat(unPfx.rules.get(0).continuationClasses(), empty());
+    assertThat(unPfx.rules.get(0).condition(), equalTo("."));
+  }
+
+  @Test
+  void shouldSupportAffixesAndSuffixesWithSameName() {
+    // given
+    List<String> lines = List.of(
+        "PFX A Y 1",
+        "PFX A   0 re .  # Prefix",
+        "",
+        "SFX A Y 1",
+        "SFX A   0 ed [^e]  # Suffix",
+        "SFX A   0 d e");
+
+    // when
+    ParsedAffixes result = parser.parseAffFile(lines.stream());
+
+    // then
+    assertThat(result.getAffixClasses(), hasSize(2));
+    ParsedAffixClass prefixClass = result.getAffixClasses().get(0);
+    assertThat(prefixClass.rules, hasSize(1));
+    ParsedAffixClass suffixClass = result.getAffixClasses().get(1);
+    assertThat(suffixClass.rules, hasSize(2));
+  }
+
+  @Test
+  void shouldParseAffixClassWithComment() {
+    // given
+    List<String> lines = List.of(
+        "FLAG long",
+        "",
+        "SFX B3 Y 1 # this is a test suffix",
+        "SFX B3   0 ing . # sample rule");
+
+    // when
+    ParsedAffixes result = parser.parseAffFile(lines.stream());
+
+    // then
+    assertThat(result.getAffixClasses(), hasSize(1));
+    assertThat(result.getAffixClasses().getFirst().flag, equalTo("B3"));
+    assertThat(result.getAffixClasses().getFirst().rules, hasSize(1));
+    assertThat(result.getAffixClasses().getFirst().rules.getFirst().affix(), equalTo("ing"));
   }
 }

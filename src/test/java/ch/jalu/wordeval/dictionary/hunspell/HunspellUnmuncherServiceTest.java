@@ -250,6 +250,36 @@ class HunspellUnmuncherServiceTest {
     assertThat(words3, containsInAnyOrder("Puerto Rico", "proPuerto Rico"));
   }
 
+  @Test
+  void shouldSkipWordsWithForbiddenWordClass() {
+    // given
+    HunspellAffixes affixDefinition = createSampleEnglishDefinitions();
+    affixDefinition.setForbiddenWordClass("W");
+
+    // when
+    List<String> result = unmuncherService.unmunch(Stream.of("suport/W", "support/V"), affixDefinition).toList();
+
+    // then
+    assertThat(result, containsInAnyOrder("support", "supportive"));
+  }
+
+  @Test
+  void shouldHandlePrefixAndSuffixWithSameName() {
+    // given
+    HunspellAffixes affixDefinition = new HunspellAffixes();
+    affixDefinition.setFlagType(AffixFlagType.SINGLE);
+    affixDefinition.setAffixRulesByFlag(ArrayListMultimap.create());
+    affixDefinition.getAffixRulesByFlag().put("A", newPrefixRule("", "re", "."));
+    affixDefinition.getAffixRulesByFlag().put("A", newSuffixRule("", "ed", "[^e]"));
+    affixDefinition.getAffixRulesByFlag().put("A", newSuffixRule("", "d", "e"));
+
+    // when
+    List<String> words = unmunchWord("start/A", affixDefinition);
+
+    // then
+    assertThat(words, containsInAnyOrder("start", "started", "restart", "restarted"));
+  }
+
   private List<String> unmunchWord(String word, HunspellAffixes affixesDefinition) {
     return unmuncherService.unmunch(Stream.of(word), affixesDefinition)
         .toList();

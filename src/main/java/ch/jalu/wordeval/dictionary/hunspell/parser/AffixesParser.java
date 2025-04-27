@@ -21,7 +21,7 @@ public class AffixesParser {
 
   // e.g. SFX V N 2
   private static final Pattern AFFIX_CLASS_HEADER_PATTERN =
-      Pattern.compile("^(PFX|SFX)\\s+(\\S+)\\s+([YN])\\s+(\\d+)$");
+      Pattern.compile("^(PFX|SFX)\\s+(\\S+)\\s+([YN])\\s+(\\d+)(\\s?#.*?)?$");
   // e.g. SFX V   e  ive  e
   private static final Pattern AFFIX_RULE_PATTERN =
       Pattern.compile("^(PFX|SFX)\\s+\\S+\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)(.*?)?$");
@@ -48,6 +48,8 @@ public class AffixesParser {
         result.setFlagType(AffixFlagType.fromAffixFileString(line.substring("FLAG ".length())));
       } else if (line.startsWith("NEEDAFFIX ")) {
         result.setNeedAffixFlag(line.substring("NEEDAFFIX ".length()));
+      } else if (line.startsWith("FORBIDDENWORD ")) {
+        result.setForbiddenWordClass(line.substring("FORBIDDENWORD ".length()));
       } else {
         handleUnknownLine(line);
       }

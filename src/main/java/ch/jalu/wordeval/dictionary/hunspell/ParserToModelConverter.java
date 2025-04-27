@@ -24,6 +24,7 @@ public class ParserToModelConverter {
     HunspellAffixes affixesDefinition = new HunspellAffixes();
     affixesDefinition.setFlagType(parsedAffixes.getFlagType());
     affixesDefinition.setNeedAffixFlag(parsedAffixes.getNeedAffixFlag());
+    affixesDefinition.setForbiddenWordClass(parsedAffixes.getForbiddenWordClass());
     affixesDefinition.setAffixRulesByFlag(convertAffixClasses(parsedAffixes.getAffixClasses()));
     return affixesDefinition;
   }
