@@ -187,4 +187,23 @@ class AffixesParserTest {
     ParsedAffixClass suffixClass = result.getAffixClasses().get(1);
     assertThat(suffixClass.rules, hasSize(2));
   }
+
+  @Test
+  void shouldParseAffixClassWithComment() {
+    // given
+    List<String> lines = List.of(
+        "FLAG long",
+        "",
+        "SFX B3 Y 1 # this is a test suffix",
+        "SFX B3   0 ing . # sample rule");
+
+    // when
+    ParsedAffixes result = parser.parseAffFile(lines.stream());
+
+    // then
+    assertThat(result.getAffixClasses(), hasSize(1));
+    assertThat(result.getAffixClasses().getFirst().flag, equalTo("B3"));
+    assertThat(result.getAffixClasses().getFirst().rules, hasSize(1));
+    assertThat(result.getAffixClasses().getFirst().rules.getFirst().affix(), equalTo("ing"));
+  }
 }
