@@ -263,6 +263,23 @@ class HunspellUnmuncherServiceTest {
     assertThat(result, containsInAnyOrder("support", "supportive"));
   }
 
+  @Test
+  void shouldHandlePrefixAndSuffixWithSameName() {
+    // given
+    HunspellAffixes affixDefinition = new HunspellAffixes();
+    affixDefinition.setFlagType(AffixFlagType.SINGLE);
+    affixDefinition.setAffixRulesByFlag(ArrayListMultimap.create());
+    affixDefinition.getAffixRulesByFlag().put("A", newPrefixRule("", "re", "."));
+    affixDefinition.getAffixRulesByFlag().put("A", newSuffixRule("", "ed", "[^e]"));
+    affixDefinition.getAffixRulesByFlag().put("A", newSuffixRule("", "d", "e"));
+
+    // when
+    List<String> words = unmunchWord("start/A", affixDefinition);
+
+    // then
+    assertThat(words, containsInAnyOrder("start", "started", "restart", "restarted"));
+  }
+
   private List<String> unmunchWord(String word, HunspellAffixes affixesDefinition) {
     return unmuncherService.unmunch(Stream.of(word), affixesDefinition)
         .toList();

@@ -165,4 +165,26 @@ class AffixesParserTest {
     assertThat(unPfx.rules.get(0).continuationClasses(), empty());
     assertThat(unPfx.rules.get(0).condition(), equalTo("."));
   }
+
+  @Test
+  void shouldSupportAffixesAndSuffixesWithSameName() {
+    // given
+    List<String> lines = List.of(
+        "PFX A Y 1",
+        "PFX A   0 re .  # Prefix",
+        "",
+        "SFX A Y 1",
+        "SFX A   0 ed [^e]  # Suffix",
+        "SFX A   0 d e");
+
+    // when
+    ParsedAffixes result = parser.parseAffFile(lines.stream());
+
+    // then
+    assertThat(result.getAffixClasses(), hasSize(2));
+    ParsedAffixClass prefixClass = result.getAffixClasses().get(0);
+    assertThat(prefixClass.rules, hasSize(1));
+    ParsedAffixClass suffixClass = result.getAffixClasses().get(1);
+    assertThat(suffixClass.rules, hasSize(2));
+  }
 }
