@@ -1,14 +1,15 @@
 package ch.jalu.wordeval.dictionary;
 
 import ch.jalu.wordeval.DataUtils;
-import ch.jalu.wordeval.dictionary.sanitizer.Sanitizer;
-import ch.jalu.wordeval.language.Language;
+import ch.jalu.wordeval.dictionary.hunspell.HunspellDictionaryService;
+import ch.jalu.wordeval.dictionary.hunspell.sanitizer.HunspellSanitizer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Service for processing dictionaries.
@@ -18,6 +19,9 @@ public class DictionaryService {
 
   @Autowired
   private DataUtils dataUtils;
+
+  @Autowired
+  private HunspellDictionaryService hunspellDictionaryService;
 
   DictionaryService() {
   }
@@ -29,36 +33,40 @@ public class DictionaryService {
    * @return all words of the dictionary
    */
   public List<Word> readAllWords(Dictionary dictionary) {
-    return processAllWords(dictionary, dataUtils.readAllLines(dictionary.getFile()));
+    WordFactory wordFactory = new WordFactory(dictionary.getLanguage());
+    try (Stream<String> lines = dataUtils.lines(dictionary.getFile())) {
+      return loadWords(lines, dictionary)
+          .filter(StringUtils::isNotEmpty)
+          .map(wordFactory::createWordObject)
+          .toList();
+    }
   }
 
-  public List<Word> processAllWords(Dictionary dictionary, List<String> lines) {
-    final Sanitizer sanitizer = dictionary.buildSanitizer();
-    final Language language = dictionary.getLanguage();
-    final WordFactory wordFactory = new WordFactory(language);
-
-    return lines.stream()
-        .map(sanitizer::isolateWord)
-        .filter(StringUtils::isNotEmpty)
-        .map(wordFactory::createWordObject)
-        .toList();
+  private Stream<String> loadWords(Stream<String> lines, Dictionary dictionary) {
+    if (dictionary instanceof HunspellDictionary hunDict) {
+      return hunspellDictionaryService.loadAllWords(lines, hunDict);
+    }
+    throw new IllegalStateException("Unsupported dictionary type: " + dictionary.getClass());
   }
 
+  // todo: move this?
   public WordEntries processWordsForDebug(Dictionary dictionary) {
-    final Sanitizer sanitizer = dictionary.buildSanitizer();
-    List<String> skippedLines = new ArrayList<>();
-    List<String> includedLines = new ArrayList<>();
+    if (dictionary instanceof HunspellDictionary hunDict) {
+      HunspellSanitizer sanitizer = hunDict.getSanitizer();
+      List<String> skippedLines = new ArrayList<>();
+      List<String> includedLines = new ArrayList<>();
 
-    dataUtils.readAllLines(dictionary.getFile()).forEach(line -> {
-      String isolatedWord = sanitizer.isolateWord(line);
-      if (StringUtils.isEmpty(isolatedWord)) {
-        skippedLines.add(line);
-      } else {
-        includedLines.add(isolatedWord + " -> " + line);
-      }
-    });
+      dataUtils.readAllLines(dictionary.getFile()).forEach(line -> {
+        if (sanitizer.skipLine(line)) {
+          skippedLines.add(line);
+        } else {
+          includedLines.add(line);
+        }
+      });
+      return new WordEntries(skippedLines, includedLines);
+    }
 
-    return new WordEntries(skippedLines, includedLines);
+    throw new IllegalStateException("Unsupported dictionary type: " + dictionary.getClass());
   }
 
   public record WordEntries(List<String> skippedLines, List<String> includedLines) {

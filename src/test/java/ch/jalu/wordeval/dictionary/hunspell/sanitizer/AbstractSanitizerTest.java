@@ -1,10 +1,11 @@
-package ch.jalu.wordeval.dictionary.sanitizer;
+package ch.jalu.wordeval.dictionary.hunspell.sanitizer;
 
 import ch.jalu.wordeval.TestUtil;
 import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.config.BaseConfiguration;
 import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.DictionaryService;
+import ch.jalu.wordeval.dictionary.HunspellDictionary;
 import com.google.common.collect.Sets;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -35,8 +36,8 @@ abstract class AbstractSanitizerTest {
    * @param code the language code to look up
    * @return the specified dictionary
    */
-  protected Dictionary getDictionary(String code) {
-    return appData.getDictionary(code);
+  protected HunspellDictionary getDictionary(String code) {
+    return (HunspellDictionary) appData.getDictionary(code);
   }
 
   /**

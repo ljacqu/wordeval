@@ -41,10 +41,10 @@ class AppDataTest {
   @Test
   void shouldReturnDictionary() {
     // given / when
-    Dictionary fr = appData.getDictionary("en-us");
+    Dictionary enUs = appData.getDictionary("en-us");
 
     // then
-    assertThat(fr.getIdentifier(), equalTo("en-us"));
+    assertThat(enUs.getIdentifier(), equalTo("en-us"));
   }
 
   @Test

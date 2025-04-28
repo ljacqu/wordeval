@@ -1,53 +1,39 @@
-package ch.jalu.wordeval.dictionary.sanitizer;
+package ch.jalu.wordeval.dictionary.hunspell.sanitizer;
 
-import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.DictionaryUtils;
-
-import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Custom sanitizer for the French dictionary.
  */
-public class FrSanitizer extends Sanitizer {
+public class FrSanitizer extends HunspellSanitizer {
 
-  private static final Set<String> MANUAL_EXCLUSIONS = Set.of(
+  private static final String[] MANUAL_EXCLUSIONS = new String[]{
       "Dᴏꜱꜱᴍᴀɴɴ", "-", "Ångström", "angström", "ångström",
-      "brrr", "grrr", "pff", "pfft", "pfut");
+      "brrr", "grrr", "pff", "pfft", "pfut"};
 
   private boolean skipRest = false;
 
   /**
    * Creates a new sanitizer for the French dictionary.
-   *
-   * @param dictionary the dictionary
    */
-  public FrSanitizer(Dictionary dictionary) {
-    super(dictionary);
+  public FrSanitizer() {
+    super(getSkipSequences());
   }
 
   @Override
-  protected String removeDelimiters(String crudeWord) {
-    String word = super.removeDelimiters(crudeWord);
-    int indexPo = word.indexOf(" po:");
-    if (indexPo >= 0) {
-      return word.substring(0, indexPo);
-    }
-    return word;
-  }
-
-  @Override
-  protected String sanitize(String word) {
+  public boolean skipLine(String line) {
     if (skipRest) {
-      return "";
-    } else if ("Δt".equals(word)) {
+      return true;
+    } else if ("Δt".equals(line)) {
       skipRest = true;
-      return "";
+      return true;
     }
 
-    if (isRomanNumeral(word) || MANUAL_EXCLUSIONS.contains(word)) {
-      return "";
+    if (isRomanNumeral(line) || StringUtils.startsWithAny(line, MANUAL_EXCLUSIONS)) {
+      return true;
     }
-    return word;
+    return super.skipLine(line);
   }
 
   // Need to roll out our own logic because there are a lot of entries with grammatical gender, such as:
@@ -60,5 +46,9 @@ public class FrSanitizer extends Sanitizer {
       return true;
     }
     return DictionaryUtils.isRomanNumeral(word);
+  }
+
+  private static String[] getSkipSequences() {
+    return new String[]{ ".", "&", "µ", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉", "ᵈ", "ᵉ", "ᵍ", "ˡ", "ᵐ", "ʳ", "ˢ" };
   }
 }
