@@ -11,7 +11,7 @@ import java.util.Objects;
  * Extension for dictionaries in the Hunspell format.
  */
 @Getter
-public class HunspellDictionary extends Dictionary {
+public final class HunspellDictionary extends Dictionary {
 
   private final HunspellSanitizer sanitizer;
 

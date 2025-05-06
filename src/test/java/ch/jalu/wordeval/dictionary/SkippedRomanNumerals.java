@@ -3,9 +3,9 @@ package ch.jalu.wordeval.dictionary;
 import ch.jalu.wordeval.DataUtils;
 import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.config.SpringContainedRunner;
+import ch.jalu.wordeval.dictionary.hunspell.sanitizer.RootAndAffixes;
 import ch.jalu.wordeval.dictionary.hunspell.sanitizer.HunspellSanitizer;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -45,10 +45,10 @@ public class SkippedRomanNumerals extends SpringContainedRunner {
       HunspellSanitizer sanitizer = hunDict.getSanitizer();
       List<String> skippedNumerals = new ArrayList<>();
       for (String line : dataUtils.readAllLines(fileName)) {
-        if (sanitizer.skipLine(line)) {
-          String word = extractHunspellWord(line);
-          if (DictionaryUtils.isRomanNumeral(word)) {
-            skippedNumerals.add(word);
+        if (sanitizer.split(line).isEmpty()) {
+          RootAndAffixes rootAndAffixes = sanitizer.splitWithoutValidation(line);
+          if (DictionaryUtils.isRomanNumeral(rootAndAffixes.root())) {
+            skippedNumerals.add(rootAndAffixes.root());
           }
         }
       }
@@ -56,10 +56,5 @@ public class SkippedRomanNumerals extends SpringContainedRunner {
     } else {
       throw new IllegalStateException("Unsupported dictionary type: " + dict.getClass());
     }
-  }
-
-  // todo: Move this - sanitizer should work on (baseWord, flags)
-  private static String extractHunspellWord(String line) {
-    return StringUtils.substringBefore(line, '/');
   }
 }

@@ -19,7 +19,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
- * Common type for dictionary sanitizer tests.
+ * Common type for dictionary Hunspell sanitizer tests.
  */
 @SpringJUnitConfig(classes = BaseConfiguration.class)
 abstract class AbstractSanitizerTest {

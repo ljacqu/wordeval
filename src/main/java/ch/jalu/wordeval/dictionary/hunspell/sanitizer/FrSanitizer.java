@@ -22,18 +22,26 @@ public class FrSanitizer extends HunspellSanitizer {
   }
 
   @Override
-  public boolean skipLine(String line) {
+  public RootAndAffixes split(String line) {
+    RootAndAffixes rootAndAffixes = super.split(line);
+    if (!rootAndAffixes.isEmpty() && skip(rootAndAffixes.root())) {
+      return RootAndAffixes.EMPTY;
+    }
+    return rootAndAffixes;
+  }
+
+  private boolean skip(String word) {
     if (skipRest) {
       return true;
-    } else if ("Δt".equals(line)) {
+    } else if ("Δt".equals(word)) {
       skipRest = true;
       return true;
     }
 
-    if (isRomanNumeral(line) || StringUtils.startsWithAny(line, MANUAL_EXCLUSIONS)) {
+    if (isRomanNumeral(word) || StringUtils.startsWithAny(word, MANUAL_EXCLUSIONS)) {
       return true;
     }
-    return super.skipLine(line);
+    return false;
   }
 
   // Need to roll out our own logic because there are a lot of entries with grammatical gender, such as:

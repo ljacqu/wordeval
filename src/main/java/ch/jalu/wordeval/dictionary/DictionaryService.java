@@ -43,32 +43,30 @@ public class DictionaryService {
   }
 
   private Stream<String> loadWords(Stream<String> lines, Dictionary dictionary) {
-    if (dictionary instanceof HunspellDictionary hunDict) {
-      return hunspellDictionaryService.loadAllWords(lines, hunDict);
-    }
-    throw new IllegalStateException("Unsupported dictionary type: " + dictionary.getClass());
+    return switch (dictionary) {
+      case HunspellDictionary hunDict -> hunspellDictionaryService.loadAllWords(lines, hunDict);
+    };
   }
 
-  // todo: move this?
-  public WordEntries processWordsForDebug(Dictionary dictionary) {
+  public DictionaryLines processWordsForDebug(Dictionary dictionary) {
     if (dictionary instanceof HunspellDictionary hunDict) {
       HunspellSanitizer sanitizer = hunDict.getSanitizer();
       List<String> skippedLines = new ArrayList<>();
       List<String> includedLines = new ArrayList<>();
 
       dataUtils.readAllLines(dictionary.getFile()).forEach(line -> {
-        if (sanitizer.skipLine(line)) {
+        if (sanitizer.split(line).isEmpty()) {
           skippedLines.add(line);
         } else {
           includedLines.add(line);
         }
       });
-      return new WordEntries(skippedLines, includedLines);
+      return new DictionaryLines(skippedLines, includedLines);
     }
 
     throw new IllegalStateException("Unsupported dictionary type: " + dictionary.getClass());
   }
 
-  public record WordEntries(List<String> skippedLines, List<String> includedLines) {
+  public record DictionaryLines(List<String> skippedLines, List<String> includedLines) {
   }
 }

@@ -6,12 +6,12 @@ package ch.jalu.wordeval.dictionary.hunspell.sanitizer;
 public class ItSanitizer extends HunspellSanitizer {
 
   @Override
-  public boolean skipLine(String line) {
+  public RootAndAffixes split(String line) {
     if (line.startsWith("Copyright")) {
-      return true;
+      return RootAndAffixes.EMPTY;
     } else if ("ziiiziiizxxivziiizmmxi".equals(line)) {
-      return true;
+      return RootAndAffixes.EMPTY;
     }
-    return super.skipLine(line);
+    return super.split(line);
   }
 }

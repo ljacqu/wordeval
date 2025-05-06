@@ -2,6 +2,10 @@ package ch.jalu.wordeval.dictionary.hunspell.sanitizer;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * Sanitizer for Hunspell.
+ */
+// todo: sanitizer not so good name anymore?
 public class HunspellSanitizer {
 
   private final String[] skipSequences;
@@ -10,11 +14,51 @@ public class HunspellSanitizer {
     this.skipSequences = skipSequences;
   }
 
-  public boolean skipLine(String line) {
-    return line.isEmpty() || StringUtils.containsAny(line, skipSequences);
+  public RootAndAffixes split(String line) {
+    if (line.isEmpty() || StringUtils.containsAny(line, skipSequences)) {
+      return RootAndAffixes.EMPTY;
+    }
+    return splitWithoutValidation(line);
+  }
+
+  public RootAndAffixes splitWithoutValidation(String line) {
+    int indexOfSlash = line.indexOf('/');
+    if (indexOfSlash < 0) {
+      // No slash - word has no affixes
+      return new RootAndAffixes(line, "");
+    }
+    if (line.indexOf('\\') > 0) {
+      // Backslashes can be used to escape the delimiter. Only few dictionaries use it and typically for words that
+      // aren't interesting to wordeval, so force manual handling of these words so we don't have to complicate our
+      // parsing logic.
+      throw new IllegalArgumentException("Backslash found in line: " + line);
+    }
+
+    String root = line.substring(0, indexOfSlash);
+    String affixFlags = extractAffixFlags(line.substring(indexOfSlash + 1));
+    return new RootAndAffixes(root, affixFlags);
   }
 
   public String transform(String word) {
     return word;
+  }
+
+  /**
+   * Returns the affix flags indicated in the "meta part" of the line, i.e. the section after the slash separating
+   * the word.
+   *
+   * @param metaPart the part with the affixes
+   * @return all affix flags in the given meta part
+   */
+  private String extractAffixFlags(String metaPart) {
+    int indexFirstWhitespace = -1;
+    for (int i = 0; i < metaPart.length(); ++i) {
+      if (Character.isWhitespace(metaPart.charAt(i))) {
+        indexFirstWhitespace = i;
+        break;
+      }
+    }
+
+    return indexFirstWhitespace >= 0 ? metaPart.substring(0, indexFirstWhitespace) : metaPart;
   }
 }

@@ -13,7 +13,7 @@ import lombok.ToString;
  */
 @Getter
 @ToString(of = "identifier")
-public abstract class Dictionary {
+public abstract sealed class Dictionary permits HunspellDictionary {
 
   /**
    * The dictionary identifier is typically the ISO-639-1 abbreviation of its language.

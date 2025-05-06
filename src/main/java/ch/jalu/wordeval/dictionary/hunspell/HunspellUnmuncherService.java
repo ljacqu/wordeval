@@ -1,5 +1,6 @@
 package ch.jalu.wordeval.dictionary.hunspell;
 
+import ch.jalu.wordeval.dictionary.hunspell.sanitizer.RootAndAffixes;
 import com.google.common.base.Preconditions;
 import org.springframework.stereotype.Service;
 
@@ -14,62 +15,32 @@ import java.util.stream.Stream;
 public class HunspellUnmuncherService {
 
   /**
-   * Processes the given dictionary lines and expands them based on the specified affix rules.
+   * Processes the given word and expands it based on the specified affix rules.
    *
-   * @param lines the lines of the dictionary file (including affix information)
+   * @param rootAndAffixes the word and affix flags to apply
    * @param affixDefinition the dictionary's affix definitions
    * @return all words isolated and expanded
    */
-  public Stream<String> unmunch(Stream<String> lines, HunspellAffixes affixDefinition) {
-    return lines.flatMap(line -> unmunch(line, affixDefinition));
-  }
+  public Stream<String> unmunch(RootAndAffixes rootAndAffixes, HunspellAffixes affixDefinition) {
+    String root = rootAndAffixes.root();
+    List<String> affixFlags = affixDefinition.getFlagType().split(rootAndAffixes.affixFlags());
 
-  private Stream<String> unmunch(String line, HunspellAffixes affixDefinition) {
-    int indexOfSlash = line.indexOf('/');
-    if (indexOfSlash <= 0) {
-      // We don't support empty strings as base
-      return Stream.of(line);
-    }
     // Slashes can be escaped with a backslash apparently (nl.dic), but this currently goes beyond the desired scope,
     // since a word with a slash won't be interesting to wordeval anyway. So it's the job of a sanitizer to skip these
     // words before they're passed to this class.
-    Preconditions.checkArgument(line.indexOf('\\') < 0, line);
-
-    String baseWord = line.substring(0, indexOfSlash);
-    List<String> affixFlags = extractAffixFlags(line.substring(indexOfSlash + 1), affixDefinition.getFlagType());
+    Preconditions.checkArgument(root.indexOf('\\') < 0, rootAndAffixes);
 
     if (affixDefinition.getForbiddenWordClass() != null
         && affixFlags.contains(affixDefinition.getForbiddenWordClass())) {
       return Stream.empty();
     }
 
-    boolean includeBaseWord = affixDefinition.getNeedAffixFlag() == null
+    boolean includeRoot = affixDefinition.getNeedAffixFlag() == null
         || !affixFlags.contains(affixDefinition.getNeedAffixFlag());
-    if (includeBaseWord) {
-      return Stream.concat(Stream.of(baseWord), streamThroughAllAffixes(baseWord, affixFlags, affixDefinition));
+    if (includeRoot) {
+      return Stream.concat(Stream.of(root), streamThroughAllAffixes(root, affixFlags, affixDefinition));
     }
-    return streamThroughAllAffixes(baseWord, affixFlags, affixDefinition);
-  }
-
-  /**
-   * Returns the affix flags indicated in the "meta part" of the line, i.e. the section after the slash separating
-   * the word.
-   *
-   * @param metaPart the part with the affixes
-   * @param flagType flag type to parse the list with
-   * @return all affix flags in the given meta part
-   */
-  private List<String> extractAffixFlags(String metaPart, AffixFlagType flagType) {
-    int indexFirstWhitespace = -1;
-    for (int i = 0; i < metaPart.length(); ++i) {
-      if (Character.isWhitespace(metaPart.charAt(i))) {
-        indexFirstWhitespace = i;
-        break;
-      }
-    }
-
-    String affixList = indexFirstWhitespace >= 0 ? metaPart.substring(0, indexFirstWhitespace) : metaPart;
-    return flagType.split(affixList);
+    return streamThroughAllAffixes(root, affixFlags, affixDefinition);
   }
 
   private Stream<String> streamThroughAllAffixes(String baseWord, List<String> affixFlags,

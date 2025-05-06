@@ -3,6 +3,7 @@ package ch.jalu.wordeval.dictionary.hunspell;
 import ch.jalu.wordeval.dictionary.hunspell.condition.AffixCondition;
 import ch.jalu.wordeval.dictionary.hunspell.condition.AnyTokenCondition;
 import ch.jalu.wordeval.dictionary.hunspell.condition.RegexCondition;
+import ch.jalu.wordeval.dictionary.hunspell.sanitizer.HunspellSanitizer;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import org.junit.jupiter.api.Test;
@@ -10,15 +11,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Test for {@link HunspellUnmuncherService}.
@@ -35,9 +34,9 @@ class HunspellUnmuncherServiceTest {
     HunspellAffixes affixesDef = createSampleEnglishDefinitions();
 
     // when
-    List<String> createWords = unmunchWord("create/KNV", affixesDef);
-    List<String> ablateWords = unmunchWord("ablate/NV", affixesDef);
-    List<String> hWords = unmunchWord("h/NV po:let", affixesDef);
+    List<String> createWords = unmunchWord(affixesDef, "create/KNV");
+    List<String> ablateWords = unmunchWord(affixesDef, "ablate/NV");
+    List<String> hWords = unmunchWord(affixesDef, "h/NV po:let");
 
     // then
     assertThat(createWords, containsInAnyOrder("create", "procreate", "creative", "creation", "procreation", "procreative"));
@@ -51,26 +50,12 @@ class HunspellUnmuncherServiceTest {
     HunspellAffixes affixesDef = createSampleEnglishDefinitions();
 
     // when
-    List<String> applesWords = unmunchWord("apple", affixesDef);
-    List<String> pastaWords = unmunchWord("pasta/AB", affixesDef);
+    List<String> applesWords = unmunchWord(affixesDef, "apple");
+    List<String> pastaWords = unmunchWord(affixesDef, "pasta/AB");
 
     // then
     assertThat(applesWords, containsInAnyOrder("apple"));
     assertThat(pastaWords, containsInAnyOrder("pasta"));
-  }
-
-  /* Slashes can be escaped in Hunspell, but there's no point in supporting this in this project. */
-  @Test
-  void shouldThrowForWordWithBackslash() {
-    // given
-    HunspellAffixes affixesDef = createSampleEnglishDefinitions();
-
-    // when
-    IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-        () -> unmunchWord("km\\/h", affixesDef));
-
-    // then
-    assertThat(ex.getMessage(), equalTo("km\\/h"));
   }
 
   @Test
@@ -80,8 +65,8 @@ class HunspellUnmuncherServiceTest {
     affixes.setFlagType(AffixFlagType.SINGLE);
 
     // when
-    List<String> result1 = unmunchWord("duck/K VN", affixes);
-    List<String> result2 = unmunchWord("duck/K\tVN test", affixes);
+    List<String> result1 = unmunchWord(affixes, "duck/K VN");
+    List<String> result2 = unmunchWord(affixes, "duck/K\tVN test");
 
     // then
     assertThat(result1, containsInAnyOrder("duck", "produck"));
@@ -99,7 +84,7 @@ class HunspellUnmuncherServiceTest {
     affixesDef.setAffixRulesByFlag(rulesByFlag);
 
     // when
-    List<String> result = unmunchWord("trude/14,53", affixesDef);
+    List<String> result = unmunchWord(affixesDef, "trude/14,53");
 
     // then
     assertThat(result, contains("protrude"));
@@ -122,7 +107,7 @@ class HunspellUnmuncherServiceTest {
     affixesDef.setAffixRulesByFlag(rulesByFlag);
 
     // when
-    List<String> words = unmunchWord("Azteek/Zf", affixesDef);
+    List<String> words = unmunchWord(affixesDef, "Azteek/Zf");
 
     // then
     assertThat(words, containsInAnyOrder("Azteek", "Azteken"));
@@ -154,7 +139,7 @@ class HunspellUnmuncherServiceTest {
     affixesDef.setAffixRulesByFlag(rulesByFlag);
 
     // when
-    List<String> thinkWords = unmunchWord("drink/R", affixesDef);
+    List<String> thinkWords = unmunchWord(affixesDef, "drink/R");
 
     // then
     assertThat(thinkWords, containsInAnyOrder("drink", "drinkable", "drinkables", "undrinkable", "undrinkables"));
@@ -183,7 +168,7 @@ class HunspellUnmuncherServiceTest {
     affixesDef.setAffixRulesByFlag(rulesByFlag);
 
     // when
-    List<String> words = unmunchWord("play/ABC", affixesDef);
+    List<String> words = unmunchWord(affixesDef, "play/ABC");
 
     // then
     assertThat(words, containsInAnyOrder("play", "replay", "played", "playing", "replayed", "replaying"));
@@ -226,7 +211,7 @@ class HunspellUnmuncherServiceTest {
     affixesDef.setAffixRulesByFlag(rulesByFlag);
 
     // when
-    List<String> words = unmunchWord("perduto/EyYJ", affixesDef);
+    List<String> words = unmunchWord(affixesDef, "perduto/EyYJ");
 
     // then
     // SFX Y not applied with PFX J, i.e. no *riperdutamente or *riperdutissimamente
@@ -240,9 +225,9 @@ class HunspellUnmuncherServiceTest {
     HunspellAffixes affixDefinition = createSampleEnglishDefinitions();
 
     // when
-    List<String> words1 = unmunchWord("Puerto Rico", affixDefinition);
-    List<String> words2 = unmunchWord("Puerto Rico/K", affixDefinition);
-    List<String> words3 = unmunchWord("Puerto Rico/K Now some other text", affixDefinition);
+    List<String> words1 = unmunchWord(affixDefinition, "Puerto Rico");
+    List<String> words2 = unmunchWord(affixDefinition, "Puerto Rico/K");
+    List<String> words3 = unmunchWord(affixDefinition, "Puerto Rico/K Now some other text");
 
     // then
     assertThat(words1, contains("Puerto Rico"));
@@ -257,7 +242,7 @@ class HunspellUnmuncherServiceTest {
     affixDefinition.setForbiddenWordClass("W");
 
     // when
-    List<String> result = unmuncherService.unmunch(Stream.of("suport/W", "support/V"), affixDefinition).toList();
+    List<String> result = unmunchWord(affixDefinition, "suport/W", "support/V");
 
     // then
     assertThat(result, containsInAnyOrder("support", "supportive"));
@@ -274,14 +259,17 @@ class HunspellUnmuncherServiceTest {
     affixDefinition.getAffixRulesByFlag().put("A", newSuffixRule("", "d", "e"));
 
     // when
-    List<String> words = unmunchWord("start/A", affixDefinition);
+    List<String> words = unmunchWord(affixDefinition, "start/A");
 
     // then
     assertThat(words, containsInAnyOrder("start", "started", "restart", "restarted"));
   }
 
-  private List<String> unmunchWord(String word, HunspellAffixes affixesDefinition) {
-    return unmuncherService.unmunch(Stream.of(word), affixesDefinition)
+  private List<String> unmunchWord(HunspellAffixes affixesDefinition, String... words) {
+    HunspellSanitizer sanitizer = new HunspellSanitizer();
+    return Arrays.stream(words)
+        .map(sanitizer::split)
+        .flatMap(baseWordAndAffixes -> unmuncherService.unmunch(baseWordAndAffixes, affixesDefinition))
         .toList();
   }
 

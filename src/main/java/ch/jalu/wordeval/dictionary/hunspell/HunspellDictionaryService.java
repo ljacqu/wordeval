@@ -28,18 +28,14 @@ public class HunspellDictionaryService {
   HunspellDictionaryService() {
   }
 
-  public Stream<String> loadAllWords(HunspellDictionary dictionary) {
-    try (Stream<String> dictionaryLines = dataUtils.lines(dictionary.getFile())) {
-      return loadAllWords(dictionaryLines, dictionary);
-    }
-  }
-
   public Stream<String> loadAllWords(Stream<String> lines, HunspellDictionary dictionary) {
     HunspellAffixes affixDefinition = loadAndParseAffixes(dictionary);
     HunspellSanitizer sanitizer = dictionary.getSanitizer();
-    return unmuncherService.unmunch(
-            lines.filter(line -> !sanitizer.skipLine(line)),
-            affixDefinition)
+
+    return lines
+        .map(sanitizer::split)
+        .filter(baseWord -> !baseWord.isEmpty())
+        .flatMap(baseWord -> unmuncherService.unmunch(baseWord, affixDefinition))
         .map(sanitizer::transform);
   }
 
