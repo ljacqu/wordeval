@@ -67,8 +67,8 @@ public class AffixesParser {
   }
 
   private static ParsedAffixClass.Rule mapAffixRule(Matcher ruleMatcher, AffixFlagType flagType) {
-    String strip = ruleMatcher.group(2).equals("0") ? "" : ruleMatcher.group(2);
-    String affix = ruleMatcher.group(3).equals("0") ? "" : ruleMatcher.group(3);
+    String strip = emptyIfZeroString(ruleMatcher.group(2));
+    String affix = emptyIfZeroString(ruleMatcher.group(3));
     String condition = ruleMatcher.group(4);
 
     int slashIndex = affix.indexOf('/');
@@ -77,13 +77,13 @@ public class AffixesParser {
     }
 
     String continuationClasses = affix.substring(slashIndex + 1);
-    affix = affix.substring(0, slashIndex);
+    affix = emptyIfZeroString(affix.substring(0, slashIndex));
     return new ParsedAffixClass.Rule(strip, affix, flagType.split(continuationClasses), condition);
   }
 
   private void handleUnknownLine(String line) {
-    if (StringUtils.startsWithAny(line, "REP ", "MAP ", "TRY ", "WORDCHARS ", "ICONV ",
-        "OCONV ", "KEY ", "BREAK ", "CHECKSHARPS", "NOSUGGEST ")) {
+    if (StringUtils.startsWithAny(line, "BREAK ", "CHECKSHARPS", "HOME ", "ICONV ", "KEY ", "LANG ", "MAP ",
+        "NOSUGGEST ", "OCONV ", "REP ", "TRY ", "VERSION ", "WORDCHARS ")) {
       // Nothing to do: command is not relevant for this application
       return;
     } else if (line.startsWith("SET ")) {
@@ -93,5 +93,9 @@ public class AffixesParser {
     } else {
       log.info("Unknown line: {}", line);
     }
+  }
+
+  private static String emptyIfZeroString(String s) {
+    return "0".equals(s) ? "" : s;
   }
 }

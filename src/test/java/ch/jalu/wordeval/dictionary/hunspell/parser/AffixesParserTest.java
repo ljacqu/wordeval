@@ -9,6 +9,7 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.nullValue;
@@ -205,5 +206,36 @@ class AffixesParserTest {
     assertThat(result.getAffixClasses().getFirst().flag, equalTo("B3"));
     assertThat(result.getAffixClasses().getFirst().rules, hasSize(1));
     assertThat(result.getAffixClasses().getFirst().rules.getFirst().affix(), equalTo("ing"));
+  }
+
+  /** Excerpt from fr.aff. */
+  @Test
+  void shouldTrimAffixToEmptyForZeroWithContinuationClasses() {
+    // given
+    List<String> lines = List.of(
+        "FLAG long",
+        "PFX Um Y 29",
+        "PFX Um 0 0/S. .",
+        "PFX Um 0 l'exa . dp:le|la+");
+
+    // when
+    ParsedAffixes result = parser.parseAffFile(lines.stream());
+
+    // then
+    assertThat(result.getAffixClasses(), hasSize(1));
+    assertThat(result.getAffixClasses().getFirst().flag, equalTo("Um"));
+    assertThat(result.getAffixClasses().getFirst().rules, hasSize(2));
+
+    ParsedAffixClass.Rule rule1 = result.getAffixClasses().getFirst().rules.get(0);
+    assertThat(rule1.strip(), emptyString());
+    assertThat(rule1.affix(), emptyString());
+    assertThat(rule1.continuationClasses(), contains("S."));
+    assertThat(rule1.condition(), equalTo("."));
+
+    ParsedAffixClass.Rule rule2 = result.getAffixClasses().getFirst().rules.get(1);
+    assertThat(rule2.strip(), emptyString());
+    assertThat(rule2.affix(), equalTo("l'exa"));
+    assertThat(rule2.continuationClasses(), empty());
+    assertThat(rule2.condition(), equalTo("."));
   }
 }
