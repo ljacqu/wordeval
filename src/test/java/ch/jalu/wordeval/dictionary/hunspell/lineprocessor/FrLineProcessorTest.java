@@ -2,10 +2,7 @@ package ch.jalu.wordeval.dictionary.hunspell.lineprocessor;
 
 import ch.jalu.wordeval.dictionary.HunspellDictionary;
 import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.dictionary.hunspell.HunspellDictionaryService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Set;
@@ -21,18 +18,11 @@ import static org.hamcrest.Matchers.contains;
  */
 class FrLineProcessorTest extends AbstractLineProcessorTest {
 
-  private HunspellDictionary frDictionary;
-
-  @Autowired
-  private HunspellDictionaryService hunspellDictionaryService;
-
-  @BeforeEach
-  void initDictionary() {
-    frDictionary = getDictionary("fr");
-  }
+  private final FrLineProcessor frLineProcessor = new FrLineProcessor();
 
   @Test
   void shouldFindTheGivenWords() {
+    HunspellDictionary frDictionary = getDictionary("fr");
     assumeDictionaryFileExists(frDictionary);
 
     // given / when
@@ -57,7 +47,7 @@ class FrLineProcessorTest extends AbstractLineProcessorTest {
     List<String> lines = getLines();
 
     // when
-    List<String> words = hunspellDictionaryService.loadAllWords(lines.stream(), frDictionary).toList();
+    List<String> words = processLines(lines, frLineProcessor);
 
     // then
     assertThat(words, contains("able", "bin", "cat", "dog", "emu", "frog-fish-ferret", "gator", "joker"));
@@ -69,7 +59,7 @@ class FrLineProcessorTest extends AbstractLineProcessorTest {
     List<String> lines = List.of("ape", "bat/A0 test", "cat cats", "dolphin/D. f", "ex. ", "frog./D0 test");
 
     // when
-    List<String> words = hunspellDictionaryService.loadAllWords(lines.stream(), frDictionary).toList();
+    List<String> words = processLines(lines, frLineProcessor);
 
     // then
     assertThat(words, contains("ape", "bat", "cat", "dolphin"));

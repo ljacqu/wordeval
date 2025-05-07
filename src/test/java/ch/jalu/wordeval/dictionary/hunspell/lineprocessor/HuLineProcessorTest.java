@@ -2,7 +2,6 @@ package ch.jalu.wordeval.dictionary.hunspell.lineprocessor;
 
 import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.Word;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -17,16 +16,10 @@ import static org.hamcrest.Matchers.hasItems;
  */
 class HuLineProcessorTest extends AbstractLineProcessorTest {
 
-  private Dictionary huDictionary;
-
-  @BeforeEach
-  void initDictionary() {
-    huDictionary = getDictionary("hu");
-  }
-
   @Test
   @Disabled // TODO: hu.aff file has encoding problems
   void shouldFindTheGivenWords() {
+    Dictionary huDictionary = getDictionary("hu");
     assumeDictionaryFileExists(huDictionary);
 
     // given / when

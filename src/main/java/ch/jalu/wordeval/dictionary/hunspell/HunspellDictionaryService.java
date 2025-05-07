@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.stream.Stream;
 
+/**
+ * Service for Hunspell dictionaries.
+ */
 @Service
 public class HunspellDictionaryService {
 
@@ -36,9 +39,21 @@ public class HunspellDictionaryService {
    * @return all parsed and unmunched words
    */
   public Stream<String> loadAllWords(Stream<String> lines, HunspellDictionary dictionary) {
-    HunspellAffixes affixDefinition = loadAndParseAffixes(dictionary);
     HunspellLineProcessor lineProcessor = dictionary.getLineProcessor();
+    HunspellAffixes affixDefinition = loadAndParseAffixes(dictionary);
+    return loadAllWords(lines, lineProcessor, affixDefinition);
+  }
 
+  /**
+   * Returns a stream with all words processed by the given lines.
+   *
+   * @param lines the lines of the dictionary to read from
+   * @param lineProcessor line processor for splitting/handling lines
+   * @param affixDefinition definition of the Hunspell dictionary's affixes
+   * @return all parsed and unmunched words
+   */
+  public Stream<String> loadAllWords(Stream<String> lines, HunspellLineProcessor lineProcessor,
+                                     HunspellAffixes affixDefinition) {
     return lines
         .map(lineProcessor::split)
         .filter(baseWord -> !baseWord.isEmpty())

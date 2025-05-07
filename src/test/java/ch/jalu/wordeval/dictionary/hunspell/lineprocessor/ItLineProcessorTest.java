@@ -2,10 +2,7 @@ package ch.jalu.wordeval.dictionary.hunspell.lineprocessor;
 
 import ch.jalu.wordeval.dictionary.HunspellDictionary;
 import ch.jalu.wordeval.dictionary.Word;
-import ch.jalu.wordeval.dictionary.hunspell.HunspellDictionaryService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Set;
@@ -21,18 +18,11 @@ import static org.hamcrest.Matchers.contains;
  */
 class ItLineProcessorTest extends AbstractLineProcessorTest {
 
-  private HunspellDictionary itDictionary;
-
-  @Autowired
-  private HunspellDictionaryService hunspellDictionaryService;
-
-  @BeforeEach
-  void initDictionary() {
-    itDictionary = getDictionary("it");
-  }
+  private final ItLineProcessor itLineProcessor = new ItLineProcessor();
 
   @Test
   void shouldSplitAndSanitizeWords() {
+    HunspellDictionary itDictionary = getDictionary("it");
     assumeDictionaryFileExists(itDictionary);
 
     // given / when
@@ -55,7 +45,7 @@ class ItLineProcessorTest extends AbstractLineProcessorTest {
     List<String> lines = getLines();
 
     // when
-    List<String> words = hunspellDictionaryService.loadAllWords(lines.stream(), itDictionary).toList();
+    List<String> words = processLines(lines, itLineProcessor);
 
     // then
     assertThat(words, contains("ash", "cat", "demo", "frog-fish-ferret", "gator", "joker"));
