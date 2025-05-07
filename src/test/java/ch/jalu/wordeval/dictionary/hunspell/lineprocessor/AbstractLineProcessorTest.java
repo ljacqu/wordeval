@@ -1,4 +1,4 @@
-package ch.jalu.wordeval.dictionary.hunspell.sanitizer;
+package ch.jalu.wordeval.dictionary.hunspell.lineprocessor;
 
 import ch.jalu.wordeval.TestUtil;
 import ch.jalu.wordeval.appdata.AppData;
@@ -12,10 +12,10 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
- * Common type for dictionary Hunspell sanitizer tests.
+ * Common type for dictionary Hunspell line processor tests.
  */
 @SpringJUnitConfig(classes = BaseConfiguration.class)
-abstract class AbstractSanitizerTest {
+abstract class AbstractLineProcessorTest {
 
   @Autowired
   private AppData appData;

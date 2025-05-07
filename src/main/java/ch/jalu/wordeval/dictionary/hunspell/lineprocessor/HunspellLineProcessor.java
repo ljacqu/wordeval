@@ -1,17 +1,16 @@
-package ch.jalu.wordeval.dictionary.hunspell.sanitizer;
+package ch.jalu.wordeval.dictionary.hunspell.lineprocessor;
 
 import ch.jalu.wordeval.dictionary.DictionaryUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Sanitizer for Hunspell.
+ * Line processor for Hunspell dictionary which can be extended.
  */
-// todo: sanitizer not so good name anymore?
-public class HunspellSanitizer {
+public class HunspellLineProcessor {
 
   private final String[] skipSequences;
 
-  public HunspellSanitizer(String... skipSequences) {
+  public HunspellLineProcessor(String... skipSequences) {
     this.skipSequences = skipSequences;
   }
 

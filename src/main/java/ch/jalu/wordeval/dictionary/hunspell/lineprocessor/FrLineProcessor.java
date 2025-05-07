@@ -1,12 +1,12 @@
-package ch.jalu.wordeval.dictionary.hunspell.sanitizer;
+package ch.jalu.wordeval.dictionary.hunspell.lineprocessor;
 
 import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Custom sanitizer for the French dictionary.
+ * Line processor for the French dictionary.
  */
-public class FrSanitizer extends HunspellSanitizer {
+public class FrLineProcessor extends HunspellLineProcessor {
 
   private static final String[] MANUAL_EXCLUSIONS = new String[]{
       "Dᴏꜱꜱᴍᴀɴɴ", "-", "Ångström", "angström", "ångström",
@@ -15,9 +15,9 @@ public class FrSanitizer extends HunspellSanitizer {
   private boolean skipRest = false;
 
   /**
-   * Creates a new sanitizer for the French dictionary.
+   * Constructor.
    */
-  public FrSanitizer() {
+  public FrLineProcessor() {
     super(getSkipSequences());
   }
 

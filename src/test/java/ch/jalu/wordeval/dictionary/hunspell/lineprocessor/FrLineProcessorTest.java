@@ -1,4 +1,4 @@
-package ch.jalu.wordeval.dictionary.hunspell.sanitizer;
+package ch.jalu.wordeval.dictionary.hunspell.lineprocessor;
 
 import ch.jalu.wordeval.dictionary.HunspellDictionary;
 import ch.jalu.wordeval.dictionary.Word;
@@ -17,9 +17,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 
 /**
- * Test for {@link FrSanitizer}.
+ * Test for {@link FrLineProcessor}.
  */
-class FrSanitizerTest extends AbstractSanitizerTest {
+class FrLineProcessorTest extends AbstractLineProcessorTest {
 
   private HunspellDictionary frDictionary;
 
@@ -52,7 +52,7 @@ class FrSanitizerTest extends AbstractSanitizerTest {
   }
 
   @Test
-  void shouldSanitize() {
+  void shouldSplitAndSanitize() {
     // given
     List<String> lines = getLines();
 

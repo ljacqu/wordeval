@@ -1,6 +1,6 @@
 package ch.jalu.wordeval.dictionary;
 
-import ch.jalu.wordeval.dictionary.hunspell.sanitizer.HunspellSanitizer;
+import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.HunspellLineProcessor;
 import ch.jalu.wordeval.language.Language;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -13,14 +13,14 @@ import java.util.Objects;
 @Getter
 public final class HunspellDictionary extends Dictionary {
 
-  private final HunspellSanitizer sanitizer;
+  private final HunspellLineProcessor lineProcessor;
 
   /**
    * @see #newHunspellDictionary
    */
-  private HunspellDictionary(String identifier, String file, Language language, HunspellSanitizer sanitizer) {
+  private HunspellDictionary(String identifier, String file, Language language, HunspellLineProcessor lineProcessor) {
     super(identifier, file, language);
-    this.sanitizer = sanitizer;
+    this.lineProcessor = lineProcessor;
   }
 
   /**
@@ -47,7 +47,7 @@ public final class HunspellDictionary extends Dictionary {
     private String identifier;
     private String file;
     private Language language;
-    private HunspellSanitizer sanitizer;
+    private HunspellLineProcessor lineProcessor;
 
     private Builder() {
     }
@@ -75,25 +75,25 @@ public final class HunspellDictionary extends Dictionary {
     }
 
     /**
-     * Sets the sanitizer to use while loading the dictionary.
+     * Sets the line processor to use while loading the dictionary.
      *
-     * @param sanitizer the sanitizer to use
+     * @param lineProcessor the line processor to use
      * @return this builder
      */
-    public Builder sanitizer(HunspellSanitizer sanitizer) {
-      this.sanitizer = sanitizer;
+    public Builder lineProcessor(HunspellLineProcessor lineProcessor) {
+      this.lineProcessor = lineProcessor;
       return this;
     }
 
     /**
-     * Sets a new default sanitizer to use while loading the dictionary. All lines containing
+     * Sets a new default line processor to use while loading the dictionary. All lines containing
      * any of the provided sequences will be skipped when loading.
      *
      * @param skipSequences strings to search for to skip lines while loading the dictionary
      * @return this builder
      */
-    public Builder sanitizer(String... skipSequences) {
-      this.sanitizer = new HunspellSanitizer(skipSequences);
+    public Builder lineProcessor(String... skipSequences) {
+      this.lineProcessor = new HunspellLineProcessor(skipSequences);
       return this;
     }
 
@@ -106,9 +106,9 @@ public final class HunspellDictionary extends Dictionary {
       Objects.requireNonNull(identifier, "identifier");
       Objects.requireNonNull(file, "file");
       Objects.requireNonNull(language, "language");
-      sanitizer = sanitizer == null ? new HunspellSanitizer() : sanitizer;
+      lineProcessor = lineProcessor == null ? new HunspellLineProcessor() : lineProcessor;
 
-      return new HunspellDictionary(identifier, file, language, sanitizer);
+      return new HunspellDictionary(identifier, file, language, lineProcessor);
     }
   }
 }

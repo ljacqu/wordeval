@@ -1,18 +1,18 @@
-package ch.jalu.wordeval.dictionary.hunspell.sanitizer;
+package ch.jalu.wordeval.dictionary.hunspell.lineprocessor;
 
 import static org.apache.commons.lang3.StringUtils.containsAny;
 
 /**
- * Custom sanitizer implementing specific rules for the Hungarian dictionary.
+ * Line processor for the Hungarian dictionary.
  */
-public class HuSanitizer extends HunspellSanitizer {
+public class HuLineProcessor extends HunspellLineProcessor {
 
   private boolean skipWords = false;
 
   /**
-   * Creates a new instance of a sanitizer for the Hungarian dictionary.
+   * Constructor.
    */
-  public HuSanitizer() {
+  public HuLineProcessor() {
     super(getSkipSequences());
   }
 

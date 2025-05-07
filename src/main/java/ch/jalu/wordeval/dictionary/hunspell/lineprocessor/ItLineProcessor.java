@@ -1,9 +1,9 @@
-package ch.jalu.wordeval.dictionary.hunspell.sanitizer;
+package ch.jalu.wordeval.dictionary.hunspell.lineprocessor;
 
 /**
- * Custom sanitizer for the Italian dictionary.
+ * Line processor for the Italian dictionary.
  */
-public class ItSanitizer extends HunspellSanitizer {
+public class ItLineProcessor extends HunspellLineProcessor {
 
   @Override
   public RootAndAffixes split(String line) {

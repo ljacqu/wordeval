@@ -2,7 +2,7 @@ package ch.jalu.wordeval.dictionary;
 
 import ch.jalu.wordeval.DataUtils;
 import ch.jalu.wordeval.dictionary.hunspell.HunspellDictionaryService;
-import ch.jalu.wordeval.dictionary.hunspell.sanitizer.HunspellSanitizer;
+import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.HunspellLineProcessor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,12 +50,12 @@ public class DictionaryService {
 
   public DictionaryLines processWordsForDebug(Dictionary dictionary) {
     if (dictionary instanceof HunspellDictionary hunDict) {
-      HunspellSanitizer sanitizer = hunDict.getSanitizer();
+      HunspellLineProcessor lineProcessor = hunDict.getLineProcessor();
       List<String> skippedLines = new ArrayList<>();
       List<String> includedLines = new ArrayList<>();
 
       dataUtils.readAllLines(dictionary.getFile()).forEach(line -> {
-        if (sanitizer.split(line).isEmpty()) {
+        if (lineProcessor.split(line).isEmpty()) {
           skippedLines.add(line);
         } else {
           includedLines.add(line);

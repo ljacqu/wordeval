@@ -1,4 +1,4 @@
-package ch.jalu.wordeval.dictionary.hunspell.sanitizer;
+package ch.jalu.wordeval.dictionary.hunspell.lineprocessor;
 
 /**
  * Parsed Hunspell dictionary line representing a root and affix flags.

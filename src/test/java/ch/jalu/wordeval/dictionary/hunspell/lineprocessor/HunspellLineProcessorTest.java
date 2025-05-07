@@ -1,4 +1,4 @@
-package ch.jalu.wordeval.dictionary.hunspell.sanitizer;
+package ch.jalu.wordeval.dictionary.hunspell.lineprocessor;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -13,23 +13,23 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * Test for {@link HunspellSanitizer}.
+ * Test for {@link HunspellLineProcessor}.
  */
-class HunspellSanitizerTest {
+class HunspellLineProcessorTest {
   
-  private static HunspellSanitizer sanitizer;
+  private static HunspellLineProcessor lineProcessor;
   
   @BeforeAll
   static void setUpSettings() {
-    sanitizer = new HunspellSanitizer("aaa", "è");
+    lineProcessor = new HunspellLineProcessor("aaa", "è");
   }
 
   @Test
   void shouldSplitWords() {
     // given / when
-    RootAndAffixes testAb  = sanitizer.split("test/AB");
-    RootAndAffixes toast   = sanitizer.split("toast");
-    RootAndAffixes tasteBc = sanitizer.split("taste/BC [ph:tejst]");
+    RootAndAffixes testAb  = lineProcessor.split("test/AB");
+    RootAndAffixes toast   = lineProcessor.split("toast");
+    RootAndAffixes tasteBc = lineProcessor.split("taste/BC [ph:tejst]");
 
     // then
     assertThat(testAb,  equalTo(new RootAndAffixes("test", "AB")));
@@ -45,7 +45,7 @@ class HunspellSanitizerTest {
 
     for (int i = 0; i < words.length; ++i) {
       // when
-      RootAndAffixes result = sanitizer.split(words[i]);
+      RootAndAffixes result = lineProcessor.split(words[i]);
 
       // then
       assertThat(result.isEmpty(), equalTo(shouldBeSkipped[i]));
@@ -56,9 +56,9 @@ class HunspellSanitizerTest {
   @Test
   void shouldReturnWordByDefault() {
     // given / when
-    assertThat(sanitizer.transform("beets"), equalTo("beets"));
-    assertThat(sanitizer.transform(""), equalTo(""));
-    assertThat(sanitizer.transform("Æ"), equalTo("Æ"));
+    assertThat(lineProcessor.transform("beets"), equalTo("beets"));
+    assertThat(lineProcessor.transform(""), equalTo(""));
+    assertThat(lineProcessor.transform("Æ"), equalTo("Æ"));
   }
 
   /* Slashes can be escaped in Hunspell, but there's no point in supporting this in this project. */
@@ -66,7 +66,7 @@ class HunspellSanitizerTest {
   void shouldThrowForWordWithBackslash() {
     // given / when
     IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-        () -> sanitizer.split("km\\/h"));
+        () -> lineProcessor.split("km\\/h"));
 
     // then
     assertThat(ex.getMessage(), equalTo("Backslash found in line: km\\/h"));
@@ -79,7 +79,7 @@ class HunspellSanitizerTest {
 
     // when
     List<RootAndAffixes> rootsAndAffixes = Arrays.stream(words)
-        .map(word -> sanitizer.split(word))
+        .map(word -> lineProcessor.split(word))
         .toList();
 
     // then

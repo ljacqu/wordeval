@@ -3,8 +3,8 @@ package ch.jalu.wordeval.dictionary;
 import ch.jalu.wordeval.DataUtils;
 import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.config.SpringContainedRunner;
-import ch.jalu.wordeval.dictionary.hunspell.sanitizer.RootAndAffixes;
-import ch.jalu.wordeval.dictionary.hunspell.sanitizer.HunspellSanitizer;
+import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.HunspellLineProcessor;
+import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.RootAndAffixes;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,11 +42,11 @@ public class SkippedRomanNumerals extends SpringContainedRunner {
     String fileName = dict.getFile();
 
     if (dict instanceof HunspellDictionary hunDict) {
-      HunspellSanitizer sanitizer = hunDict.getSanitizer();
+      HunspellLineProcessor lineProcessor = hunDict.getLineProcessor();
       List<String> skippedNumerals = new ArrayList<>();
       for (String line : dataUtils.readAllLines(fileName)) {
-        if (sanitizer.split(line).isEmpty()) {
-          RootAndAffixes rootAndAffixes = sanitizer.splitWithoutValidation(line);
+        if (lineProcessor.split(line).isEmpty()) {
+          RootAndAffixes rootAndAffixes = lineProcessor.splitWithoutValidation(line);
           if (DictionaryUtils.isRomanNumeral(rootAndAffixes.root())) {
             skippedNumerals.add(rootAndAffixes.root());
           }

@@ -6,8 +6,8 @@ import ch.jalu.wordeval.config.SpringContainedRunner;
 import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.DictionaryService;
 import ch.jalu.wordeval.dictionary.HunspellDictionary;
-import ch.jalu.wordeval.dictionary.hunspell.sanitizer.HunspellSanitizer;
-import ch.jalu.wordeval.dictionary.hunspell.sanitizer.RootAndAffixes;
+import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.HunspellLineProcessor;
+import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.RootAndAffixes;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -61,11 +61,11 @@ public class HunspellSizeEstimater extends SpringContainedRunner {
 
   private long estimateTotalEntries(HunspellDictionary dictionary) {
     HunspellAffixes affixes = hunspellDictionaryService.loadAndParseAffixes(dictionary);
-    HunspellSanitizer sanitizer = dictionary.getSanitizer();
+    HunspellLineProcessor lineProcessor = dictionary.getLineProcessor();
 
     try (Stream<String> lines = dataUtils.lines(dictionary.getFile())) {
       return lines.mapToLong(line -> {
-          RootAndAffixes rootAndAffixes = sanitizer.split(line);
+          RootAndAffixes rootAndAffixes = lineProcessor.split(line);
           return estimateNumbersForLine(rootAndAffixes, affixes);
         })
         .sum();

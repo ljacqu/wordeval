@@ -2,9 +2,9 @@ package ch.jalu.wordeval.dictionary.hunspell;
 
 import ch.jalu.wordeval.DataUtils;
 import ch.jalu.wordeval.dictionary.HunspellDictionary;
+import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.HunspellLineProcessor;
 import ch.jalu.wordeval.dictionary.hunspell.parser.AffixesParser;
 import ch.jalu.wordeval.dictionary.hunspell.parser.ParsedAffixes;
-import ch.jalu.wordeval.dictionary.hunspell.sanitizer.HunspellSanitizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,13 +37,13 @@ public class HunspellDictionaryService {
    */
   public Stream<String> loadAllWords(Stream<String> lines, HunspellDictionary dictionary) {
     HunspellAffixes affixDefinition = loadAndParseAffixes(dictionary);
-    HunspellSanitizer sanitizer = dictionary.getSanitizer();
+    HunspellLineProcessor lineProcessor = dictionary.getLineProcessor();
 
     return lines
-        .map(sanitizer::split)
+        .map(lineProcessor::split)
         .filter(baseWord -> !baseWord.isEmpty())
         .flatMap(baseWord -> unmuncherService.unmunch(baseWord, affixDefinition))
-        .map(sanitizer::transform);
+        .map(lineProcessor::transform);
   }
 
   /**

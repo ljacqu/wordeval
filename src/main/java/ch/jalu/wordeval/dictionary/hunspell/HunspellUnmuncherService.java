@@ -1,6 +1,6 @@
 package ch.jalu.wordeval.dictionary.hunspell;
 
-import ch.jalu.wordeval.dictionary.hunspell.sanitizer.RootAndAffixes;
+import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.RootAndAffixes;
 import com.google.common.base.Preconditions;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +26,8 @@ public class HunspellUnmuncherService {
     List<String> affixFlags = affixDefinition.getFlagType().split(rootAndAffixes.affixFlags());
 
     // Slashes can be escaped with a backslash apparently (nl.dic), but this currently goes beyond the desired scope,
-    // since a word with a slash won't be interesting to wordeval anyway. So it's the job of a sanitizer to skip these
-    // words before they're passed to this class.
+    // since a word with a slash won't be interesting to wordeval anyway. So it's the job of a line processor to skip
+    // these words before they're passed to this class.
     Preconditions.checkArgument(root.indexOf('\\') < 0, rootAndAffixes);
 
     if (affixDefinition.getForbiddenWordClass() != null

@@ -3,7 +3,7 @@ package ch.jalu.wordeval.dictionary.hunspell;
 import ch.jalu.wordeval.dictionary.hunspell.condition.AffixCondition;
 import ch.jalu.wordeval.dictionary.hunspell.condition.AnyTokenCondition;
 import ch.jalu.wordeval.dictionary.hunspell.condition.RegexCondition;
-import ch.jalu.wordeval.dictionary.hunspell.sanitizer.HunspellSanitizer;
+import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.HunspellLineProcessor;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import org.junit.jupiter.api.Test;
@@ -266,9 +266,9 @@ class HunspellUnmuncherServiceTest {
   }
 
   private List<String> unmunchWord(HunspellAffixes affixesDefinition, String... words) {
-    HunspellSanitizer sanitizer = new HunspellSanitizer();
+    HunspellLineProcessor lineProcessor = new HunspellLineProcessor();
     return Arrays.stream(words)
-        .map(sanitizer::split)
+        .map(lineProcessor::split)
         .flatMap(baseWordAndAffixes -> unmuncherService.unmunch(baseWordAndAffixes, affixesDefinition))
         .toList();
   }
