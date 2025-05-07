@@ -5,6 +5,7 @@ import ch.jalu.wordeval.dictionary.HunspellDictionary;
 import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.FrLineProcessor;
 import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.HuLineProcessor;
 import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.ItLineProcessor;
+import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.NlLineProcessor;
 import ch.jalu.wordeval.language.Language;
 
 import java.util.stream.Stream;
@@ -31,8 +32,7 @@ final class DictionaryData {
   public static final Dictionary HU = hunspellDictionary("hu").lineProcessor(new HuLineProcessor()).build();
   public static final Dictionary IT = hunspellDictionary("it").lineProcessor(new ItLineProcessor()).build();
   public static final Dictionary NB = hunspellDictionary("nb").build();
-  // TODO: The nl dictionary uses the digraph symbol 'ĳ' instead of 'i'+'j'
-  public static final Dictionary NL = hunspellDictionary("nl").build();
+  public static final Dictionary NL = hunspellDictionary("nl").lineProcessor(new NlLineProcessor()).build();
   public static final Dictionary NN = hunspellDictionary("nn").build();
   public static final Dictionary PL = hunspellDictionary("pl").build();
   public static final Dictionary PT_BR = hunspellDictionary("pt-br").build();
