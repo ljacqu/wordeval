@@ -1,21 +1,18 @@
 package ch.jalu.wordeval.dictionary.hunspell.parser;
 
+import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.config.SpringContainedRunner;
+import ch.jalu.wordeval.dictionary.Dictionary;
+import ch.jalu.wordeval.dictionary.HunspellDictionary;
 import ch.jalu.wordeval.dictionary.hunspell.AffixRule;
 import ch.jalu.wordeval.dictionary.hunspell.HunspellAffixes;
-import ch.jalu.wordeval.dictionary.hunspell.ParserToModelConverter;
+import ch.jalu.wordeval.dictionary.hunspell.HunspellDictionaryService;
 import com.google.common.collect.Multimaps;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Stream;
 
 /**
  * Runner that prints out the parsed affix rules of a dictionary file.
@@ -23,10 +20,10 @@ import java.util.stream.Stream;
 public class AffixesParserRunner extends SpringContainedRunner {
 
   @Autowired
-  private AffixesParser parser;
+  private AppData appData;
 
   @Autowired
-  private ParserToModelConverter converter;
+  private HunspellDictionaryService hunspellDictionaryService;
 
   public static void main(String[] args) {
     runApplication(AffixesParserRunner.class, args);
@@ -38,24 +35,15 @@ public class AffixesParserRunner extends SpringContainedRunner {
       System.out.println("Language code: ");
       String code = scanner.nextLine().trim();
 
-      Path affFile = Paths.get("dict/" + code + ".aff");
-      HunspellAffixes affixes = loadAndParseAffixes(affFile);
+      Dictionary dictionary = appData.getDictionary(code);
+      HunspellAffixes affixes = switch (dictionary) {
+        case HunspellDictionary hunDict -> hunspellDictionaryService.loadAndParseAffixes(hunDict);
+      };
 
       System.out.println("Processed " + affixes.getAffixRulesByFlag().keySet().size() + " affix classes");
       Multimaps.asMap(affixes.getAffixRulesByFlag())
           .forEach(this::printAffixClass);
     }
-  }
-
-  private HunspellAffixes loadAndParseAffixes(Path file) {
-    ParsedAffixes parsedAffixes;
-    try (Stream<String> lines = Files.lines(file)) {
-      parsedAffixes = parser.parseAffFile(lines);
-    } catch (IOException e) {
-      throw new UncheckedIOException("Failed to read '" + file + "'", e);
-    }
-
-    return converter.convert(parsedAffixes);
   }
 
   private void printAffixClass(String flag, List<AffixRule> rules) {

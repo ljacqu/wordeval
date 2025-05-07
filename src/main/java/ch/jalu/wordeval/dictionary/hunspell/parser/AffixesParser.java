@@ -82,7 +82,7 @@ public class AffixesParser {
   }
 
   private void handleUnknownLine(String line) {
-    if (StringUtils.startsWithAny(line, "BREAK ", "CHECKSHARPS", "HOME ", "ICONV ", "KEY ", "LANG ", "MAP ",
+    if (StringUtils.startsWithAny(line, "BREAK ", "CHECKSHARPS", "HOME ", "ICONV ", "KEY ", "LANG ", "MAP ", "NAME ",
         "NOSUGGEST ", "OCONV ", "REP ", "TRY ", "VERSION ", "WORDCHARS ")) {
       // Nothing to do: command is not relevant for this application
       return;

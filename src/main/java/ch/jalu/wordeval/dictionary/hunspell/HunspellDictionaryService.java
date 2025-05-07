@@ -28,6 +28,13 @@ public class HunspellDictionaryService {
   HunspellDictionaryService() {
   }
 
+  /**
+   * Returns a stream with all words defined by the given dictionary.
+   *
+   * @param lines the lines of the dictionary to read from
+   * @param dictionary the dictionary the lines belong to
+   * @return all parsed and unmunched words
+   */
   public Stream<String> loadAllWords(Stream<String> lines, HunspellDictionary dictionary) {
     HunspellAffixes affixDefinition = loadAndParseAffixes(dictionary);
     HunspellSanitizer sanitizer = dictionary.getSanitizer();
@@ -39,7 +46,13 @@ public class HunspellDictionaryService {
         .map(sanitizer::transform);
   }
 
-  private HunspellAffixes loadAndParseAffixes(HunspellDictionary dictionary) {
+  /**
+   * Loads all affix rules defined by the given dictionary.
+   *
+   * @param dictionary the dictionary to process
+   * @return the dictionary's affix rules
+   */
+  public HunspellAffixes loadAndParseAffixes(HunspellDictionary dictionary) {
     ParsedAffixes parsedAffixes;
     try (Stream<String> affixLines = dataUtils.lines(dictionary.getAffixFile())) {
       parsedAffixes = affixesParser.parseAffFile(affixLines);

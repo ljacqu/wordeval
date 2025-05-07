@@ -1,5 +1,6 @@
 package ch.jalu.wordeval.dictionary.hunspell.sanitizer;
 
+import ch.jalu.wordeval.dictionary.DictionaryUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -15,10 +16,17 @@ public class HunspellSanitizer {
   }
 
   public RootAndAffixes split(String line) {
-    if (line.isEmpty() || StringUtils.containsAny(line, skipSequences)) {
+    RootAndAffixes rootAndAffixes = splitWithoutValidation(line);
+    if (shouldSkipRoot(rootAndAffixes.root())) {
       return RootAndAffixes.EMPTY;
     }
-    return splitWithoutValidation(line);
+    return rootAndAffixes;
+  }
+
+  protected boolean shouldSkipRoot(String root) {
+    return StringUtils.containsAny(root, skipSequences)
+        || root.chars().anyMatch(ch -> ch >= '0' && ch <= '9')
+        || DictionaryUtils.isRomanNumeral(root);
   }
 
   public RootAndAffixes splitWithoutValidation(String line) {
@@ -40,7 +48,7 @@ public class HunspellSanitizer {
   }
 
   public String transform(String word) {
-    return word;
+    return word.replace('–', '-');
   }
 
   /**

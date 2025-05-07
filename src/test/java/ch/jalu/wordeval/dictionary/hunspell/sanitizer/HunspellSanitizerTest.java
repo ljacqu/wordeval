@@ -3,9 +3,12 @@ package ch.jalu.wordeval.dictionary.hunspell.sanitizer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -45,11 +48,7 @@ class HunspellSanitizerTest {
       RootAndAffixes result = sanitizer.split(words[i]);
 
       // then
-      if (shouldBeSkipped[i]) {
-        assertThat(result.root(), emptyString());
-      } else {
-        assertThat(result.root().isEmpty(), equalTo(false));
-      }
+      assertThat(result.isEmpty(), equalTo(shouldBeSkipped[i]));
       assertThat(result.affixFlags(), notNullValue());
     }
   }
@@ -71,5 +70,21 @@ class HunspellSanitizerTest {
 
     // then
     assertThat(ex.getMessage(), equalTo("Backslash found in line: km\\/h"));
+  }
+
+  @Test
+  void shouldNotSkipWordIfAffixClassHasSkipSequence() {
+    // given
+    String[] words = { "test/Pè", "toast/D tèst" };
+
+    // when
+    List<RootAndAffixes> rootsAndAffixes = Arrays.stream(words)
+        .map(word -> sanitizer.split(word))
+        .toList();
+
+    // then
+    assertThat(rootsAndAffixes, hasSize(2));
+    assertThat(rootsAndAffixes.get(0), equalTo(new RootAndAffixes("test", "Pè")));
+    assertThat(rootsAndAffixes.get(1), equalTo(new RootAndAffixes("toast", "D")));
   }
 }

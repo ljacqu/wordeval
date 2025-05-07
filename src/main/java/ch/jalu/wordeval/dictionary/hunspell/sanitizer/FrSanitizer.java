@@ -1,6 +1,6 @@
 package ch.jalu.wordeval.dictionary.hunspell.sanitizer;
 
-import ch.jalu.wordeval.dictionary.DictionaryUtils;
+import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -22,23 +22,28 @@ public class FrSanitizer extends HunspellSanitizer {
   }
 
   @Override
-  public RootAndAffixes split(String line) {
-    RootAndAffixes rootAndAffixes = super.split(line);
-    if (!rootAndAffixes.isEmpty() && skip(rootAndAffixes.root())) {
-      return RootAndAffixes.EMPTY;
+  public RootAndAffixes splitWithoutValidation(String line) {
+    RootAndAffixes rootAndAffixes = super.splitWithoutValidation(line);
+    if (rootAndAffixes.root().contains(" ")) {
+      Preconditions.checkState(rootAndAffixes.affixFlags().isEmpty(), "Line '%s' has space but affix flags", line);
+      return rootAndAffixes.withNewRoot(StringUtils.substringBefore(rootAndAffixes.root(), " "));
     }
     return rootAndAffixes;
   }
 
-  private boolean skip(String word) {
+  @Override
+  protected boolean shouldSkipRoot(String root) {
+    if (super.shouldSkipRoot(root)) {
+      return true;
+    }
     if (skipRest) {
       return true;
-    } else if ("Δt".equals(word)) {
+    } else if ("Δt".equals(root)) {
       skipRest = true;
       return true;
     }
 
-    if (isRomanNumeral(word) || StringUtils.startsWithAny(word, MANUAL_EXCLUSIONS)) {
+    if (isRomanNumeral(root) || StringUtils.startsWithAny(root, MANUAL_EXCLUSIONS)) {
       return true;
     }
     return false;
@@ -46,14 +51,12 @@ public class FrSanitizer extends HunspellSanitizer {
 
   // Need to roll out our own logic because there are a lot of entries with grammatical gender, such as:
   // XXXVIe, XXXIIes, XXXIIIe, XLVIIIes
+  // Note: DictionaryUtils.isRomanNumeral(word) was already checked if we are in this method
   private static boolean isRomanNumeral(String word) {
     // Search the dictionary with regexp ^[MCLXVI]{2,}e?s?/ and try to exclude as much as possible
-    if (word.startsWith("II") || word.startsWith("IV") || word.startsWith("VI")
+    return word.startsWith("II") || word.startsWith("IV") || word.startsWith("VI")
         || word.startsWith("IX") || word.startsWith("XI") || word.startsWith("XV")
-        || word.startsWith("XX") || word.startsWith("XL")) {
-      return true;
-    }
-    return DictionaryUtils.isRomanNumeral(word);
+        || word.startsWith("XX") || word.startsWith("XL");
   }
 
   private static String[] getSkipSequences() {
