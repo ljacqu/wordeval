@@ -43,6 +43,7 @@ class AffixesParserTest {
     assertThat(result.getFlagType(), equalTo(AffixFlagType.SINGLE));
     assertThat(result.getNeedAffixFlag(), nullValue());
     assertThat(result.getForbiddenWordClass(), nullValue());
+    assertThat(result.getOnlyInCompound(), nullValue());
 
     assertThat(result.getAffixClasses(), hasSize(2));
 
@@ -237,5 +238,26 @@ class AffixesParserTest {
     assertThat(rule2.affix(), equalTo("l'exa"));
     assertThat(rule2.continuationClasses(), empty());
     assertThat(rule2.condition(), equalTo("."));
+  }
+
+  /** Excerpt from nl.aff. */
+  @Test
+  void shouldExtractOnlyInCompoundFlag() {
+    // given
+    List<String> lines = List.of(
+        "FLAG long",
+        "ONLYINCOMPOUND Cx",
+        "SFX Yb Y 6" ,
+        "SFX Yb 0 je [^m]\t\t\tts:NN1r");
+
+    // when
+    ParsedAffixes result = parser.parseAffFile(lines.stream());
+
+    // then
+    assertThat(result.getForbiddenWordClass(), nullValue());
+    assertThat(result.getOnlyInCompound(), equalTo("Cx"));
+
+    assertThat(result.getAffixClasses(), hasSize(1));
+    assertThat(result.getAffixClasses().getFirst().rules, hasSize(1));
   }
 }

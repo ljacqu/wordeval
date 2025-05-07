@@ -30,8 +30,7 @@ public class HunspellUnmuncherService {
     // these words before they're passed to this class.
     Preconditions.checkArgument(root.indexOf('\\') < 0, rootAndAffixes);
 
-    if (affixDefinition.getForbiddenWordClass() != null
-        && affixFlags.contains(affixDefinition.getForbiddenWordClass())) {
+    if (affixDefinition.containsForbiddenFlag(affixFlags)) {
       return Stream.empty();
     }
 

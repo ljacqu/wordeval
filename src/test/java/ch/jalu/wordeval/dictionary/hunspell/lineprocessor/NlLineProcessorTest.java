@@ -32,7 +32,8 @@ class NlLineProcessorTest extends AbstractLineProcessorTest {
 
     // then
     assertThat(words, largeCollectionHasItems("abdijbier", "lekkerder", "zeeën", "IJzermijn", "pygmeeën", "pruttelarijen"));
-    assertThat(words, largeCollectionHasNoneItems("o.a.", "C++", "aanw.", "ww.", "Costa Rica"));
+    assertThat(words, largeCollectionHasNoneItems("o.a.", "C++", "aanw.", "ww.", "Costa Rica", "-"));
+    assertThat(words, largeCollectionHasNoneItems("IJspack", "e-eeuws", "schoenzetten", "zonne")); // Forbidden words due to their affixes
   }
 
   @Test

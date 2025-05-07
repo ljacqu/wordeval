@@ -7,7 +7,7 @@ import java.util.Set;
  */
 public class NlLineProcessor extends HunspellLineProcessor {
 
-  private static final Set<String> SKIPPED_LINES = Set.of("km\\/h", "km\\/u", "m\\/s");
+  private static final Set<String> SKIPPED_LINES = Set.of("km\\/h", "km\\/u", "m\\/s", "-/Hp");
 
   public NlLineProcessor() {
     super(".", "+", " ");

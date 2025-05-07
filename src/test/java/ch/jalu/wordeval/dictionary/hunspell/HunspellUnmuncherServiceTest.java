@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -239,7 +240,7 @@ class HunspellUnmuncherServiceTest {
   void shouldSkipWordsWithForbiddenWordClass() {
     // given
     HunspellAffixes affixDefinition = createSampleEnglishDefinitions();
-    affixDefinition.setForbiddenWordClass("W");
+    affixDefinition.setForbiddenWordClasses(Set.of("W"));
 
     // when
     List<String> result = unmunchWord(affixDefinition, "suport/W", "support/V");

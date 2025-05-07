@@ -26,6 +26,10 @@ public class ParsedAffixes {
   @Setter
   private String forbiddenWordClass;
 
+  @Getter
+  @Setter
+  private String onlyInCompound;
+
   private final List<ParsedAffixClass> classes = new ArrayList<>();
   private ParsedAffixClass currentClass;
 

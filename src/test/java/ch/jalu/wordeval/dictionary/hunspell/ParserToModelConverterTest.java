@@ -16,6 +16,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
@@ -48,7 +49,7 @@ class ParserToModelConverterTest {
     // then
     assertThat(affixesDefinition.getFlagType(), equalTo(AffixFlagType.SINGLE));
     assertThat(affixesDefinition.getNeedAffixFlag(), nullValue());
-    assertThat(affixesDefinition.getForbiddenWordClass(), nullValue());
+    assertThat(affixesDefinition.getForbiddenWordClasses(), empty());
     assertThat(affixesDefinition.getAffixRulesByFlag().keySet(), contains("N"));
 
     AffixRule affixRule = Iterables.getOnlyElement(affixesDefinition.getAffixRulesByFlag().get("N"));
@@ -82,7 +83,7 @@ class ParserToModelConverterTest {
     // then
     assertThat(affixesDefinition.getFlagType(), equalTo(AffixFlagType.LONG));
     assertThat(affixesDefinition.getNeedAffixFlag(), equalTo("{}"));
-    assertThat(affixesDefinition.getForbiddenWordClass(), equalTo("Ft"));
+    assertThat(affixesDefinition.getForbiddenWordClasses(), contains("Ft"));
     assertThat(affixesDefinition.getAffixRulesByFlag().keySet(), contains("P2"));
 
     List<AffixRule> p2Rules = affixesDefinition.getAffixRulesByFlag().get("P2");
@@ -153,6 +154,24 @@ class ParserToModelConverterTest {
     assertThat(rules.get(1).getAffix(), equalTo("ed"));
     assertThat(rules.get(2).getType(), equalTo(AffixType.SFX));
     assertThat(rules.get(2).getAffix(), equalTo("d"));
+  }
+
+  @Test
+  void shouldConvertOnlyInCompoundAsForbiddenFlag() {
+    // given
+    ParsedAffixes parsedAffixes1 = new ParsedAffixes();
+    parsedAffixes1.setOnlyInCompound("Cx");
+    ParsedAffixes parsedAffixes2 = new ParsedAffixes();
+    parsedAffixes2.setOnlyInCompound("Cx");
+    parsedAffixes2.setForbiddenWordClass("Fw");
+
+    // when
+    HunspellAffixes result1 = converter.convert(parsedAffixes1);
+    HunspellAffixes result2 = converter.convert(parsedAffixes2);
+
+    // then
+    assertThat(result1.getForbiddenWordClasses(), contains("Cx"));
+    assertThat(result2.getForbiddenWordClasses(), containsInAnyOrder("Cx", "Fw"));
   }
 
   static List<Arguments> getPatternConversionCases() {

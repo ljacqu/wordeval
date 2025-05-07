@@ -50,6 +50,8 @@ public class AffixesParser {
         result.setNeedAffixFlag(line.substring("NEEDAFFIX ".length()));
       } else if (line.startsWith("FORBIDDENWORD ")) {
         result.setForbiddenWordClass(line.substring("FORBIDDENWORD ".length()));
+      } else if (line.startsWith("ONLYINCOMPOUND ")) {
+        result.setOnlyInCompound(line.substring("ONLYINCOMPOUND ".length()));
       } else {
         handleUnknownLine(line);
       }
@@ -82,7 +84,12 @@ public class AffixesParser {
   }
 
   private void handleUnknownLine(String line) {
-    if (StringUtils.startsWithAny(line, "BREAK ", "CHECKSHARPS", "HOME ", "ICONV ", "KEY ", "LANG ", "MAP ", "NAME ",
+    // We don't support compounds for now, but let's log them as DEBUG so we can easily
+    // find them again and be alerted to a lot of rules being skipped
+    if (StringUtils.startsWithAny(line, "CHECKCOMPOUNDCASE", "CHECKCOMPOUNDPATTERN ", "CHECKCOMPOUNDDUP",
+        "COMPOUNDBEGIN ", "COMPOUNDMIDDLE ", "COMPOUNDEND ", "COMPOUNDPERMITFLAG ", "COMPOUNDMIN ", "COMPOUNDRULE ")) {
+      log.debug("Skipping unsupported line: {}", line);
+    } else if (StringUtils.startsWithAny(line, "BREAK ", "CHECKSHARPS", "HOME ", "ICONV ", "KEY ", "LANG ", "MAP ", "NAME ",
         "NOSUGGEST ", "OCONV ", "REP ", "TRY ", "VERSION ", "WORDCHARS ")) {
       // Nothing to do: command is not relevant for this application
       return;

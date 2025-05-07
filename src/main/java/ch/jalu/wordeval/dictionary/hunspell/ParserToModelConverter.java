@@ -13,6 +13,10 @@ import org.jheaps.annotations.VisibleForTesting;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Converter from {@link ParsedAffixes} to {@link HunspellAffixes}.
@@ -24,9 +28,15 @@ public class ParserToModelConverter {
     HunspellAffixes affixesDefinition = new HunspellAffixes();
     affixesDefinition.setFlagType(parsedAffixes.getFlagType());
     affixesDefinition.setNeedAffixFlag(parsedAffixes.getNeedAffixFlag());
-    affixesDefinition.setForbiddenWordClass(parsedAffixes.getForbiddenWordClass());
+    affixesDefinition.setForbiddenWordClasses(convertForbiddenClasses(parsedAffixes));
     affixesDefinition.setAffixRulesByFlag(convertAffixClasses(parsedAffixes.getAffixClasses()));
     return affixesDefinition;
+  }
+
+  private Set<String> convertForbiddenClasses(ParsedAffixes parsedAffixes) {
+    return Stream.of(parsedAffixes.getForbiddenWordClass(), parsedAffixes.getOnlyInCompound())
+        .filter(Objects::nonNull)
+        .collect(Collectors.toUnmodifiableSet());
   }
 
   private ListMultimap<String, AffixRule> convertAffixClasses(List<ParsedAffixClass> classes) {
