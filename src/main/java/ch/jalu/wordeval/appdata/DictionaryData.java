@@ -6,6 +6,8 @@ import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.FrLineProcessor;
 import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.HuLineProcessor;
 import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.ItLineProcessor;
 import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.NlLineProcessor;
+import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.NoLineProcessor;
+import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.PtPtLineProcessor;
 import ch.jalu.wordeval.language.Language;
 
 import java.util.stream.Stream;
@@ -31,12 +33,12 @@ final class DictionaryData {
   public static final Dictionary FR = hunspellDictionary("fr").lineProcessor(new FrLineProcessor()).build();
   public static final Dictionary HU = hunspellDictionary("hu").lineProcessor(new HuLineProcessor()).build();
   public static final Dictionary IT = hunspellDictionary("it").lineProcessor(new ItLineProcessor()).build();
-  public static final Dictionary NB = hunspellDictionary("nb").build();
+  public static final Dictionary NB = hunspellDictionary("nb").lineProcessor(new NoLineProcessor()).build();
   public static final Dictionary NL = hunspellDictionary("nl").lineProcessor(new NlLineProcessor()).build();
-  public static final Dictionary NN = hunspellDictionary("nn").build();
-  public static final Dictionary PL = hunspellDictionary("pl").build();
+  public static final Dictionary NN = hunspellDictionary("nn").lineProcessor(new NoLineProcessor()).build();
+  public static final Dictionary PL = hunspellDictionary("pl").lineProcessor(".", "uuu").build();
   public static final Dictionary PT_BR = hunspellDictionary("pt-br").build();
-  public static final Dictionary PT_PT = hunspellDictionary("pt-pt").build();
+  public static final Dictionary PT_PT = hunspellDictionary("pt-pt").lineProcessor(new PtPtLineProcessor()).build();
   public static final Dictionary RU = hunspellDictionary("ru").lineProcessor(".").build();
   public static final Dictionary SR_CYRL = hunspellDictionary("sr-cyrl").build();
   public static final Dictionary SR_LATN = hunspellDictionary("sr-latn").build();
