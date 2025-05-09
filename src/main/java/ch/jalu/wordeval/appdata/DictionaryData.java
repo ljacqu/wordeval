@@ -3,7 +3,6 @@ package ch.jalu.wordeval.appdata;
 import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.HunspellDictionary;
 import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.FrLineProcessor;
-import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.HuLineProcessor;
 import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.ItLineProcessor;
 import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.NlLineProcessor;
 import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.NoLineProcessor;
@@ -31,7 +30,7 @@ final class DictionaryData {
   public static final Dictionary ES = hunspellDictionary("es").build();
   public static final Dictionary EU = hunspellDictionary("eu").lineProcessor(".", "+", "_").build();
   public static final Dictionary FR = hunspellDictionary("fr").lineProcessor(new FrLineProcessor()).build();
-  public static final Dictionary HU = hunspellDictionary("hu").lineProcessor(new HuLineProcessor()).build();
+  public static final Dictionary HU = hunspellDictionary("hu").build();
   public static final Dictionary IT = hunspellDictionary("it").lineProcessor(new ItLineProcessor()).build();
   public static final Dictionary NB = hunspellDictionary("nb").lineProcessor(new NoLineProcessor()).build();
   public static final Dictionary NL = hunspellDictionary("nl").lineProcessor(new NlLineProcessor()).build();

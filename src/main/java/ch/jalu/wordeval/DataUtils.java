@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
@@ -82,6 +83,20 @@ public class DataUtils {
       return Files.lines(Paths.get(filename));
     } catch (IOException e) {
       throw new UncheckedIOException("Could not read from file '" + filename + "'", e);
+    }
+  }
+
+  /**
+   * Renames the source file to the target file.
+   *
+   * @param source the source to rename
+   * @param target the target with the name to rename to
+   */
+  public void move(Path source, Path target) {
+    try {
+      Files.move(source, target);
+    } catch (IOException e) {
+      throw new UncheckedIOException("Could not move file '" + source + "' to '" + target + "'", e);
     }
   }
 

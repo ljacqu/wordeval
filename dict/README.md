@@ -36,6 +36,9 @@ https://github.com/titoBouzout/Dictionaries
 * Elastic Hunspell
 https://github.com/elastic/hunspell
 
+* wooorm dictionaries
+https://github.com/wooorm/dictionaries/tree/main/dictionaries/
+
 * Features many dictionaries but seems outdated:
 http://www.winedt.org/Dict/
 

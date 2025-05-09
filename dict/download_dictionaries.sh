@@ -17,8 +17,8 @@ curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Spani
 curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Spanish.dic"              # es
 curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/French.aff"               # fr
 curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/French.dic"               # fr
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Hungarian.aff"            # hu
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Hungarian.dic"            # hu
+#curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Hungarian.aff"            # hu - is not encoded properly
+#curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Hungarian.dic"            # hu
 curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Italian.aff"              # it
 curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Italian.dic"              # it
 curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Norwegian%20(Bokmal).aff" # nb
@@ -39,3 +39,6 @@ curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Serbi
 curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Serbian%20(Latin).dic"    # sr-lat
 curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Turkish.aff"              # tr
 curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Turkish.dic"              # tr
+
+curl -o hu.aff "https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/hu/index.aff"
+curl -o hu.dic "https://raw.githubusercontent.com/wooorm/dictionaries/refs/heads/main/dictionaries/hu/index.dic"
