@@ -1,42 +1,43 @@
-package ch.jalu.wordeval.dictionary.sanitizer;
-
-import ch.jalu.wordeval.dictionary.Dictionary;
-import org.apache.commons.lang3.StringUtils;
+package ch.jalu.wordeval.dictionary.hunspell.lineprocessor;
 
 import static org.apache.commons.lang3.StringUtils.containsAny;
 
 /**
- * Custom sanitizer implementing specific rules for the Hungarian dictionary.
+ * Line processor for the Hungarian dictionary.
  */
-public class HuSanitizer extends Sanitizer {
+public class HuLineProcessor extends HunspellLineProcessor {
 
   private boolean skipWords = false;
 
   /**
-   * Creates a new instance of a sanitizer for the Hungarian dictionary.
-   *
-   * @param dictionary the dictionary
+   * Constructor.
    */
-  public HuSanitizer(Dictionary dictionary) {
-    super(dictionary);
+  public HuLineProcessor() {
+    super(getSkipSequences());
   }
 
   @Override
-  protected String sanitize(String word) {
-    if (StringUtils.isEmpty(word)) {
-      return "";
+  public RootAndAffixes split(String line) {
+    RootAndAffixes rootAndAffixes = super.split(line);
+    return remapWordIfNeeded(rootAndAffixes);
+  }
+
+  public RootAndAffixes remapWordIfNeeded(RootAndAffixes rootAndAffixes) {
+    if (rootAndAffixes.isEmpty()) {
+      return rootAndAffixes;
     }
 
+    String word = rootAndAffixes.root();
     // Skip Roman numerals; they are in range:
     // "xxxviii." to "v.", "lxxxviii." to "l."
     // "ix." to "i.", "cxxxviii." to "cv."
     // "clxxxviii." to "c."
     if (skipWords && equalsAny(word, "v.", "l.", "i.", "cv.", "c.")) {
       skipWords = false;
-      return "";
+      return RootAndAffixes.EMPTY;
     } else if (equalsAny(word, "xxxviii.", "lxxxviii.", "ix.", "cxxxviii.", "clxxxviii.")) {
       skipWords = true;
-      return "";
+      return RootAndAffixes.EMPTY;
     }
 
     // From ATP-vé to the end of the file, only abbreviation-like words are
@@ -46,27 +47,27 @@ public class HuSanitizer extends Sanitizer {
       skipWords = true;
     }
     if (skipWords) {
-      return "";
+      return RootAndAffixes.EMPTY;
     }
 
     // The dictionary contains a lot of odd entries like "góóóóól",
     // which are the only ones where "óóó" appears, so we skip those
     if (word.contains("óóól")) {
-      return "";
+      return RootAndAffixes.EMPTY;
     }
 
     // Some words have a starting '|' for some reason
     if (word.charAt(0) == '|') {
-      return word.substring(1);
+      return rootAndAffixes.withNewRoot(word.substring(1));
     }
 
     // Skip some chemical words because they have parentheses, which is annoying
     if (containsAny(word, "(vinil", "(izobutilén)", "(akril", "(metil")) {
-      return "";
+      return RootAndAffixes.EMPTY;
     }
 
     if (equalsAny(word, "[", "]", "{", "}", "#")) {
-      return "";
+      return RootAndAffixes.EMPTY;
     }
 
     // alakú, közben, közbeni, szer exist as own entry, so we can just return
@@ -77,18 +78,19 @@ public class HuSanitizer extends Sanitizer {
     if (foundPart != null) {
       if (equalsAny(word, "hó vége", "papagáj módra", "tél végi")) {
         // Return the second word in these exceptional cases
-        return word.substring(word.indexOf(" ") + 1);
+        return rootAndAffixes.withNewRoot(word.substring(word.indexOf(" ") + 1));
       }
-      return word.substring(0, word.indexOf(foundPart));
+
+      return rootAndAffixes.withNewRoot(word.substring(0, word.indexOf(foundPart)));
     }
 
     // A few entries are "fő" with another word; fő exists alone while some
     // second words do not, so just return the second word in those cases
     if (word.startsWith("fő ")) {
-      return word.substring(3);
+      return rootAndAffixes.withNewRoot(word.substring(3));
     } else if ("úti cél".equals(word)) {
       // úti doesn't exist alone and cél is covered by "fő cél"
-      return "úti";
+      return rootAndAffixes.withNewRoot("úti");
     }
 
     // Remove yahoo! and dog breeds causing trouble
@@ -96,28 +98,30 @@ public class HuSanitizer extends Sanitizer {
     if (containsAny(word, "yahoo!", "Yahoo!")
         || equalsAny(word, "lhasa apso", "yorkshire terrier",
             "csak azért is", "papír zsebkendő", "nota bene")) {
-      return "";
+      return RootAndAffixes.EMPTY;
     }
+
+    // TODO: Some of those remappings are probably not correct -- cannot keep the same affix flags if the word changes!
 
     // "üzembehelyezés-" and "üzembe helyezés" are in the dictionary but not the
     // individual words. As a not so nice hack we'll use üzembe and we'll
     // replace the entry "ë" (which has /nothing/ to do in a Hungarian
     // dictionary) with "helyeszés"
     if ("üzembe helyezés".equals(word)) {
-      return "üzembe";
+      return rootAndAffixes.withNewRoot("üzembe");
     } else if ("ë".equals(word)) {
-      return "helyezés";
+      return rootAndAffixes.withNewRoot("helyezés");
     } else if ("működő tőke".equals(word)) {
-      return "tőke";
+      return rootAndAffixes.withNewRoot("tőke");
     }
 
     if ("adieu[ph:agyő]".equals(word)) {
-      return "adieu";
+      return rootAndAffixes.withNewRoot("adieu");
     } else if ("ancien}".equals(word)) {
-      return "ancien";
+      return rootAndAffixes.withNewRoot("ancien");
     }
 
-    return word;
+    return rootAndAffixes;
   }
 
   private static String getFirstContains(String word, String... parts) {
@@ -138,4 +142,7 @@ public class HuSanitizer extends Sanitizer {
     return false;
   }
 
+  private static String[] getSkipSequences() {
+    return new String[]{".", "+", "±", "ø", "ʻ", "’", "­"};
+  }
 }

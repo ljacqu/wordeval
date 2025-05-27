@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 /**
  * Utility task to verify if a certain word appears in a given dictionary.
- * (Useful to make sure a custom sanitizer is not too strict.)
+ * (Useful to make sure that a custom line processor is not too strict.)
  */
 public class FindWordsInDictionary extends SpringContainedRunner {
 

@@ -19,7 +19,8 @@ Requirements
 Technical layout
 ----------------
 - `Language` contains some basic definitions about a language, such as which characters it considers as vowels.
-- A `Dictionary` has some basic rules about how to read a dictionary file and which language it belongs to. It can
-  create a `Sanitizer`, which processes the dictionary's lines and extracts the words from it for further use.
+- A `Dictionary` has some basic rules about how to read a dictionary file and which language it belongs to. 
+  Its Hunspell extension can create a `HunspellLineProcessor`, which processes the dictionary's lines and extracts 
+  the words from it for further use.
 - Each `Evaluator` processes words based on some criteria to find the most (for its criteria) "interesting" ones.
   It then allows to export the most relevant ones.

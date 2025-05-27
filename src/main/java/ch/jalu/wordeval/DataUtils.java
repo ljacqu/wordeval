@@ -13,6 +13,7 @@ import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Wrapper for interaction with the file system and JSON operations.
@@ -69,7 +70,21 @@ public class DataUtils {
       throw new UncheckedIOException("Could not read from file '" + filename + "'", e);
     }
   }
-  
+
+  /**
+   * Returns all lines of the file read as UTF-8 in a stream that must be closed.
+   *
+   * @param filename the name of the file to read
+   * @return stream of the file's lines
+   */
+  public Stream<String> lines(String filename) {
+    try {
+      return Files.lines(Paths.get(filename));
+    } catch (IOException e) {
+      throw new UncheckedIOException("Could not read from file '" + filename + "'", e);
+    }
+  }
+
   /**
    * Converts an object to its JSON representation.
    *
