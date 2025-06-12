@@ -31,8 +31,11 @@ final class DictionaryData {
   public static final Dictionary ES = hunspellDictionary("es").build();
   public static final Dictionary EU = hunspellDictionary("eu").lineProcessor(".", "+", "_").build();
   public static final Dictionary FR = hunspellDictionary("fr").lineProcessor(new FrLineProcessor()).build();
+  public static final Dictionary HR = hunspellDictionary("hr").lineProcessor(".", "!", "?").build();
   public static final Dictionary HU = hunspellDictionary("hu").lineProcessor(new HuLineProcessor()).build();
   public static final Dictionary IT = hunspellDictionary("it").lineProcessor(new ItLineProcessor()).build();
+  public static final Dictionary LT = hunspellDictionary("lt").build();
+  public static final Dictionary LV = hunspellDictionary("lv").build();
   public static final Dictionary NB = hunspellDictionary("nb").lineProcessor(new NoLineProcessor()).build();
   public static final Dictionary NL = hunspellDictionary("nl").lineProcessor(new NlLineProcessor()).build();
   public static final Dictionary NN = hunspellDictionary("nn").lineProcessor(new NoLineProcessor()).build();
@@ -43,6 +46,7 @@ final class DictionaryData {
   public static final Dictionary SR_CYRL = hunspellDictionary("sr-cyrl").build();
   public static final Dictionary SR_LATN = hunspellDictionary("sr-latn").build();
   public static final Dictionary TR = hunspellDictionary("tr").build();
+  public static final Dictionary UK = hunspellDictionary("uk").build();
 
   private DictionaryData() {
   }
@@ -62,8 +66,8 @@ final class DictionaryData {
   }
 
   public static Stream<Dictionary> streamThroughAll() {
-    return Stream.of(AF, BG, DA, DE_DE, EN_US, EN_TEST, ES, EU, FR, HU, IT,
-        NB, NL, NN, PL, PT_BR, PT_PT, RU, SR_CYRL, SR_LATN, TR);
+    return Stream.of(AF, BG, DA, DE_DE, EN_US, EN_TEST, ES, EU, FR, HR, HU, IT, LT, LV,
+        NB, NL, NN, PL, PT_BR, PT_PT, RU, SR_CYRL, SR_LATN, TR, UK);
   }
 
   private static HunspellDictionary.Builder hunspellDictionary(String identifier) {

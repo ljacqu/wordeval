@@ -58,11 +58,11 @@ public class WordFactory {
   }
 
   private static String initializeTempReplacements(String lettersToKeep) {
-    if (lettersToKeep.length() > 10) {
-      throw new IllegalStateException("Can only support up to 10 additional letters currently; "
+    if (lettersToKeep.length() > 20) {
+      throw new IllegalStateException("Can only support up to 20 additional letters currently; "
           + "please update WordFactory with more replacements.");
     }
 
-    return "0123456789".substring(0, lettersToKeep.length());
+    return "0123456789０１２３４５６７８９".substring(0, lettersToKeep.length());
   }
 }

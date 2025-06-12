@@ -1,41 +1,49 @@
 # Downloads some dictionaries from GitHub.
 # If on Windows, this can be run with Git Bash
 
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Bulgarian.aff"            # bg
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Bulgarian.dic"            # bg
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Czech.aff"                # cs
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Czech.dic"                # cs
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Danish.aff"               # da
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Danish.dic"               # da
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/German_de_DE.aff"         # de
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/German_de_DE.dic"         # de
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/English%20(American).aff" # en
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/English%20(American).dic" # en
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Basque.aff"               # eu
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Basque.dic"               # eu
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Spanish.aff"              # es
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Spanish.dic"              # es
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/French.aff"               # fr
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/French.dic"               # fr
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Hungarian.aff"            # hu
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Hungarian.dic"            # hu
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Italian.aff"              # it
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Italian.dic"              # it
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Norwegian%20(Bokmal).aff" # nb
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Norwegian%20(Bokmal).dic" # nb
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Dutch.aff"                # nl
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Dutch.dic"                # nl
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Norwegian%20(Nynorsk).aff" # nn
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Norwegian%20(Nynorsk).dic" # nn
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Polish.aff"                # pl
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Polish.dic"                # pl
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Portuguese%20(European).aff" # pt
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Portuguese%20(European).dic" # pt
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Russian.aff"              # ru
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Russian.dic"              # ru
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Serbian%20(Cyrillic).aff" # sr-cyrl
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Serbian%20(Cyrillic).dic" # sr-cyrl
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Serbian%20(Latin).aff"    # sr-lat
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Serbian%20(Latin).dic"    # sr-lat
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Turkish.aff"              # tr
-curl -O "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Turkish.dic"              # tr
+curl -o bg.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Bulgarian.aff"
+curl -o bg.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Bulgarian.dic"
+curl -o cs.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Czech.aff"
+curl -o cs.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Czech.dic"
+curl -o da.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Danish.aff"
+curl -o da.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Danish.dic"
+curl -o de.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/German_de_DE.aff"
+curl -o de.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/German_de_DE.dic"
+curl -o en.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/English%20(American).aff"
+curl -o en.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/English%20(American).dic"
+curl -o eu.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Basque.aff"
+curl -o eu.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Basque.dic"
+curl -o es.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Spanish.aff"
+curl -o es.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Spanish.dic"
+curl -o fr.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/French.aff"
+curl -o fr.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/French.dic"
+curl -o hr.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Croatian.aff"
+curl -o hr.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Croatian.dic"
+curl -o hu.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Hungarian.aff"
+curl -o hu.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Hungarian.dic"
+curl -o it.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Italian.aff"
+curl -o it.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Italian.dic"
+curl -o lt.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Lithuanian.aff"
+curl -o lt.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Lithuanian.dic"
+curl -o lv.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Latvian.aff"
+curl -o lv.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Latvian.dic"
+curl -o nb.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Norwegian%20(Bokmal).aff"
+curl -o nb.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Norwegian%20(Bokmal).dic"
+curl -o nl.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Dutch.aff"
+curl -o nl.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Dutch.dic"
+curl -o nn.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Norwegian%20(Nynorsk).aff"
+curl -o nn.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Norwegian%20(Nynorsk).dic"
+curl -o pl.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Polish.aff"
+curl -o pl.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Polish.dic"
+curl -o pt-pt.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Portuguese%20(European).aff"
+curl -o pt-pt.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Portuguese%20(European).dic"
+curl -o ru.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Russian.aff"
+curl -o ru.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Russian.dic"
+curl -o sr-cyrl.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Serbian%20(Cyrillic).aff"
+curl -o sr-cyrl.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Serbian%20(Cyrillic).dic"
+curl -o sr-lat.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Serbian%20(Latin).aff"
+curl -o sr-lat.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Serbian%20(Latin).dic"
+curl -o tr.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Turkish.aff"
+curl -o tr.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Turkish.dic"
+curl -o uk.aff "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Ukrainian_uk_UA.aff"
+curl -o uk.dic "https://raw.githubusercontent.com/titoBouzout/Dictionaries/master/Ukrainian_uk_UA.dic"

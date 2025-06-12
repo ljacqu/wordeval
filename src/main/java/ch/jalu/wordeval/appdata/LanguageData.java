@@ -42,11 +42,22 @@ final class LanguageData {
   public static final Language FR = builder("fr", "French", Alphabet.LATIN)
       .additionalVowels("æ", "œ")
       .build();
+  public static final Language HR = builder("hr", "Croatian", Alphabet.LATIN)
+      .additionalConsonants("č", "ć", "dž", "đ", "lj", "nj", "š", "ž")
+      .build();
   public static final Language HU = builder("hu", "Hungarian", Alphabet.LATIN)
       .additionalConsonants("cs", "dz", "dzs", "gy", "ly", "ny", "sz", "ty", "zs")
       .additionalVowels("á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű")
       .build();
   public static final Language IT = builder("it", "Italian", Alphabet.LATIN).build();
+  public static final Language LT = builder("lt", "Lithuanian", Alphabet.LATIN)
+      .additionalConsonants("č", "š", "ž")
+      .additionalVowels("ą", "ę", "ė", "į", "ų", "ū")
+      .build();
+  public static final Language LV = builder("lv", "Latvian", Alphabet.LATIN)
+      .additionalConsonants("č", "ģ", "ķ", "ļ", "ņ", "š", "ž")
+      .additionalVowels("ā", "ē", "ī", "ū")
+      .build();
   public static final Language NB = builder("nb", "Norwegian (Bokmål)", Alphabet.LATIN)
       .additionalVowels("æ", "ø", "å")
       .build();
@@ -71,6 +82,8 @@ final class LanguageData {
       .additionalVowels("ı", "ö", "ü")
       .lettersToRemove("y")
       .build();
+  public static final Language UK = builder("uk", "Ukrainian", Alphabet.CYRILLIC)
+      .build();
 
   private LanguageData() {
   }
@@ -90,7 +103,7 @@ final class LanguageData {
   }
 
   public static Stream<Language> streamThroughAll() {
-    return Stream.of(AF, BG, CS, DA, DE, EN, ES, EU, FI, FR, HU, IT,
-        NB, NL, NN, PL, PT, RU, SR_CYRL, SR_LATN, TR);
+    return Stream.of(AF, BG, CS, DA, DE, EN, ES, EU, FI, FR, HR, HU, IT, LT, LV,
+        NB, NL, NN, PL, PT, RU, SR_CYRL, SR_LATN, TR, UK);
   }
 }
