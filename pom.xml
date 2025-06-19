@@ -9,7 +9,7 @@
   <description>Processes a language dictionary to find fun words</description>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <version.springboot>3.5.0</version.springboot>
+    <version.springboot>3.5.2</version.springboot>
   </properties>
 
   <build>
