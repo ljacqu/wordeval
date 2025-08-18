@@ -1,15 +1,13 @@
 package ch.jalu.wordeval.dictionary;
 
 import ch.jalu.wordeval.DataUtils;
-import ch.jalu.wordeval.ReflectionTestUtil;
 import ch.jalu.wordeval.appdata.AppData;
 import ch.jalu.wordeval.config.SpringContainedRunner;
-import ch.jalu.wordeval.dictionary.sanitizer.Sanitizer;
+import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.HunspellLineProcessor;
+import ch.jalu.wordeval.dictionary.hunspell.lineprocessor.RootAndAffixes;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -32,30 +30,31 @@ public class SkippedRomanNumerals extends SpringContainedRunner {
   }
 
   public void run(String[] args) {
-    Scanner sc = new Scanner(System.in);
-    System.out.println("Enter dictionary code:");
-    String code = sc.nextLine();
-    sc.close();
-    findRomanNumeralSkips(code);
+    try (Scanner sc = new Scanner(System.in)) {
+      System.out.println("Enter dictionary code:");
+      String code = sc.nextLine();
+      findRomanNumeralSkips(code);
+    }
   }
 
   public void findRomanNumeralSkips(String dictionaryCode) {
     Dictionary dict = appData.getDictionary(dictionaryCode);
     String fileName = dict.getFile();
-    Sanitizer sanitizer = dict.buildSanitizer();
-    Method lineToWord = ReflectionTestUtil.getMethod(Sanitizer.class, "removeDelimiters", String.class);
 
-    List<String> skippedNumerals = new ArrayList<>();
-    for (String line : dataUtils.readAllLines(fileName)) {
-      String sanitizerResult = sanitizer.isolateWord(line);
-      if (StringUtils.isEmpty(sanitizerResult)) {
-        String word = (String) ReflectionTestUtil.invokeMethod(lineToWord, sanitizer, line);
-        if (DictionaryUtils.isRomanNumeral(word)) {
-          skippedNumerals.add(word);
+    if (dict instanceof HunspellDictionary hunDict) {
+      HunspellLineProcessor lineProcessor = hunDict.getLineProcessor();
+      List<String> skippedNumerals = new ArrayList<>();
+      for (String line : dataUtils.readAllLines(fileName)) {
+        if (lineProcessor.split(line).isEmpty()) {
+          RootAndAffixes rootAndAffixes = lineProcessor.splitWithoutValidation(line);
+          if (DictionaryUtils.isRomanNumeral(rootAndAffixes.root())) {
+            skippedNumerals.add(rootAndAffixes.root());
+          }
         }
       }
+      log.info("Skipped words for '{}':\n- {}", dictionaryCode, String.join("\n- ", skippedNumerals));
+    } else {
+      throw new IllegalStateException("Unsupported dictionary type: " + dict.getClass());
     }
-
-    log.info("Skipped words for '{}':\n- {}", dictionaryCode, String.join("\n- ", skippedNumerals));
   }
 }

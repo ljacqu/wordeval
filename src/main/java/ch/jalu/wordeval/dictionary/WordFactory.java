@@ -1,6 +1,5 @@
 package ch.jalu.wordeval.dictionary;
 
-import ch.jalu.wordeval.dictionary.sanitizer.Sanitizer;
 import ch.jalu.wordeval.language.Alphabet;
 import ch.jalu.wordeval.language.Language;
 import org.apache.commons.lang3.StringUtils;
@@ -8,8 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Locale;
 
 /**
- * Utility class used in {@link Sanitizer} to
- * generate the various word forms of a word.
+ * Constructs an object of a word in different representations, respecting the language's rules.
  */
 public class WordFactory {
 
