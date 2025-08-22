@@ -10,6 +10,8 @@ import java.util.stream.Stream;
 
 /**
  * Stores all {@link Dictionary} objects.
+ *
+ * @see AppData
  */
 final class DictionaryData {
 
