@@ -1,8 +1,8 @@
-package ch.jalu.wordeval.dictionary.sanitizer;
+package ch.jalu.wordeval.dictionary.hunspell.lineprocessor;
 
 import ch.jalu.wordeval.dictionary.Dictionary;
 import ch.jalu.wordeval.dictionary.Word;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
@@ -12,19 +12,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 
 /**
- * Test for the {@link HuSanitizer Hungarian dictionary} (which has custom sanitation).
+ * Test for {@link HuLineProcessor}.
  */
-class HuSanitizerTest extends AbstractSanitizerTest {
-
-  private Dictionary huDictionary;
-
-  @BeforeEach
-  void initDictionary() {
-    huDictionary = getDictionary("hu");
-  }
+class HuLineProcessorTest extends AbstractLineProcessorTest {
 
   @Test
+  @Disabled // TODO: hu.aff file has encoding problems
   void shouldFindTheGivenWords() {
+    Dictionary huDictionary = getDictionary("hu");
     assumeDictionaryFileExists(huDictionary);
 
     // given / when
